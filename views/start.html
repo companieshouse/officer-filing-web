@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  File a Director termination - Companies House
+{% endblock %}
+
+<!-- No service name header-->
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "https://www.gov.uk",
+    containerClasses: "govuk-width-container"})
+  }}
+{% endblock %}
+
+{% block signoutBar %}
+{# Remove signout bar on this page by replacing it with nothing #}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">
+        File a Director termination
+      </h1>
+
+      <p class="govuk-body-l">This service allows private limited companies to confirm that company information is correct and file a confirmation statement (previously known as an annual return).</p>
+      <p class="govuk-body govuk-!-font-weight-bold">You can only use this service if the company:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        {% if FEATURE_FLAG_FIVE_OR_LESS_OFFICERS_JOURNEY_21102021 === "true" %}
+          <li>is a private company limited by shares</li>
+          <li>has only one shareholder</li>
+          <li>has between 1 and 5 officers</li>
+          <li>has 5 people with significant control (PSCs) or less</li>
+        {% else %}
+          <li>is a private limited company</li>
+          <li>has only one director, and no company secretaries</li>
+          <li>has only one shareholder</li>
+          <li>has one person with significant control (PSC), or no PSCs</li>
+        {% endif %}
+
+      </ul>
+      <p>If the company does not meet these criteria, you will need to file a confirmation statement using our
+        <a href="{{EWF_URL}}" data-event-id="webfiling-service-link-from-ncs-start-page">WebFiling service</a>.</p>
+
+      <p>You cannot use this service to make any changes to company information. You should
+        <a href="{{CHS_URL}}" data-event-id="check-company-details-link">check the company's details</a>
+        and update any information that is incorrect or out of date before filing the confirmation statement.
+
+        <p class="govuk-body govuk-!-font-weight-bold">To file a confirmation statement, you'll need:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>a Companies House account, which is different from a WebFiling account</li>
+          <li>the company number</li>
+          <li>the company authentication code</li>
+          <li>to pay the £13 annual fee using a credit or debit card</li>
+        </ul>
+
+        {{ govukInsetText({
+          html: insetHTML
+        }) }}
+
+        <p>It can take up to 15 minutes to file a confirmation statement. The service will time out after 60 minutes and your answers will not be saved.</p>
+
+        <a href="/confirmation-statement/company-number" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+          Start now
+          <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+          </svg>
+        </a>
+
+        <h2 class="govuk-heading-m">Before you start</h2>
+
+        <p><a href="https://www.gov.uk/guidance/confirmation-statement-guidance" data-event-id="Read-the-guidance-on-filing-link">Read the guidance on filing a confirmation statement</a>, including how to make changes to your company information.</p>
+
+        {{ govukDetails({
+          summaryHtml: '<div data-event-id="Other-ways-to-file-a-confirmation-statement-details-dropdown"> Other ways to file a confirmation statement</div>',
+          html: fileByPostHTML
+        }) }}
+
+      </div>
+    </div>
+  {% endblock %}

@@ -1,0 +1,10 @@
+{% if corporateDirectorList.length > 1 %}
+  <h2 class="govuk-heading-">{{ corporateDirectorList.length }} corporate directors</h2>
+{% elseif corporateDirectorList.length === 1 %}
+  <h2 class="govuk-heading-">1 corporate director</h2>
+{% endif %}
+
+{% for officer in corporateDirectorList %}
+   {% include "includes/corporate-officer.html" %}
+{% endfor %}
+
