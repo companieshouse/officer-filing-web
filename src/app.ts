@@ -42,17 +42,17 @@ app.set("view engine", "html");
 
 // apply middleware
 app.use(cookieParser());
-app.use(serviceAvailabilityMiddleware);
+//app.use(serviceAvailabilityMiddleware);
 
 
-app.use(`${urls.CONFIRMATION_STATEMENT}*`, sessionMiddleware);
-const userAuthRegex = new RegExp("^" + urls.CONFIRMATION_STATEMENT + "/.+");
+app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
+const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/.+");
 app.use(userAuthRegex, authenticationMiddleware);
-app.use(`${urls.CONFIRMATION_STATEMENT}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
+app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
 
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /confirmation-statement
-app.use(urls.CONFIRMATION_STATEMENT, router);
+app.use(urls.OFFICER_FILING, router);
 app.use(errorHandler);
 
 logger.info("Officer filing Web has started");
