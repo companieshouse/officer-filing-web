@@ -2,7 +2,7 @@ import express from "express";
 import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { router } from "./routes/routes";
-import * as urls from "./types/page.urls";
+//import * as urls from "./types/page.urls";
 //import errorHandler from "./controllers/error.controller";
 //import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
 //import { authenticationMiddleware } from "./middleware/authentication.middleware";
