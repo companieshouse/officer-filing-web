@@ -1,4 +1,4 @@
-e/**
+/**
  * Gets an environment variable. If the env var is not set and a default value is not
  * provided, then it is assumed it is a mandatory requirement and an error will be
  * thrown.

@@ -13,7 +13,7 @@ import { logger } from "./utils/logger";
 //import { companyNumberQueryParameterValidationMiddleware } from "./middleware/company.number.validation.middleware";
 //import { transactionIdValidationMiddleware } from "./middleware/transaction.id.validation.middleware";
 //import { submissionIdValidationMiddleware } from "./middleware/submission.id.validation.middleware";
-//import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
+import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 
 const app = express();
 app.disable("x-powered-by");
