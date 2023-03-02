@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { formatForDisplay, getCompanyProfile } from "../services/company.profile.service";
+//import { formatForDisplay, getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { createConfirmationStatement, getNextMadeUpToDate } from "../services/confirmation.statement.service";
+//import { createConfirmationStatement, getNextMadeUpToDate } from "../services/confirmation.statement.service";
 import { Session } from "@companieshouse/node-session-handler";
 //import { FEATURE_FLAG_PRIVATE_SDK_12052021 } from "../utils/properties";
 //import { isActiveFeature } from "../utils/feature.flag";
-import { checkEligibility } from "../services/eligibility.service";
+//import { checkEligibility } from "../services/eligibility.service";
 import {
   EligibilityStatusCode, NextMadeUpToDate
 } from "@companieshouse/api-sdk-node/dist/services/confirmation-statement";
@@ -23,8 +23,8 @@ import { toReadableFormat } from "../utils/date";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const companyProfile: CompanyProfile = await getCompanyProfile(req.query.companyNumber as string);
-    return res.render(Templates.CONFIRM_COMPANY, await buildPageOptions(req.session as Session, companyProfile));
+    //const companyProfile: CompanyProfile = await getCompanyProfile(req.query.companyNumber as string);
+    return res.render(Templates.CONFIRM_COMPANY/*, await buildPageOptions(req.session as Session, companyProfile)*/);
   } catch (e) {
     return next(e);
   }
@@ -32,19 +32,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile): Promise<Object> => {
   const pageOptions = {
-    company: formatForDisplay(companyProfile),
+    //company: formatForDisplay(companyProfile),
     templateName: Templates.CONFIRM_COMPANY
   };
 
   if (companyProfile?.confirmationStatement?.nextMadeUpTo) {
-    const nextMadeUpToDate: NextMadeUpToDate = await getNextMadeUpToDate(session, companyProfile.companyNumber);
+    //const nextMadeUpToDate: NextMadeUpToDate = await getNextMadeUpToDate(session, companyProfile.companyNumber);
 
     // can't use falsy here, isDue can be undefined
-    if (nextMadeUpToDate.isDue === false) {
-      pageOptions["notDueWarning"] = {
-        newNextMadeUptoDate: nextMadeUpToDate.newNextMadeUpToDate ? toReadableFormat(nextMadeUpToDate.newNextMadeUpToDate) : ""
-      };
-    }
+    // if (nextMadeUpToDate.isDue === false) {
+    //   pageOptions["notDueWarning"] = {
+    //     newNextMadeUptoDate: nextMadeUpToDate.newNextMadeUpToDate ? toReadableFormat(nextMadeUpToDate.newNextMadeUpToDate) : ""
+    //   };
+    // }
   }
   return pageOptions;
 };
@@ -52,17 +52,17 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
-    const company: CompanyProfile = await getCompanyProfile(req.query.companyNumber as string);
-    const companyNumber = company.companyNumber;
-    const eligibilityStatusCode: EligibilityStatusCode = await checkEligibility(session, companyNumber);
+    //const company: CompanyProfile = await getCompanyProfile(req.query.companyNumber as string);
+    //const companyNumber = company.companyNumber;
+    //const eligibilityStatusCode: EligibilityStatusCode = await checkEligibility(session, companyNumber);
 
-    if (!isCompanyValidForService(eligibilityStatusCode)) {
-      return displayEligibilityStopPage(res, eligibilityStatusCode, company);
-    }
+    // if (!isCompanyValidForService(eligibilityStatusCode)) {
+    //   return displayEligibilityStopPage(res, eligibilityStatusCode, company);
+    // }
 
     await createNewConfirmationStatement(session);
-    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-    return res.redirect(nextPageUrl);
+    //const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+    return res.redirect(/*nextPageUrl*/"/");
   } catch (e) {
     return next(e);
   }
@@ -81,7 +81,7 @@ const displayEligibilityStopPage = (res: Response, eligibilityStatusCode: Eligib
 
 const createNewConfirmationStatement = async (session: Session) => {
     const transactionId: string = "";
-    await createConfirmationStatement(session, transactionId);
+    //await createConfirmationStatement(session, transactionId);
 };
 
 const stopPagesPathMap = {
