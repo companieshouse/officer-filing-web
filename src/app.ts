@@ -5,11 +5,11 @@ import { router } from "./routes/routes";
 import * as urls from "./types/page.urls";
 //import errorHandler from "./controllers/error.controller";
 //import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
-//import { authenticationMiddleware } from "./middleware/authentication.middleware";
+import { authenticationMiddleware } from "./middleware/authentication.middleware";
 //import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
-//import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
+import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
 //import { companyNumberQueryParameterValidationMiddleware } from "./middleware/company.number.validation.middleware";
 //import { transactionIdValidationMiddleware } from "./middleware/transaction.id.validation.middleware";
 //import { submissionIdValidationMiddleware } from "./middleware/submission.id.validation.middleware";
@@ -46,9 +46,13 @@ app.use(cookieParser());
 
 
 //app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
+
+
+// ------------- Enable login redirect -----------------
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/.+");
-//app.use(userAuthRegex, authenticationMiddleware);
-//app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
+app.use(userAuthRegex, authenticationMiddleware);
+app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
+
 
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /confirmation-statement
