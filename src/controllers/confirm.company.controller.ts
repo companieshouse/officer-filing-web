@@ -61,8 +61,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     // }
 
     await createNewConfirmationStatement(session);
-    //const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-    return res.redirect(/*nextPageUrl*/"/");
+    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, "00006400");
+    return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }
