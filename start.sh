@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Start script for confirmation-statement-web
+# Start script for officer-filing-web
 
 APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

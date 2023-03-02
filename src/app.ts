@@ -6,7 +6,7 @@ import * as urls from "./types/page.urls";
 //import errorHandler from "./controllers/error.controller";
 //import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
-//import { sessionMiddleware } from "./middleware/session.middleware";
+import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
@@ -45,7 +45,7 @@ app.use(cookieParser());
 //app.use(serviceAvailabilityMiddleware);
 
 
-//app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
+app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 
 
 // ------------- Enable login redirect -----------------
@@ -55,7 +55,7 @@ app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuth
 
 
 app.use(commonTemplateVariablesMiddleware)
-// apply our default router to /confirmation-statement
+// apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
 //app.use(errorHandler);
 
