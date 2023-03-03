@@ -22,10 +22,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       //const nextPageUrl = urlUtils
         //.getUrlWithCompanyNumberTransactionIdAndSubmissionId(TRADING_STATUS_PATH, companyNumber,
           //                                                   transactionId, "castedResponseResource.id");
-      console.log(transactionId);
+      req.params[urlParams.PARAM_TRANSACTION_ID] = transactionId;
+      req.params[urlParams.PARAM_SUBMISSION_ID] = "1";
       var nextPageUrl = urlUtils.getUrlToPath(ACTIVE_OFFICERS_PATH, req)
-      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_TRANSACTION_ID, transactionId);
-      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_SUBMISSION_ID, "1");
       return res.redirect(nextPageUrl);
     //}
     //next(new Error(`Unable to create Confirmation Statement, httpStatusCode = ${submissionResponse.httpStatusCode}, resource = ${JSON.stringify(submissionResponse.resource)}`));
