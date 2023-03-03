@@ -31,8 +31,22 @@
         {% else %}
           {% set activeOfficersError = false %}
         {% endif %}
-        <h1 class="govuk-heading-l">Check the director's details</h1>
-        <h2 class="govuk-heading-m">1 Director</h2>
+
+        <span class="govuk-caption-xl gem-c-title__context">
+          Company Name
+        </span>
+        <h1 class="govuk-heading-l">Active directors</h1>
+
+        {% from "govuk/components/button/macro.njk" import govukButton %}
+
+        {{ govukButton({
+          text: "Appoint new director",
+          attributes: {
+            "data-event-id": "appoint-button",
+            "id": "appoint"
+        }
+        }) }}
+
         {% set directorHTML %}
           {% include "includes/directors.html" %}
         {% endset %}
@@ -45,48 +59,7 @@
             ]
           ]
         }) }}
-        {{ govukRadios({
-          classes: "govuk-radios",
-          idPrefix: "active-officers",
-          name: "activeOfficers",
-          errorMessage: activeOfficersError,
-          fieldset: {
-            legend: {
-              isPageHeading: false,
-              classes: "govuk-fieldset__legend--l",
-              html: "Are the director details correct?"
-            }
-          },
-          items: [
-            {
-              value: "yes",
-              text: "Yes",
-              label: "active-officer Yes",
-              attributes: {
-                "data-event-id": "yes-radio-button"
-              }
-            },
-            {
-              value: "no",
-              text: "No",
-              label: "active-officer No",
-              attributes: {
-                "data-event-id": "no-radio-button"
-              }
-            },
-            {
-              value: "recently_filed",
-              text: "No, but an update has been submitted",
-              label: "active-officer No, but an update has been submitted",
-              attributes: {
-                "data-event-id": "recently-filed-radio-button"
-              }
-            }
-          ]
-        }) }}
-
-        {% include "includes/continue-button.html" %}
-
+        
       </form>
     </div>
   </div>

@@ -7,23 +7,13 @@
           {{activeOfficerDetails.foreName2}}
         {% endif %}
       </p>
-      {{govukTag({
-        text: "Active",
-        classes: "govuk-tag--green"
-      })}}
     </div>
     <div style="display: flex" class="govuk-!-padding-1">
       <dl style="display: block" class="govuk-summary-list govuk-!-margin-3">
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Nationality</dt>
+          <dt class="govuk-summary-list__key">Role</dt>
           <dd class="govuk-summary-list__value">
-            <p>{{activeOfficerDetails.nationality}}</p>
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Country of residence</dt>
-          <dd class="govuk-summary-list__value">
-            <p>{{countryOfResidence}}</p>
+            <p>{{activeOfficerDetails.role}}</p>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -33,32 +23,14 @@
           </dd>
         </div>
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Appointment date</dt>
+          <dt class="govuk-summary-list__key">Appointment on</dt>
           <dd class="govuk-summary-list__value">
             <p>{{activeOfficerDetails.dateOfAppointment}}</p>
           </dd>
         </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Occupation</dt>
-          <dd class="govuk-summary-list__value">
-            <p>{{activeOfficerDetails.occupation}}</p>
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Correspondence address</dt>
-          <dd class="govuk-summary-list__value">
-          <p>
-            {{serviceAddress}}
-          </p>
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Usual residential address</dt>
-          <dd class="govuk-summary-list__value">
-          <p>
-            {{residentialAddress}}
-          </p>
-          </dd>
+        <div class="govuk-!-padding-top-6">
+          <a href="#" class="govuk-link ">Update details</a>
+          <a href="#" class="govuk-link govuk-!-margin-5">Remove director</a>
         </div>
       </dl>
     </div>
