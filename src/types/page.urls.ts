@@ -9,6 +9,8 @@ export enum urlParams {
 
 export enum URL_QUERY_PARAM {
   COMPANY_NUM = "companyNumber",
+  PARAM_TRANSACTION_ID = "transactionId",
+  PARAM_SUBMISSION_ID = "submissionId",
   IS_PSC = "isPsc"
 }
 
@@ -33,6 +35,8 @@ export const COMPANY_LOOKUP = "/company-lookup/search?forward=/officer-filing/co
 export const SIGNOUT_PATH = "/signout";
 export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "transaction";
 export const CREATE_TRANSACTION_PATH = OFFICER_FILING + CREATE_TRANSACTION;
+export const TRADING_STATUS = ACTIVE_SUBMISSION_BASE + "trading-status";
+export const TRADING_STATUS_PATH = OFFICER_FILING + TRADING_STATUS ;
 export const ACTIVE_OFFICERS = ACTIVE_SUBMISSION_BASE + "active-officers";
 export const ACTIVE_OFFICERS_PATH = OFFICER_FILING + ACTIVE_OFFICERS;
 export const ACTIVE_OFFICERS_DETAILS = ACTIVE_SUBMISSION_BASE + "active-officers-details";
