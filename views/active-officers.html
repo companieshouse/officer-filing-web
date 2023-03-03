@@ -37,16 +37,6 @@
         </span>
         <h1 class="govuk-heading-l">Active directors</h1>
 
-        {% from "govuk/components/button/macro.njk" import govukButton %}
-
-        {{ govukButton({
-          text: "Appoint new director",
-          attributes: {
-            "data-event-id": "appoint-button",
-            "id": "appoint"
-        }
-        }) }}
-
         {% set directorHTML %}
           {% include "includes/directors.html" %}
         {% endset %}
@@ -59,7 +49,7 @@
             ]
           ]
         }) }}
-        
+
       </form>
     </div>
   </div>
