@@ -31,7 +31,7 @@ export const CONFIRM_COMPANY = SEPARATOR + Templates.CONFIRM_COMPANY;
 export const OFFICER_FILING = "/officer-filing";
 export const COMPANY_NUMBER = "/company-number";
 export const COMPANY_LOOKUP = "/company-lookup/search?forward=/officer-filing/confirm-company?companyNumber={companyNumber}";
-//export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
+export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
 export const SIGNOUT_PATH = "/signout";
 export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "transaction";
 export const CREATE_TRANSACTION_PATH = OFFICER_FILING + CREATE_TRANSACTION;

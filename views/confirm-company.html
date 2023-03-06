@@ -4,10 +4,7 @@
   Confirm the company
 {% endblock %}
 {% block backLink %}
-  {{ govukBackLink({
-    text: "Back",
-    href: "/officer-filing/company-number"
-  }) }}
+  {% include "includes/back-link.html" %}
 {% endblock %}
 
 {% block content %}

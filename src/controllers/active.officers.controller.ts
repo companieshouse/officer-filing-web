@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CONFIRM_COMPANY } from "../types/page.urls";
+import { CONFIRM_COMPANY_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -32,7 +32,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.ACTIVE_OFFICERS, {
       templateName: Templates.ACTIVE_OFFICERS,
-      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY, req),
+      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
       // activeOfficerDetails,
       // serviceAddress,
       // residentialAddress,
@@ -68,7 +68,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     //   const serviceAddress = formatAddressForDisplay(activeOfficerDetails?.serviceAddress);
     //   const residentialAddress = formatAddressForDisplay(activeOfficerDetails?.residentialAddress);
       return res.render(Templates.ACTIVE_OFFICERS, {
-        backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY, req),
+        backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
         officerErrorMsg: DIRECTOR_DETAILS_ERROR,
         templateName: Templates.ACTIVE_OFFICERS,
         // activeOfficerDetails,
