@@ -24,6 +24,14 @@
 
         {{ govukSummaryList({
           rows: [
+          {
+            key: {
+              text: "Company name"
+            },
+            value: {
+              text: ""
+            }
+          },
             {
               key: {
                 classes: "govuk-!-width-full",
@@ -59,18 +67,10 @@
             },
             {
               key: {
-                text: "Date of next confirmation statement"
+                text: "Registered office address"
               },
               value: {
-                text: company.confirmationStatement.nextMadeUpTo
-              }
-            },
-            {
-              key: {
-                text: "To be filed by"
-              },
-              value: {
-                text: company.confirmationStatement.nextDue
+                text: ""
               }
             }
           ]
