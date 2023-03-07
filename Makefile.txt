@@ -1,4 +1,4 @@
-artifact_name       := overseas-entities-web
+artifact_name       := officer-filing-web
 version             := "unversioned"
 
 .PHONY: all
