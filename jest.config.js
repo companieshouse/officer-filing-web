@@ -1,25 +1,25 @@
 module.exports = {
   roots: [
-    "<rootDir>"
+    '<rootDir>'
   ],
   testPathIgnorePatterns: [
-    "/node_modules/",
-    "/dist/",
+    '/node_modules/',
+    '/dist/'
   ],
   collectCoverageFrom: [
-    "./src/**/*.ts"
+    './src/**/*.ts'
   ],
   coveragePathIgnorePatterns: [
-    "/src/bin/"
+    '/src/bin/'
   ],
-  preset: "ts-jest",
-  testEnvironment: "node",
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   verbose: true,
-  testMatch: ["**/test/**/*.unit.[jt]s"],
+  testMatch: ['**/test/**/*.unit.[jt]s'],
   globals: {
-    "ts-jest": {
-      diagnostics: false,
+    'ts-jest': {
+      diagnostics: false
     }
   },
-  globalSetup: "./test/global.setup.ts"
-};
+  globalSetup: './test/global.setup.ts'
+}
