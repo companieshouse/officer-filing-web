@@ -1,0 +1,18 @@
+{
+  "type": "Service",
+  "name": "officer-filing-web",
+  "description": "Web interface to allow eligible companies to digitally submit directors terminations, adds and updates",
+  "owned_by": "Team Thundercats, Vhagar",
+  "calls_via": "Eric",
+  "documentation": "to be added",
+  "git_repo": "https://github.com/companieshouse/officer-filing-web",
+  "specification": "https://companieshouse.atlassian.net/wiki/spaces/DACT/pages/4067393712/ODP-DIR-006+TM01+Web",
+  "public": true,
+  "users": "public - Web",
+  "code_analysis_link": "http://code-analysis.platform.aws.chdev.org:9000/dashboard?id=uk.gov.companieshouse%3Acofficer-filing-web",
+  "test_automation_repo": "https://github.com/companieshouse/chs-test-automation",
+  "language": "NodeJS",
+  "integration_outgoing": [
+    "officer-filing-api,TransactionsPI"
+  ]
+}

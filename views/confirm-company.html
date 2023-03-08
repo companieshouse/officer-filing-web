@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Confirm the company
+{% endblock %}
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Confirm this is the correct company</h1>
+      <h2 class="govuk-heading-l">{{company.companyName}}</h2>
+      <form action="" method="post">
+
+        {% set notDueWarningHTML %}
+        <p style="font-weight: 400; display: inline;">
+          You are not due to file a officer filing. If you file a filing statement today, it will show the date as
+          <strong>{{notDueWarning.newNextMadeUptoDate}}</strong>
+          and this will change your future review periods.
+        </p>
+        {% endset %}
+
+        {{ govukSummaryList({
+          rows: [
+          {
+            key: {
+              text: "Company name"
+            },
+            value: {
+              text: ""
+            }
+          },
+            {
+              key: {
+                classes: "govuk-!-width-full",
+                text: "Company number"
+              },
+              value: {
+                text: company.companyNumber
+              }
+            },
+            {
+              key: {
+                text: "Status"
+              },
+              value: {
+                text: company.companyStatus
+              }
+            },
+            {
+              key: {
+                text: "Incorporation date"
+              },
+              value: {
+                text: company.dateOfCreation
+              }
+            },
+            {
+              key: {
+                text: "Company type"
+              },
+              value: {
+                text: company.type
+              }
+            },
+            {
+              key: {
+                text: "Registered office address"
+              },
+              value: {
+                text: ""
+              }
+            }
+          ]
+        }) }}
+
+        {% if notDueWarning %}
+          {{ govukWarningText({
+            html: notDueWarningHTML,
+            iconFallbackText: "Warning"
+          }) }}
+        {% endif %}
+
+        {{ govukButton({
+          attributes: {
+            id: "submit",
+            "data-event-id": "confirm-and-continue-button"
+          },
+          text: "Confirm and continue"
+        }) }}
+
+        <p>
+          <a href="/officer-filing/company-number" data-event-id="choose-a-different-company-link">Choose a different company</a>
+        </p>
+      </form>
+    </div>
+  </div>
+{% endblock %}

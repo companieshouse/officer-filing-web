@@ -31,3 +31,5 @@ typings/
 
 # IDE
 .idea/
+
+dist/

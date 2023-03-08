@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+{% if errorList.length > 0 %}
+  Error:
+{% endif %}  Review the officers
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <form action="" method="post">
+        {% if officerErrorMsg %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+              {
+                text: officerErrorMsg,
+                href: "#active-officers"
+            }
+          ]
+          }) }}
+          {% set activeOfficersError = {
+            text: officerErrorMsg
+          }
+          %}
+        {% else %}
+          {% set activeOfficersError = false %}
+        {% endif %}
+
+        <span class="govuk-caption-xl gem-c-title__context">
+          Company Name
+        </span>
+        <h1 class="govuk-heading-l">Current directors</h1>
+
+        {% set directorHTML %}
+          {% include "includes/directors.html" %}
+        {% endset %}
+        {{ govukTable({
+          rows: [
+            [
+              {
+                html: directorHTML
+              }
+            ]
+          ]
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
