@@ -13,7 +13,7 @@ describe("start controller tests", () => {
   it("should return start page", async () => {
     const response = "TODO ..."
 
-    expect(response.text).toContain("TODO");
+    expect(response).toContain("TODO");
   });
 
 
