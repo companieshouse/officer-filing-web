@@ -28,9 +28,9 @@ export const CONTAINS_SUBMISSION_ID = `/submission/:${urlParams.PARAM_SUBMISSION
 export const ACCESSIBILITY_STATEMENT = SEPARATOR + Templates.ACCESSIBILITY_STATEMENT;
 export const ACCOUNTS_SIGNOUT_PATH = `${ACCOUNT_URL}/signout`;
 export const CONFIRM_COMPANY = SEPARATOR + Templates.CONFIRM_COMPANY;
-export const OFFICER_FILING = "/officer-filing";
+export const OFFICER_FILING = "/officer-filing-web";
 export const COMPANY_NUMBER = "/company-number";
-export const COMPANY_LOOKUP = "/company-lookup/search?forward=/officer-filing/confirm-company?companyNumber={companyNumber}";
+export const COMPANY_LOOKUP = "/company-lookup/search?forward=/officer-filing-web/confirm-company?companyNumber={companyNumber}";
 export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
 export const SIGNOUT_PATH = "/signout";
 export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "transaction";
