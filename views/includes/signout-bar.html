@@ -1,5 +1,5 @@
 {% if userEmail %}
-    {% set signoutURL = signoutURL | default("/officer-filing/signout") %}
+    {% set signoutURL = signoutURL | default("/officer-filing-web/signout") %}
     {% set email = userEmail | default("Not signed in") %}
     <ul class="js-signout" id="navigation">
         <li class="content-email" id="signed-in-user">{{email}}</li>
