@@ -3,6 +3,7 @@ import * as nunjucks from "nunjucks";
 import * as path from "path";
 import { router } from "./routes/routes";
 import * as urls from "./types/page.urls";
+import pageNotFound from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
@@ -24,8 +25,8 @@ const nunjucksEnv = nunjucks.configure([
 });
 
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
-//nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
-//nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
+nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
+nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 
 app.enable("trust proxy");
 app.use(express.json());
@@ -52,7 +53,7 @@ app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuth
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
-//app.use(errorHandler);
+app.use(pageNotFound);
 
 logger.info("Officer filing Web has started");
 export default app;
