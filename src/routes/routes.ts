@@ -4,6 +4,7 @@ import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
 import * as activeOfficers from "../controllers/active.officers.controller";
+import * as removeDirector from "../controllers/remove.director.controller";
 import * as urls from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { logger } from "../utils/logger"
@@ -31,3 +32,6 @@ router.get(urls.CREATE_TRANSACTION, createTransactionRoute.get);
 
 router.get(urls.ACTIVE_OFFICERS, activeOfficers.get);
 router.post(urls.ACTIVE_OFFICERS, activeOfficers.post);
+
+router.get(urls.REMOVE_DIRECTOR, removeDirector.get);
+router.post(urls.REMOVE_DIRECTOR, removeDirector.post);

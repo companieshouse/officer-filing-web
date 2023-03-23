@@ -4,5 +4,6 @@ export enum Templates {
   SIGNOUT = "signout",
   START = "start",
   CONFIRM_COMPANY = "confirm-company",
+  REMOVE_DIRECTOR = "remove-director",
   
 }
