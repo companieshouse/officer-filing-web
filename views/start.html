@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% block pageTitle %}
   File a Director termination - Companies House
@@ -24,28 +25,37 @@
         Remove a company director
       </h1>
 
+      {% if FEATURE_FLAG_REMOVE_DIRECTOR_20022023 === "true" %}
+        <p class="govuk-body">Use this service to remove (terminate the appointment of) a director of a limited company on the Companies House register, including corporate directors.</p>
 
-        {% if FEATURE_FLAG_REMOVE_DIRECTOR_20022023 === "true" %}
-        <p class="govuk-body-l">Use this service to remove a director of a limited company on the Companies House register, including corporate directors.</p>
-        <p class="govuk-body govuk-!-font-weight-bold">You'll need:</p>
+        {% set corporateDetails %}
+        <p>This is a company, firm, or any other kind of corporate body that is appointed as the director of another company.</p>
+        <p>For example, COMPANY 1 LIMITED could be the corporate director of COMPANY 2 LIMITED.</p>
+        {% endset %}
+
+        {{ govukDetails({
+          summaryHtml: '<div data-event-id="start-now-accordion-expansion"> What a corporate director is</div>',
+          html: corporateDetails
+        }) }}
+
+        <p class="govuk-body">You'll need:</p>
         <ul class="govuk-list govuk-list--bullet">
-
           <li>to sign in to or create a Companies House account</li>
           <li>the company number</li>
-          <li>the <a href="{{CHS_URL}}" data-event-id="check-company-details-link">company authentication code</a> </li>
+          <li>the <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link">company authentication code</a> </li>
           <li>the date the director was removed from the company</li>
+        </ul>
 
-        <a href="/officer-filing-web/company-number" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+        <a href="/officer-filing-web/company-number" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
           Start now
           <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
             <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
           </svg>
         </a>
-        {% else %}
-          <li>This service is not yet active</li>
-        {% endif %}
-        </ul>
+      {% else %}
+        <li>This service is not yet active</li>
+      {% endif %}
 
-      </div>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}

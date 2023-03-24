@@ -1,6 +1,7 @@
 export default () => {
   process.env.ACCOUNT_URL = 'http://account.chs.local'
   process.env.API_URL = "http://localhost:8080";
+  process.env.INTERNAL_API_URL = "http://localhost:9333";
   process.env.CACHE_SERVER = "cache_server";
   process.env.CDN_HOST = "CDN_HOST";
   process.env.CHS_API_KEY = "12345";
