@@ -24,8 +24,8 @@ const nunjucksEnv = nunjucks.configure([
 });
 
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
-//nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
-//nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
+nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
+nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 
 app.enable("trust proxy");
 app.use(express.json());
@@ -39,7 +39,6 @@ app.set("view engine", "html");
 app.use(cookieParser());
 //app.use(serviceAvailabilityMiddleware);
 
-
 app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 
 
@@ -47,7 +46,6 @@ app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/.+");
 app.use(userAuthRegex, authenticationMiddleware);
 app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
-
 
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing

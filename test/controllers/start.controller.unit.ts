@@ -11,10 +11,19 @@ describe("start controller tests", () => {
   });
 
   it("should return start page", async () => {
-    const response = "TODO ..."
+    const response = await request(app)
+      .get("/officer-filing-web");
 
-    expect(response).toContain("TODO");
+    expect(response.text).toContain(EXPECTED_TEXT);
+    expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
   });
 
+  it("should return start page when url has trailing slash", async () => {
+    const response = await request(app)
+      .get("/officer-filing-web/");
+
+    expect(response.text).toContain(EXPECTED_TEXT);
+    expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+  });
 
 });
