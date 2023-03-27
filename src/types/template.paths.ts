@@ -5,6 +5,7 @@ export enum Templates {
   START = "start",
   ERROR_404 = "page-not-found",
   SERVICE_OFFLINE_MID_JOURNEY = "service-offline-mid-journey",
-  CONFIRM_COMPANY = "confirm-company"
-  
+  CONFIRM_COMPANY = "confirm-company",
+  REMOVE_DIRECTOR = "remove-director"
+
 }
