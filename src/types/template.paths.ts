@@ -6,6 +6,7 @@ export enum Templates {
   ERROR_404 = "page-not-found",
   SERVICE_OFFLINE_MID_JOURNEY = "service-offline-mid-journey",
   CONFIRM_COMPANY = "confirm-company",
-  REMOVE_DIRECTOR = "remove-director"
-
+  REMOVE_DIRECTOR = "remove-director",
+  REMOVE_DIRECTOR_CHECK_ANSWERS = "remove-director-check-answers",
+  ERROR_404 = "page-not-found"
 }
