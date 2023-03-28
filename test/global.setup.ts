@@ -11,7 +11,6 @@ export default () => {
   process.env.EWF_URL = "https://ewf.companieshouse.gov.uk/";
   process.env.FEATURE_FLAG_REMOVE_DIRECTOR_20022023 = "true";
   process.env.INTERNAL_API_URL = "http://localhost:9333";
-  process.env.LOGLEVEL=DEBUG;
   process.env.NODE_ENV = "development";
   process.env.PIWIK_SITE_ID = "999";
   process.env.PIWIK_START_GOAL_ID = "3";
