@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Removal submitted
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+      <form action="" method="post">
+        {{ govukPanel({
+          titleText: "Removal of director submitted",
+          html: "Reference number<br><strong>HDJ2123F</strong>"
+        }) }}
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Company Number"
+              },
+              value: {
+                text: ""
+              }
+            },
+            {
+              key: {
+                text: "Company name"
+              },
+              value: {
+                text: ""
+              }
+            },
+            {
+              key: {
+                text: "Name of director"
+              },
+              value: {
+                html: ""
+              }
+            },
+            {
+              key: {
+                text: "Date removed"
+              },
+              value: {
+                html: ""
+              }
+            }
+          ]
+        }) }}
+
+        <h3 class="govuk-heading-m">What happens next</h3>
+
+        <p class="govuk-body">We'll send a confirmation email to
+          <strong></strong>
+          which contains your reference number.</p>
+
+          <p class="govuk-body">We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.</p>
+
+          <p class="govuk-body">If it's accepted, we'll add it to the company's filing history on the <a href="https://find-and-update.company-information.service.gov.uk/">Companies House register</a>. If it's rejected, we'll email you to let you know what to do next.</p>
+
+          <h2 class="govuk-heading-m">What do you want to do next?</h2>
+
+          <ul class="govuk-list govuk-list--spaced">
+            <li>
+              <a href="/officer-filing-web/company/00006400/transaction/135075-941116-795019/submission/1/active-officers" class="govuk-link govuk-link--no-visited-state">Remove another director from the same company</a>
+            </li>
+            <li>
+              <a href="http://chs.local/company-lookup/search?forward=/officer-filing-web/confirm-company?companyNumber=%7BcompanyNumber%7D" class="govuk-link govuk-link--no-visited-state">Remove another director from a different company</a>
+            </li>
+          </ul>
+
+          <h3 class="govuk-heading-m">Feedback</h3>
+
+          <p class="govuk-body">This is a new service. Help us improve it by completing our <a href="https://www.smartsurvey.co.uk/s/directors-conf/" class="govuk-link govuk-link--no-visited-state">quick survey</a>.</p>
+
+
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

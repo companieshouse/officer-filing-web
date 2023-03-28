@@ -8,5 +8,6 @@ export enum Templates {
   CONFIRM_COMPANY = "confirm-company",
   REMOVE_DIRECTOR = "remove-director",
   REMOVE_DIRECTOR_CHECK_ANSWERS = "remove-director-check-answers",
+  REMOVE_DIRECTOR_SUBMITTED = "remove-director-submitted",
   ERROR_404 = "page-not-found"
 }

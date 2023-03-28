@@ -6,6 +6,7 @@ import * as createTransactionRoute from "../controllers/create.transaction.contr
 import * as activeOfficers from "../controllers/active.officers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
+import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { logger } from "../utils/logger"
@@ -39,3 +40,5 @@ router.post(urls.REMOVE_DIRECTOR, removeDirector.post);
 
 router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);
+
+router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
