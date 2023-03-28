@@ -40,7 +40,6 @@ app.set("view engine", "html");
 app.use(cookieParser());
 //app.use(serviceAvailabilityMiddleware);
 
-
 app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 
 
@@ -48,7 +47,6 @@ app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/.+");
 app.use(userAuthRegex, authenticationMiddleware);
 app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
-
 
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
