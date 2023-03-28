@@ -24,8 +24,8 @@ const nunjucksEnv = nunjucks.configure([
 });
 
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
-nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
+nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 
 app.enable("trust proxy");
 app.use(express.json());
