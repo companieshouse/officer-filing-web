@@ -59,5 +59,11 @@ export const NO_FILING_REQUIRED = "/no-filing-required";
 export const NO_FILING_REQUIRED_PATH = OFFICER_FILING + NO_FILING_REQUIRED + `?${URL_QUERY_PARAM.COMPANY_NUM}={${URL_QUERY_PARAM.COMPANY_NUM}}`;
 export const REMOVE_DIRECTOR = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director";
 export const REMOVE_DIRECTOR_PATH = OFFICER_FILING + REMOVE_DIRECTOR;
+//Hardcoded for now
+//export const REMOVE_DIRECTOR_CHECK_ANSWERS = ACTIVE_SUBMISSION_BASE + "remove-director-check-answers";
+//export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
+export const REMOVE_DIRECTOR_CHECK_ANSWERS = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-check-answers";
+export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
+
 
 
