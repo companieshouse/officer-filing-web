@@ -20,7 +20,7 @@
             errorList: [
               {
                 text: officerErrorMsg,
-                href: "#active-officers"
+                href: "#active-directors"
             }
           ]
           }) }}
@@ -40,14 +40,14 @@
         {% set directorHTML %}
           {% include "includes/directors.html" %}
         {% endset %}
+
+        {% set officerRows = [] %}
+        {% if directorsList|length %}
+        {% set officerRows = (officerRows.push([{html: directorHTML}]), officerRows) %}
+        {% endif %}
+
         {{ govukTable({
-          rows: [
-            [
-              {
-                html: directorHTML
-              }
-            ]
-          ]
+          rows: officerRows
         }) }}
 
       </form>
