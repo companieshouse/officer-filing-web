@@ -17,11 +17,17 @@ export const formatForDisplay = (companyProfile: CompanyProfile): CompanyProfile
   companyProfile.type = lookupCompanyType(companyProfile.type);
   companyProfile.companyStatus = lookupCompanyStatus(companyProfile.companyStatus);
   companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation);
+  companyProfile.registeredOfficeAddress.premises = formatTitleCase(companyProfile.registeredOfficeAddress.premises);
   companyProfile.registeredOfficeAddress.addressLineOne = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineOne);
+  companyProfile.registeredOfficeAddress.addressLineTwo = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineTwo);
   companyProfile.registeredOfficeAddress.locality = formatTitleCase(companyProfile.registeredOfficeAddress.locality);
   companyProfile.registeredOfficeAddress.region = formatTitleCase(companyProfile.registeredOfficeAddress.region);
+  companyProfile.registeredOfficeAddress.country = formatTitleCase(companyProfile.registeredOfficeAddress.country);
   if(companyProfile.registeredOfficeAddress.postalCode != null){
     companyProfile.registeredOfficeAddress.postalCode = companyProfile.registeredOfficeAddress.postalCode.toUpperCase();
+  }
+  if(companyProfile.registeredOfficeAddress.poBox != null){
+    companyProfile.registeredOfficeAddress.poBox = companyProfile.registeredOfficeAddress.poBox.toUpperCase();
   }
   return companyProfile;
 };

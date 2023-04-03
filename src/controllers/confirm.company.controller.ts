@@ -21,8 +21,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile): Promise<Object> => {
   companyProfile = formatForDisplay(companyProfile);
-  var addressArray: string[] = [companyProfile.registeredOfficeAddress.addressLineOne,
-    companyProfile.registeredOfficeAddress.locality, companyProfile.registeredOfficeAddress.region,
+  var addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
+    companyProfile.registeredOfficeAddress.premises, companyProfile.registeredOfficeAddress.addressLineOne,
+    companyProfile.registeredOfficeAddress.addressLineTwo, companyProfile.registeredOfficeAddress.locality,
+    companyProfile.registeredOfficeAddress.region, companyProfile.registeredOfficeAddress.country,
     companyProfile.registeredOfficeAddress.postalCode]
   const address = buildAddress(addressArray);
   const pageOptions = {
