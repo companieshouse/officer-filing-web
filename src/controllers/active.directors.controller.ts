@@ -22,8 +22,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
-      directorsList: officerLists.directorList,
-      corporateDirectorList: officerLists.corporateDirectorList
+      directorsList: officerLists.directorsList,
+      corporateDirectorsList: officerLists.corporateDirectorsList
     });
   } catch (e) {
     return next(e);
@@ -47,29 +47,19 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const buildDirectorList = (officers: ActiveOfficerDetails[]): any[] => {
+const buildDirectorsList = (officers: ActiveOfficerDetails[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.role, OFFICER_ROLE.DIRECTOR) && !officer.isCorporate)
-    .map(officer => {
-      return {
-        officer
-      };
-    });
+    .filter(officer => equalsIgnoreCase(officer.role, OFFICER_ROLE.DIRECTOR) && !officer.isCorporate);
 };
 
-const buildCorporateOfficerList = (officers: ActiveOfficerDetails[], wantedOfficerRole: OFFICER_ROLE): any[] => {
+const buildCorporateDirectorsList = (officers: ActiveOfficerDetails[], wantedOfficerRole: OFFICER_ROLE): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.role, wantedOfficerRole) && officer.isCorporate)
-    .map(officer => {
-      return {
-        officer
-      };
-    });
+    .filter(officer => equalsIgnoreCase(officer.role, wantedOfficerRole) && officer.isCorporate);
 };
 
 const buildOfficerLists = (officers: ActiveOfficerDetails[]): any => {
   return {
-    directorList: buildDirectorList(officers),
-    corporateDirectorList: buildCorporateOfficerList(officers, OFFICER_ROLE.DIRECTOR),
+    directorsList: buildDirectorsList(officers),
+    corporateDirectorsList: buildCorporateDirectorsList(officers, OFFICER_ROLE.DIRECTOR),
   };
 };

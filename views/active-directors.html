@@ -41,9 +41,16 @@
           {% include "includes/directors.html" %}
         {% endset %}
 
+        {% set corporateDirectorsHTML %}
+        {% include "includes/corporate-directors.html" %}
+        {% endset %}
+
         {% set officerRows = [] %}
         {% if directorsList|length %}
         {% set officerRows = (officerRows.push([{html: directorHTML}]), officerRows) %}
+        {% endif %}
+        {% if corporateDirectorsList|length %}
+        {% set officerRows = (officerRows.push([{html: corporateDirectorsHTML}]), officerRows) %}
         {% endif %}
 
         {{ govukTable({
