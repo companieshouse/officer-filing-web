@@ -4,6 +4,7 @@ import * as path from "path";
 import { router } from "./routes/routes";
 import * as urls from "./types/page.urls";
 import pageNotFound from "./controllers/error.controller";
+import errorHandler from "./controllers/error.controller";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
@@ -51,7 +52,7 @@ app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuth
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
-app.use(pageNotFound);
+app.use(errorHandler, pageNotFound);
 
 logger.info("Officer filing Web has started");
 export default app;
