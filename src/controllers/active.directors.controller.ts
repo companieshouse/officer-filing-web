@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CONFIRM_COMPANY_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
+import { buildPaginationData } from '../utils/pagination';
+import { RESULTS_PER_PAGE } from '../config/index';
+
 import {
   DIRECTOR_DETAILS_ERROR,
   OFFICER_ROLE } from "../utils/constants";
@@ -19,12 +22,23 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const directors: ActiveOfficerDetails[] = await getListActiveDirectorDetails(session, transactionId);
     const officerLists = buildOfficerLists(directors);
 
-    return res.render(Templates.ACTIVE_DIRECTORS, {
+    const { itemsPerPage = 0, startIndex = 0, totalResults = 0 } = officerLists.resource || {};
+    let pagination;
+    if (totalResults > 0 && itemsPerPage > 0) {
+      const numOfPages = Math.ceil(totalResults / RESULTS_PER_PAGE);
+      pagination = buildPaginationData(startIndex + 1, numOfPages, "activeDirectors");
+    }
+    return res.render(Templates.ACTIVE_DIRECTORS, { 
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
       directorsList: officerLists.directorsList,
-      corporateDirectorsList: officerLists.corporateDirectorsList
+      corporateDirectorsList: officerLists.corporateDirectorsList, 
+      pagination, 
+      itemsPerPage, 
+      startIndex, 
+      totalResults
     });
+
   } catch (e) {
     return next(e);
   }
