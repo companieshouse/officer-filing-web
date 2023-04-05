@@ -8,7 +8,7 @@ import {
   import {
     equalsIgnoreCase
   } from "../utils/format";
-import { ActiveOfficerDetails } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 
@@ -16,7 +16,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const directors: ActiveOfficerDetails[] = await getListActiveDirectorDetails(session, transactionId);
+    const directors: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const officerLists = buildOfficerLists(directors);
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
@@ -47,19 +47,19 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const buildDirectorsList = (officers: ActiveOfficerDetails[]): any[] => {
+const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.role, OFFICER_ROLE.DIRECTOR) && !officer.isCorporate);
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR || OFFICER_ROLE.NOMINEE_DIRECTOR));
 };
 
-const buildCorporateDirectorsList = (officers: ActiveOfficerDetails[], wantedOfficerRole: OFFICER_ROLE): any[] => {
+const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.role, wantedOfficerRole) && officer.isCorporate);
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR || OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR));
 };
 
-const buildOfficerLists = (officers: ActiveOfficerDetails[]): any => {
+const buildOfficerLists = (officers: CompanyOfficer[]): any => {
   return {
     directorsList: buildDirectorsList(officers),
-    corporateDirectorsList: buildCorporateDirectorsList(officers, OFFICER_ROLE.DIRECTOR),
+    corporateDirectorsList: buildCorporateDirectorsList(officers),
   };
 };

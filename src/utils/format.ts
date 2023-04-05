@@ -1,5 +1,5 @@
 import { RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { ActiveOfficerDetails, Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer, Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN } from "./constants";
 
 

@@ -29,7 +29,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     await createNewOfficerFiling(session);
-    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, "00006400");
+    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, "01777777");
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);

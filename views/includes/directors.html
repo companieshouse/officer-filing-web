@@ -2,11 +2,7 @@
 <div class="govuk-summary-card govuk-!-margin-bottom-4">
     <div class="govuk-summary-card_heading govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-padding-right-3 govuk-!-padding-left-3" style="display: flex; justify-content: space-between; align-items: center; color: govuk-colour("light-grey")">
       <p class="govuk-!-font-weight-bold govuk-!-margin-0">
-        {{director.surname}},
-          {{director.foreName1}}
-        {% if director.foreName2 %}
-          {{director.foreName2}}
-        {% endif %}
+        {{director.name}}
       </p>
     </div>
     <div style="display: flex" class="govuk-!-padding-1">
@@ -14,23 +10,25 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Role</dt>
           <dd class="govuk-summary-list__value">
-            <p>{{director.role}}</p>
+            <p>{{director.officerRole}}</p>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Date of birth</dt>
           <dd class="govuk-summary-list__value">
-            <p>{{director.dateOfBirth}}</p>
+            <p>{{director.dateOfBirth.month}}
+              {{director.dateOfBirth.year}}
+            </p>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Appointment on</dt>
           <dd class="govuk-summary-list__value">
-            <p>{{director.dateOfAppointment}}</p>
+            <p>{{director.appointedOn}}</p>
           </dd>
         </div>
         <div class="govuk-!-padding-top-6">
-          <a href="/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
+          <a href="/officer-filing-web/company/01777777/transaction/020002-120116-793219/submission/1/remove-director" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
         </div>
       </dl>
     </div>
