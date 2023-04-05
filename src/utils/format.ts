@@ -18,7 +18,12 @@ export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string 
   if (!dateOfBirth) {
     return "";
   }
-  let parseDateOfBirth = new Date(parseInt(dateOfBirth.year), parseInt(dateOfBirth.month));
+
+  if (parseInt(dateOfBirth.month) < 1 || parseInt(dateOfBirth.month) > 12 ) {
+    return "";
+  }
+
+  let parseDateOfBirth = new Date(parseInt(dateOfBirth.year), (parseInt(dateOfBirth.month) - 1));
   
   let dateOfBirthStr = parseDateOfBirth.toLocaleString('default', {month: 'long'}) +
       ' ' + parseDateOfBirth.getFullYear();
@@ -33,7 +38,11 @@ export const formatAppointmentDate = (appointedOn: string | undefined): string =
 
   let appointedOnSplit = appointedOn.split("-");
 
-  let parseAppointedOn = new Date(parseInt(appointedOnSplit[0]), parseInt(appointedOnSplit[1]),  parseInt(appointedOnSplit[2]));
+  if (parseInt(appointedOnSplit[1]) < 1 || parseInt(appointedOnSplit[1]) > 12 ) {
+    return "";
+  }
+
+  let parseAppointedOn = new Date(parseInt(appointedOnSplit[0]), (parseInt(appointedOnSplit[1]) - 1),  parseInt(appointedOnSplit[2]));
   
   let appointmentDateStr = parseAppointedOn.getDate() + ' ' + parseAppointedOn.toLocaleString('default', {month: 'long'}) +
       ' ' + parseAppointedOn.getFullYear();
