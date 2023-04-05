@@ -6,7 +6,10 @@ import {
   DIRECTOR_DETAILS_ERROR,
   OFFICER_ROLE } from "../utils/constants";
   import {
-    equalsIgnoreCase
+    equalsIgnoreCase,
+    formatTitleCase,
+    formatDateOfBirth,
+    formatAppointmentDate
   } from "../utils/format";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { Session } from "@companieshouse/node-session-handler";
@@ -49,12 +52,27 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR || OFFICER_ROLE.NOMINEE_DIRECTOR));
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR || OFFICER_ROLE.NOMINEE_DIRECTOR))
+    .map(officer => {
+      return {
+        name: officer.name,
+        officerRole: formatTitleCase(officer.officerRole),
+        dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
+        appointedOn: formatAppointmentDate(officer.appointedOn)
+      };
+    });
 };
 
 const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR || OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR));
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR || OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
+    .map(officer => {
+      return {
+        name: officer.name,
+        officerRole: formatTitleCase(officer.officerRole),
+        appointedOn: formatAppointmentDate(officer.appointedOn)
+      };
+    });
 };
 
 const buildOfficerLists = (officers: CompanyOfficer[]): any => {
