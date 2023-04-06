@@ -58,6 +58,7 @@ describe("Confirm company controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
     const response = await request(app)
       .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+    console.log(response.body);
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual("/officer-filing-web/company/" + companyNumber + "/transaction");
   });
