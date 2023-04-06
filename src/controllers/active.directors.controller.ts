@@ -12,21 +12,26 @@ import {
     formatAppointmentDate
   } from "../utils/format";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
+import { getCompanyProfile } from "../services/company.profile.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const directors: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
+    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerLists = buildOfficerLists(directors);
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
       directorsList: officerLists.directorsList,
-      corporateDirectorsList: officerLists.corporateDirectorsList
+      corporateDirectorsList: officerLists.corporateDirectorsList,
+      company: companyProfile
     });
   } catch (e) {
     return next(e);
