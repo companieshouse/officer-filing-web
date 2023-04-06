@@ -45,9 +45,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     //TODO discuss proper implementation of company number verification
     if(companyNumber.length > 12){
       throw Error("Company number was greater than 12 characters");
+    } else {
+      const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+      return res.redirect(nextPageUrl);
     }
-    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-    return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }
