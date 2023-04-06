@@ -26,16 +26,16 @@ describe("Error controller test", () => {
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
 
-//   it("Should render the error page", async () => {
-//     const message = "Can't connect";
-//     mocks.mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
-//       return next(new Error(message));
-//     });
-//     const response = await request(app)
-//       .get(CONFIRM_COMPANY_PATH);
-//
-//     expect(response.status).toEqual(500);
-//     expect(response.text).toContain("Sorry, the service is unavailable");
-//     expect(mockLoggerErrorRequest.mock.calls[0][1]).toContain(message);
-//   });
+  it("Should render the error page", async () => {
+    const message = "Can't connect";
+    mocks.mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
+      return next(new Error(message));
+    });
+    const response = await request(app)
+      .get(CONFIRM_COMPANY_PATH);
+
+    expect(response.status).toEqual(500);
+    expect(response.text).toContain("Sorry, there is a problem with the service");
+    expect(mockLoggerErrorRequest.mock.calls[0][1]).toContain(message);
+  });
 });
