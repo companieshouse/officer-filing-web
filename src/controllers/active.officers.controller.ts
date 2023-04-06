@@ -38,6 +38,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
       });
   } catch (e) {
+    console.log("A lovely harmless test message");
     return next(e);
   }
 };
