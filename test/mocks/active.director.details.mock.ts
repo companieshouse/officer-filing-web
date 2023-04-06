@@ -39,3 +39,48 @@ export const mockCompanyOfficer: CompanyOfficer = {
   officerRole: "DIRECTOR",
   resignedOn: "04-01-2023",
 };
+
+export const mockCompanyOfficers: CompanyOfficer[] = [
+  {
+    address: mockAddress1,
+    appointedOn: "01-03-2022",
+    countryOfResidence: "UNITED KINGDOM",
+    dateOfBirth: dateOfBirth,
+    formerNames: undefined,
+    identification: undefined,
+    links: companyOfficerLinks,
+    name: "JOHN MiddleName DOE",
+    nationality: "British",
+    occupation: "singer",
+    officerRole: "DIRECTOR",
+    resignedOn: "04-01-2023",
+  },
+  {
+    address: mockAddress1,
+    appointedOn: "11-05-2019",
+    countryOfResidence: "UNITED KINGDOM",
+    dateOfBirth: dateOfBirth,
+    formerNames: undefined,
+    identification: undefined,
+    links: companyOfficerLinks,
+    name: "JANE SMITH",
+    nationality: "British",
+    occupation: "designer",
+    officerRole: "DIRECTOR",
+    resignedOn: undefined,
+  },
+  {
+    address: mockAddress1,
+    appointedOn: "03-11-2020",
+    countryOfResidence: "UNITED KINGDOM",
+    dateOfBirth: dateOfBirth,
+    formerNames: undefined,
+    identification: undefined,
+    links: companyOfficerLinks,
+    name: "BIG CORP",
+    nationality: "British",
+    occupation: "company",
+    officerRole: "CORPORATE_DIRECTOR",
+    resignedOn: undefined,
+  }
+];
