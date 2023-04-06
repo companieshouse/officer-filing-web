@@ -7,7 +7,7 @@
 const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
     const isMandatory = !defaultValue;
     const value: string = process.env[key] || "";
-  
+    console.log("Test test")
     if (!value && isMandatory) {
       throw new Error(`Please set the environment variable "${key}"`);
     }
