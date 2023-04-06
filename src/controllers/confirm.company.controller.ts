@@ -37,7 +37,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 };
 
 export const isValidUrl = (url: string) => { 
-  return nextPageUrl.startsWith("/officer-filing-web/company")
+  return url.startsWith("/officer-filing-web/company")
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
