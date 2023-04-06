@@ -36,9 +36,8 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
   };
 };
 
-export const isValidCompanyNumber = (companyNumber: string) => { 
-  //TODO discuss proper implementation of company number verification
-  return (companyNumber.length <= 12);
+export const isValidUrl = (url: string) => { 
+  return nextPageUrl.startsWith("/officer-filing-web/company")
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
@@ -47,14 +46,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     await createNewOfficerFiling(session);
     const companyNumber = req.query.companyNumber as string;
-    if(isValidCompanyNumber(companyNumber)) {
-      const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-      console.log(nextPageUrl);
-      if(nextPageUrl.startsWith("/company")) {
-        return res.redirect(nextPageUrl);
-      }
+    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+    console.log(nextPageUrl);
+    if(isValidUrl(nextPageUrl)) {
+      return res.redirect(nextPageUrl);
     } else {
-      throw Error("Company number was greater than 12 characters");
+      throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
     }
   } catch (e) {
     return next(e);
