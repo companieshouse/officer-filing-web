@@ -47,7 +47,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     await createNewOfficerFiling(session);
     const companyNumber = req.query.companyNumber as string;
     const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-    console.log(nextPageUrl);
     if(isValidUrl(nextPageUrl)) {
       return res.redirect(nextPageUrl);
     } else {
