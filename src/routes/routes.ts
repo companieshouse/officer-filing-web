@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import * as startRoute from "../controllers/start.controller";
+import * as signoutRoute from "../controllers/signout.controller";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
@@ -42,3 +43,6 @@ router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);
 
 router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
+
+router.get(urls.SIGNOUT_PATH, signoutRoute.get);
+router.post(urls.SIGNOUT_PATH, signoutRoute.post);

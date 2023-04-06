@@ -33,3 +33,4 @@ typings/
 .idea/
 
 dist/
+coverage/
