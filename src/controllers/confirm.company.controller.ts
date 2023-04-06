@@ -29,13 +29,11 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     companyProfile.registeredOfficeAddress.region, companyProfile.registeredOfficeAddress.country,
     companyProfile.registeredOfficeAddress.postalCode]
   const address = buildAddress(addressArray);
-  const pageOptions = {
+  return {
     company: companyProfile,
     address: address,
     templateName: Templates.CONFIRM_COMPANY
   };
-
-  return pageOptions;
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
