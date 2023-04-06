@@ -49,7 +49,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     if(isValidCompanyNumber(companyNumber)) {
       const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-      return res.redirect(nextPageUrl);
+      if(nextPageUrl.contains("company")) {
+        return res.redirect(nextPageUrl);
+      }
     } else {
       throw Error("Company number was greater than 12 characters");
     }
