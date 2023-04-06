@@ -9,7 +9,8 @@ import { createAndLogError } from "../../src/utils/logger";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { toReadableFormat } from "../../src/utils/date";
 import { lookupCompanyStatus, lookupCompanyType } from "../../src/utils/api.enumerations";
-import { formatForDisplay } from "../../src/services/confirm.company.service";
+import { buildAddress, formatForDisplay } from "../../src/services/confirm.company.service";
+import { add } from "winston";
 
 const mockCreateApiClient = createApiClient as jest.Mock;
 const mockGetCompanyProfile = jest.fn();
@@ -56,5 +57,14 @@ const clone = (objectToClone: any): any => {
 
       expect(mockLookupCompanyStatus).toBeCalledWith(validCompanyProfile.companyStatus);
       expect(formattedCompanyProfile.companyStatus).toEqual(formattedCompanyStatus);
+    });
+
+    
+});
+
+    describe("buildAddress tests", () => {
+      it("Should produce HTML splitting the address entries one per line", () => {
+      const address = buildAddress(new Array("Line1", "Line2", "Line3"));
+      expect(address).toEqual("Line1<br>Line2<br>Line3<br>")
     });
 });
