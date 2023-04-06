@@ -36,7 +36,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
   };
 };
 
-export isValidCompanyNumber = (companyNumber: string) => { 
+export const isValidCompanyNumber = (companyNumber: string) => { 
   //TODO discuss proper implementation of company number verification
   return (companyNumber.length > 12);
 };
