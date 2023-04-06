@@ -49,7 +49,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     if(isValidCompanyNumber(companyNumber)) {
       const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-      if(nextPageUrl.contains("company")) {
+      console.log(nextPageUrl);
+      if(nextPageUrl.startsWith("/company")) {
         return res.redirect(nextPageUrl);
       }
     } else {
