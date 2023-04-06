@@ -6,6 +6,7 @@ import {CREATE_TRANSACTION_PATH} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
+import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,6 +16,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const pageOptions = await buildPageOptions(session, companyProfile);
     return res.render(Templates.CONFIRM_COMPANY, pageOptions);
   } catch (e) {
+    logger.debug(`Confirm company controller hit exception` + e);
     return next(e);
   }
 };

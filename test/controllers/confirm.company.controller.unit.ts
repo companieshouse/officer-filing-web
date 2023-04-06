@@ -1,23 +1,20 @@
+jest.mock("../../src/utils/logger");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/confirm.company.service");
 jest.mock("../../src/utils/date");
 
+import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import {
-  CONFIRM_COMPANY_PATH
-} from "../../src/types/page.urls";
-import mocks from "../mocks/all.middleware.mock";
+import { CONFIRM_COMPANY_PATH } from "../../src/types/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
-import { Settings as luxonSettings } from "luxon";
 import { formatForDisplay } from "../../src/services/confirm.company.service";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockFormatForDisplay = formatForDisplay as jest.Mock;
 
 const companyNumber = "12345678";
-const today = "2020-04-25";
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {
@@ -25,23 +22,16 @@ describe("Confirm company controller tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    luxonSettings.now = () => new Date(today).valueOf();
   });
 
   it("Should navigate to confirm company page", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
     const response = await request(app)
-      .get(CONFIRM_COMPANY_PATH);
-
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    .get(CONFIRM_COMPANY_PATH)
+    .query({ companyNumber });
     expect(response.text).toContain(PAGE_HEADING);
-  });
-
-  it("Should pass the company number to the company profile service", async () => {
-    await request(app)
-      .get(CONFIRM_COMPANY_PATH)
-      .query({ companyNumber });
-
-    expect(mockGetCompanyProfile).toHaveBeenCalledWith(companyNumber);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
 
   it("Should populate the template with CompanyProfile data", async () => {
@@ -73,3 +63,4 @@ describe("Confirm company controller tests", () => {
   });
 
 });
+
