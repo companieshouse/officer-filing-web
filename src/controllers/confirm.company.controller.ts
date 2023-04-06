@@ -44,6 +44,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     await createNewOfficerFiling(session);
     const companyNumber = req.query.companyNumber as string;
+    //TODO discuss proper implementation of company number verification
+    if(companyNumber.length > 12){
+      throw Error("Company number was greater than 12 characters");
+    }
     const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
     return res.redirect(nextPageUrl);
   } catch (e) {
