@@ -38,8 +38,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const isValidCompanyNumber = (companyNumber: string) => { 
   //TODO discuss proper implementation of company number verification
-  console.log("Validating company number:" + companyNumber);
-  return (companyNumber.length > 12);
+  return (companyNumber.length <= 12);
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
