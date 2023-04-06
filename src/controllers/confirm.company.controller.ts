@@ -36,18 +36,22 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
   };
 };
 
+export isValidCompanyNumber = (companyNumber: string) => { 
+  //TODO discuss proper implementation of company number verification
+  return (companyNumber.length > 12);
+};
+
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
 
     await createNewOfficerFiling(session);
     const companyNumber = req.query.companyNumber as string;
-    //TODO discuss proper implementation of company number verification
-    if(companyNumber.length > 12){
-      throw Error("Company number was greater than 12 characters");
-    } else {
+    if(isValidCompanyNumber(companyNumber)) {
       const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
       return res.redirect(nextPageUrl);
+    } else {
+      throw Error("Company number was greater than 12 characters");
     }
   } catch (e) {
     return next(e);
