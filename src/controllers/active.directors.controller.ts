@@ -57,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR || OFFICER_ROLE.NOMINEE_DIRECTOR))
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
     .map(officer => {
       return {
         name: officer.name,
@@ -70,7 +70,7 @@ const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
 
 const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR || OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
+    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
     .map(officer => {
       return {
         name: officer.name,
