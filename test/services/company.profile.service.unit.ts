@@ -84,5 +84,4 @@ describe("Company profile service test", () => {
         });
     });
   });
-
 });
