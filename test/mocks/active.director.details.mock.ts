@@ -27,7 +27,7 @@ export const companyOfficerLinks: CompanyOfficerLinks = {
 
 export const mockCompanyOfficer: CompanyOfficer = {
   address: mockAddress1,
-  appointedOn: "01-03-2022",
+  appointedOn: "2022-03-01",
   countryOfResidence: "UNITED KINGDOM",
   dateOfBirth: dateOfBirth,
   formerNames: undefined,
@@ -37,13 +37,13 @@ export const mockCompanyOfficer: CompanyOfficer = {
   nationality: "British",
   occupation: "singer",
   officerRole: "DIRECTOR",
-  resignedOn: "04-01-2023",
+  resignedOn: "2023-01-04",
 };
 
 export const mockCompanyOfficers: CompanyOfficer[] = [
   {
     address: mockAddress1,
-    appointedOn: "01-03-2022",
+    appointedOn: "2022-03-01",
     countryOfResidence: "UNITED KINGDOM",
     dateOfBirth: dateOfBirth,
     formerNames: undefined,
@@ -57,7 +57,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
   },
   {
     address: mockAddress1,
-    appointedOn: "11-05-2019",
+    appointedOn: "2019-05-11",
     countryOfResidence: "UNITED KINGDOM",
     dateOfBirth: dateOfBirth,
     formerNames: undefined,
@@ -71,7 +71,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
   },
   {
     address: mockAddress1,
-    appointedOn: "03-11-2020",
+    appointedOn: "2020-11-03",
     countryOfResidence: "UNITED KINGDOM",
     dateOfBirth: dateOfBirth,
     formerNames: undefined,
@@ -80,7 +80,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
     name: "BIG CORP",
     nationality: "British",
     occupation: "company",
-    officerRole: "CORPORATE_DIRECTOR",
+    officerRole: "CORPORATE-DIRECTOR",
     resignedOn: undefined,
   }
 ];
