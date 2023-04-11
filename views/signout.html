@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+    {% if noInputSelectedError %}Error: {% endif %}
+    Are you sure you want to sign out? - Remove a Company Director - GOV.UK
+{% endblock %}
+
+{% block header %}
+  {{ govukHeader({
+    homepageUrl: "https://www.gov.uk",
+    containerClasses: "govuk-width-container"})
+  }}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block signoutBar %}
+{# Remove signout bar on this page by replacing it with nothing #}
+{% endblock %}
+
+{% block content %}
+    {% if noInputSelectedError %}
+        {% set detailsErrorMsg = {
+            text: "Select yes if you want to sign out"
+        } %}
+
+        {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+                {
+                text: "Select yes if you want to sign out",
+                href: "#yes"
+                }
+            ]
+        }) }}
+    {% else %}
+        {% set detailsErrorMsg = false %}
+    {% endif %}
+
+    <form action="/officer-filing-web/signout" method="POST">
+        {{ govukRadios({
+            classes: "govuk-radios--inline",
+            idPrefix: "signout",
+            name: "signout",
+            errorMessage: detailsErrorMsg,
+            fieldset: {
+                legend: {
+                    html: "Are you sure you want to sign out?",
+                    classes: "govuk-fieldset__legend--l"
+                }
+            },
+            hint: {
+                text: "Your answers will not be saved. You will need to start again if you want to remove a company director."
+            },
+            items: [
+                {
+                    value: "yes",
+                    text: "Yes",
+                    attributes: {
+                        "data-event-id": "signout-yes"
+                    }
+                },
+                {
+                    value: "no",
+                    text: "No",
+                    attributes: {
+                        "data-event-id": "signout-no"
+                    }
+                }
+            ]
+            }) 
+        }} 
+    {% include "includes/continue-button.html" %}
+    </form>
+{% endblock %}
