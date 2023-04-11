@@ -58,7 +58,21 @@ describe("Active directors controller tests", () => {
 
     });
 
-    it("Should display corporate-directors", async () => {
+    it("Should display active non-corporate nominee directors", async () => {
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+  
+        expect(mockGetCompanyOfficers).toHaveBeenCalled();
+        expect(response.text).toContain("BETTY");
+        expect(response.text).toContain("WHITE");
+        expect(response.text).toContain("Director");
+        expect(response.text).toContain("Date of birth");
+        expect(response.text).toContain("December 2001");
+        expect(response.text).toContain("Appointed on");
+        expect(response.text).toContain("1 April 2016");
+  
+      });
+
+    it("Should display active corporate directors", async () => {
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
@@ -68,15 +82,11 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("3 November 2020");
     });
 
-    // it("Should navigate to an error page if the called service throws an error", async () => {
-    //     mockGetCompanyOfficers.mockImplementationOnce(() => { throw new Error(); });
-
-    //   const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
-
-    //   expect(response.text).toContain(EXPECTED_ERROR_TEXT);
-    // });
-  });
-
-  describe("post tests", () => {
+    it("Should display active corporate nominee directors", async () => {
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+  
+        expect(mockGetCompanyOfficers).toHaveBeenCalled();
+        expect(response.text).toContain("13 August 2022");
+      });
   });
 });
