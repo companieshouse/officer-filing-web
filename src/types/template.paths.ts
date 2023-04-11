@@ -3,6 +3,7 @@ export enum Templates {
   ACTIVE_OFFICERS = "active-officers",
   SIGNOUT = "signout",
   START = "start",
+  SERVICE_OFFLINE_MID_JOURNEY = "service-offline-mid-journey",
   CONFIRM_COMPANY = "confirm-company",
   REMOVE_DIRECTOR = "remove-director",
   REMOVE_DIRECTOR_CHECK_ANSWERS = "remove-director-check-answers",
