@@ -19,6 +19,8 @@ const SEPARATOR = "/";
 export const COMPANY_AUTH_PROTECTED_BASE = `/company/:${urlParams.PARAM_COMPANY_NUMBER}/`;
 export const ACTIVE_SUBMISSION_BASE = COMPANY_AUTH_PROTECTED_BASE +
   `transaction/:${urlParams.PARAM_TRANSACTION_ID}/submission/:${urlParams.PARAM_SUBMISSION_ID}/`;
+  export const ACTIVE_BASE = COMPANY_AUTH_PROTECTED_BASE +
+  `transaction/:${urlParams.PARAM_TRANSACTION_ID}/`;
 export const CONTAINS_TRANSACTION_ID = `/transaction/:${urlParams.PARAM_TRANSACTION_ID}`;
 export const CONTAINS_SUBMISSION_ID = `/submission/:${urlParams.PARAM_SUBMISSION_ID}`;
 
@@ -37,7 +39,7 @@ export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "transaction";
 export const CREATE_TRANSACTION_PATH = OFFICER_FILING + CREATE_TRANSACTION;
 export const TRADING_STATUS = ACTIVE_SUBMISSION_BASE + "trading-status";
 export const TRADING_STATUS_PATH = OFFICER_FILING + TRADING_STATUS ;
-export const ACTIVE_DIRECTORS = ACTIVE_SUBMISSION_BASE + "active-directors";
+export const ACTIVE_DIRECTORS = ACTIVE_BASE + "active-directors";
 export const ACTIVE_DIRECTORS_PATH = OFFICER_FILING + ACTIVE_DIRECTORS;
 export const ACTIVE_DIRECTORS_DETAILS = ACTIVE_SUBMISSION_BASE + "active-directors-details";
 export const ACTIVE_DIRECTORS_DETAILS_PATH = OFFICER_FILING + ACTIVE_DIRECTORS_DETAILS;
