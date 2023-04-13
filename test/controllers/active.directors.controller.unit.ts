@@ -7,7 +7,6 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-
 import { ACTIVE_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { mockCompanyOfficers } from "../mocks/active.director.details.mock";
@@ -24,7 +23,6 @@ mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
-// const EXPECTED_ERROR_TEXT = "Error retrieving active director details";
 const ACTIVE_DIRECTOR_DETAILS_URL = ACTIVE_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
 
 describe("Active directors controller tests", () => {
@@ -49,13 +47,13 @@ describe("Active directors controller tests", () => {
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
       expect(response.text).toContain("JANE");
+      expect(response.text).toContain("ALICE");
       expect(response.text).toContain("SMITH");
       expect(response.text).toContain("Director");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("December 2001");
       expect(response.text).toContain("Appointed on");
       expect(response.text).toContain("11 May 2019");
-
     });
 
     it("Should display active non-corporate nominee directors", async () => {
@@ -69,7 +67,6 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("December 2001");
         expect(response.text).toContain("Appointed on");
         expect(response.text).toContain("1 April 2016");
-  
       });
 
     it("Should display active corporate directors", async () => {
@@ -86,6 +83,9 @@ describe("Active directors controller tests", () => {
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
   
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
+        expect(response.text).toContain("Test Company (12345678)");
+        expect(response.text).toContain("Director");
+        expect(response.text).toContain("Appointed on");
         expect(response.text).toContain("13 August 2022");
       });
   });

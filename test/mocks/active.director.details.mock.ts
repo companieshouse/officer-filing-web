@@ -63,7 +63,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
     formerNames: undefined,
     identification: undefined,
     links: companyOfficerLinks,
-    name: "JANE SMITH",
+    name: "JANE ALICE SMITH",
     nationality: "British",
     occupation: "designer",
     officerRole: "DIRECTOR",
