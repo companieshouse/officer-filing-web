@@ -41,7 +41,6 @@ describe("Test active director details service", () => {
 
     expect(mockGetActiveOfficerDetails).toBeCalledWith(TRANSACTION_ID);
     expect(response).toEqual(mockCompanyOfficer);
-
   });
 
   it("should throw error when http error code is returned", async () => {
@@ -65,7 +64,5 @@ describe("Test active director details service", () => {
 
     expect(actualMessage).toBeTruthy();
     expect(actualMessage).toEqual(expectedMessage);
-
   });
-
 });

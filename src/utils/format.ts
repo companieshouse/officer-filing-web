@@ -2,7 +2,6 @@ import { RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/servi
 import { CompanyOfficer, DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN } from "./constants";
 
-
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
     return "";
@@ -49,7 +48,6 @@ export const formatAppointmentDate = (appointedOn: string | undefined): string =
 
   return appointmentDateStr;
 };
-
 
 export const toUpperCase = (str: string | undefined): string => {
   if (!str) {
