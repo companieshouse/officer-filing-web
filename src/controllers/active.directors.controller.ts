@@ -28,7 +28,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
-      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
+      backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: officerLists.directorsList,
       corporateDirectorsList: officerLists.corporateDirectorsList,
       company: companyProfile
@@ -86,3 +86,5 @@ const buildOfficerLists = (officers: CompanyOfficer[]): any => {
     corporateDirectorsList: buildCorporateDirectorsList(officers),
   };
 };
+
+const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;
