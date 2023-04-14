@@ -2,11 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import {CREATE_TRANSACTION_PATH} from "../types/page.urls";
+import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
-import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,7 +15,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const pageOptions = await buildPageOptions(session, companyProfile);
     return res.render(Templates.CONFIRM_COMPANY, pageOptions);
   } catch (e) {
-    logger.debug(`Confirm company controller hit exception` + e);
     return next(e);
   }
 };
@@ -32,7 +30,8 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
   return {
     company: companyProfile,
     address: address,
-    templateName: Templates.CONFIRM_COMPANY
+    templateName: Templates.CONFIRM_COMPANY,
+    backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };
 };
 
