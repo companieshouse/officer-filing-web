@@ -1,36 +1,34 @@
+{% for director in directorsList %}
 <div class="govuk-summary-card govuk-!-margin-bottom-4">
     <div class="govuk-summary-card_heading govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-padding-right-3 govuk-!-padding-left-3" style="display: flex; justify-content: space-between; align-items: center; color: govuk-colour("light-grey")">
       <p class="govuk-!-font-weight-bold govuk-!-margin-0">
-        {{activeOfficerDetails.surname}},
-          {{activeOfficerDetails.foreName1}}
-        {% if activeOfficerDetails.foreName2 %}
-          {{activeOfficerDetails.foreName2}}
-        {% endif %}
+        {{director.name}}
       </p>
     </div>
     <div style="display: flex" class="govuk-!-padding-1">
       <dl style="display: block" class="govuk-summary-list govuk-!-margin-3">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Role</dt>
-          <dd class="govuk-summary-list__value">
-            <p>{{activeOfficerDetails.role}}</p>
+          <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            <p>Director</p>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Date of birth</dt>
-          <dd class="govuk-summary-list__value">
-            <p>{{activeOfficerDetails.dateOfBirth}}</p>
+          <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            <p>{{director.dateOfBirth}}</p>
           </dd>
         </div>
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Appointment on</dt>
-          <dd class="govuk-summary-list__value">
-            <p>{{activeOfficerDetails.dateOfAppointment}}</p>
+          <dt class="govuk-summary-list__key">Appointed on</dt>
+          <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            <p>{{director.appointedOn}}</p>
           </dd>
         </div>
         <div class="govuk-!-padding-top-6">
-          <a href="/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director" class="govuk-link">Remove director</a>
+          <a href="/officer-filing-web/company/01777777/transaction/020002-120116-793219/submission/1/remove-director" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
         </div>
       </dl>
     </div>
 </div>
+{% endfor %}

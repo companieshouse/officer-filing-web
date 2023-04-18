@@ -19,6 +19,8 @@ const SEPARATOR = "/";
 export const COMPANY_AUTH_PROTECTED_BASE = `/company/:${urlParams.PARAM_COMPANY_NUMBER}/`;
 export const ACTIVE_SUBMISSION_BASE = COMPANY_AUTH_PROTECTED_BASE +
   `transaction/:${urlParams.PARAM_TRANSACTION_ID}/submission/:${urlParams.PARAM_SUBMISSION_ID}/`;
+  export const ACTIVE_BASE = COMPANY_AUTH_PROTECTED_BASE +
+  `transaction/:${urlParams.PARAM_TRANSACTION_ID}/`;
 export const CONTAINS_TRANSACTION_ID = `/transaction/:${urlParams.PARAM_TRANSACTION_ID}`;
 export const CONTAINS_SUBMISSION_ID = `/submission/:${urlParams.PARAM_SUBMISSION_ID}`;
 
@@ -37,10 +39,10 @@ export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "transaction";
 export const CREATE_TRANSACTION_PATH = OFFICER_FILING + CREATE_TRANSACTION;
 export const TRADING_STATUS = ACTIVE_SUBMISSION_BASE + "trading-status";
 export const TRADING_STATUS_PATH = OFFICER_FILING + TRADING_STATUS ;
-export const ACTIVE_OFFICERS = ACTIVE_SUBMISSION_BASE + "active-officers";
-export const ACTIVE_OFFICERS_PATH = OFFICER_FILING + ACTIVE_OFFICERS;
-export const ACTIVE_OFFICERS_DETAILS = ACTIVE_SUBMISSION_BASE + "active-officers-details";
-export const ACTIVE_OFFICERS_DETAILS_PATH = OFFICER_FILING + ACTIVE_OFFICERS_DETAILS;
+export const ACTIVE_DIRECTORS = ACTIVE_BASE + "active-directors";
+export const ACTIVE_DIRECTORS_PATH = OFFICER_FILING + ACTIVE_DIRECTORS;
+export const ACTIVE_DIRECTORS_DETAILS = ACTIVE_SUBMISSION_BASE + "active-directors-details";
+export const ACTIVE_DIRECTORS_DETAILS_PATH = OFFICER_FILING + ACTIVE_DIRECTORS_DETAILS;
 export const REGISTERED_OFFICE_ADDRESS = ACTIVE_SUBMISSION_BASE + "registered-office-address";
 export const REGISTERED_OFFICE_ADDRESS_PATH = OFFICER_FILING + REGISTERED_OFFICE_ADDRESS;
 export const REVIEW = ACTIVE_SUBMISSION_BASE + "review";
@@ -57,14 +59,14 @@ export const USE_WEBFILING = "/use-webfiling";
 export const USE_WEBFILING_PATH = OFFICER_FILING + USE_WEBFILING + `?${URL_QUERY_PARAM.COMPANY_NUM}={${URL_QUERY_PARAM.COMPANY_NUM}}`;
 export const NO_FILING_REQUIRED = "/no-filing-required";
 export const NO_FILING_REQUIRED_PATH = OFFICER_FILING + NO_FILING_REQUIRED + `?${URL_QUERY_PARAM.COMPANY_NUM}={${URL_QUERY_PARAM.COMPANY_NUM}}`;
-export const REMOVE_DIRECTOR = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director";
+export const REMOVE_DIRECTOR = "/company/01777777/transaction/020002-120116-793219/submission/1/remove-director";
 export const REMOVE_DIRECTOR_PATH = OFFICER_FILING + REMOVE_DIRECTOR;
 //Hardcoded for now
 //export const REMOVE_DIRECTOR_CHECK_ANSWERS = ACTIVE_SUBMISSION_BASE + "remove-director-check-answers";
 //export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
-export const REMOVE_DIRECTOR_CHECK_ANSWERS = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-check-answers";
+export const REMOVE_DIRECTOR_CHECK_ANSWERS = "/company/01777777/transaction/020002-120116-793219/submission/1/remove-director-check-answers";
 export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
-export const REMOVE_DIRECTOR_SUBMITTED = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-submitted";
+export const REMOVE_DIRECTOR_SUBMITTED = "/company/01777777/transaction/020002-120116-793219/submission/1/remove-director-submitted";
 export const REMOVE_DIRECTOR_SUBMITTED_PATH = OFFICER_FILING + REMOVE_DIRECTOR_SUBMITTED;
 
 

@@ -10,7 +10,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.REMOVE_DIRECTOR, {
       templateName: Templates.REMOVE_DIRECTOR,
-      backLinkUrl: urlUtils.getUrlToPath("/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/active-officers", req),
+      backLinkUrl: urlUtils.getUrlToPath("/officer-filing-web/company/01777777/transaction/020002-120116-793219/submission/1/active-officers", req),
     });
   } catch (e) {
     return next(e);
