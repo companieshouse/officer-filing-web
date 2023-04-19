@@ -2,7 +2,7 @@ export enum Templates {
   ACCESSIBILITY_STATEMENT = "accessibility-statement",
   ACTIVE_DIRECTORS = "active-directors",
   SIGNOUT = "signout",
-  START = "stop-page",
+  START = "start",
   SERVICE_OFFLINE_MID_JOURNEY = "service-offline-mid-journey",
   CONFIRM_COMPANY = "confirm-company",
   REMOVE_DIRECTOR = "remove-director",
