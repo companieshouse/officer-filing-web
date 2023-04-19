@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH} from "../types/page.urls";
+import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
@@ -59,4 +59,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 const createNewOfficerFiling = async (session: Session) => {
     const transactionId: string = "";
+};
+
+const displayStopPage = (res: Response, company: CompanyProfile) => {
+  return res.redirect(urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, company.companyNumber))
 };
