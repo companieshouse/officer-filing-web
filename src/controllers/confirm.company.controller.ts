@@ -6,32 +6,48 @@ import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
+import { isDissolved } from "../validators/stop.page.validator";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    
-    const content = { content: {
-      pageHeader: "Company is Dissolved or it's in the process of being dissolved",
-      pageBody: `
-      <p>${companyProfile.companyName} cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
 
-      <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
-      <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-      <p><a href="https://www.gov.uk/contact-companies-house">Contact us</a> if you have any questions.</p>
-      `
-    }}
-
+    if (isDissolved(companyNumber)){
+    const content = setContent(companyProfile)
     displayStopPage(res, content)
+    }
+    else {
+    const pageOptions = await buildPageOptions(session, companyProfile);
+    return res.render(Templates.CONFIRM_COMPANY, pageOptions);
+    }
 
-    // const pageOptions = await buildPageOptions(session, companyProfile);
-    // return res.render(Templates.CONFIRM_COMPANY, pageOptions);
   } catch (e) {
     return next(e);
   }
 };
+
+const setContent = (companyProfile: CompanyProfile) => {
+  if (companyProfile.companyName == undefined || companyProfile.companyName == "") {
+    companyProfile.companyName = "This company"
+  }
+  
+  const content = {
+    pageHeader: "Company is Dissolved or it's in the process of being dissolved",
+    pageBody: `
+    <p>${companyProfile.companyName} cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
+
+    <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
+    <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+    <p><a href="https://www.gov.uk/contact-companies-house">Contact us</a> if you have any questions.</p>
+    `
+  }
+
+  return{
+    content
+  }
+}
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile): Promise<Object> => {
   companyProfile = formatForDisplay(companyProfile);
