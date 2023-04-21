@@ -1,4 +1,3 @@
-{% for director in directorsList %}
 <div class="govuk-summary-card govuk-!-margin-bottom-4">
     <div class="govuk-summary-card_heading govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-padding-right-3 govuk-!-padding-left-3" style="display: flex; justify-content: space-between; align-items: center; color: govuk-colour("light-grey")">
       <p class="govuk-!-font-weight-bold govuk-!-margin-0">
@@ -6,23 +5,23 @@
       </p>
     </div>
     <div style="display: flex" class="govuk-!-padding-1">
-      <dl style="display: block" class="govuk-summary-list govuk-!-margin-3">
+      <dl class="govuk-summary-list govuk-!-margin-3">
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Role</dt>
           <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            <p>Director</p>
+            Director
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Date of birth</dt>
           <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            <p>{{director.dateOfBirth}}</p>
+            {{director.dateOfBirth}}
           </dd>
         </div>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Appointed on</dt>
           <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            <p>{{director.appointedOn}}</p>
+            {{director.appointedOn}}
           </dd>
         </div>
         <div class="govuk-!-padding-top-6">
@@ -31,4 +30,3 @@
       </dl>
     </div>
 </div>
-{% endfor %}
