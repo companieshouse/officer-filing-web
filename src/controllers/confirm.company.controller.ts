@@ -6,7 +6,7 @@ import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
-import { isDissolved } from "../validators/stop.page.validator";
+import { hasCessationDate } from "../validators/stop.page.validator";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +14,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if (isDissolved(companyNumber)){
+    if (await hasCessationDate(session, companyNumber)){
     const content = setContent(companyProfile)
     displayStopPage(res, content)
     }

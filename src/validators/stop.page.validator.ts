@@ -1,7 +1,7 @@
-import { hasCessationDate } from "../services/stop.page.validation.service";
+import { getHasCessationDate } from "../services/stop.page.validation.service";
 import { Session } from "@companieshouse/node-session-handler";
 
-export const isDissolved = async (session: Session, companyNumber: string): Promise<Boolean> => {
-  const dissolved: Boolean = await hasCessationDate(session, companyNumber);
-  return dissolved;
+export const hasCessationDate = async (session: Session, companyNumber: string, transactionId: string): Promise<Boolean> => {
+  const hasCessationDate: Boolean = await getHasCessationDate(session, companyNumber, transactionId);
+  return hasCessationDate;
 };
