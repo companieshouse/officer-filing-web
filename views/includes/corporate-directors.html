@@ -1,28 +1,28 @@
-{% for director in corporateDirectorsList %}
-<div class="govuk-summary-card govuk-!-margin-bottom-4">
-  <div class="govuk-summary-card_heading govuk-!-padding-top-4 govuk-!-padding-bottom-4 govuk-!-padding-right-3 govuk-!-padding-left-3" style="display: flex; justify-content: space-between; align-items: center; color: govuk-colour("light-grey")">
-    <p class="govuk-!-font-weight-bold govuk-!-margin-0">
-      {{company.companyName}} ({{company.companyNumber}})
-    </p>
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">{{company.companyName}} ({{company.companyNumber}})</h2>
   </div>
-  <div style="display: flex" class="govuk-!-padding-1">
-    <dl style="display: block" class="govuk-summary-list govuk-!-margin-3">
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Role</dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-          <p>Director</p>
+        <dt class="govuk-summary-list__key">
+          Role
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Director
         </dd>
       </div>
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Appointed on</dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-          <p>{{director.appointedOn}}</p>
+        <dt class="govuk-summary-list__key">
+          Appointed on
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{director.appointedOn}}
         </dd>
       </div>
       <div class="govuk-!-padding-top-6">
-        <a href="#" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
+        <a href="/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
       </div>
     </dl>
   </div>
 </div>
-{% endfor %}

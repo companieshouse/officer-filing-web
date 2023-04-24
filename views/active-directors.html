@@ -37,25 +37,17 @@
         </span>
         <h1 class="govuk-heading-l">Current directors</h1>
 
-        {% set directorHTML %}
-          {% include "includes/directors.html" %}
-        {% endset %}
-
-        {% set corporateDirectorsHTML %}
-        {% include "includes/corporate-directors.html" %}
-        {% endset %}
-
-        {% set officerRows = [] %}
         {% if directorsList|length %}
-        {% set officerRows = (officerRows.push([{html: directorHTML}]), officerRows) %}
-        {% endif %}
-        {% if corporateDirectorsList|length %}
-        {% set officerRows = (officerRows.push([{html: corporateDirectorsHTML}]), officerRows) %}
+        {% for director in directorsList %}
+        {% include "includes/directors.html" %}
+        {% endfor %}
         {% endif %}
 
-        {{ govukTable({
-          rows: officerRows
-        }) }}
+        {% if corporateDirectorsList|length %}
+        {% for director in corporateDirectorsList %}
+        {% include "includes/corporate-directors.html" %}
+        {% endfor %}
+        {% endif %}
 
       </form>
     </div>
