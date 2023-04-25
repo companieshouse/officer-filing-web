@@ -6,7 +6,7 @@ import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
-import { hasCessationDate } from "../validators/stop.page.validator";
+import { currentOrFutureDissolved } from "../validators/stop.page.validator";
 import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +21,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     //   return createApiClient(undefined, oAuth);
     // }
 
-    if (await hasCessationDate(session, companyNumber, transactionId)){
+    if (await currentOrFutureDissolved(session, companyNumber, transactionId)){
     const content = setContent(companyProfile)
     displayStopPage(res, content)
     }
