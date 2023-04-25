@@ -1,4 +1,8 @@
-import { CompanyOfficer, Address, DateOfBirth, CompanyOfficerLinks, OfficerLinks } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer, Address, DateOfBirth, CompanyOfficerLinks, OfficerLinks, Identification } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+
+export const mockIdentification: Identification = {
+  registrationNumber: "12345678"
+};
 
 export const mockAddress1: Address = {
   addressLine1: "Diddly squat farm shop",
@@ -75,7 +79,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
     countryOfResidence: "UNITED KINGDOM",
     dateOfBirth: dateOfBirth,
     formerNames: undefined,
-    identification: undefined,
+    identification: mockIdentification,
     links: companyOfficerLinks,
     name: "BIG CORP",
     nationality: "British",
@@ -103,7 +107,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
     countryOfResidence: "UNITED KINGDOM",
     dateOfBirth: dateOfBirth,
     formerNames: undefined,
-    identification: undefined,
+    identification: mockIdentification,
     links: companyOfficerLinks,
     name: "BIGGER CORP 2",
     nationality: "British",
