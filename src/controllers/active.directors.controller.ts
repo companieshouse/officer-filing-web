@@ -74,6 +74,7 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
     .map(officer => {
       return {
         name: officer.name,
+        registrationNumber: officer.identification?.registrationNumber,
         officerRole: formatTitleCase(officer.officerRole),
         appointedOn: formatAppointmentDate(officer.appointedOn)
       };
