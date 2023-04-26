@@ -15,19 +15,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req)
+    const transactionId = "No transaction yet";
     // const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
     // if (oAuth) {
     //   return createApiClient(undefined, oAuth);
     // }
 
     if (await currentOrFutureDissolved(session, companyNumber, transactionId)){
-    const content = setContent(companyProfile)
-    displayStopPage(res, content)
+      const content = setContent(companyProfile)
+      displayStopPage(res, content)
     }
     else {
-    const pageOptions = await buildPageOptions(session, companyProfile);
-    return res.render(Templates.CONFIRM_COMPANY, pageOptions);
+      const pageOptions = await buildPageOptions(session, companyProfile);
+      return res.render(Templates.CONFIRM_COMPANY, pageOptions);
     }
 
   } catch (e) {
