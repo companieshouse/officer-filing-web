@@ -29,8 +29,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
-      directorsList: officerLists.directorsList,
-      corporateDirectorsList: officerLists.corporateDirectorsList,
+      directorsList: [...officerLists.directorsList, ...officerLists.corporateDirectorsList],
       company: companyProfile
     });
   } catch (e) {
