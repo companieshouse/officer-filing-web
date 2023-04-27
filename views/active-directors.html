@@ -39,9 +39,9 @@
 
         {% if directorsList|length %}
         {% for director in directorsList %}
-        {% if director.officerRole == "Director" %}
+        {% if ((director.officerRole == "Director") or (director.officerRole == "Nominee-director")) %}
         {% include "includes/directors.html" %}
-        {% elif director.officerRole == "Corporate-director" %}
+        {% elif ((director.officerRole == "Corporate-director") or (director.officerRole == "Corporate-nominee-director")) %}
         {% include "includes/corporate-directors.html" %}
         {% endif %}
         {% endfor %}
