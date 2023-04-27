@@ -21,7 +21,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     //   return createApiClient(undefined, oAuth);
     // }
 
-    if (await currentOrFutureDissolved(session, companyNumber, transactionId)){
+    if (await currentOrFutureDissolved(session, companyNumber)){
       const content = setContent(companyProfile)
       displayStopPage(res, content)
     }
