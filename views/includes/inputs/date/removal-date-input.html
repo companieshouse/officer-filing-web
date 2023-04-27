@@ -1,0 +1,93 @@
+{% set removalDateErrorMessage = '' %}
+{% set isremovalDateDayError = false %}
+{% set isremovalDateMonthError = false %}
+{% set isremovalDateYearError = false %}
+
+{# We are constrained by the generic validation handling so have to manipulate the error data in the template rather than the controller #}
+{# We need to loop through the errors returned to pick out the first removal_date error #}
+{# to prevent duplicate messages on the same field. #}
+{# We can use its message text and then work out which of the day/month/year fields #}
+{# to mark as 'red' using the error style class #}
+
+{% if errors %}
+  {% for key, value in errors %}
+
+    {# only look at first matching error #}
+    {% if not removalDateErrorMessage %}
+      {% if "removal_date" == key|string %}
+        {# if the matching error is for the whole date field, look at the data to see what has not been populated in the date #}
+        {% set removalDateErrorMessage = value %}
+        {% if removal_date %}
+          {% if not removal_date["removal_date-day"] %}
+            {% set isremovalDateDayError = true %}
+          {% endif %}
+          {% if not removal_date["removal_date-month"] %}
+            {% set isremovalDateMonthError = true %}
+          {% endif %}
+          {% if not removal_date["removal_date-year"] %}
+            {% set isremovalDateYearError = true %}
+          {% endif %}
+        {% endif %}
+      {% elif "removal_date" in key|string %}
+        {# if the matching error is for a -day,-month,-year field, set the flag to mark that field as in error #}
+        {% set removalDateErrorMessage = value %}
+        {% if "-day" in key|string %}
+          {% set isremovalDateDayError = true %}
+        {% elif "-month" in key|string %} 
+          {% set isremovalDateMonthError = true %}
+        {% elif "-year" in key|string %} 
+          {% set isremovalDateYearError = true %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}    
+{% endif %}
+
+
+{% set removal_date_classes_year = "govuk-input--width-4 govuk-input" %}
+{% set removal_date_classes_month = "govuk-input--width-2 govuk-input" %}
+{% set removal_date_classes_day = "govuk-input--width-2 govuk-input" %}
+
+{% if isremovalDateDayError %}
+  {% set removal_date_classes_day = removal_date_classes_day + "--error" %}
+{% endif %}
+{% if isremovalDateMonthError %}
+  {% set removal_date_classes_month = removal_date_classes_month + "--error" %}
+{% endif %}
+{% if isremovalDateYearError %}
+  {% set removal_date_classes_year = removal_date_classes_year + "--error" %}
+{% endif %}
+
+
+{{ govukDateInput({
+  errorMessage: removalDateErrorMessage,
+  id: "removal_date",
+  namePrefix: "removal_date",
+  fieldset: {
+    legend: {
+      text: "When was the director removed from the company?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "For example, 27 3 2007"
+  },
+  items: [
+    {
+      classes: removal_date_classes_day,
+      name: "day",
+      value: removal_date["removal_date-day"] if removal_date
+    },
+    {
+      classes: removal_date_classes_month,
+      name: "month",
+      value: removal_date["removal_date-month"] if removal_date
+    },
+    {
+      classes: removal_date_classes_year,
+      name: "year",
+      value: removal_date["removal_date-year"] if removal_date
+    }
+  ]
+}) }}
