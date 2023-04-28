@@ -10,6 +10,7 @@ import * as removeDirectorCheckAnswers from "../controllers/remove.director.chec
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
 import { removalDataValidations } from "../validation/fields/date.validation";
+import { checkValidations } from "../middleware/validation.middleware";
 
 
 export const router: Router = Router();
@@ -36,7 +37,7 @@ router.get(urls.ACTIVE_OFFICERS, activeOfficers.get);
 router.post(urls.ACTIVE_OFFICERS, activeOfficers.post);
 
 router.get(urls.REMOVE_DIRECTOR, removeDirector.get);
-router.post(urls.REMOVE_DIRECTOR, ...removalDataValidations, removeDirector.post);
+router.post(urls.REMOVE_DIRECTOR, ...removalDataValidations, checkValidations, removeDirector.post);
 
 router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);

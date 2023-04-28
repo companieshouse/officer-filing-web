@@ -2,20 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult, ValidationError } from "express-validator";
 
 import { getApplicationData, prepareData } from "../utils/application.data";
-import { NAVIGATION } from "../utils/navigation";
 import {
-  DateOfBirthKey,
-  StartDateKey,
-  DateOfBirthKeys,
-  StartDateKeys,
-  IdentityDateKey,
-  IdentityDateKeys,
+  RemovalDateKey,
+  RemovalDateKeys
 } from "../model/date.model";
 
 import { logger } from '../utils/logger';
 import { EntityNameKey, ID } from "../model/data.types.model";
 import { ApplicationData } from "../model/application.model";
-import { getBeneficialOwnerList } from "../utils/trusts";
+import { Templates } from "../types/template.paths";
 
 export function checkValidations(req: Request, res: Response, next: NextFunction) {
   try {
@@ -27,12 +22,8 @@ export function checkValidations(req: Request, res: Response, next: NextFunction
       // Bypass the direct use of variables with dashes that
       // govukDateInput adds for day, month and year field
       const dates = {
-        [DateOfBirthKey]: prepareData(req.body, DateOfBirthKeys),
-        [StartDateKey]: prepareData(req.body, StartDateKeys),
-        [IdentityDateKey]: prepareData(req.body, IdentityDateKeys)
+        [RemovalDateKey]: prepareData(req.body, RemovalDateKeys)
       };
-
-      const routePath = req.route.path;
 
       // need to pass the id req param back into the page if present in the url in order to show the remove button again
       // when changing BO or MO data after failing validation. If not present, undefined will be passed in, which is fine as those pages
@@ -41,39 +32,14 @@ export function checkValidations(req: Request, res: Response, next: NextFunction
       const appData: ApplicationData = getApplicationData(req.session);
       const entityName = appData?.[EntityNameKey];
 
-      return res.render(NAVIGATION[routePath].currentPage, {
-        backLinkUrl: NAVIGATION[routePath].previousPage(appData),
-        templateName: NAVIGATION[routePath].currentPage,
+      return res.render(Templates.REMOVE_DIRECTOR, {
+        backLinkUrl: "/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/active-officers",
+        templateName: Templates.REMOVE_DIRECTOR,
         id,
         entityName,
         ...appData,
         ...req.body,
         ...dates,
-        errors
-      });
-    }
-
-    return next();
-  } catch (err) {
-    logger.errorRequest(req, err);
-    next(err);
-  }
-}
-
-export function checkTrustValidations(req: Request, res: Response, next: NextFunction) {
-  try {
-    const errorList = validationResult(req);
-    if (!errorList.isEmpty()) {
-      const errors = formatValidationError(errorList.array());
-      const routePath = req.route.path;
-      const appData: ApplicationData = getApplicationData(req.session);
-
-      return res.render(NAVIGATION[routePath].currentPage, {
-        backLinkUrl: NAVIGATION[routePath].previousPage(appData),
-        templateName: NAVIGATION[routePath].currentPage,
-        ...req.body,
-        beneficialOwners: getBeneficialOwnerList(appData),
-        trusts_input: req.body.trusts?.toString(),
         errors
       });
     }
