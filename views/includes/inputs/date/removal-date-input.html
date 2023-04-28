@@ -77,17 +77,20 @@
     {
       classes: removal_date_classes_day,
       name: "day",
-      value: removal_date["removal_date-day"] if removal_date
+      value: removal_date["removal_date-day"] if removal_date,
+      pattern: "*"
     },
     {
       classes: removal_date_classes_month,
       name: "month",
-      value: removal_date["removal_date-month"] if removal_date
+      value: removal_date["removal_date-month"] if removal_date,
+      pattern: "*"
     },
     {
       classes: removal_date_classes_year,
       name: "year",
-      value: removal_date["removal_date-year"] if removal_date
+      value: removal_date["removal_date-year"] if removal_date,
+      pattern: "*"
     }
   ]
 }) }}

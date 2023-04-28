@@ -12,7 +12,7 @@ export const removalDataValidations = [
   body("removal_date-day")
     .custom((value, { req }) => checkDateFieldDay(req.body["removal_date-day"], req.body["removal_date-month"], req.body["removal_date-year"])),
   body("removal_date-month")
-    .custom((value, { req }) => checkDateFieldMonth(ErrorMessages.MONTH, req.body["removal_date-day"], req.body["removal_date-month"])),
+    .custom((value, { req }) => checkDateFieldMonth(ErrorMessages.MONTH, req.body["removal_date-day"], req.body["removal_date-month"], req.body["removal_date-year"])),
   body("removal_date-year")
     .custom((value, { req }) => checkDateFieldYear(ErrorMessages.YEAR, req.body["removal_date-day"], req.body["removal_date-month"], req.body["removal_date-year"]))
 ];
