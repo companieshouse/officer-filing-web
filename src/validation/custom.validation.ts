@@ -76,7 +76,6 @@ const checkRemovalDateFields = (dayStr: string = "", monthStr: string = "", year
 };
 
 export const checkDateFieldDay = (dayStr: string = "", monthStr: string = "", yearStr: string = "") => {
-  logger.debug(`Checking date field`);
   if (isYearEitherMissingOrCorrectLength(yearStr)) {
     if (dayStr === "" && monthStr !== "" && yearStr !== "") {
       throw new Error(ErrorMessages.DAY);
