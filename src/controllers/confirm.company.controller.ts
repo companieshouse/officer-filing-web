@@ -47,7 +47,7 @@ const setContent = (companyProfile: CompanyProfile) => {
 
     <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
     <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-    <p><a href="https://www.gov.uk/contact-companies-house">Contact us</a> if you have any questions.</p>
+    <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
     `
   }
 
