@@ -5,6 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "start": "node dist/bin/www.js",
+    "start_local": "export $(cat .env | xargs) && node dist/bin/www.js",
     "build": "tsc && cp -r views dist/",
     "test": "jest",
     "lint": "eslint '{src,test}/**/*'",
@@ -31,7 +32,7 @@
     "@companieshouse/web-security-node": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.1",
-    "govuk-frontend": "^3.14.0",
+    "govuk-frontend": "^4.3.1",
     "js-yaml": "^4.1.0",
     "luxon": "^2.1.1",
     "nunjucks": "^3.2.3",

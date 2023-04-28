@@ -16,6 +16,8 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
+import { buildPaginationData } from "../utils/pagination";
+import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -26,12 +28,30 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerLists = buildOfficerLists(directors);
 
+
+
+    // TODO: Testing pagination - tidy this up
+    let page = req.query["page"];
+    const pageNumber = isNaN(Number(page))? 1: Number(page);
+
+    let objectsPerPage = 5;
+    let startIndex = (pageNumber - 1) * objectsPerPage;
+    let endIndex = startIndex + objectsPerPage;
+    let numOfPages = Math.ceil(officerLists.directorsList.length / objectsPerPage);
+
+    const directorsList = [...officerLists.directorsList, ...officerLists.corporateDirectorsList];
+    const paginatedDirectorsList = directorsList.slice(startIndex, endIndex);
+    const urlPrefix = "/officer-filing-web/company/" + companyNumber + "/transaction/" + transactionId + "/active-directors";
+    let paginationData = buildPaginationData(pageNumber, numOfPages, urlPrefix);
+
+
+
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
-      directorsList: officerLists.directorsList,
-      corporateDirectorsList: officerLists.corporateDirectorsList,
-      company: companyProfile
+      directorsList: paginatedDirectorsList,
+      company: companyProfile,
+      pagination: paginationData
     });
   } catch (e) {
     return next(e);
@@ -82,9 +102,18 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
 
 const buildOfficerLists = (officers: CompanyOfficer[]): any => {
   return {
-    directorsList: buildDirectorsList(officers),
+    directorsList: copyOfficers(buildDirectorsList(officers), 16),
     corporateDirectorsList: buildCorporateDirectorsList(officers),
   };
 };
+
+// TODO: Remove - testing more officers for pagination
+const copyOfficers = (officers: CompanyOfficer[], numTimes: number): any[] => {
+  const newArray: CompanyOfficer[] = [];
+  for (let i = 0; i < numTimes; i++) {
+    newArray.push(...officers);
+  }
+  return newArray;
+}
 
 const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;
