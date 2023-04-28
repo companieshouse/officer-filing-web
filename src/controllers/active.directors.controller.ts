@@ -16,7 +16,7 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { buildPaginationData } from "../utils/pagination";
+import { buildPaginationElement } from "../utils/pagination";
 import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +42,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const directorsList = [...officerLists.directorsList, ...officerLists.corporateDirectorsList];
     const paginatedDirectorsList = directorsList.slice(startIndex, endIndex);
     const urlPrefix = "/officer-filing-web/company/" + companyNumber + "/transaction/" + transactionId + "/active-directors";
-    let paginationData = buildPaginationData(pageNumber, numOfPages, urlPrefix);
+    let paginationData = buildPaginationElement(pageNumber, numOfPages, urlPrefix);
 
 
 
@@ -102,7 +102,7 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
 
 const buildOfficerLists = (officers: CompanyOfficer[]): any => {
   return {
-    directorsList: copyOfficers(buildDirectorsList(officers), 16),
+    directorsList: copyOfficers(buildDirectorsList(officers), 55),
     corporateDirectorsList: buildCorporateDirectorsList(officers),
   };
 };
