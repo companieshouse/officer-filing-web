@@ -7,6 +7,7 @@ import {
 
 import { logger } from '../utils/logger';
 import { Templates } from "../types/template.paths";
+import { ACTIVE_OFFICERS_PATH_END, OFFICER_FILING, REMOVE_DIRECTOR_PATH_END } from "../types/page.urls";
 
 export function checkValidations(req: Request, res: Response, next: NextFunction) {
   try {
@@ -22,8 +23,10 @@ export function checkValidations(req: Request, res: Response, next: NextFunction
         [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
       };
 
+      const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
+
       return res.render(Templates.REMOVE_DIRECTOR, {
-        backLinkUrl: "/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/active-officers",
+        backLinkUrl: backLink,
         templateName: Templates.REMOVE_DIRECTOR,
         ...req.body,
         ...dates,
