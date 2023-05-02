@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CONFIRM_COMPANY_PATH } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -17,41 +17,36 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
-import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    const directors: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    const officerLists = buildOfficerLists(directors);
+    const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
+    const directorList = [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)];
 
-
-
-    // TODO: Testing pagination - tidy this up
+    // Get current page number
     let page = req.query["page"];
     const pageNumber = isNaN(Number(page))? 1: Number(page);
 
-    let objectsPerPage = 5;
-    let startIndex = (pageNumber - 1) * objectsPerPage;
-    let endIndex = startIndex + objectsPerPage;
-    let numOfPages = Math.ceil(officerLists.directorsList.length / objectsPerPage);
+    // Get list of directors to show on current page
+    const objectsPerPage = 5;
+    const startIndex = (pageNumber - 1) * objectsPerPage;
+    const endIndex = startIndex + objectsPerPage;
+    const paginatedDirectorsList = directorList.slice(startIndex, endIndex);
 
-    const directorsList = [...officerLists.directorsList, ...officerLists.corporateDirectorsList];
-    const paginatedDirectorsList = directorsList.slice(startIndex, endIndex);
-    const urlPrefix = "/officer-filing-web/company/" + companyNumber + "/transaction/" + transactionId + "/active-directors";
-    let paginationData = buildPaginationElement(pageNumber, numOfPages, urlPrefix);
-
-
+    // Create pagination element to navigate pages
+    const numOfPages = Math.ceil(directorList.length / objectsPerPage);
+    const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req));
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,
       company: companyProfile,
-      pagination: paginationData
+      pagination: paginationElement
     });
   } catch (e) {
     return next(e);
@@ -75,7 +70,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
+const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
     .map(officer => {
@@ -99,21 +94,5 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
       };
     });
 };
-
-const buildOfficerLists = (officers: CompanyOfficer[]): any => {
-  return {
-    directorsList: copyOfficers(buildDirectorsList(officers), 55),
-    corporateDirectorsList: buildCorporateDirectorsList(officers),
-  };
-};
-
-// TODO: Remove - testing more officers for pagination
-const copyOfficers = (officers: CompanyOfficer[], numTimes: number): any[] => {
-  const newArray: CompanyOfficer[] = [];
-  for (let i = 0; i < numTimes; i++) {
-    newArray.push(...officers);
-  }
-  return newArray;
-}
 
 const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;
