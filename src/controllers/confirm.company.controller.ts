@@ -7,7 +7,6 @@ import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { currentOrFutureDissolved } from "../validators/stop.page.validator";
-import { SessionKey } from "@companieshouse/node-session-handler/lib/session/keys/SessionKey";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,10 +15,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     const transactionId = "No transaction yet";
-    // const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
-    // if (oAuth) {
-    //   return createApiClient(undefined, oAuth);
-    // }
 
     if (await currentOrFutureDissolved(session, companyNumber)){
       const content = setContent(companyProfile)
