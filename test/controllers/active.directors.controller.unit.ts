@@ -73,7 +73,7 @@ describe("Active directors controller tests", () => {
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
-      expect(response.text).toContain("Test Company (12345678)");
+      expect(response.text).toContain("BIG CORP");
       expect(response.text).toContain("Director");
       expect(response.text).toContain("Appointed on");
       expect(response.text).toContain("3 November 2020");
@@ -83,7 +83,7 @@ describe("Active directors controller tests", () => {
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
   
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
-        expect(response.text).toContain("Test Company (12345678)");
+        expect(response.text).toContain("BIGGER CORP 2");
         expect(response.text).toContain("Director");
         expect(response.text).toContain("Appointed on");
         expect(response.text).toContain("13 August 2022");
