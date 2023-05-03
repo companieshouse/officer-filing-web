@@ -16,7 +16,6 @@ export const checkDateValueIsValid = (dayStr: string, monthStr: string, yearStr:
       throw new Error(ErrorMessages.INVALID_DATE);
     }
   }
-  return true;
 };
 
 export const checkIsNumber = (dayStr: string) => {
