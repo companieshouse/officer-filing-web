@@ -2,14 +2,14 @@ import { DateTime } from "luxon";
 import { ErrorMessages } from "./error.messages";
 
 
-export const checkDateIsNotCompletelyEmpty = (day: string = "", month: string = "", year: string = "") => {
+export const checkDateIsNotCompletelyEmpty = (day: string, month: string, year: string) => {
   if ( !day.trim() && !month.trim() && !year.trim() ) {
     return false;
   }
   return true;
 };
 
-export const checkDateValueIsValid = (dayStr: string = "", monthStr: string = "", yearStr: string = "") => {
+export const checkDateValueIsValid = (dayStr: string, monthStr: string, yearStr: string) => {
   const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
   if (checkIsNumber(dayStr) && checkIsNumber(monthStr) && checkIsNumber(yearStr)) {
     if( !DateTime.utc(year, month, day).isValid){
@@ -19,7 +19,7 @@ export const checkDateValueIsValid = (dayStr: string = "", monthStr: string = ""
   return true;
 };
 
-export const checkIsNumber = (dayStr: string = "") => {
+export const checkIsNumber = (dayStr: string) => {
   const day = parseInt(dayStr);
   if (isNaN(day)) {
     return false;
@@ -27,7 +27,7 @@ export const checkIsNumber = (dayStr: string = "") => {
   return true;
 }
 
-export const checkDateFieldDay = (dayStr: string = "", monthStr: string = "", yearStr: string = "") => {
+export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: string) => {
   if (!checkDateIsNotCompletelyEmpty(dayStr, monthStr, yearStr)) {
     throw new Error(ErrorMessages.ENTER_DATE);
   }
@@ -43,7 +43,7 @@ export const checkDateFieldDay = (dayStr: string = "", monthStr: string = "", ye
   return true;
 };
 
-export const checkDateFieldMonth = (dayStr: string = "", monthStr: string = "", yearStr: string = "") => {
+export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: string) => {
   if (monthStr === "" && dayStr !== "") {
     throw new Error(ErrorMessages.MONTH);
   }
@@ -53,7 +53,7 @@ export const checkDateFieldMonth = (dayStr: string = "", monthStr: string = "", 
   return true;
 };
 
-export const checkDateFieldYear = (dayStr: string = "", monthStr: string = "", yearStr: string = "") => {
+export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: string) => {
   if (yearStr === "" && dayStr !== "" && monthStr !== "") {
       throw new Error(ErrorMessages.YEAR);
     }

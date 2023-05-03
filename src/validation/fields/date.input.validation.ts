@@ -4,7 +4,6 @@ import {
   checkDateFieldMonth,
   checkDateFieldYear
 } from "../date.validation";
-import { ErrorMessages } from "../error.messages";
 
 // to prevent more than 1 error reported on the date fields we check if the date is valid before doing some checks.
 // This means that the date check is checked before some others
