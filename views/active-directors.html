@@ -20,7 +20,7 @@
             errorList: [
               {
                 text: officerErrorMsg,
-                href: "#active-officers"
+                href: "#active-directors"
             }
           ]
           }) }}
@@ -33,22 +33,21 @@
         {% endif %}
 
         <span class="govuk-caption-xl gem-c-title__context">
-          Company Name
+          {{company.companyName}}
         </span>
         <h1 class="govuk-heading-l">Current directors</h1>
 
-        {% set directorHTML %}
-          {% include "includes/directors.html" %}
-        {% endset %}
-        {{ govukTable({
-          rows: [
-            [
-              {
-                html: directorHTML
-              }
-            ]
-          ]
-        }) }}
+        {% if directorsList|length %}
+        {% for director in directorsList %}
+        {% include "includes/directors.html" %}
+        {% endfor %}
+        {% endif %}
+
+        {% if corporateDirectorsList|length %}
+        {% for director in corporateDirectorsList %}
+        {% include "includes/corporate-directors.html" %}
+        {% endfor %}
+        {% endif %}
 
       </form>
     </div>

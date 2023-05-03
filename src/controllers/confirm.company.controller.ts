@@ -44,6 +44,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     await createNewOfficerFiling(session);
+
     const companyNumber = req.query.companyNumber as string;
     const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
     if(isValidUrl(nextPageUrl)) {
@@ -59,4 +60,3 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 const createNewOfficerFiling = async (session: Session) => {
     const transactionId: string = "";
 };
-

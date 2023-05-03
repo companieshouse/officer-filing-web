@@ -1,10 +1,28 @@
-{% if corporateDirectorList.length > 1 %}
-  <h2 class="govuk-heading-">{{ corporateDirectorList.length }} corporate directors</h2>
-{% elseif corporateDirectorList.length === 1 %}
-  <h2 class="govuk-heading-">1 corporate director</h2>
-{% endif %}
-
-{% for officer in corporateDirectorList %}
-   {% include "includes/corporate-officer.html" %}
-{% endfor %}
-
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">{{director.name}}</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Role
+        </dt>
+        <dd class="govuk-summary-list__value">
+          Director
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Appointed on
+        </dt>
+        <dd class="govuk-summary-list__value">
+          {{director.appointedOn}}
+        </dd>
+      </div>
+      <div class="govuk-!-padding-top-6">
+        <a href="/officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director" data-event-id="current-directors-remove-link" class="govuk-link">Remove director</a>
+      </div>
+    </dl>
+  </div>
+</div>
