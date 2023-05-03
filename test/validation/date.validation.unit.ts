@@ -74,16 +74,16 @@ describe("Invalid character day input validation tests", () => {
         expect(() =>  checkDateFieldDay("$","12","2021")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
     });
 
-    test("Error if day is invalid and month field is empty", async () => {
-        expect(() =>  checkDateFieldDay("$","","2021")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
+    test("Error if day is invalid and month field is invalid", async () => {
+        expect(() =>  checkDateFieldDay("$","$","2021")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
     });
 
     test("Error if day is invalid and month field is invalid", async () => {
         expect(() =>  checkDateFieldDay("$","&","2021")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
     });
 
-    test("Error if day is invalid and year field is empty", async () => {
-        expect(() =>  checkDateFieldDay("&d","12","")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
+    test("Error if day is invalid and year field is invalid", async () => {
+        expect(() =>  checkDateFieldDay("&d","12","$")).toThrowError(ErrorMessages.DAY_INVALID_CHARACTER);
     });
 
     test("Error if day is invalid and year field is ivalid", async () => {

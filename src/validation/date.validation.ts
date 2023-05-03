@@ -26,37 +26,40 @@ export const checkIsNumber = (dayStr: string) => {
   return true;
 }
 
-export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: string) => {
+export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: string): boolean => {
   if (!checkDateIsNotCompletelyEmpty(dayStr, monthStr, yearStr)) {
     throw new Error(ErrorMessages.ENTER_DATE);
   }
   else if (dayStr === "") {
     throw new Error(ErrorMessages.DAY);
   }
-  else if(!checkIsNumber(dayStr)){
+  else if(!checkIsNumber(dayStr) && monthStr != "" && yearStr != ""){
     throw new Error(ErrorMessages.DAY_INVALID_CHARACTER);
   }
   else if (checkIsNumber(dayStr) && checkIsNumber(monthStr) && checkIsNumber(yearStr)) {
     checkDateValueIsValid(dayStr, monthStr, yearStr);
   }
+  return true;
 };
 
-export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: string) => {
+export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: string): boolean => {
   if (monthStr === "" && dayStr !== "") {
     throw new Error(ErrorMessages.MONTH);
   }
   else if(dayStr !== "" && yearStr !== "" && checkIsNumber(dayStr) && !checkIsNumber(monthStr)){
     throw new Error(ErrorMessages.MONTH_INVALID_CHARACTER);
   }
+  return true;
 };
 
-export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: string) => {
+export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: string): boolean => {
   if (yearStr === "" && dayStr !== "" && monthStr !== "") {
       throw new Error(ErrorMessages.YEAR);
     }
   else if(dayStr !== "" && monthStr !== "" && checkIsNumber(dayStr) && checkIsNumber(monthStr) && !checkIsNumber(yearStr)){
     throw new Error(ErrorMessages.YEAR_INVALID_CHARACTER);
   }
+  return true;
 };
 
 
