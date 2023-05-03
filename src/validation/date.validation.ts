@@ -40,7 +40,6 @@ export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: str
   else if (checkIsNumber(dayStr) && checkIsNumber(monthStr) && checkIsNumber(yearStr)) {
     checkDateValueIsValid(dayStr, monthStr, yearStr);
   }
-  return true;
 };
 
 export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: string) => {
@@ -50,7 +49,6 @@ export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: s
   else if(dayStr !== "" && yearStr !== "" && checkIsNumber(dayStr) && !checkIsNumber(monthStr)){
     throw new Error(ErrorMessages.MONTH_INVALID_CHARACTER);
   }
-  return true;
 };
 
 export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: string) => {
@@ -60,7 +58,6 @@ export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: st
   else if(dayStr !== "" && monthStr !== "" && checkIsNumber(dayStr) && checkIsNumber(monthStr) && !checkIsNumber(yearStr)){
     throw new Error(ErrorMessages.YEAR_INVALID_CHARACTER);
   }
-  return true;
 };
 
 

@@ -20,11 +20,11 @@ describe("Missing day input validation tests", () => {
     });
 
     test("Don't error if day field is not empty", async () => {
-        expect(() =>  checkDateFieldDay("12","","")).toReturnWith(true);;
+        expect(() =>  checkDateFieldDay("12","","")).toReturn;
     });
 
     test("Don't error with full input", async () => {
-        expect(() =>  checkDateFieldDay("12","11","2021")).toReturnWith(true);
+        expect(() =>  checkDateFieldDay("12","11","2021")).toReturn;
     });
 });
 
@@ -38,12 +38,12 @@ describe("Missing month input validation tests", () => {
     });
 
     test("Don't error if day field is empty, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldMonth("","","")).toReturnWith(true);;
-        expect(() =>  checkDateFieldMonth("","","2021")).toReturnWith(true);;
+        expect(() =>  checkDateFieldMonth("","","")).toReturn;
+        expect(() =>  checkDateFieldMonth("","","2021")).toReturn;
     });
 
     test("Don't error with full input", async () => {
-        expect(() =>  checkDateFieldMonth("12","11","2021")).toReturnWith(true);;
+        expect(() =>  checkDateFieldMonth("12","11","2021")).toReturn;
     });
 
 });
@@ -54,17 +54,17 @@ describe("Missing year input validation tests", () => {
     });
 
     test("Don't error if day field is empty, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("","","")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("","5","")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("","","")).toReturn;
+        expect(() =>  checkDateFieldYear("","5","")).toReturn;
     });
 
     test("Don't error if month field is empty, month errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("","","")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("5","","")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("","","")).toReturn;
+        expect(() =>  checkDateFieldYear("5","","")).toReturn;
     });
 
     test("Don't error with full input", async () => {
-        expect(() =>  checkDateFieldYear("12","11","2021")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("12","11","2021")).toReturn;
     });
 
 });
@@ -91,7 +91,7 @@ describe("Invalid character day input validation tests", () => {
     });
 
     test("Don't error if day field is valid but month and year are invalid", async () => {
-        expect(() =>  checkDateFieldDay("12","$s","sh")).toReturnWith(true);;
+        expect(() =>  checkDateFieldDay("12","$s","sh")).toReturn;
     });
 });
 
@@ -105,13 +105,13 @@ describe("Invalid character month input validation tests", () => {
     });
 
     test("Don't error if day field is empty, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldMonth("","$","")).toReturnWith(true);;
-        expect(() =>  checkDateFieldMonth("","^","*")).toReturnWith(true);;
+        expect(() =>  checkDateFieldMonth("","$","")).toReturn;
+        expect(() =>  checkDateFieldMonth("","^","*")).toReturn;
     });
 
     test("Don't error if day field is invalid, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldMonth("&","$","")).toReturnWith(true);;
-        expect(() =>  checkDateFieldMonth("(","^","*")).toReturnWith(true);;
+        expect(() =>  checkDateFieldMonth("&","$","")).toReturn;
+        expect(() =>  checkDateFieldMonth("(","^","*")).toReturn;
     });
 });
 
@@ -121,30 +121,30 @@ describe("Invalid charavter year input validation tests", () => {
     });
 
     test("Don't error if day field is empty, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("","","$^")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("","5","*&")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("","","$^")).toReturn;
+        expect(() =>  checkDateFieldYear("","5","*&")).toReturn;
     });
 
     test("Don't error if day field is invalid, day errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("ds","jk","$^")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("fd","5","*&")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("ds","jk","$^")).toReturn;
+        expect(() =>  checkDateFieldYear("fd","5","*&")).toReturn;
     });
 
     test("Don't error if month or day field is empty, month errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("","","$")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("5","","$")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("","","$")).toReturn;
+        expect(() =>  checkDateFieldYear("5","","$")).toReturn;
     });
 
     test("Don't error if month or day field is invalid, month errors are higher priority", async () => {
-        expect(() =>  checkDateFieldYear("*","%^","$")).toReturnWith(true);;
-        expect(() =>  checkDateFieldYear("5","*","$")).toReturnWith(true);;
+        expect(() =>  checkDateFieldYear("*","%^","$")).toReturn;
+        expect(() =>  checkDateFieldYear("5","*","$")).toReturn;
     });
 });
 
 describe("Invalid date input validation tests", () => {
     test("Don't error if valid date", async () => {
-        expect(() =>  checkDateFieldDay("15","8","2013")).toReturnWith(true);;
-        expect(() =>  checkDateFieldDay("31","5","2013")).toReturnWith(true);;
+        expect(() =>  checkDateFieldDay("15","8","2013")).toReturn;
+        expect(() =>  checkDateFieldDay("31","5","2013")).toReturn;
     });
 
     test("Error if 29th February in non leap year", async () => {
@@ -152,7 +152,7 @@ describe("Invalid date input validation tests", () => {
     });
 
     test("Don't error if 29th February in leap year", async () => {
-        expect(() =>  checkDateFieldDay("29","2","2012")).toReturnWith(true);;
+        expect(() =>  checkDateFieldDay("29","2","2012")).toReturn;
     });
 
     test("Error if non valid month", async () => {
