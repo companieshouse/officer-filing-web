@@ -14,7 +14,7 @@ export const validCompanyProfile: CompanyProfile = {
     overdue: false,
   },
   companyName: "Test Company",
-  companyNumber: "123456789012",
+  companyNumber: "12345678",
   companyStatus: "active",
   companyStatusDetail: "company status detail",
   confirmationStatement: {

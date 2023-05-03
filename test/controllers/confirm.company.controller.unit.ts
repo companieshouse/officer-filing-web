@@ -14,7 +14,7 @@ import { formatForDisplay } from "../../src/services/confirm.company.service";
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockFormatForDisplay = formatForDisplay as jest.Mock;
 
-const companyNumber = "123456789012";
+const companyNumber = "12345678";
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {

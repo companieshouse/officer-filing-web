@@ -1,6 +1,6 @@
 export enum Templates {
   ACCESSIBILITY_STATEMENT = "accessibility-statement",
-  ACTIVE_OFFICERS = "active-officers",
+  ACTIVE_DIRECTORS = "active-directors",
   SIGNOUT = "signout",
   START = "start",
   SERVICE_OFFLINE_MID_JOURNEY = "service-offline-mid-journey",
