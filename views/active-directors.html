@@ -15,21 +15,20 @@ Error:
   <div class="govuk-grid-column-three-quarters">
     <form action="" method="post">
       {% if officerErrorMsg %}
-      {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: [
-      {
-      text: officerErrorMsg,
-      href: "#active-directors"
-      }
-      ]
-      }) }}
-      {% set activeOfficersError = {
-      text: officerErrorMsg
-      }
-      %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: officerErrorMsg,
+              href: "#active-directors"
+            }
+          ]
+        }) }}
+        {% set activeOfficersError = {
+          text: officerErrorMsg
+        } %}
       {% else %}
-      {% set activeOfficersError = false %}
+        {% set activeOfficersError = false %}
       {% endif %}
 
       <span class="govuk-caption-xl gem-c-title__context">
@@ -38,13 +37,13 @@ Error:
       <h1 class="govuk-heading-l">Current directors</h1>
 
       {% if directorsList|length %}
-      {% for director in directorsList %}
-      {% if ((director.officerRole == "Director") or (director.officerRole == "Nominee-director")) %}
-      {% include "includes/directors.html" %}
-      {% elif ((director.officerRole == "Corporate-director") or (director.officerRole == "Corporate-nominee-director")) %}
-      {% include "includes/corporate-directors.html" %}
-      {% endif %}
-      {% endfor %}
+        {% for director in directorsList %}
+          {% if ((director.officerRole == "Director") or (director.officerRole == "Nominee-director")) %}
+            {% include "includes/directors.html" %}
+          {% elif ((director.officerRole == "Corporate-director") or (director.officerRole == "Corporate-nominee-director")) %}
+            {% include "includes/corporate-directors.html" %}
+          {% endif %}
+        {% endfor %}
       {% endif %}
 
       {% if pagination and pagination.items|length %}
