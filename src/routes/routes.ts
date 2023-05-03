@@ -9,7 +9,7 @@ import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
-import { removalDataValidations } from "../validation/fields/date.validation";
+import { removalDataValidations } from "../validation/fields/date.input.validation";
 import { checkValidations } from "../middleware/validation.middleware";
 
 
