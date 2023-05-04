@@ -12,7 +12,7 @@ export const getCurrentOrFutureDissolved = async (session: Session, companyNumbe
 
     if (status >= 400) {
       const errorResponse = response as ApiErrorResponse;
-      throw new Error(`Error retrieving cessation date: ${JSON.stringify(errorResponse)}`);
+      throw new Error(`Error retrieving company information: ${JSON.stringify(errorResponse)}`);
     }
     const successfulResponse = response as Resource<Boolean>;
     return successfulResponse.resource as Boolean;
