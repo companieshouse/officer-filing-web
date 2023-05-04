@@ -6,7 +6,7 @@ import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
-import { currentOrFutureDissolved } from "../validators/stop.page.validator";
+import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +14,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if (await currentOrFutureDissolved(session, companyNumber)){
+    if (await getCurrentOrFutureDissolved(session, companyNumber)){
       res.redirect(urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber));
     }
     else {
