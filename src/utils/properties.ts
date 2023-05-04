@@ -3,7 +3,6 @@
  * provided, then it is assumed it is a mandatory requirement and an error will be
  * thrown.
  */
-
 const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
     const isMandatory = !defaultValue;
     const value: string = process.env[key] || "";

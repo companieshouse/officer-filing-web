@@ -13,7 +13,8 @@
 {% from "govuk/components/table/macro.njk"               import govukTable %}
 {% from "govuk/components/tag/macro.njk"                 import govukTag %}
 {% from "govuk/components/date-input/macro.njk"          import govukDateInput %}
-{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/panel/macro.njk"               import govukPanel %}
+{% from "govuk/components/pagination/macro.njk"          import govukPagination %}
 
 
 {% block head %}
@@ -102,7 +103,7 @@
 
 {% block bodyEnd %}
   {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-  <script src="{{assetPath}}/javascripts/govuk-frontend/v3.11.0/govuk-frontend-3.11.0.min.js"></script>
+  <script src="{{assetPath}}/javascripts/govuk-frontend/v4.6.0/govuk-frontend-4.6.0.min.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
   {% include "includes/piwik-scripts.html" %}
 {% endblock %}

@@ -31,7 +31,7 @@
     "@companieshouse/web-security-node": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.1",
-    "govuk-frontend": "^3.14.0",
+    "govuk-frontend": "^4.6.0",
     "js-yaml": "^4.1.0",
     "luxon": "^2.1.1",
     "nunjucks": "^3.2.3",
