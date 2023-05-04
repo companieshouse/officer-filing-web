@@ -6,6 +6,7 @@ import * as confirmCompanyRoute from "../controllers/confirm.company.controller"
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
 import * as activeDirectors from "../controllers/active.directors.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
+import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
@@ -46,3 +47,5 @@ router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
 
 router.get(urls.SIGNOUT_PATH, signoutRoute.get);
 router.post(urls.SIGNOUT_PATH, signoutRoute.post);
+
+router.get(urls.SHOW_STOP_PAGE, stopPathRoute.get);
