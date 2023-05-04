@@ -7,7 +7,6 @@ import { SHOW_STOP_PAGE, SHOW_STOP_PAGE_PATH } from "../../src/types/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { dissolvedCompanyProfile } from "../mocks/company.profile.mock";
 
-
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 
 const companyNumber = "12345678";
@@ -22,7 +21,6 @@ describe("Stop screen controller tests", () => {
   });
 
   it("Should navigate to dissolved stop screen", async () => {
-    // jest.setTimeout(25000);
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
     
     const response = await request(app)

@@ -32,9 +32,11 @@ describe("Confirm company controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
     mockFormatForDisplay.mockReturnValueOnce(dissolvedCompanyProfile);
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
+
     const response = await request(app)
     .get(CONFIRM_COMPANY_PATH)
     .query({ companyNumber });
+
     expect(response.text).toContain(DISSOLVED_PAGE_REDIRECT_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
@@ -43,9 +45,11 @@ describe("Confirm company controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
     mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+
     const response = await request(app)
     .get(CONFIRM_COMPANY_PATH)
     .query({ companyNumber });
+
     expect(response.text).toContain(PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
@@ -65,6 +69,7 @@ describe("Confirm company controller tests", () => {
   it("Should return error page if error is thrown when getting Company Profile", async () => {
     const message = "Can't connect";
     mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
+
     const response = await request(app)
       .get(CONFIRM_COMPANY_PATH);
 
@@ -77,6 +82,7 @@ describe("Confirm company controller tests", () => {
 
     const response = await request(app)
       .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+      
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual("/officer-filing-web/company/" + companyNumber + "/transaction");
   });
