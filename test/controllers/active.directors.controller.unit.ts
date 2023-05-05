@@ -9,7 +9,7 @@ import app from "../../src/app";
 
 import { ACTIVE_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
-import { mockCompanyOfficers } from "../mocks/active.director.details.mock";
+import { mockCompanyOfficers, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -18,7 +18,7 @@ const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as j
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
 const mockGetCompanyOfficers = getListActiveDirectorDetails as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
-mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficers);
+mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficersExtended);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
 const COMPANY_NUMBER = "12345678";
@@ -38,6 +38,12 @@ describe("Active directors controller tests", () => {
 
     it("Should navigate to current directors page", async () => {
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(response.text).toContain(PAGE_HEADING);
+    });
+
+    it("Should navigate to current directors paginated pages", async () => {
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?page=2");
 
       expect(response.text).toContain(PAGE_HEADING);
     });
@@ -70,7 +76,7 @@ describe("Active directors controller tests", () => {
       });
 
     it("Should display active corporate directors", async () => {
-      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?page=2");
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
       expect(response.text).toContain("BIG CORP");
@@ -80,7 +86,7 @@ describe("Active directors controller tests", () => {
     });
 
     it("Should display active corporate nominee directors", async () => {
-        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?page=2");
   
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
         expect(response.text).toContain("BIGGER CORP 2");
@@ -88,5 +94,13 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Appointed on");
         expect(response.text).toContain("13 August 2022");
       });
+
+      it("Should display a maximum of 5 directors on a page", async () => {
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+  
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(mockGetCompanyOfficers).toHaveBeenCalled();
+        expect(response.text.match(/Remove director/g) || []).toHaveLength(5);
+      });  
   });
 });
