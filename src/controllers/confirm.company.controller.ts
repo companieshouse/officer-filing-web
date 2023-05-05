@@ -8,6 +8,10 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 
+export const isValidUrl = (url: string) => { 
+  return url.startsWith("/officer-filing-web/company")
+};
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
@@ -15,7 +19,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      res.redirect(urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber));
+      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
+      if (isValidUrl(redirectUrl)){
+        res.redirect(redirectUrl);
+      } else {
+        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
+      }
     }
     else {
       const pageOptions = await buildPageOptions(session, companyProfile);
@@ -41,10 +50,6 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };
-};
-
-export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web/company")
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
