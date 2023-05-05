@@ -18,12 +18,11 @@ export const checkDateValueIsValid = (dayStr: string, monthStr: string, yearStr:
   }
 };
 
-export const checkIsNumber = (dayStr: string) => {
-  const day = parseInt(dayStr);
-  if (isNaN(day)) {
-    return false;
+export const checkIsNumber = (numStr: string) => {
+  if(numStr.match("^[0-9]+$")){
+    return true;
   }
-  return true;
+  return false;
 }
 
 export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: string): boolean => {
