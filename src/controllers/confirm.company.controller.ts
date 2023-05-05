@@ -9,7 +9,7 @@ import { buildAddress, formatForDisplay } from "../services/confirm.company.serv
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 
 export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web/company")
+  return url.startsWith("/officer-filing-web")
 };
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
