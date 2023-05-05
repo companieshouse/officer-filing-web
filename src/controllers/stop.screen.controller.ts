@@ -27,7 +27,7 @@ const setContent = async (req: Request) => {
     }
 
     const content = {
-        pageHeader: "Company is Dissolved or it's in the process of being dissolved",
+        pageHeader: "Company is dissolved or it's in the process of being dissolved",
         pageBody: `
         <p>${companyProfile.companyName} cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
 

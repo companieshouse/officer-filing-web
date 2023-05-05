@@ -13,7 +13,7 @@ const companyNumber = "12345678";
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Stop screen controller tests", () => {
-  const DISSOLVED_PAGE_HEADING = "Company is Dissolved or it's in the process of being dissolved";
+  const DISSOLVED_PAGE_HEADING = "Company is dissolved or it's in the process of being dissolved";
   const dissolvedPageBodyText = "cannot use this service because it has been dissolved, or it's in the process of being dissolved."
 
   beforeEach(() => {
