@@ -15,6 +15,30 @@
 
         <h1 class="govuk-heading-l">Check your answers before submitting the removal of a director</h1>
 
+        <h2 class="govuk-heading-m">Company details</h2>
+
+        {{ govukSummaryList({
+          classes: 'govuk-!-margin-bottom-9',
+          rows: [
+            {
+              key: {
+                text: "Company name"
+              },
+              value: {
+                text: company.companyName
+              }
+            },
+            {
+              key: {
+                text: "Company number"
+              },
+              value: {
+                text: company.companyNumber
+              }
+            }
+          ]
+        }) }}
+
         <h2 class="govuk-heading-m">Director details</h2>
 
         {{ govukSummaryList({
@@ -24,7 +48,7 @@
                 text: "Name"
               },
               value: {
-                text: "Sarah Philips"
+                text: director.name
               }
             },
             {
@@ -32,7 +56,15 @@
                 text: "Date of birth"
               },
               value: {
-                text: "5 January 1978"
+                text: director.dateOfBirth
+              }
+            },
+            {
+              key: {
+                text: "Appointed on"
+            },
+              value: {
+                text: director.appointedOn
               }
             },
             {

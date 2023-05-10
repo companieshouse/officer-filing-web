@@ -23,6 +23,7 @@ const getUrlToPath = (pathToPage: string, req: Request): string => {
 };
 
 const getCompanyNumberFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_COMPANY_NUMBER];
+const getDirectorIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_DIRECTOR_ID];
 const getTransactionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_TRANSACTION_ID];
 const getSubmissionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_SUBMISSION_ID];
 
