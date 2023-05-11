@@ -22,6 +22,9 @@
         {% include "includes/inputs/date/removal-date-input.html" %}
 
         {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
           text: "Continue"
         }) }}
 
