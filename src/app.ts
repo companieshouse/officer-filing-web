@@ -4,6 +4,7 @@ import * as path from "path";
 import { router } from "./routes/routes";
 import * as urls from "./types/page.urls";
 import { pageNotFound, errorHandler } from "./controllers/error.controller";
+import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
 import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
@@ -38,7 +39,7 @@ app.set("view engine", "html");
 
 // apply middleware
 app.use(cookieParser());
-//app.use(serviceAvailabilityMiddleware);
+app.use(serviceAvailabilityMiddleware);
 
 app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 
