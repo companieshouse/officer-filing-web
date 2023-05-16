@@ -14,7 +14,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const transaction: Transaction = await postTransaction(session, companyNumber, DESCRIPTION, REFERENCE);
     const transactionId = transaction.id as string;
       req.params[urlParams.PARAM_TRANSACTION_ID] = transactionId;
-      req.params[urlParams.PARAM_SUBMISSION_ID] = "1";
+      req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
       var nextPageUrl = urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req)
       return res.redirect(nextPageUrl);
 

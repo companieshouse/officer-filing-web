@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CONFIRM_COMPANY_PATH } from "../types/page.urls";
+import { CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -25,13 +25,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const directors: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerLists = buildOfficerLists(directors);
+    req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req);
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: officerLists.directorsList,
       corporateDirectorsList: officerLists.corporateDirectorsList,
-      company: companyProfile
+      company: companyProfile,
+      nextPageUrl: nextPageUrl
     });
   } catch (e) {
     return next(e);

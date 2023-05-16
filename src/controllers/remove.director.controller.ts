@@ -20,10 +20,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //Hardcoded for now
-    //const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
-    //return res.redirect(nextPageUrl);
-    return res.redirect(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH);
-
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }

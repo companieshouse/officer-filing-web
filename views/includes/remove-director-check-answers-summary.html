@@ -1,0 +1,48 @@
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Name"
+      },
+      value: {
+        text: name
+      }
+    },
+    {
+      key: {
+        text: "Date of birth"
+      },
+      value: {
+        text: dateOfBirth
+      }
+    },
+    {
+      key: {
+        text: "Appointed on"
+    },
+      value: {
+        text: appointedOn
+      }
+    },
+    {
+      key: {
+        text: "Date the director was removed from the company"
+      },
+      value: {
+        text: resignedOn
+      },
+      actions: {
+        items: [
+          {
+            href: changeLink,
+            text: "Change",
+            visuallyHiddenText: "address",
+            attributes: {
+              "data-event-id": "change-link"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}) }}

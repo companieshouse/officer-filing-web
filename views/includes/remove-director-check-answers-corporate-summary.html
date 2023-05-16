@@ -1,0 +1,37 @@
+{{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Name"
+      },
+      value: {
+        text: director.name
+      }
+    },
+    {
+      key: {
+        text: "Appointed on"
+    },
+      value: {
+        text: director.appointedOn
+      }
+    },
+    {
+      key: {
+        text: "Date the director was removed from the company"
+      },
+      value: {
+        text: director.resignedOn
+      },
+      actions: {
+        items: [
+          {
+            href: changeLink,
+            text: "Change",
+            visuallyHiddenText: "address"
+          }
+        ]
+      }
+    }
+  ]
+}) }}
