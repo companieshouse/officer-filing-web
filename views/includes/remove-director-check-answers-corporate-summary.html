@@ -5,7 +5,7 @@
         text: "Name"
       },
       value: {
-        text: director.name
+        text: name
       }
     },
     {
@@ -13,7 +13,7 @@
         text: "Appointed on"
     },
       value: {
-        text: director.appointedOn
+        text: appointedOn
       }
     },
     {
@@ -21,14 +21,17 @@
         text: "Date the director was removed from the company"
       },
       value: {
-        text: director.resignedOn
+        text: resignedOn
       },
       actions: {
         items: [
           {
             href: changeLink,
             text: "Change",
-            visuallyHiddenText: "address"
+            visuallyHiddenText: "address",
+            attributes: {
+              "data-event-id": "change-link"
+            }
           }
         ]
       }

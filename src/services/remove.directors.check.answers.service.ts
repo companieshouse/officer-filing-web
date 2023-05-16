@@ -29,3 +29,8 @@ export const getMonthString = (month: string|undefined): string => {
     return "undefined";
   } 
 }
+
+export const buildDateString = (dateStr: string): string => {
+  var dateArray = dateStr.split("-");
+  return dateArray[2] + " " + getMonthString(dateArray[1]) + " " + dateArray[0];;
+}
