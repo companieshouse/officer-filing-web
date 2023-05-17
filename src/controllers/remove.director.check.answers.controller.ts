@@ -22,7 +22,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
     }
 
-    const dateOfBirth = companyOfficer.dateOfBirth?.day + " " + getMonthString(companyOfficer.dateOfBirth?.month) + " " + companyOfficer.dateOfBirth?.year;
+    var dateOfBirth = "";
+    if(companyOfficer.dateOfBirth?.day !== undefined && companyOfficer.dateOfBirth?.day !== "undefined"){
+      dateOfBirth = companyOfficer.dateOfBirth?.day + " ";
+    }
+    dateOfBirth = dateOfBirth + getMonthString(companyOfficer.dateOfBirth?.month) + " " + companyOfficer.dateOfBirth?.year;
     var corporateDirector = false;
     if(companyOfficer.officerRole === "corporate-director"){
       corporateDirector = true;

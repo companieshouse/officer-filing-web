@@ -22,7 +22,7 @@ export const getDirectorAndTerminationDate = async (session: Session, transactio
 };
 
 export const getMonthString = (month: string|undefined): string => {
-  if(month != undefined){
+  if(month !== undefined){
     return Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(Number(month)));
   }
   else {
