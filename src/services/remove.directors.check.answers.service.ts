@@ -20,17 +20,3 @@ export const getDirectorAndTerminationDate = async (session: Session, transactio
   const successfulResponse = response as Resource<CompanyOfficer>;
   return successfulResponse.resource as CompanyOfficer;
 };
-
-export const getMonthString = (month: string|undefined): string => {
-  if(month !== undefined){
-    return Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(Number(month)));
-  }
-  else {
-    return "undefined";
-  } 
-}
-
-export const buildDateString = (dateStr: string): string => {
-  var dateArray = dateStr.split("-");
-  return dateArray[2] + " " + getMonthString(dateArray[1]) + " " + dateArray[0];;
-}

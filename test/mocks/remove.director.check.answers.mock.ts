@@ -14,7 +14,7 @@ export const mockAddress1: Address = {
 
 export const dateOfBirth: DateOfBirth = {
   day: "5",
-  month: "12",
+  month: "11",
   year: "2002"
 }
 
@@ -34,7 +34,7 @@ export const mockCompanyOfficer: CompanyOfficer = {
   links: companyOfficerLinks,
   name: "JOHN MiddleName DOE",
   officerRole: "DIRECTOR",
-  resignedOn: "2023-12-04",
+  resignedOn: "2022-12-04",
 };
 
 export const mockCorporateCompanyOfficer: CompanyOfficer = {
@@ -44,5 +44,5 @@ export const mockCorporateCompanyOfficer: CompanyOfficer = {
   links: companyOfficerLinks,
   name: "JOHN MiddleName DOE",
   officerRole: "corporate-director",
-  resignedOn: "2023-12-04",
+  resignedOn: "2022-12-04",
 };
