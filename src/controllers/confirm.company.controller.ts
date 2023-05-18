@@ -4,13 +4,10 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { Session } from "@companieshouse/node-session-handler";
 import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
+import { isValidUrl } from "../validation/request.input.validation";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
-
-export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web")
-};
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -47,23 +44,19 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
-
+    var nextPageUrl;
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
-      if (isValidUrl(redirectUrl)){
-        return res.redirect(redirectUrl);
-      } else {
-        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
-      }
+      nextPageUrl = (urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber));
+    }
+    else {
+      await createNewOfficerFiling(session);
+      nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
     }
     
-    await createNewOfficerFiling(session);
-
-    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-
-    if(isValidUrl(nextPageUrl)) {
+    if (isValidUrl(nextPageUrl)) {
       return res.redirect(nextPageUrl);
-    } else {
+    }
+    else {
       throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
     }
   } catch (e) {
