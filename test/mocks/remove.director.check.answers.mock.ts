@@ -42,7 +42,7 @@ export const mockCorporateCompanyOfficer: CompanyOfficer = {
   appointedOn: "2022-12-01",
   countryOfResidence: "UNITED KINGDOM",
   links: companyOfficerLinks,
-  name: "JOHN MiddleName DOE",
+  name: "Blue Enterprises",
   officerRole: "corporate-director",
   resignedOn: "2022-12-04",
 };
