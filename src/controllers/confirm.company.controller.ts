@@ -8,10 +8,6 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 
-export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web")
-};
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
@@ -50,22 +46,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
-      if (isValidUrl(redirectUrl)){
-        return res.redirect(redirectUrl);
-      } else {
-        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
-      }
+      return res.redirect(redirectUrl);
     }
-    
     await createNewOfficerFiling(session);
-
     const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-
-    if(isValidUrl(nextPageUrl)) {
-      return res.redirect(nextPageUrl);
-    } else {
-      throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
-    }
+    return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }
