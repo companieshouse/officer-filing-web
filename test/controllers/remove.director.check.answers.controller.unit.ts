@@ -56,7 +56,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("5 November 2002");
       expect(response.text).toContain("Appointed on");
       expect(response.text).toContain("1 December 2022");
-      expect(response.text).toContain("Date the director was removed from the company");
+      expect(response.text).toContain("Removal Date");
       expect(response.text).toContain("4 December 2022");
     });
 
@@ -73,7 +73,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text.includes("Date of birth")).toEqual(false);
       expect(response.text).toContain("Appointed on");
       expect(response.text).toContain("1 December 2022");
-      expect(response.text).toContain("Date the director was removed from the company");
+      expect(response.text).toContain("Removal Date");
       expect(response.text).toContain("4 December 2022");
     });
   });
