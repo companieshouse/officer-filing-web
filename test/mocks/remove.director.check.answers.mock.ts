@@ -18,6 +18,11 @@ export const dateOfBirth: DateOfBirth = {
   year: "2002"
 }
 
+export const dateOfBirthMissingDay: DateOfBirth = {
+  month: "11",
+  year: "2002"
+}
+
 export const officerLinks: OfficerLinks = {
   appointments: "appointments"
 }
@@ -35,6 +40,37 @@ export const mockCompanyOfficer: CompanyOfficer = {
   name: "JOHN MiddleName DOE",
   officerRole: "DIRECTOR",
   resignedOn: "2022-12-04",
+};
+
+export const mockCompanyOfficerMissingDateOfBirth: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  links: companyOfficerLinks,
+  name: "JOHN MiddleName DOE",
+  officerRole: "DIRECTOR",
+  resignedOn: "2022-12-04",
+};
+
+export const mockCompanyOfficerMissingDateOfBirthDay: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  dateOfBirth: dateOfBirthMissingDay,
+  links: companyOfficerLinks,
+  name: "JOHN MiddleName DOE",
+  officerRole: "DIRECTOR",
+  resignedOn: "2022-12-04",
+};
+
+export const mockCompanyOfficerMissingResignedOn: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  dateOfBirth: dateOfBirth,
+  links: companyOfficerLinks,
+  name: "JOHN MiddleName DOE",
+  officerRole: "DIRECTOR"
 };
 
 export const mockCorporateCompanyOfficer: CompanyOfficer = {
