@@ -2,18 +2,35 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH} from "../types/page.urls";
+import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
+import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
+
+export const isValidUrl = (url: string) => { 
+  return url.startsWith("/officer-filing-web")
+};
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    const pageOptions = await buildPageOptions(session, companyProfile);
-    return res.render(Templates.CONFIRM_COMPANY, pageOptions);
+
+    if (await getCurrentOrFutureDissolved(session, companyNumber)){
+      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
+      if (isValidUrl(redirectUrl)){
+        res.redirect(redirectUrl);
+      } else {
+        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
+      }
+    }
+    else {
+      const pageOptions = await buildPageOptions(session, companyProfile);
+      return res.render(Templates.CONFIRM_COMPANY, pageOptions);
+    }
+
   } catch (e) {
     return next(e);
   }
@@ -33,10 +50,6 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };
-};
-
-export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web/company")
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

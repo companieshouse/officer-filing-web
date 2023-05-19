@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -16,25 +16,40 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
+import { buildPaginationElement } from "../utils/pagination";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    const directors: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    const officerLists = buildOfficerLists(directors);
     req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
     const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req);
+    const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
+    const directorList = [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)];
+
+    // Get current page number
+    let page = req.query["page"];
+    const pageNumber = isNaN(Number(page))? 1: Number(page);
+
+    // Get list of directors to show on current page
+    const objectsPerPage = 5;
+    const startIndex = (pageNumber - 1) * objectsPerPage;
+    const endIndex = startIndex + objectsPerPage;
+    const paginatedDirectorsList = directorList.slice(startIndex, endIndex);
+
+    // Create pagination element to navigate pages
+    const numOfPages = Math.ceil(directorList.length / objectsPerPage);
+    const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req));
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
-      directorsList: officerLists.directorsList,
-      corporateDirectorsList: officerLists.corporateDirectorsList,
+      nextPageUrl: nextPageUrl,
+      directorsList: paginatedDirectorsList,
       company: companyProfile,
-      nextPageUrl: nextPageUrl
+      pagination: paginationElement
     });
   } catch (e) {
     return next(e);
@@ -58,7 +73,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const buildDirectorsList = (officers: CompanyOfficer[]): any[] => {
+const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
     .map(officer => {
@@ -81,13 +96,6 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
         appointedOn: formatAppointmentDate(officer.appointedOn)
       };
     });
-};
-
-const buildOfficerLists = (officers: CompanyOfficer[]): any => {
-  return {
-    directorsList: buildDirectorsList(officers),
-    corporateDirectorsList: buildCorporateDirectorsList(officers),
-  };
 };
 
 const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;

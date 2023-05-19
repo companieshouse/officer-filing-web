@@ -116,3 +116,7 @@ export const mockCompanyOfficers: CompanyOfficer[] = [
     resignedOn: undefined,
   }
 ];
+
+export const mockCompanyOfficersExtended: CompanyOfficer[] = [
+  ...mockCompanyOfficers, ...mockCompanyOfficers
+];

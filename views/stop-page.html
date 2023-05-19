@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+    {{content.pageHeader}}
+{% endblock %}
+{% block signOut %}{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        {{content.pageHeader | safe}}
+      </h1>
+
+      {{content.pageBody | safe}}
+
+    </div>
+  </div>
+{% endblock %}

@@ -2,54 +2,58 @@
 
 {% block pageTitle %}
 {% if errorList.length > 0 %}
-  Error:
-{% endif %}  Review the officers
+Error:
+{% endif %} Review the officers
 {% endblock %}
 
 {% block backLink %}
-  {% include "includes/back-link.html" %}
+{% include "includes/back-link.html" %}
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
-      <form action="" method="post">
-        {% if officerErrorMsg %}
-          {{ govukErrorSummary({
-            titleText: "There is a problem",
-            errorList: [
-              {
-                text: officerErrorMsg,
-                href: "#active-directors"
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <form action="" method="post">
+      {% if officerErrorMsg %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: [
+            {
+              text: officerErrorMsg,
+              href: "#active-directors"
             }
           ]
-          }) }}
-          {% set activeOfficersError = {
-            text: officerErrorMsg
-          }
-          %}
-        {% else %}
-          {% set activeOfficersError = false %}
-        {% endif %}
+        }) }}
+        {% set activeOfficersError = {
+          text: officerErrorMsg
+        } %}
+      {% else %}
+        {% set activeOfficersError = false %}
+      {% endif %}
 
-        <span class="govuk-caption-xl gem-c-title__context">
-          {{company.companyName}}
-        </span>
-        <h1 class="govuk-heading-l">Current directors</h1>
+      <span class="govuk-caption-xl gem-c-title__context">
+        {{company.companyName}}
+      </span>
+      <h1 class="govuk-heading-l">Current directors</h1>
 
-        {% if directorsList|length %}
+      {% if directorsList|length %}
         {% for director in directorsList %}
-        {% include "includes/directors.html" %}
+          {% if ((director.officerRole == "Director") or (director.officerRole == "Nominee-director")) %}
+            {% include "includes/directors.html" %}
+          {% elif ((director.officerRole == "Corporate-director") or (director.officerRole == "Corporate-nominee-director")) %}
+            {% include "includes/corporate-directors.html" %}
+          {% endif %}
         {% endfor %}
-        {% endif %}
+      {% endif %}
 
-        {% if corporateDirectorsList|length %}
-        {% for director in corporateDirectorsList %}
-        {% include "includes/corporate-directors.html" %}
-        {% endfor %}
-        {% endif %}
+      {% if pagination and pagination.items|length %}
+      <br>
+      <div id="pagination-container">
+        {{ govukPagination(pagination) }}
+      </div>
+      {% endif %}
 
-      </form>
-    </div>
+    </form>
   </div>
+</div>
 {% endblock %}

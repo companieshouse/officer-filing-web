@@ -3,7 +3,6 @@
  * provided, then it is assumed it is a mandatory requirement and an error will be
  * thrown.
  */
-
 const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
     const isMandatory = !defaultValue;
     const value: string = process.env[key] || "";
@@ -34,6 +33,8 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const API_URL = getEnvironmentVariable("API_URL");
   
   export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");
+
+  export const OFFICER_FILING_WEB_ACTIVE = getEnvironmentVariable("OFFICER_FILING_WEB_ACTIVE", "false");
   
   export const FEATURE_FLAG_REMOVE_DIRECTOR_20022023 = "true"; //TODO  add the feature flag and then replace true with this get getEnvironmentVariable("FEATURE_FLAG_REMOVE_DIRECTOR_20022023");
   

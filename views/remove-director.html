@@ -11,44 +11,20 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
+
+      {% include "includes/list/errors.html" %}
+      
       <form action="" method="post">
 
         <span class="govuk-caption-xl gem-c-title__context">
           Director name
         </span>
-        {{ govukDateInput({
-          id: "dob",
-          namePrefix: "dob",
-          fieldset: {
-            legend: {
-              text: "When was the director removed from the company?",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
-            }
-          },
-          hint: {
-            text: "For example, 27 3 2021"
-          },
-          items: [
-            {
-              name: "day",
-              classes: "govuk-input--width-2",
-              autocomplete: "bday-day"
-            },
-            {
-              name: "month",
-              classes: "govuk-input--width-2",
-              autocomplete: "bday-month"
-            },
-            {
-              name: "year",
-              classes: "govuk-input--width-4",
-              autocomplete: "bday-year"
-            }
-          ]
-        }) }}
+        {% include "includes/inputs/date/removal-date-input.html" %}
 
         {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
           text: "Continue"
         }) }}
 
