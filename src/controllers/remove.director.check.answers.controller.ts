@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { REMOVE_DIRECTOR_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, REMOVE_DIRECTOR_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
@@ -7,7 +7,6 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing/types";
 import { getDirectorAndTerminationDate } from "../services/remove.directors.check.answers.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { ACTIVE_DIRECTORS_PATH } from "../types/page.urls";
 import { toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {

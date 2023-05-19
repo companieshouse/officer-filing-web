@@ -14,7 +14,7 @@ export const getDirectorAndTerminationDate = async (session: Session, transactio
   const status = response.httpStatusCode as number;
 
   if (status >= 400) {
-    const errorResponse = response as ApiErrorResponse;
+    const errorResponse = response;
     throw new Error(`Error retrieving TM01 check your answers details: ${JSON.stringify(errorResponse)}`);
   }
   const successfulResponse = response as Resource<CompanyOfficer>;
