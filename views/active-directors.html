@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
+{% set title = "Review the officers" %}
+
 {% block pageTitle %}
-{% if errorList.length > 0 %}
-Error:
-{% endif %} Review the officers
+  {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
