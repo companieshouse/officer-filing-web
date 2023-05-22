@@ -18,19 +18,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
-      if (isValidUrl(redirectUrl)){
-        res.redirect(redirectUrl);
-      } else {
-        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
-      }
-    }
-    else {
-      const pageOptions = await buildPageOptions(session, companyProfile);
-      return res.render(Templates.CONFIRM_COMPANY, pageOptions);
-    }
-
+    const pageOptions = await buildPageOptions(session, companyProfile);
+    return res.render(Templates.CONFIRM_COMPANY, pageOptions);
+    
   } catch (e) {
     return next(e);
   }
@@ -54,12 +44,23 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const session: Session = req.session as Session;
 
+    const session: Session = req.session as Session;
+    const companyNumber = req.query.companyNumber as string;
+
+    if (await getCurrentOrFutureDissolved(session, companyNumber)){
+      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
+      if (isValidUrl(redirectUrl)){
+        return res.redirect(redirectUrl);
+      } else {
+        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
+      }
+    }
+    
     await createNewOfficerFiling(session);
 
-    const companyNumber = req.query.companyNumber as string;
     const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+
     if(isValidUrl(nextPageUrl)) {
       return res.redirect(nextPageUrl);
     } else {

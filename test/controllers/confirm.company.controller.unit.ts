@@ -7,11 +7,12 @@ jest.mock("../../src/services/stop.page.validation.service");
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { CONFIRM_COMPANY_PATH } from "../../src/types/page.urls";
+import { CONFIRM_COMPANY_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../../src/types/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile, dissolvedCompanyProfile } from "../mocks/company.profile.mock";
 import { formatForDisplay } from "../../src/services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../../src/services/stop.page.validation.service";
+import { urlUtils } from "../../src/utils/url";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockFormatForDisplay = formatForDisplay as jest.Mock;
@@ -26,19 +27,7 @@ describe("Confirm company controller tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  it("Should redirect to dissolved stop screen when company is dissolved", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
-    mockFormatForDisplay.mockReturnValueOnce(dissolvedCompanyProfile);
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
-
-    const response = await request(app)
-    .get(CONFIRM_COMPANY_PATH)
-    .query({ companyNumber });
-
-    expect(response.text).toContain(DISSOLVED_PAGE_REDIRECT_HEADING);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    mockGetCurrentOrFutureDissolved.mockReset();
   });
 
   it("Should navigate to confirm company page", async () => {
@@ -87,5 +76,14 @@ describe("Confirm company controller tests", () => {
     expect(response.header.location).toEqual("/officer-filing-web/company/" + companyNumber + "/transaction");
   });
 
+  it("Should redirect to dissolved stop screen when company is dissolved", async () => {
+    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
+
+    const response = await request(app)
+      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+
+    expect(response.text).toEqual(DISSOLVED_PAGE_REDIRECT_HEADING);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
 });
 
