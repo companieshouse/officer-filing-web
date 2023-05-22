@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -24,6 +24,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+    req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req);
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const directorList = [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)];
 
@@ -44,6 +46,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
+      nextPageUrl: nextPageUrl,
       directorsList: paginatedDirectorsList,
       company: companyProfile,
       pagination: paginationElement
