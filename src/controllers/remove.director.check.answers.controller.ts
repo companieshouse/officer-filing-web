@@ -8,6 +8,8 @@ import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/offic
 import { getDirectorAndTerminationDate } from "../services/remove.directors.check.answers.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
+import { equalsIgnoreCase } from "../utils/format";
+import { OFFICER_ROLE } from "../utils/constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -34,7 +36,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
       var corporateDirector = false;
-      if(companyOfficer.officerRole === "corporate-director"){
+      if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
         corporateDirector = true;
       }
 

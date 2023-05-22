@@ -9,7 +9,7 @@ import app from "../../src/app";
 
 import { REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
-import { mockCompanyOfficer, mockCompanyOfficerMissingDateOfBirth, mockCompanyOfficerMissingDateOfBirthDay, mockCompanyOfficerMissingResignedOn, mockCorporateCompanyOfficer } from "../mocks/remove.director.check.answers.mock";
+import { mockCompanyOfficer, mockCompanyOfficerMissingDateOfBirth, mockCompanyOfficerMissingDateOfBirthDay, mockCompanyOfficerMissingResignedOn, mockCorporateCompanyOfficer, mockCorporateNomineeCompanyOfficer } from "../mocks/remove.director.check.answers.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getDirectorAndTerminationDate } from "../../src/services/remove.directors.check.answers.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -62,6 +62,23 @@ describe("Remove director check answers controller tests", () => {
 
     it("Should display summary for the corporate directors, missing date of birth", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
+      const response = await request(app).get(CHECK_ANSWERS_URL);
+      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
+      expect(response.text).toContain("Company name");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("Company number");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("Name");
+      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text.includes("Date of birth")).toEqual(false);
+      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("1 December 2022");
+      expect(response.text).toContain("Removal Date");
+      expect(response.text).toContain("4 December 2022");
+    });
+
+    it("Should display summary for the corporate-nominee directors, missing date of birth", async () => {
+      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateNomineeCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
       expect(response.text).toContain("Company name");

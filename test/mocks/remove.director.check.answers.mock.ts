@@ -82,3 +82,13 @@ export const mockCorporateCompanyOfficer: CompanyOfficer = {
   officerRole: "corporate-director",
   resignedOn: "2022-12-04",
 };
+
+export const mockCorporateNomineeCompanyOfficer: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  links: companyOfficerLinks,
+  name: "Blue Enterprises",
+  officerRole: "corporate-nominee-director",
+  resignedOn: "2022-12-04",
+};
