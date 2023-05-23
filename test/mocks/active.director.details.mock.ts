@@ -26,6 +26,7 @@ export const officerLinks: OfficerLinks = {
 }
 
 export const companyOfficerLinks: CompanyOfficerLinks = {
+  self: "company/00006400/appointments/9876",
   officer: officerLinks
 }
 

@@ -37,10 +37,10 @@ Error:
       <h1 class="govuk-heading-l">Current directors</h1>
 
       {% if directorsList|length %}
-        {% for director in directorsList %}
-          {% if ((director.officerRole == "Director") or (director.officerRole == "Nominee-director")) %}
+        {% for officerCard in directorsList %}
+          {% if ((officerCard.officer.officerRole == "Director") or (officerCard.officer.officerRole == "Nominee-director")) %}
             {% include "includes/directors.html" %}
-          {% elif ((director.officerRole == "Corporate-director") or (director.officerRole == "Corporate-nominee-director")) %}
+          {% elif ((officerCard.officer.officerRole == "Corporate-director") or (officerCard.officer.officerRole == "Corporate-nominee-director")) %}
             {% include "includes/corporate-directors.html" %}
           {% endif %}
         {% endfor %}
