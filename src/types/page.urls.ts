@@ -4,17 +4,20 @@ import { Templates } from "./template.paths";
 export enum urlParams {
   PARAM_COMPANY_NUMBER = "companyNumber",
   PARAM_TRANSACTION_ID = "transactionId",
-  PARAM_SUBMISSION_ID = "submissionId"
+  PARAM_SUBMISSION_ID = "submissionId",
+  PARAM_APPOINTMENT_ID = "appointmentId"
 }
 
 export enum URL_QUERY_PARAM {
   COMPANY_NUM = "companyNumber",
   PARAM_TRANSACTION_ID = "transactionId",
   PARAM_SUBMISSION_ID = "submissionId",
+  PARAM_APPOINTMENT_ID = "appointmentId",
   IS_PSC = "isPsc"
 }
 
 const SEPARATOR = "/";
+
 
 export const COMPANY_AUTH_PROTECTED_BASE = `/company/:${urlParams.PARAM_COMPANY_NUMBER}/`;
 export const ACTIVE_SUBMISSION_BASE = COMPANY_AUTH_PROTECTED_BASE +
@@ -23,7 +26,7 @@ export const ACTIVE_BASE = COMPANY_AUTH_PROTECTED_BASE +
   `transaction/:${urlParams.PARAM_TRANSACTION_ID}/`;
 export const CONTAINS_TRANSACTION_ID = `/transaction/:${urlParams.PARAM_TRANSACTION_ID}`;
 export const CONTAINS_SUBMISSION_ID = `/submission/:${urlParams.PARAM_SUBMISSION_ID}`;
-
+export const CONTAINS_APPOINTMENT_ID = `appointment/:${urlParams.PARAM_APPOINTMENT_ID}`;
 
 // Use _PATH consts for redirects
 // Use const without _PATH to match the url in the routes.ts
@@ -32,6 +35,7 @@ export const ACCOUNTS_SIGNOUT_PATH = `${ACCOUNT_URL}/signout`;
 export const CONFIRM_COMPANY = SEPARATOR + Templates.CONFIRM_COMPANY;
 export const OFFICER_FILING = "/officer-filing-web";
 export const COMPANY_NUMBER = "/company-number";
+export const DIRECTOR_ID = "/director-id";
 export const COMPANY_LOOKUP = "/company-lookup/search?forward="+OFFICER_FILING+"/confirm-company?companyNumber={companyNumber}";
 export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
 export const SIGNOUT_PATH = "/signout";
@@ -64,13 +68,13 @@ export const USE_WEBFILING = "/use-webfiling";
 export const USE_WEBFILING_PATH = OFFICER_FILING + USE_WEBFILING + `?${URL_QUERY_PARAM.COMPANY_NUM}={${URL_QUERY_PARAM.COMPANY_NUM}}`;
 export const NO_FILING_REQUIRED = "/no-filing-required";
 export const NO_FILING_REQUIRED_PATH = OFFICER_FILING + NO_FILING_REQUIRED + `?${URL_QUERY_PARAM.COMPANY_NUM}={${URL_QUERY_PARAM.COMPANY_NUM}}`;
-export const REMOVE_DIRECTOR_PATH_END = "remove-director";
-export const REMOVE_DIRECTOR = "/company/00006400/transaction/020002-120116-793219/submission/1/" + REMOVE_DIRECTOR_PATH_END;
+export const REMOVE_DIRECTOR_PATH_END = "/remove-director";
+export const REMOVE_DIRECTOR = ACTIVE_BASE + CONTAINS_APPOINTMENT_ID + REMOVE_DIRECTOR_PATH_END;
 export const REMOVE_DIRECTOR_PATH = OFFICER_FILING + REMOVE_DIRECTOR;
 //Hardcoded for now
 //export const REMOVE_DIRECTOR_CHECK_ANSWERS = ACTIVE_SUBMISSION_BASE + "remove-director-check-answers";
 //export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
-export const REMOVE_DIRECTOR_CHECK_ANSWERS = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-check-answers";
+export const REMOVE_DIRECTOR_CHECK_ANSWERS = ACTIVE_SUBMISSION_BASE + "remove-director-check-answers";
 export const REMOVE_DIRECTOR_CHECK_ANSWERS_PATH = OFFICER_FILING + REMOVE_DIRECTOR_CHECK_ANSWERS;
 export const REMOVE_DIRECTOR_SUBMITTED = "/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-submitted";
 export const REMOVE_DIRECTOR_SUBMITTED_PATH = OFFICER_FILING + REMOVE_DIRECTOR_SUBMITTED;

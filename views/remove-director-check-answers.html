@@ -15,55 +15,50 @@
     <div class="govuk-grid-column-three-quarters">
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">Check your answers before submitting the removal of a director</h1>
+        <h1 class="govuk-heading-l">Check your answers before submitting a removal of a director</h1>
 
-        <h2 class="govuk-heading-m">Director details</h2>
+        <h2 class="govuk-heading-m">Company details</h2>
 
         {{ govukSummaryList({
+          classes: 'govuk-!-margin-bottom-9',
           rows: [
             {
               key: {
-                text: "Name"
+                text: "Company name"
               },
               value: {
-                text: "Sarah Philips"
+                text: company.companyName
               }
             },
             {
               key: {
-                text: "Date of birth"
+                text: "Company number"
               },
               value: {
-                text: "5 January 1978"
-              }
-            },
-            {
-              key: {
-                text: "Date the director was removed from the company"
-              },
-              value: {
-                html: ""
-              },
-              actions: {
-                items: [
-                  {
-                    href: "#",
-                    text: "Change",
-                    visuallyHiddenText: "address"
-                  }
-                ]
+                text: company.companyNumber
               }
             }
           ]
         }) }}
 
-        {{ govukButton({
-          attributes: {
-            id: "submit",
-            "data-event-id": "confirm-and-submit-button"
-          },
-          text: "Confirm and submit"
-        }) }}
+        <h2 class="govuk-heading-m">Director details</h2>
+
+        {% if corporateDirector %}
+          {% include "includes/remove-director-check-answers-corporate-summary.html" %}
+        {% else %}
+          {% include "includes/remove-director-check-answers-summary.html" %}
+        {% endif %}
+
+        <div class="govuk-button-group"></div>
+          {{ govukButton({
+            attributes: {
+              id: "submit",
+              "data-event-id": "confirm-and-submit-button"
+            },
+            text: "Confirm and submit"
+          }) }}
+          <a class="govuk-link" href="{{cancelLink}}" data-event-id="cancel-link">Cancel</a>
+        </div>
 
       </form>
     </div>

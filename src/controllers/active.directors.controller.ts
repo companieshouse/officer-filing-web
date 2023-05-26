@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -11,7 +11,7 @@ import {
     formatDateOfBirth,
     formatAppointmentDate
   } from "../utils/format";
-import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer, OfficerCard } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
@@ -25,7 +25,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
-    const directorList = [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)];
+    const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
 
     // Get current page number
     let page = req.query["page"];
@@ -60,11 +60,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const activeOfficerDetailsBtnValue = req.body.activeOfficers;
 
-      return res.render(Templates.ACTIVE_DIRECTORS, {
-        backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
-        officerErrorMsg: DIRECTOR_DETAILS_ERROR,
-        templateName: Templates.ACTIVE_DIRECTORS,
-      });
+    return res.render(Templates.ACTIVE_DIRECTORS, {
+      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
+      officerErrorMsg: DIRECTOR_DETAILS_ERROR,
+      templateName: Templates.ACTIVE_DIRECTORS,
+    });
   } catch (e) {
     return next(e);
   }
@@ -78,7 +78,8 @@ const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
         dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
-        appointedOn: formatAppointmentDate(officer.appointedOn)
+        appointedOn: formatAppointmentDate(officer.appointedOn),
+        links: officer.links
       };
     });
 };
@@ -90,9 +91,39 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
       return {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
-        appointedOn: formatAppointmentDate(officer.appointedOn)
+        appointedOn: formatAppointmentDate(officer.appointedOn),
+        links: officer.links
       };
     });
 };
 
 const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;
+
+const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCard[] => {
+  return officers
+    .filter(officer => getAppointmentIdFromSelfLink(officer).length)
+    .map(officer => {
+      return {
+        removeUrl: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, getAppointmentIdFromSelfLink(officer)),
+        officer: officer
+      }
+    })
+};
+
+/**
+ * Extract the referenced appointment ID from the officers self link URL
+ * @param officer The officer containing the link
+ * @returns The appointment ID if available, or an empty string if not
+ */
+const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
+  if (officer.links != undefined) {
+    const self = officer.links.self;
+    if (self != undefined) {
+      const matches = self.match("\/appointments\/([^\/]+)");
+      if (matches && matches[1]) {
+        return matches[1];
+      }
+    }
+  }
+  return "";
+};
