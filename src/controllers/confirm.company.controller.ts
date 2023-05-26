@@ -7,6 +7,7 @@ import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
+import { STOP_TYPE } from "../utils/constants";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/officer-filing-web")
@@ -47,9 +48,21 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
+    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      const redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber)
+      var redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
+      redirectUrl = urlUtils.setQueryParam(redirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
+      if (isValidUrl(redirectUrl)){
+        return res.redirect(redirectUrl);
+      } else {
+        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
+      }
+    }
+
+    if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
+      var redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
+      redirectUrl = urlUtils.setQueryParam(redirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
       if (isValidUrl(redirectUrl)){
         return res.redirect(redirectUrl);
       } else {
