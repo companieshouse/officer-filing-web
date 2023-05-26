@@ -23,7 +23,7 @@ const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {
   const PAGE_HEADING = "Confirm this is the correct company";
-  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678"
+  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=dissolved";
 
   beforeEach(() => {
     jest.clearAllMocks();
