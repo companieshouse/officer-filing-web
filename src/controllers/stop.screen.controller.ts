@@ -9,8 +9,8 @@ import { COMPANY_NAME_PLACEHOLDER, STOP_TYPE, STOP_PAGE_CONTENT } from "../utils
 export const get = async (req, res, next: NextFunction) => {
     try {
         const stopType = req.query.stopType as string;
-        const content = setContent(req, stopType)
-        displayStopPage(res, await content)
+        const content = setContent(req, stopType);
+        return displayStopPage(res, await content);
     } catch (e) {
         return next(e);
     }
@@ -24,7 +24,7 @@ const setContent = async (req: Request, stopType: String) => {
     const companyNumber = req.query[URL_QUERY_PARAM.COMPANY_NUM] as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if (companyProfile.companyName == undefined || companyProfile.companyName == "") {
+    if (companyProfile.companyName === "") {
         if(stopType === STOP_TYPE.DISSOLVED){
             // Company name is at the start of the paragraph on the dissolved screen.
             companyProfile.companyName = "This company";
