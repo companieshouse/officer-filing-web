@@ -13,6 +13,10 @@ export const isValidUrl = (url: string) => {
   return url.startsWith("/officer-filing-web")
 };
 
+export const isValidCompanyNumber = (companyNumber: string) => {
+  return companyNumber.length <= 20;
+}
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
@@ -49,6 +53,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+
+    if(!isValidCompanyNumber(companyNumber)){
+      throw Error("Company number is invalid, length is greater than 20 characters");
+    }
 
     var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
