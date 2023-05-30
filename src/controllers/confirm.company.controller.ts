@@ -50,29 +50,17 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
+    var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      var redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
-      redirectUrl = urlUtils.setQueryParam(redirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
-      if (isValidUrl(redirectUrl)){
-        return res.redirect(redirectUrl);
-      } else {
-        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
-      }
+      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
     }
-
-    if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
-      var redirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
-      redirectUrl = urlUtils.setQueryParam(redirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
-      if (isValidUrl(redirectUrl)){
-        return res.redirect(redirectUrl);
-      } else {
-        throw Error("URL to redirect to (" + redirectUrl + ") was not valid");
-      }
+    else if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
+      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
     }
-    
-    await createNewOfficerFiling(session);
-
-    const nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+    else{
+      await createNewOfficerFiling(session);
+      nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+    }
 
     if(isValidUrl(nextPageUrl)) {
       return res.redirect(nextPageUrl);
