@@ -88,4 +88,12 @@ describe("Stop screen controller tests", () => {
     expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
   });
 
+  it("Should return error page if unknown stop type is provided", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL + "undefined");
+
+    expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+  });
+
 });

@@ -20,7 +20,7 @@ const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: 
     return res.render(Templates.STOP_PAGE, content);
 };
 
-const setContent = async (req: Request, stopType: String) => {  
+const setContent = async (req: Request, stopType: string) => {  
     const companyNumber = req.query[URL_QUERY_PARAM.COMPANY_NUM] as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
