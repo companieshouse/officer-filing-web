@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
+import * as constants from "./utils/constants"
 
 const app = express();
 app.disable("x-powered-by");
@@ -28,6 +29,7 @@ const nunjucksEnv = nunjucks.configure([
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
 nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
+nunjucksEnv.addGlobal("SERVICE_NAME", process.env.SERVICE_NAME);
 
 app.enable("trust proxy");
 app.use(express.json());

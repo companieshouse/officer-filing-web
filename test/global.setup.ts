@@ -20,4 +20,5 @@ export default () => {
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";
   process.env.URL_LOG_MAX_LENGTH = "400";
   process.env.URL_PARAM_MAX_LENGTH = "50";
+  process.env.SERVICE_NAME = 'Remove a director from a company';
 };
