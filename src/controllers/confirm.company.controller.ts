@@ -14,7 +14,8 @@ export const isValidUrl = (url: string) => {
 };
 
 export const isValidCompanyNumber = (companyNumber: string) => {
-  return companyNumber.length <= 20;
+  var pattern= "^[a-zA-Z0-9]*$";
+  return (companyNumber.length <= 20 && companyNumber.match(pattern));
 }
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -55,7 +56,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     if(!isValidCompanyNumber(companyNumber)){
-      throw Error("Company number is invalid, length is greater than 20 characters");
+      throw Error("Company number is invalid, should be an alphanumeric string of a maximum 20 characters");
     }
 
     var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
