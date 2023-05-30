@@ -13,11 +13,6 @@ export const isValidUrl = (url: string) => {
   return url.startsWith("/officer-filing-web")
 };
 
-export const isValidCompanyNumber = (companyNumber: string) => {
-  var pattern= "^[a-zA-Z0-9]*$";
-  return (companyNumber.length <= 20 && companyNumber.match(pattern));
-}
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
@@ -58,16 +53,28 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
+      if(isValidUrl(nextPageUrl)) {
+        return res.redirect(nextPageUrl);
+      } else {
+        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
+      }
     }
     else if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
+      if(isValidUrl(nextPageUrl)) {
+        return res.redirect(nextPageUrl);
+      } else {
+        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
+      }
     }
     else{
       await createNewOfficerFiling(session);
-      if(!isValidCompanyNumber(companyNumber)){
-        throw Error("Company number is invalid, should be an alphanumeric string of a maximum 20 characters");
-      }
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+      if(isValidUrl(nextPageUrl)) {
+        return res.redirect(nextPageUrl);
+      } else {
+        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
+      }
     }
 
     if(isValidUrl(nextPageUrl)) {
