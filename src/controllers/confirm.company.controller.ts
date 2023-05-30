@@ -68,6 +68,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     else{
       await createNewOfficerFiling(session);
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
+      //Sonarqube will flag a vulnerability if the URL produced by the line above is not validated on the next line.
+      return redirectToUrl(nextPageUrl, res);
     }
     redirectToUrl(nextPageUrl, res);
   } catch (e) {
