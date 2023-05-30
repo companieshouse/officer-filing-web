@@ -36,13 +36,17 @@ const setContent = async (req: Request, stopType: String) => {
 
     switch(stopType) { 
         case STOP_TYPE.DISSOLVED: { 
-            STOP_PAGE_CONTENT.dissolved.pageBody = STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName);
-            return STOP_PAGE_CONTENT.dissolved;
+            return {
+                pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+            }
             
         } 
         case STOP_TYPE.LIMITED_UNLIMITED: { 
-            STOP_PAGE_CONTENT.limited_unlimited.pageBody = STOP_PAGE_CONTENT.limited_unlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName);
-            return STOP_PAGE_CONTENT.limited_unlimited;
+            return {
+                pageHeader: STOP_PAGE_CONTENT.limited_unlimited.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.limited_unlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+            }
         } 
         default: { 
            throw Error("Unrecognised stop screen type: " + stopType); 
