@@ -13,6 +13,14 @@ export const isValidUrl = (url: string) => {
   return url.startsWith("/officer-filing-web")
 };
 
+export const redirectToUrl = (url: string, res: Response) => { 
+  if(isValidUrl(url)) {
+    return res.redirect(url);
+  } else {
+    throw Error("URL to redirect to (" + url + ") was not valid");
+  }
+};
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
@@ -53,35 +61,17 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
-      if(isValidUrl(nextPageUrl)) {
-        return res.redirect(nextPageUrl);
-      } else {
-        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
-      }
     }
     else if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
-      if(isValidUrl(nextPageUrl)) {
-        return res.redirect(nextPageUrl);
-      } else {
-        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
-      }
     }
     else{
       await createNewOfficerFiling(session);
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-      if(isValidUrl(nextPageUrl)) {
-        return res.redirect(nextPageUrl);
-      } else {
-        throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
-      }
+      //Sonarqube will flag a vulnerability if the URL produced by the line above is not validated on the next line.
+      return redirectToUrl(nextPageUrl, res);
     }
-
-    if(isValidUrl(nextPageUrl)) {
-      return res.redirect(nextPageUrl);
-    } else {
-      throw Error("URL to redirect to (" + nextPageUrl + ") was not valid");
-    }
+    redirectToUrl(nextPageUrl, res);
   } catch (e) {
     return next(e);
   }
