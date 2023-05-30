@@ -55,10 +55,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if(!isValidCompanyNumber(companyNumber)){
-      throw Error("Company number is invalid, should be an alphanumeric string of a maximum 20 characters");
-    }
-
     var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
@@ -68,6 +64,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
     else{
       await createNewOfficerFiling(session);
+      if(!isValidCompanyNumber(companyNumber)){
+        throw Error("Company number is invalid, should be an alphanumeric string of a maximum 20 characters");
+      }
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
     }
 
