@@ -11,7 +11,6 @@ import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
-import * as constants from "./utils/constants"
 
 const app = express();
 app.disable("x-powered-by");
