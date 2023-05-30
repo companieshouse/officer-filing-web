@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
+{% set title = "File a Director termination - Companies House" %}
+
 {% block pageTitle %}
-  File a Director termination - Companies House
+{% include "includes/page-title.html" %}
 {% endblock %}
 
 <!-- No service name header-->
