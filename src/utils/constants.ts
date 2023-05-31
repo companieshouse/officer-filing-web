@@ -1,3 +1,5 @@
+import { COMPANY_LOOKUP } from "../types/page.urls";
+
 export const STATEMENT_OF_CAPITAL_ERROR = "Select yes if the statement of capital is correct";
 export const TRADING_STATUS_ERROR = "Select yes if the company trading status is correct";
 export const SIC_CODE_ERROR = "Select yes if the SIC codes are correct";
@@ -26,6 +28,7 @@ export const WRONG_PSC_ERROR = "Select yes if you have updated the PSC details";
 export const SIGNOUT_RETURN_URL_SESSION_KEY = 'signout-return-to-url';
 export const WRONG_PSC_DETAILS_TEXT = "wrong-psc-details";
 export const WRONG_PSC_STATEMENT_TEXT = "wrong-psc-statement";
+export const COMPANY_NAME_PLACEHOLDER = "COMPANY_NAME_PLACEHOLDER";
 
 
 export enum RADIO_BUTTON_VALUE {
@@ -79,4 +82,36 @@ export enum OFFICER_ROLE {
   CORPORATE_DIRECTOR = "CORPORATE-DIRECTOR",
   NOMINEE_DIRECTOR = "NOMINEE-DIRECTOR", 
   CORPORATE_NOMINEE_DIRECTOR = "CORPORATE-NOMINEE-DIRECTOR"
+}
+
+export enum STOP_TYPE {
+  DISSOLVED = "dissolved",
+  LIMITED_UNLIMITED ="limited-unlimited"
+}
+
+export const STOP_PAGE_CONTENT = 
+{   
+    dissolved:{
+        pageHeader: "Company is dissolved or in the process of being dissolved",
+        pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
+
+        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
+        <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+        `
+    },
+    limited_unlimited:{
+        pageHeader: "Only limited and unlimited companies can use this service",
+        pageBody: `<p>You can only file director updates for ` + COMPANY_NAME_PLACEHOLDER + ` using this service if it's a:</p>
+        <ul>
+            <li>private limited company</li>
+            <li>public limited company</li>
+            <li>private unlimited company</li>
+        </ul>  
+
+        <p>To make an update for ` + COMPANY_NAME_PLACEHOLDER + `, you may find the form or service you need in the <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">list of Companies House forms</a>.</p>
+        <p>If this is the wrong company, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">go back and enter a different company number</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+        `
+    }
 }
