@@ -47,7 +47,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 
     if (errorMessage) {
-      const error = formatValidationError(errorMessage);
+      const errors = formatValidationError(errorMessage);
 
       // Bypass the direct use of variables with dashes that
       // govukDateInput adds for day, month and year field
@@ -63,7 +63,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.REMOVE_DIRECTOR,
         ...req.body,
         ...dates,
-        error
+        errors
       });
 
     }
@@ -75,9 +75,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export function formatValidationError(errorMessage: string): FormattedValidationErrors {
-  const errors = { errorMessage: [] } as any;
-    errors.errorList.push({ href: `#removal_date["removal_date-day"]`, text: errorMessage });
-    errors[RemovalDateKey["removal_date-day"]] = { text: errorMessage };
+export function formatValidationError(errorList: string): FormattedValidationErrors {
+  const errors = { errorList: [] } as any;
+    errors.errorList.push({ href: '#removal_date-day', text: errorList });
+    errors["removal_date-day"] = { text: errorList };
+    console.log(errors)
   return errors;
 };
