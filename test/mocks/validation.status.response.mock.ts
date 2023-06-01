@@ -36,7 +36,7 @@ export const mockValidationStatusError4: ValidationStatusError = {
 }
 
 export const mockValidationStatusError5: ValidationStatusError = {
-    error: "Enter a date that is on or after the date the director was appointed",
+    error: "Date John Doe was removed must be on or after the date the director was appointed",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
     type: "ch:validation",
     locationType: "json-path"
@@ -57,3 +57,12 @@ export const mockValidationStatusResponseList2: ValidationStatusResponse = {
     isValid: false
 }
 
+export const mockValidationStatusResponseList3: ValidationStatusResponse = {
+    errors: [mockValidationStatusError4, mockValidationStatusError5],
+    isValid: false
+}
+
+export const mockValidationStatusResponseList4: ValidationStatusResponse = {
+    errors: [mockValidationStatusError5],
+    isValid: false
+}
