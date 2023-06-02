@@ -9,7 +9,7 @@ import app from "../../src/app";
 
 import { ACTIVE_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
-import { mockCompanyOfficers, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
+import { mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -24,6 +24,7 @@ mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
 const ACTIVE_DIRECTOR_DETAILS_URL = ACTIVE_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=no%20directors";
 
 describe("Active directors controller tests", () => {
 
@@ -102,5 +103,11 @@ describe("Active directors controller tests", () => {
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
         expect(response.text.match(/Remove director/g) || []).toHaveLength(5);
       });  
+
+      it("Should redirect to no directors page if no officers are returned", async () => {
+        mockGetCompanyOfficers.mockResolvedValue([]);
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+        expect(response.text).toContain(NO_DIRECTORS_REDIRECT);
+      }); 
   });
 });

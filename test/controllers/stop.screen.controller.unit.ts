@@ -12,10 +12,13 @@ const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 const SHOW_STOP_PAGE_PATH_URL = "/officer-filing-web/stop-page?companyNumber=12345678&stopType=";
 const SHOW_STOP_PAGE_PATH_URL_DISSOLVED = SHOW_STOP_PAGE_PATH_URL + "dissolved";
 const SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED = SHOW_STOP_PAGE_PATH_URL + "limited-unlimited";
+const SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS = SHOW_STOP_PAGE_PATH_URL + "no directors";
 const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being dissolved";
-const dissolvedPageBodyText = "cannot use this service because it has been dissolved, or it's in the process of being dissolved."
+const NO_DIRECTORS_PAGE_HEADING = "Company has no current directors";
+const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
 const NON_LIMITED_UNLIMITED_PAGE_HEADING = "Only limited and unlimited companies can use this service";
-const nonLimitedUnlimitedPageBodyText = "You can only file director updates for Test Company using this service if it's a:"
+const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for Test Company using this service if it's a:";
+const NO_DIRECTORS_PAGE_BODY_TEXT = "cannot use this service because it has no current directors.";
 
 describe("Stop screen controller tests", () => {
   beforeEach(() => {
@@ -40,7 +43,26 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
     expect(response.text).toContain(dissolvedCompanyProfile.companyName);
-    expect(response.text).toContain(dissolvedPageBodyText);
+    expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT);
+  });
+
+  it("Should navigate to no directors stop screen", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+    const response = await request(app)
+    .get(SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS);
+    expect(response.text).toContain(NO_DIRECTORS_PAGE_HEADING);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
+
+  it("Should set the content to no directors content", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS);
+
+    expect(response.text).toContain(NO_DIRECTORS_PAGE_HEADING);
+    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName);
+    expect(response.text).toContain(NO_DIRECTORS_PAGE_BODY_TEXT);
   });
 
    it("Should navigate to non limited-unlimited stop screen", async () => {
@@ -60,14 +82,14 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
     expect(response.text).toContain(overseaCompanyCompanyProfile.companyName);
-    expect(response.text).toContain(nonLimitedUnlimitedPageBodyText);
+    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT);
   });
-
+  
     it("Should substitute company name for 'This company' for dissolved company missing company name", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedMissingNameCompanyProfile);
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
-    expect(response.text).toContain("This company " + dissolvedPageBodyText);
+    expect(response.text).toContain("This company " + DISSOLVED_PAGE_BODY_TEXT);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
 
@@ -75,9 +97,18 @@ describe("Stop screen controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
-    expect(response.text).toContain(nonLimitedUnlimitedPageBodyText.replace("Test Company", "this company"));
+    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("Test Company", "this company"));
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
+
+  it("Should substitute company name for 'This company' for company with no directors missing company name", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
+    const response = await request(app)
+    .get(SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS);
+    expect(response.text).toContain("This company " + NO_DIRECTORS_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
+
 
   it("Should return error page if error is thrown when getting Company Profile", async () => {
     const message = "Can't connect";

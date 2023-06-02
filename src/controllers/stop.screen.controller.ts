@@ -23,14 +23,14 @@ const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: 
 const setContent = async (req: Request, stopType: string) => {  
     const companyNumber = req.query[URL_QUERY_PARAM.COMPANY_NUM] as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-
-    if (companyProfile.companyName === "") {
+    var companyName = companyProfile.companyName;
+    if (companyName === "") {
         if(stopType === STOP_TYPE.DISSOLVED || stopType === STOP_TYPE.NO_DIRECTORS){
             // Company name is at the start of the paragraph.
-            companyProfile.companyName = "This company";
+            companyName = "This company";
         } 
         else{
-            companyProfile.companyName = "this company";
+            companyName = "this company";
         }
     }
 
@@ -38,19 +38,19 @@ const setContent = async (req: Request, stopType: string) => {
         case STOP_TYPE.DISSOLVED: { 
             return {
                 pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.NO_DIRECTORS: { 
             return {
                 pageHeader: STOP_PAGE_CONTENT.noDirectors.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.noDirectors.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+                pageBody: STOP_PAGE_CONTENT.noDirectors.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.LIMITED_UNLIMITED: { 
             return {
                 pageHeader: STOP_PAGE_CONTENT.limitedUnlimited.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.limitedUnlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+                pageBody: STOP_PAGE_CONTENT.limitedUnlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         } 
         default: { 
