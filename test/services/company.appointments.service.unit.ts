@@ -5,6 +5,10 @@ jest.mock("../../src/utils/api.enumerations");
 jest.mock("../../src/services/api.service");
 
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
+<<<<<<< HEAD
+=======
+import { Resource } from "@companieshouse/api-sdk-node";
+>>>>>>> 0cca2210187e616511a4a83b3da4d147b3086bd2
 import { createAndLogError } from "../../src/utils/logger";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { validCompanyAppointmentResource } from "../mocks/company.appointment.mock";
@@ -48,6 +52,51 @@ describe("Company Appointments service test", () => {
         expect(returnedAppointment).toHaveProperty(property);
       });
     });
+<<<<<<< HEAD
  
+=======
+
+    it("Should throw an error if status code >= 400", async () => {
+      const HTTP_STATUS_CODE = 400;
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        httpStatusCode: HTTP_STATUS_CODE
+      } as Resource<CompanyAppointment>);
+
+      await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID)
+        .then(() => {
+          fail("Was expecting an error to be thrown.");
+        })
+        .catch(() => {
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${HTTP_STATUS_CODE}`));
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${APPOINTMENT_ID}`));
+        });
+    });
+
+    it("Should throw an error if no response returned from SDK", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(undefined);
+
+      await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID)
+        .then(() => {
+          fail("Was expecting an error to be thrown.");
+        })
+        .catch(() => {
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining("no response"));
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${APPOINTMENT_ID}`));
+        });
+    });
+
+    it("Should throw an error if no response resource returned from SDK", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({} as Resource<CompanyAppointment>);
+
+      await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID)
+        .then(() => {
+          fail("Was expecting an error to be thrown.");
+        })
+        .catch(() => {
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining("no resource"));
+          expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${APPOINTMENT_ID}`));
+        });
+    });
+>>>>>>> 0cca2210187e616511a4a83b3da4d147b3086bd2
   });
 });
