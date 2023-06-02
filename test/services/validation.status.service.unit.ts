@@ -37,7 +37,7 @@ describe("Test validation status service", () => {
     };
 
     mockGetValidationStatus.mockReturnValueOnce(resource);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
 
     expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
@@ -53,7 +53,7 @@ describe("Test validation status service", () => {
     };
 
     mockGetValidationStatus.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const expectedMessage = "Error retrieving validation status: " + JSON.stringify(errorResponse);
     let actualMessage;
 

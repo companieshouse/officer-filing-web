@@ -42,6 +42,11 @@ export const mockValidationStatusError5: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidValidationStatusResponse: ValidationStatusResponse = {
+    errors: [],
+    isValid: true
+}
+
 export const mockValidationStatusResponse: ValidationStatusResponse = {
     errors: [mockValidationStatusError],
     isValid: false

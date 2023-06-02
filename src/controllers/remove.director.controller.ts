@@ -64,20 +64,16 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
     await patchOfficerFiling(session, transactionId, filingId, officerFiling);
 
+    // Validate the filing
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
     const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
 
-
+    // Display any errors
     if (errorMessage) {
       const errors = formatValidationError(errorMessage);
-
-      // Bypass the direct use of variables with dashes that
-      // govukDateInput adds for day, month and year field
-      
       const dates = {
         [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
       };
-
       const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
 
       return res.render(Templates.REMOVE_DIRECTOR, {
@@ -96,9 +92,15 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export function formatValidationError(errorList: string): FormattedValidationErrors {
+
+/**
+ * Format the validation errors to always highlight the 'day' field when clicked
+ * @param errorMessage The message to be displayed to the user
+ * @returns A validation errors object to display on the page
+ */
+export function formatValidationError(errorMessage: string): FormattedValidationErrors {
   const errors = { errorList: [] } as any;
-    errors.errorList.push({ href: '#removal_date-day', text: errorList });
-    errors["removal_date-day"] = { text: errorList };
+    errors.errorList.push({ href: '#removal_date-day', text: errorMessage });
+    errors["removal_date-day"] = { text: errorMessage };
   return errors;
 };

@@ -5,10 +5,7 @@ jest.mock("../../src/utils/api.enumerations");
 jest.mock("../../src/services/api.service");
 
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
-<<<<<<< HEAD
-=======
 import { Resource } from "@companieshouse/api-sdk-node";
->>>>>>> 0cca2210187e616511a4a83b3da4d147b3086bd2
 import { createAndLogError } from "../../src/utils/logger";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { validCompanyAppointmentResource } from "../mocks/company.appointment.mock";
@@ -52,9 +49,6 @@ describe("Company Appointments service test", () => {
         expect(returnedAppointment).toHaveProperty(property);
       });
     });
-<<<<<<< HEAD
- 
-=======
 
     it("Should throw an error if status code >= 400", async () => {
       const HTTP_STATUS_CODE = 400;
@@ -97,6 +91,5 @@ describe("Company Appointments service test", () => {
           expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${APPOINTMENT_ID}`));
         });
     });
->>>>>>> 0cca2210187e616511a4a83b3da4d147b3086bd2
   });
 });
