@@ -3,10 +3,7 @@ import { Templates } from "../types/template.paths";
 import { ACTIVE_DIRECTORS_PATH, REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { validationResult, ValidationError } from "express-validator";
 import { FormattedValidationErrors } from "../middleware/validation.middleware"
-import { postOfficerFiling } from "../services/officer.filing.service";
-import { Session } from "@companieshouse/node-session-handler";
 import { getValidationStatus } from "../services/validation.status.service";
 import {
   RemovalDateKey,
@@ -14,6 +11,13 @@ import {
 } from "../model/date.model";
 import { retrieveErrorMessageToDisplay } from "../services/remove.directors.date.service";
 import { ACTIVE_OFFICERS_PATH_END, OFFICER_FILING, REMOVE_DIRECTOR_PATH_END } from "../types/page.urls";
+import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
+import { Session } from "@companieshouse/node-session-handler";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+
+var filingId: string;
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,7 +25,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const session: Session = req.session as Session;
     
+    // Create and post officer filing and retrieve filing ID
     const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+    filingId = filingResponse.submissionId;
 
     return res.render(Templates.REMOVE_DIRECTOR, {
       directorName: filingResponse.name,
@@ -35,14 +41,30 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    //Hardcoded for now
-    req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
-
+      
+    req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = "645d1188c794645afe15f5cc";
+    const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
+    // Get date of resignation
+    const day = req.body[RemovalDateKeys[0]];
+    const month = req.body[RemovalDateKeys[1]];
+    const year = req.body[RemovalDateKeys[2]];
+    const resignationDate = new Date(year, month-1, day);
+
+    // Get current etag within the appointment
+    const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+    // Patch filing with etag and resignation date
+    const officerFiling: OfficerFiling = {
+      referenceEtag: appointment.etag,
+      resignedOn: resignationDate.toISOString().split('T')[0]   // Get date in the format 'yyyy-mm-dd'
+    }
+    patchOfficerFiling(session, transactionId, filingId, officerFiling);
+
+    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
     const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
 
 

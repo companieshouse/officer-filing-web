@@ -4,39 +4,52 @@ import { URL_QUERY_PARAM } from "../types/page.urls";
 
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../services/company.profile.service";
+import { COMPANY_NAME_PLACEHOLDER, STOP_TYPE, STOP_PAGE_CONTENT } from "../utils/constants";
 
 export const get = async (req, res, next: NextFunction) => {
     try {
-        const content = setContent(req)
-        displayStopPage(res, await content)
+        const stopType = req.query.stopType as string;
+        const content = setContent(req, stopType);
+        return displayStopPage(res, await content);
     } catch (e) {
         return next(e);
     }
 }
 
-const displayStopPage = (res: Response, content: { content: {pageHeader: string, pageBody: string}}) => {
+const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: string}) => {
     return res.render(Templates.STOP_PAGE, content);
 };
 
-const setContent = async (req: Request) => {  
+const setContent = async (req: Request, stopType: string) => {  
     const companyNumber = req.query[URL_QUERY_PARAM.COMPANY_NUM] as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    if (companyProfile.companyName == undefined || companyProfile.companyName == "") {
-        companyProfile.companyName = "This company"
+    if (companyProfile.companyName === "") {
+        if(stopType === STOP_TYPE.DISSOLVED){
+            // Company name is at the start of the paragraph on the dissolved screen.
+            companyProfile.companyName = "This company";
+        } 
+        else{
+            companyProfile.companyName = "this company";
+        }
     }
 
-    const content = {
-        pageHeader: "Company is dissolved or in the process of being dissolved",
-        pageBody: `
-        <p>${companyProfile.companyName} cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
-
-        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
-        <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
-        `
-    }
-    return{
-        content
-    }
+    switch(stopType) { 
+        case STOP_TYPE.DISSOLVED: { 
+            return {
+                pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+            }
+            
+        } 
+        case STOP_TYPE.LIMITED_UNLIMITED: { 
+            return {
+                pageHeader: STOP_PAGE_CONTENT.limited_unlimited.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.limited_unlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyProfile.companyName)
+            }
+        } 
+        default: { 
+           throw Error("Unrecognised stop screen type: " + stopType); 
+        } 
+     } 
 }
