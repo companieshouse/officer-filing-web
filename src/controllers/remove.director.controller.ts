@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       referenceEtag: appointment.etag,
       resignedOn: resignationDate.toISOString().split('T')[0]   // Get date in the format 'yyyy-mm-dd'
     }
-    patchOfficerFiling(session, transactionId, filingId, officerFiling);
+    await patchOfficerFiling(session, transactionId, filingId, officerFiling);
 
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
     const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
@@ -87,7 +87,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         ...dates,
         errors
       });
-
     }
 
     const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
@@ -101,6 +100,5 @@ export function formatValidationError(errorList: string): FormattedValidationErr
   const errors = { errorList: [] } as any;
     errors.errorList.push({ href: '#removal_date-day', text: errorList });
     errors["removal_date-day"] = { text: errorList };
-    console.log(errors)
   return errors;
 };
