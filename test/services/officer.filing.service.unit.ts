@@ -5,16 +5,18 @@ jest.mock("../../src/utils/logger");
 import { Session } from "@companieshouse/node-session-handler";
 import { createPublicOAuthApiClient } from "../../src/services/api.service";
 import { createAndLogError } from "../../src/utils/logger";
-import { postOfficerFiling } from "../../src/services/officer.filing.service";
-import { FilingResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { patchOfficerFiling, postOfficerFiling } from "../../src/services/officer.filing.service";
+import { OfficerFiling, FilingResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 const mockCreatePublicOAuthApiClient = createPublicOAuthApiClient as jest.Mock;
 const mockPostOfficerFiling = jest.fn();
+const mockPatchOfficerFiling = jest.fn();
 const mockCreateAndLogError = createAndLogError as jest.Mock;
 
 mockCreatePublicOAuthApiClient.mockReturnValue({
   officerFiling: {
-    postOfficerFiling: mockPostOfficerFiling
+    postOfficerFiling: mockPostOfficerFiling,
+    patchOfficerFiling: mockPatchOfficerFiling
   }
 });
 
@@ -73,6 +75,44 @@ describe("officer filing service tests", () => {
 
       await expect(postOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID)).rejects.toThrow(ERROR);
       expect(mockCreateAndLogError).toBeCalledWith("Officer filing API POST request returned no resource for transaction 2222");
+    });
+
+  });
+
+  describe("patchOfficerFiling tests", () => {
+
+    it("Should throw an error when no officer filing api response", async () => {
+      mockPatchOfficerFiling.mockResolvedValueOnce(undefined);
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
+
+      await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
+      expect(mockCreateAndLogError).toBeCalledWith("Officer filing PATCH request returned no response for transaction 2222");
+    });
+
+    it("Should throw an error when officer filing api returns a status greater than 400", async () => {
+      mockPatchOfficerFiling.mockResolvedValueOnce({
+        httpStatusCode: 404
+      });
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
+
+      await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
+      expect(mockCreateAndLogError).toBeCalledWith("Http status code 404 - Failed to patch officer filing for transaction 2222");
+    });
+
+    it("Should throw an error when officer filing api returns no resource", async () => {
+      mockPatchOfficerFiling.mockResolvedValueOnce({
+        httpStatusCode: 200
+      });
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
+
+      await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
+      expect(mockCreateAndLogError).toBeCalledWith("Officer filing API PATCH request returned no resource for transaction 2222");
     });
 
   });
