@@ -5,6 +5,11 @@ import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api
 export const retrieveErrorMessageToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
 
     var listOfValidationKeys = new Array();
+
+    if (!validationStatusResponse.errors) {
+        return "";
+    }
+
     validationStatusResponse.errors.forEach(element => {
       listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
