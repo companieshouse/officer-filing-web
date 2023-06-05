@@ -8,7 +8,7 @@ import {
   OFFICER_FILING, 
   urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
-import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { ValidationStatusResponse, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { FormattedValidationErrors } from "../middleware/validation.middleware"
 import { getValidationStatus } from "../services/validation.status.service";
 import {
@@ -18,7 +18,6 @@ import {
 import { retrieveErrorMessageToDisplay } from "../services/remove.directors.date.service";
 import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 
