@@ -27,14 +27,18 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     
     // Create and post officer filing and retrieve filing ID
     const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
     filingId = filingResponse.submissionId;
 
+    // Get the director name from company appointments
+    const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
     return res.render(Templates.REMOVE_DIRECTOR, {
-      directorName: filingResponse.name,
+      directorName: appointment.name,
       templateName: Templates.REMOVE_DIRECTOR,
       backLinkUrl: urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req),
     });
