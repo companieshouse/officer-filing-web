@@ -113,6 +113,24 @@ describe("Remove director date controller tests", () => {
           resignedOn: "2010-08-07"
         });
     });
+    
+    it("Should redirect to next page if no errors - day and month are larger than 10", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+
+      const response = await request(app)
+        .post(REMOVE_DIRECTOR_URL)
+        .send({ "removal_date-day": "27",
+                "removal_date-month": "12",
+                "removal_date-year": "2010" });
+
+        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/remove-director-check-answers");
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
+          referenceEtag: "etag",
+          resignedOn: "2010-12-27"
+        });
+    });
 
     it("Should display error before patching if day is not a number", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
