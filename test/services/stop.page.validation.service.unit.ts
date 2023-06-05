@@ -31,7 +31,7 @@ describe("Test stop page validation service", () => {
     };
 
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(resource);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const response = await getCurrentOrFutureDissolved(session, COMPANY_NUMBER);
 
     expect(mockGetCurrentOrFutureDissolved).toBeCalledWith(COMPANY_NUMBER);
@@ -46,7 +46,7 @@ describe("Test stop page validation service", () => {
     };
 
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(resource);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const response = await getCurrentOrFutureDissolved(session, COMPANY_NUMBER);
 
     expect(mockGetCurrentOrFutureDissolved).toBeCalledWith(COMPANY_NUMBER);
@@ -62,7 +62,7 @@ describe("Test stop page validation service", () => {
     };
 
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const expectedMessage = "Error retrieving company information: " + JSON.stringify(errorResponse);
     let actualMessage;
 

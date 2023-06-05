@@ -13,7 +13,7 @@ clean:
 
 .PHONY: build
 build: update_submodules
-	npm ci
+	export GIT_SSH_COMMAND="ssh" && npm ci
 	npm run build
 
 .PHONY: lint
