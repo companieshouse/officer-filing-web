@@ -110,7 +110,7 @@ describe("Remove director date controller tests", () => {
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
           referenceEtag: "etag",
-          resignedOn: "2010-08-06"
+          resignedOn: "2010-08-07"
         });
     });
 
