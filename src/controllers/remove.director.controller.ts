@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { ACTIVE_DIRECTORS_PATH, REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../types/page.urls";
+import { 
+  ACTIVE_DIRECTORS_PATH, 
+  ACTIVE_OFFICERS_PATH_END, 
+  REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, 
+  REMOVE_DIRECTOR_PATH_END, 
+  OFFICER_FILING, 
+  urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { FormattedValidationErrors } from "../middleware/validation.middleware"
@@ -10,7 +16,6 @@ import {
   RemovalDateKeys
 } from "../model/date.model";
 import { retrieveErrorMessageToDisplay } from "../services/remove.directors.date.service";
-import { ACTIVE_OFFICERS_PATH_END, OFFICER_FILING, REMOVE_DIRECTOR_PATH_END } from "../types/page.urls";
 import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -103,4 +108,4 @@ export function formatValidationError(errorMessage: string): FormattedValidation
     errors.errorList.push({ href: '#removal_date-day', text: errorMessage });
     errors["removal_date-day"] = { text: errorMessage };
   return errors;
-};
+}
