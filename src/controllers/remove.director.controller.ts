@@ -89,7 +89,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
