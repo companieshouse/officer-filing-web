@@ -56,7 +56,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const day = req.body[RemovalDateKeys[0]];
     const month = req.body[RemovalDateKeys[1]];
     const year = req.body[RemovalDateKeys[2]];
-    const resignationDate = new Date(year, month-1, day);
+    const resignationDate = year + '-' + (month < 10? '0' + month: month) + '-' + (day < 10? '0' + day: day);   // Get date in the format yyyy-mm-dd
 
     // Get current etag within the appointment
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
@@ -64,7 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     // Patch filing with etag and resignation date
     const officerFiling: OfficerFiling = {
       referenceEtag: appointment.etag,
-      resignedOn: resignationDate.toISOString().split('T')[0]   // Get date in the format 'yyyy-mm-dd'
+      resignedOn: resignationDate
     }
     await patchOfficerFiling(session, transactionId, filingId, officerFiling);
 
