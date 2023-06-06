@@ -102,10 +102,10 @@ describe("Remove director date controller tests", () => {
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
         .send({ "removal_date-day": "7",
-                "removal_date-month": "8",
+                "removal_date-month": "08",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
@@ -123,7 +123,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "12",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
