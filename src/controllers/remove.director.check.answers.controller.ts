@@ -49,7 +49,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       appointedOn: toReadableFormat(companyOfficer.appointedOn),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
-      changeLink: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req),
+      changeLink: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
       cancelLink:  urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req)
     });
   } catch (e) {
