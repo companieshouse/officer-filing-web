@@ -13,7 +13,11 @@ export const getListActiveDirectorDetails = async (session: Session, transaction
   const response: Resource<CompanyOfficer[]> | ApiErrorResponse = await ofService.getListActiveDirectorDetails(transactionId);
   const status = response.httpStatusCode as number;
 
-  if (status >= 400) {
+  // 404 is returned if no officers were found for the company
+  if(status === 404){
+    return [] as CompanyOfficer[];
+  }
+  else if (status >= 400) {
     const errorResponse = response as ApiErrorResponse;
     throw new Error(`Error retrieving active director details: ${JSON.stringify(errorResponse)}`);
   }

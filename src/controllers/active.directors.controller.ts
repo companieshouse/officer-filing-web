@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, urlParams } from "../types/page.urls";
+import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
-  OFFICER_ROLE } from "../utils/constants";
+  OFFICER_ROLE, 
+  STOP_TYPE} from "../utils/constants";
   import {
     equalsIgnoreCase,
     formatTitleCase,
@@ -23,9 +24,18 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
+    // Redirect to stop screen if there are no directors
+    if(directorDtoList.length === 0){
+      var stopPageRedirectUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
+      stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
+      return res.redirect(stopPageRedirectUrl);
+    }
     const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
+
+    
+
+    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     // Get current page number
     let page = req.query["page"];

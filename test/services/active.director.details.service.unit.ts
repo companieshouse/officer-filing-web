@@ -43,11 +43,11 @@ describe("Test active director details service", () => {
     expect(response).toEqual(mockCompanyOfficer);
   });
 
-  it("should throw error when http error code is returned", async () => {
+  it("should throw error when http error code 500 is returned", async () => {
 
     const errorMessage = "Oops! Someone stepped on the wire.";
     const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 404,
+      httpStatusCode: 500,
       errors: [{ error: errorMessage }]
     };
 
@@ -64,5 +64,21 @@ describe("Test active director details service", () => {
 
     expect(actualMessage).toBeTruthy();
     expect(actualMessage).toEqual(expectedMessage);
+  });
+
+  it("should return an empty array when no officers are returned", async () => {
+
+    const errorMessage = "404 not found\n{}";
+    const errorResponse: ApiErrorResponse = {
+      httpStatusCode: 404,
+      errors: [{ error: errorMessage }]
+    };
+
+    mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
+    const session =  getSessionRequest({ access_token: "token" });
+
+    const response =  await getListActiveDirectorDetails(session, TRANSACTION_ID);
+
+    expect(response.length).toEqual(0);
   });
 });
