@@ -18,6 +18,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
+import app from "app";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -84,11 +85,12 @@ const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
     .map(officer => {
+      const appointedOn = setAppointedOnDate(officer);
       return {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
         dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
-        appointedOn: formatAppointmentDate(officer.appointedOn),
+        appointedOn: appointedOn,
         links: officer.links
       };
     });
@@ -98,10 +100,11 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
     .map(officer => {
+      const appointedOn = setAppointedOnDate(officer);
       return {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
-        appointedOn: formatAppointmentDate(officer.appointedOn),
+        appointedOn: appointedOn,
         links: officer.links
       };
     });
@@ -137,3 +140,11 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   }
   return "";
 };
+
+const setAppointedOnDate = (officer: CompanyOfficer): string => {
+  var appointedOn = formatAppointmentDate(officer.appointedOn);
+      if(appointedOn === ""){
+        appointedOn = "Before 1992";
+      }
+  return appointedOn;
+}
