@@ -10,7 +10,6 @@ import {
     equalsIgnoreCase,
     formatTitleCase,
     formatDateOfBirth,
-    formatAppointmentDate
   } from "../utils/format";
 import { CompanyOfficer, OfficerCard } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
@@ -18,7 +17,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
-import app from "app";
+import { setAppointedOnDate } from "../utils/date";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -140,11 +139,3 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   }
   return "";
 };
-
-const setAppointedOnDate = (officer: CompanyOfficer): string => {
-  var appointedOn = formatAppointmentDate(officer.appointedOn);
-      if(appointedOn === ""){
-        appointedOn = "Before 1992";
-      }
-  return appointedOn;
-}

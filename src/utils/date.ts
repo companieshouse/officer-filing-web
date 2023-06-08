@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 import { createAndLogError } from "./logger";
+import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { formatAppointmentDate } from "./format";
 
 export const toReadableFormat = (dateToConvert: string): string => {
   if (!dateToConvert) {
@@ -34,3 +36,11 @@ export const toReadableFormatMonthYear = (monthNum: number, year: number): strin
 
   return `${convertedMonth} ${year}`;
 };
+
+export const setAppointedOnDate = (officer: CompanyOfficer): string => {
+  var appointedOn = formatAppointmentDate(officer.appointedOn);
+      if(appointedOn === ""){
+        appointedOn = "Before 1992";
+      }
+  return appointedOn;
+}
