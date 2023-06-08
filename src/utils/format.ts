@@ -31,7 +31,7 @@ export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string 
 };
 
 export const formatAppointmentDate = (appointedOn: string | undefined): string =>  {
-  if (!appointedOn) {
+  if (!appointedOn || appointedOn === "") {
     return "";
   }
 

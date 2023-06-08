@@ -9,7 +9,7 @@ import app from "../../src/app";
 
 import { ACTIVE_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
-import { mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
+import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -108,6 +108,13 @@ describe("Active directors controller tests", () => {
         mockGetCompanyOfficers.mockResolvedValue([]);
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
         expect(response.text).toContain(NO_DIRECTORS_REDIRECT);
+      }); 
+
+      it("Should show appointed before 1992 if appointed on date is missing", async () => {
+        mockGetCompanyOfficers.mockResolvedValue([mockCompanyOfficerMissingAppointedOn]);
+        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+        expect(response.text).toContain("Date appointed");
+        expect(response.text).toContain("Before 1992");
       }); 
   });
 });
