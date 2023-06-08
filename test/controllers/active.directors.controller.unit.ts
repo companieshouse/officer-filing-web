@@ -59,7 +59,7 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("Director");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("December 2001");
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("11 May 2019");
     });
 
@@ -72,7 +72,7 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Director");
         expect(response.text).toContain("Date of birth");
         expect(response.text).toContain("December 2001");
-        expect(response.text).toContain("Appointed on");
+        expect(response.text).toContain("Date appointed");
         expect(response.text).toContain("1 April 2016");
       });
 
@@ -82,7 +82,7 @@ describe("Active directors controller tests", () => {
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
       expect(response.text).toContain("BIG CORP");
       expect(response.text).toContain("Director");
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("3 November 2020");
     });
 
@@ -92,7 +92,7 @@ describe("Active directors controller tests", () => {
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
         expect(response.text).toContain("BIGGER CORP 2");
         expect(response.text).toContain("Director");
-        expect(response.text).toContain("Appointed on");
+        expect(response.text).toContain("Date appointed");
         expect(response.text).toContain("13 August 2022");
       });
 
