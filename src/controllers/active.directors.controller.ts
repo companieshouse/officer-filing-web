@@ -10,7 +10,6 @@ import {
     equalsIgnoreCase,
     formatTitleCase,
     formatDateOfBirth,
-    formatAppointmentDate
   } from "../utils/format";
 import { CompanyOfficer, OfficerCard } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
@@ -18,6 +17,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
+import { setAppointedOnDate } from "../utils/date";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -84,11 +84,12 @@ const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
     .map(officer => {
+      const appointedOn = setAppointedOnDate(officer);
       return {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
         dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
-        appointedOn: formatAppointmentDate(officer.appointedOn),
+        appointedOn: appointedOn,
         links: officer.links
       };
     });
@@ -98,10 +99,11 @@ const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
     .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
     .map(officer => {
+      const appointedOn = setAppointedOnDate(officer);
       return {
         name: officer.name,
         officerRole: formatTitleCase(officer.officerRole),
-        appointedOn: formatAppointmentDate(officer.appointedOn),
+        appointedOn: appointedOn,
         links: officer.links
       };
     });

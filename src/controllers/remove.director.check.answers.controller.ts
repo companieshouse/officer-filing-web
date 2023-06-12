@@ -7,7 +7,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing/types";
 import { getDirectorAndTerminationDate } from "../services/remove.directors.check.answers.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
+import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 import { equalsIgnoreCase } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
 
@@ -46,7 +46,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       company: companyProfile,
       name: companyOfficer.name,
       dateOfBirth: dateOfBirth,
-      appointedOn: toReadableFormat(companyOfficer.appointedOn),
+      appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
       changeLink: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
