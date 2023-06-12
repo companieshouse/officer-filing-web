@@ -1,6 +1,6 @@
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api.enumerations";
-
+import { STOP_TYPE } from "../utils/constants";
 
 export const retrieveErrorMessageToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
 
@@ -30,3 +30,21 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
     return "";
   };
   
+  export const retrieveStopScreen = (validationStatusResponse: ValidationStatusResponse): string => {
+
+    var listOfValidationKeys = new Array();
+
+    if (!validationStatusResponse.errors) {
+        return "";
+    }
+
+    validationStatusResponse.errors?.forEach(element => {
+        listOfValidationKeys.push(convertAPIMessageToKey(element.error));
+    });
+
+    if (listOfValidationKeys.includes("company-dissolved")) {
+        return STOP_TYPE.DISSOLVED;
+    }
+
+    return "";
+  };

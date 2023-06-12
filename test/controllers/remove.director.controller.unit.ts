@@ -19,7 +19,7 @@ import { getCompanyAppointmentFullRecord } from "../../src/services/company.appo
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay } from "../../src/services/remove.directors.date.service";
+import { retrieveErrorMessageToDisplay } from "../../src/services/remove.directors.error.keys.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());

@@ -15,7 +15,7 @@ import {
   RemovalDateKey,
   RemovalDateKeys
 } from "../model/date.model";
-import { retrieveErrorMessageToDisplay } from "../services/remove.directors.date.service";
+import { retrieveErrorMessageToDisplay } from "../services/remove.directors.error.keys.service";
 import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
