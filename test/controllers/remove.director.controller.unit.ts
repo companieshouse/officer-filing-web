@@ -3,7 +3,7 @@ jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/services/company.appointments.service");
 jest.mock("../../src/services/validation.status.service");
-jest.mock("../../src/services/remove.directors.date.service");
+jest.mock("../../src/services/remove.directors.error.keys.service");
 jest.mock("../../src/utils/api.enumerations");
 
 import mocks from "../mocks/all.middleware.mock";
@@ -19,7 +19,7 @@ import { getCompanyAppointmentFullRecord } from "../../src/services/company.appo
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.date.service";
+import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
