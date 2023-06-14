@@ -18,8 +18,8 @@ import { postOfficerFiling, patchOfficerFiling } from "../../src/services/office
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidValidationStatusResponse, mockValidationStatusResponseList } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay } from "../../src/services/remove.directors.date.service";
+import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
+import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.date.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -31,6 +31,7 @@ mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockRetrieveErrorMessageToDisplay = retrieveErrorMessageToDisplay as jest.Mock;
+const mockRetrieveStopPageTypeToDisplayy = retrieveStopPageTypeToDisplay as jest.Mock;
 
 
 const COMPANY_NUMBER = "12345678";
@@ -54,6 +55,7 @@ describe("Remove director date controller tests", () => {
     mockGetValidationStatus.mockClear();
     mockPatchOfficerFiling.mockClear();
     mockRetrieveErrorMessageToDisplay.mockClear();
+    mockRetrieveStopPageTypeToDisplayy.mockClear();
   });
 
   describe("get tests", () => {
@@ -193,8 +195,21 @@ describe("Remove director date controller tests", () => {
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
     });
 
+    it("Should display stop page if validation status returns pre-2009 error", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponsePreOct2009);
+      mockRetrieveErrorMessageToDisplay.mockReturnValueOnce("");
+      mockRetrieveStopPageTypeToDisplayy.mockReturnValueOnce("pre-october-2009");
+
+      const response = await request(app)
+        .post(REMOVE_DIRECTOR_URL)
+        .send({ "removal_date-day": "1",
+                "removal_date-month": "1",
+                "removal_date-year": "2008" });
+
+        expect(response.text).toEqual("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/appointment/987654321/stop-page?stopType=pre-october-2009");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
 
   });
-
 
 });

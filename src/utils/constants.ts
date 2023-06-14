@@ -1,4 +1,4 @@
-import { COMPANY_LOOKUP } from "../types/page.urls";
+import { COMPANY_LOOKUP, REMOVE_DIRECTOR_PATH } from "../types/page.urls";
 
 export const STATEMENT_OF_CAPITAL_ERROR = "Select yes if the statement of capital is correct";
 export const TRADING_STATUS_ERROR = "Select yes if the company trading status is correct";
@@ -29,6 +29,8 @@ export const SIGNOUT_RETURN_URL_SESSION_KEY = 'signout-return-to-url';
 export const WRONG_PSC_DETAILS_TEXT = "wrong-psc-details";
 export const WRONG_PSC_STATEMENT_TEXT = "wrong-psc-statement";
 export const COMPANY_NAME_PLACEHOLDER = "COMPANY_NAME_PLACEHOLDER";
+export const TRANSACTION_ID_PLACEHOLDER = "TRANSACTION_ID_PLACEHOLDER";
+export const APPOINTMENT_ID_PLACEHOLDER = "APPOINTMENT_ID_PLACEHOLDER";
 
 
 export enum RADIO_BUTTON_VALUE {
@@ -87,12 +89,12 @@ export enum OFFICER_ROLE {
 export enum STOP_TYPE {
   DISSOLVED = "dissolved",
   LIMITED_UNLIMITED = "limited-unlimited",
-  NO_DIRECTORS = "no directors"
-
+  NO_DIRECTORS = "no directors",
+  PRE_OCTOBER_2009 = "pre-october-2009"
 }
 
 export const STOP_PAGE_CONTENT = 
-{   
+{
     dissolved:{
         pageHeader: "Company is dissolved or in the process of being dissolved",
         pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
@@ -120,6 +122,14 @@ export const STOP_PAGE_CONTENT =
       pageHeader: "Company has no current directors",
       pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has no current directors.</p>
       <p>If you want to appoint a director, you can use <a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="webfiling-link">WebFiling</a> or a <a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="paper-form-link">paper form</a>.</p>
+      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+      `
+    },
+    pre_october_2009:{
+      pageHeader: "You cannot use this service",
+      pageBody: `<p>The date the director was removed is before 1 October 2009.</p>
+      <p>You'll need to file the <a href="https://webarchive.nationalarchives.gov.uk/ukgwa/20140103090023/http://www.companieshouse.gov.uk/forms/formsOnline1985.shtml" data-event-id="288b-form-link">288b form 'Terminating appointment as director or secretary'</a> on paper for directors removed before this date.</p>
+      <p>If the date entered is not correct, you can <a href="` + REMOVE_DIRECTOR_PATH + `" data-event-id="enter-a-different-date-link">enter a different date</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
       `
   }

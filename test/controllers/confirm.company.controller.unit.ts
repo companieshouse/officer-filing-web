@@ -7,12 +7,11 @@ jest.mock("../../src/services/stop.page.validation.service");
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { CONFIRM_COMPANY_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../../src/types/page.urls";
+import { CONFIRM_COMPANY_PATH } from "../../src/types/page.urls";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { validCompanyProfile, dissolvedCompanyProfile, overseaCompanyCompanyProfile } from "../mocks/company.profile.mock";
+import { validCompanyProfile, overseaCompanyCompanyProfile } from "../mocks/company.profile.mock";
 import { formatForDisplay } from "../../src/services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../../src/services/stop.page.validation.service";
-import { urlUtils } from "../../src/utils/url";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockFormatForDisplay = formatForDisplay as jest.Mock;
@@ -23,8 +22,8 @@ const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {
   const PAGE_HEADING = "Confirm this is the correct company";
-  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=dissolved";
-  const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=limited-unlimited";
+  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=dissolved";
+  const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=limited-unlimited";
 
   beforeEach(() => {
     jest.clearAllMocks();
