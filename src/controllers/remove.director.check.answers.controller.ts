@@ -73,12 +73,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     if (stopQuery) {
       return res.redirect(
-        urlUtils.setQueryParam(urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber), 
+        urlUtils.setQueryParam(urlUtils.getUrlWithCompanyNumber(SHOW_STOP_PAGE_PATH, companyNumber), 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, stopQuery)
         );
     }
 
-    const transactionResponse: string | undefined = await closeTransaction(session, companyNumber, submissionId, transactionId);
+    await closeTransaction(session, companyNumber, submissionId, transactionId);
   
     return res.redirect(REMOVE_DIRECTOR_SUBMITTED_PATH);
   } catch (e) {
