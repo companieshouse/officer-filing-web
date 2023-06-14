@@ -15,6 +15,18 @@ import { toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 import { equalsIgnoreCase } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
 
+export const isValidUrl = (url: string) => { 
+  return url.startsWith("/officer-filing-web")
+};
+
+export const redirectToUrl = (url: string, res: Response) => { 
+  if(isValidUrl(url)) {
+    return res.redirect(url);
+  } else {
+    throw Error("URL to redirect to (" + url + ") was not valid");
+  }
+};
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -72,10 +84,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const stopQuery = retrieveStopScreen(validationStatus);
 
     if (stopQuery) {
-      return res.redirect(
-        urlUtils.setQueryParam(urlUtils.getUrlWithCompanyNumber(SHOW_STOP_PAGE_PATH, companyNumber), 
-        URL_QUERY_PARAM.PARAM_STOP_TYPE, stopQuery)
-        );
+      const nextPageUrl =  urlUtils.setQueryParam(urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber), 
+      URL_QUERY_PARAM.PARAM_STOP_TYPE, stopQuery);
+      return redirectToUrl(nextPageUrl, res);
     }
 
     await closeTransaction(session, companyNumber, submissionId, transactionId);
