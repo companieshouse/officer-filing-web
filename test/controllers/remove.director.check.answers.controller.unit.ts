@@ -19,7 +19,7 @@ import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList } from "../mocks/validation.status.response.mock";
 import { closeTransaction } from "../../src/services/transaction.service";
-import { retrieveStopScreen } from "../../src/services/remove.directors.error.keys.service";
+import { retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { STOP_TYPE } from "../../src/utils/constants";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
@@ -30,7 +30,7 @@ mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficer);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockCloseTransaction = closeTransaction as jest.Mock;
-const mockRetrieveStopScreen = retrieveStopScreen as jest.Mock;
+const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
@@ -69,7 +69,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("JOHN MiddleName DOE");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("5 November 2002");
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
@@ -86,7 +86,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Name");
       expect(response.text).toContain("Blue Enterprises");
       expect(response.text.includes("Date of birth")).toEqual(false);
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
@@ -103,7 +103,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Name");
       expect(response.text).toContain("Blue Enterprises");
       expect(response.text.includes("Date of birth")).toEqual(false);
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
@@ -119,7 +119,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Name");
       expect(response.text).toContain("JOHN MiddleName DOE");
       expect(response.text).toContain("Date of birth");
-      expect(response.text).toContain("Appointed on");
+      expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
@@ -161,7 +161,7 @@ describe("Remove director check answers controller tests", () => {
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).not.toHaveBeenCalled();
-      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=dissolved");
+      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=dissolved");
     });
 
     it("Should redirect to error 500 screen if close transaction returns errors", async () => {

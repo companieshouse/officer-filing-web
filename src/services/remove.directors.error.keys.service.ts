@@ -29,9 +29,14 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
 
     return "";
   };
-  
-  export const retrieveStopScreen = (validationStatusResponse: ValidationStatusResponse): string => {
 
+  /**
+   * Work out whether any of the error messages returned within the validation status repsonse require a stop page be displayed to the user.
+   * If so, map that error message to the appropriate stop-type and return it.
+   * @param validationStatusResponse Contains the errors to be analysed
+   * @returns Either the name of the stop type or an empty string
+   */
+  export const retrieveStopPageTypeToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
     var listOfValidationKeys = new Array();
 
     if (!validationStatusResponse.errors) {
@@ -45,6 +50,10 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
     if (listOfValidationKeys.includes("company-dissolved")) {
         return STOP_TYPE.DISSOLVED;
     }
+    else if (listOfValidationKeys.includes("removal-date-after-2009")) {
+        return STOP_TYPE.PRE_OCTOBER_2009;
+    }
 
     return "";
   };
+  

@@ -1,5 +1,5 @@
 import { mockValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponseList2, mockValidationStatusResponseList3, mockValidationStatusResponseList4 } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay, retrieveStopScreen } from "../../src/services/remove.directors.error.keys.service";
+import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { STOP_TYPE } from "../../src/utils/constants";
 
 describe("Test remove director error keys service", () => {
@@ -34,12 +34,12 @@ describe("Test remove director error keys service", () => {
 
   describe("Test remove director error keys service", () => {
     it("Should return first stop query that matches priority order", async () => {
-      const stopQuery = retrieveStopScreen(mockValidationStatusResponseList);
+      const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponseList);
       expect(stopQuery).toEqual(STOP_TYPE.DISSOLVED);
     });
 
     it("Should return empty string if stop query is not found", async () => {
-      const stopQuery = retrieveStopScreen(mockValidationStatusResponseList2);
+      const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponseList2);
       expect(stopQuery).toEqual("");
     });
   });

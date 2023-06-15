@@ -6,7 +6,9 @@ import {
   REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, 
   REMOVE_DIRECTOR_PATH_END, 
   OFFICER_FILING, 
-  urlParams } from "../types/page.urls";
+  urlParams,
+  URL_QUERY_PARAM,
+  APPID_STOP_PAGE_PATH} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { ValidationStatusResponse, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { FormattedValidationErrors } from "../middleware/validation.middleware"
@@ -15,7 +17,7 @@ import {
   RemovalDateKey,
   RemovalDateKeys
 } from "../model/date.model";
-import { retrieveErrorMessageToDisplay } from "../services/remove.directors.error.keys.service";
+import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
 import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
@@ -49,7 +51,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -74,25 +75,22 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Validate the filing
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
-    const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
 
-    // Display any errors
-    if (errorMessage) {
-      const errors = formatValidationError(errorMessage);
-      const dates = {
-        [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
-      };
-      const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
-
-      return res.render(Templates.REMOVE_DIRECTOR, {
-        backLinkUrl: backLink,
-        templateName: Templates.REMOVE_DIRECTOR,
-        ...req.body,
-        ...dates,
-        errors
-      });
+    // Handle any errors
+    if (validationStatus.errors) {
+      const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
+      if (errorMessage) {
+        return displayErrorMessage(errorMessage, req, res);
+      }
+     const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
+     if (stopPageType) {
+      var stopPageUrl = urlUtils.getUrlToPath(APPID_STOP_PAGE_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId);
+      stopPageUrl = urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType);
+      return res.redirect(stopPageUrl);
+     }
     }
 
+    // Successfully progress to next page
     const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req);
     return res.redirect(nextPageUrl);
   } catch (e) {
@@ -100,6 +98,24 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+/**
+ * Return the page with the rendered error message
+ */
+function displayErrorMessage(errorMessage: string, req: Request, res: Response<any, Record<string, any>>) {
+  const errors = formatValidationError(errorMessage);
+  const dates = {
+    [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
+  };
+  const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
+
+  return res.render(Templates.REMOVE_DIRECTOR, {
+    backLinkUrl: backLink,
+    templateName: Templates.REMOVE_DIRECTOR,
+    ...req.body,
+    ...dates,
+    errors
+  });
+}
 
 /**
  * Format the validation errors to always highlight the 'day' field when clicked

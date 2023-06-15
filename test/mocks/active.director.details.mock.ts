@@ -45,6 +45,21 @@ export const mockCompanyOfficer: CompanyOfficer = {
   resignedOn: "2023-01-04",
 };
 
+export const mockCompanyOfficerMissingAppointedOn: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "",
+  countryOfResidence: "UNITED KINGDOM",
+  dateOfBirth: dateOfBirth,
+  formerNames: undefined,
+  identification: undefined,
+  links: companyOfficerLinks,
+  name: "JOHN MiddleName DOE",
+  nationality: "British",
+  occupation: "singer",
+  officerRole: "DIRECTOR",
+  resignedOn: "2023-01-04",
+};
+
 export const mockCompanyOfficers: CompanyOfficer[] = [
   {
     address: mockAddress1,

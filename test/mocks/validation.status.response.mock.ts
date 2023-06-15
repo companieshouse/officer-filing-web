@@ -49,6 +49,13 @@ export const mockValidationStatusError6: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusErrorPreOct2009: ValidationStatusError = {
+    error: "Enter a date that is on or after 1 October 2009. If the director was removed before this date, you must file form 288b instead",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     errors: [],
     isValid: true
@@ -76,5 +83,10 @@ export const mockValidationStatusResponseList3: ValidationStatusResponse = {
 
 export const mockValidationStatusResponseList4: ValidationStatusResponse = {
     errors: [mockValidationStatusError5],
+    isValid: false
+}
+
+export const mockValidationStatusResponsePreOct2009: ValidationStatusResponse = {
+    errors: [mockValidationStatusErrorPreOct2009],
     isValid: false
 }
