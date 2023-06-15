@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import { COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM} from "../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, URL_QUERY_PARAM, urlParams} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
@@ -53,12 +53,12 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
+    req.params[urlParams.PARAM_COMPANY_NUMBER] = companyNumber;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    var nextPageUrl = urlUtils.setQueryParam(SHOW_STOP_PAGE_PATH, URL_QUERY_PARAM.COMPANY_NUM, companyNumber);
+    var nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
     }

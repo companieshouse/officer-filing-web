@@ -24,7 +24,7 @@ mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
 const ACTIVE_DIRECTOR_DETAILS_URL = ACTIVE_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
-const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /officer-filing-web/stop-page?companyNumber=12345678&stopType=no%20directors";
+const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=no%20directors";
 
 describe("Active directors controller tests", () => {
 

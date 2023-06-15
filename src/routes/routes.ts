@@ -48,4 +48,5 @@ router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
 router.get(urls.SIGNOUT_PATH, signoutRoute.get);
 router.post(urls.SIGNOUT_PATH, signoutRoute.post);
 
-router.get(urls.SHOW_STOP_PAGE, stopPathRoute.get);
+router.get(urls.BASIC_STOP_PAGE, stopPathRoute.get);
+router.get(urls.APPID_STOP_PAGE, stopPathRoute.get);
