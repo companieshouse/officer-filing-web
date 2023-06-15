@@ -155,7 +155,6 @@ describe("Remove director check answers controller tests", () => {
     it("Should redirect to appropriate stop screen if validation status errors (DISSOLVED)", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
       mockRetrieveStopScreen.mockReturnValueOnce(STOP_TYPE.DISSOLVED);
-      //mockCloseTransaction.mockResolvedValueOnce("closed");
 
       const response = await request(app).post(CHECK_ANSWERS_URL);
 
