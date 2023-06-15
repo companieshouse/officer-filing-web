@@ -65,8 +65,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const company: CompanyProfile = await getCompanyProfile(req.query.companyNumber as string);
-    const companyNumber = company.companyNumber;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
