@@ -36,7 +36,7 @@ describe("Test active director details service", () => {
     };
 
     mockGetActiveOfficerDetails.mockReturnValueOnce(resource);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const response = await getListActiveDirectorDetails(session, TRANSACTION_ID);
 
     expect(mockGetActiveOfficerDetails).toBeCalledWith(TRANSACTION_ID);
@@ -52,7 +52,7 @@ describe("Test active director details service", () => {
     };
 
     mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const expectedMessage = "Error retrieving active director details: " + JSON.stringify(errorResponse);
     let actualMessage;
 
@@ -75,7 +75,7 @@ describe("Test active director details service", () => {
     };
 
     mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
 
     const response =  await getListActiveDirectorDetails(session, TRANSACTION_ID);
 
