@@ -38,7 +38,7 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
    */
   export const retrieveStopPageTypeToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
     var listOfValidationKeys = new Array();
-
+    
     if (!validationStatusResponse.errors) {
         return "";
     }
