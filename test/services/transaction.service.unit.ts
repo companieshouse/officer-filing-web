@@ -128,27 +128,7 @@ describe("transaction service tests", () => {
   });
 
   describe("closeTransaction tests", () => {
-    it("Should extract payment url from headers", async () => {
-      const paymentUrl = "http://payment";
-      mockPutTransaction.mockResolvedValueOnce({
-        headers: {
-          "x-payment-required": paymentUrl
-        },
-        httpStatusCode: 200,
-        resource: {
-          reference: EXPECTED_REF,
-          companyNumber: COMPANY_NUMBER,
-          description: "desc",
-          status: "closed"
-        }
-      } as ApiResponse<Transaction>);
-
-      const url = await closeTransaction(session, COMPANY_NUMBER, CS_SUBMISSION_ID, TRANSACTION_ID);
-
-      expect(url).toBe(paymentUrl);
-    });
-
-    it("Should return undefined if payment header not present", async () => {
+    it("Should return status transaction status", async () => {
       mockPutTransaction.mockResolvedValueOnce({
         headers: {  },
         httpStatusCode: 200,
@@ -160,25 +140,24 @@ describe("transaction service tests", () => {
         }
       } as ApiResponse<Transaction>);
 
-      const url = await closeTransaction(session, COMPANY_NUMBER, CS_SUBMISSION_ID, TRANSACTION_ID);
+      const transactionStatus = await closeTransaction(session, COMPANY_NUMBER, CS_SUBMISSION_ID, TRANSACTION_ID);
 
-      expect(url).toBeUndefined();
+      expect(transactionStatus).toEqual("closed");
     });
 
-    it("Should return undefined if no headers present", async () => {
+    it("Should return undefined if no status present", async () => {
       mockPutTransaction.mockResolvedValueOnce({
         httpStatusCode: 200,
         resource: {
           reference: EXPECTED_REF,
           companyNumber: COMPANY_NUMBER,
           description: "desc",
-          status: "closed"
         }
       } as ApiResponse<Transaction>);
 
-      const url = await closeTransaction(session, COMPANY_NUMBER, CS_SUBMISSION_ID, TRANSACTION_ID);
+      const transactionStatus = await closeTransaction(session, COMPANY_NUMBER, CS_SUBMISSION_ID, TRANSACTION_ID);
 
-      expect(url).toBeUndefined();
+      expect(transactionStatus).toBeUndefined();
     });
   });
 

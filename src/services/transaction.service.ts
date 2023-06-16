@@ -5,7 +5,7 @@ import { createPublicOAuthApiClient } from "./api.service";
 import { Session } from "@companieshouse/node-session-handler";
 import ApiClient from "@companieshouse/api-sdk-node/dist/client";
 import { ApiErrorResponse, ApiResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { DESCRIPTION, headers, REFERENCE, transactionStatuses } from "../utils/constants";
+import { DESCRIPTION, REFERENCE, transactionStatuses } from "../utils/constants";
 
 
 export const postTransaction = async (session: Session, companyNumber: string, description: string, reference: string): Promise<Transaction> => {
@@ -65,11 +65,12 @@ export const getTransaction = async (session: Session, transactionId: string): P
 };
 
 /**
- * Response can contain a URL to start payment session if payment is needed
+ * Response returns the status of the transaction
  */
 export const closeTransaction = async (session: Session, companyNumber: string, officerFilingId: string, transactionId: string): Promise<string | undefined> => {
   const apiResponse: ApiResponse<Transaction> = await putTransaction(session, companyNumber, officerFilingId, transactionId, DESCRIPTION, transactionStatuses.CLOSED);
-  return apiResponse.headers?.[headers.PAYMENT_REQUIRED];
+  logger.debug(`Closed transaction ${transactionId} with company number ${companyNumber}, status ${apiResponse.resource?.status}`);
+  return apiResponse.resource?.status;
 };
 
 /**
@@ -83,12 +84,12 @@ export const putTransaction = async (session: Session,
                                      transactionStatus: string): Promise<ApiResponse<Transaction>> => {
   const apiClient: ApiClient = createPublicOAuthApiClient(session);
 
-  const csReference = `${REFERENCE}_${officerFilingId}`;
+  const ofReference = `${REFERENCE}_${officerFilingId}`;
   const transaction: Transaction = {
     companyNumber,
     description: transactionDescription,
     id: transactionId,
-    reference: csReference,
+    reference: ofReference,
     status: transactionStatus
   };
 

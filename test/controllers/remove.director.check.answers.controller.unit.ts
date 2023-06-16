@@ -2,6 +2,9 @@ jest.mock("../../src/middleware/company.authentication.middleware");
 jest.mock("../../src/services/remove.directors.check.answers.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/utils/api.enumerations");
+jest.mock("../../src/services/validation.status.service");
+jest.mock("../../src/services/transaction.service");
+jest.mock("../../src/services/remove.directors.error.keys.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -13,6 +16,11 @@ import { mockCompanyOfficer, mockCompanyOfficerMissingDateOfBirth, mockCompanyOf
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getDirectorAndTerminationDate } from "../../src/services/remove.directors.check.answers.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
+import { getValidationStatus } from "../../src/services/validation.status.service";
+import { mockValidValidationStatusResponse, mockValidationStatusResponseList } from "../mocks/validation.status.response.mock";
+import { closeTransaction } from "../../src/services/transaction.service";
+import { retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
+import { STOP_TYPE } from "../../src/utils/constants";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -20,10 +28,14 @@ const mockGetDirectorAndTerminationDate = getDirectorAndTerminationDate as jest.
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficer);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+const mockGetValidationStatus = getValidationStatus as jest.Mock;
+const mockCloseTransaction = closeTransaction as jest.Mock;
+const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
 const CHECK_ANSWERS_URL = REMOVE_DIRECTOR_CHECK_ANSWERS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Remove director check answers controller tests", () => {
 
@@ -32,6 +44,9 @@ describe("Remove director check answers controller tests", () => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetDirectorAndTerminationDate.mockClear();
     mockGetCompanyProfile.mockClear();
+    mockGetValidationStatus.mockClear();
+    mockCloseTransaction.mockClear();
+    mockRetrieveStopScreen.mockClear();
   });
 
   describe("get tests", () => {
@@ -123,5 +138,40 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Sorry, there is a problem with this service");
     });
 
+  });
+
+  describe("post tests", () => {
+    it("Should redirect to next page if no errors", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockCloseTransaction.mockResolvedValueOnce("closed");
+
+      const response = await request(app).post(CHECK_ANSWERS_URL);
+
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockCloseTransaction).toHaveBeenCalled();
+      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-submitted");
+    });
+
+    it("Should redirect to appropriate stop screen if validation status errors (DISSOLVED)", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
+      mockRetrieveStopScreen.mockReturnValueOnce(STOP_TYPE.DISSOLVED);
+
+      const response = await request(app).post(CHECK_ANSWERS_URL);
+
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockCloseTransaction).not.toHaveBeenCalled();
+      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=dissolved");
+    });
+
+    it("Should redirect to error 500 screen if close transaction returns errors", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockCloseTransaction.mockRejectedValue(new Error("can't connect"));
+
+      const response = await request(app).post(CHECK_ANSWERS_URL);
+
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockCloseTransaction).toHaveBeenCalled();
+      expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+    });
   });
 });

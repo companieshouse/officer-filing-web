@@ -2,7 +2,6 @@ import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/serv
 import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api.enumerations";
 import { STOP_TYPE } from "../utils/constants";
 
-
 export const retrieveErrorMessageToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
 
     var listOfValidationKeys = new Array();
@@ -39,15 +38,19 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
    */
   export const retrieveStopPageTypeToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
     var listOfValidationKeys = new Array();
+    
     if (!validationStatusResponse.errors) {
         return "";
     }
 
-    validationStatusResponse.errors.forEach(element => {
-      listOfValidationKeys.push(convertAPIMessageToKey(element.error));
+    validationStatusResponse.errors?.forEach(element => {
+        listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
 
-    if (listOfValidationKeys.includes("removal-date-after-2009")) {
+    if (listOfValidationKeys.includes("company-dissolved")) {
+        return STOP_TYPE.DISSOLVED;
+    }
+    else if (listOfValidationKeys.includes("removal-date-after-2009")) {
         return STOP_TYPE.PRE_OCTOBER_2009;
     }
 

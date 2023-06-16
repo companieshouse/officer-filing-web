@@ -42,6 +42,13 @@ export const mockValidationStatusError5: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusError6: ValidationStatusError = {
+    error: "You cannot remove a director from a company that has been dissolved or is in the process of being dissolved",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidationStatusErrorPreOct2009: ValidationStatusError = {
     error: "Enter a date that is on or after 1 October 2009. If the director was removed before this date, you must file form 288b instead",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
@@ -60,7 +67,7 @@ export const mockValidationStatusResponse: ValidationStatusResponse = {
 }
 
 export const mockValidationStatusResponseList: ValidationStatusResponse = {
-    errors: [mockValidationStatusError4, mockValidationStatusError2, mockValidationStatusError3, mockValidationStatusError5, mockValidationStatusError1],
+    errors: [mockValidationStatusError4, mockValidationStatusError2, mockValidationStatusError3, mockValidationStatusError5, mockValidationStatusError1, mockValidationStatusError6],
     isValid: false
 }
 
