@@ -56,6 +56,13 @@ export const mockValidationStatusErrorPreOct2009: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusErrorEtag: ValidationStatusError = {
+    error: "The Director’s information was updated before you sent this submission. You will need to start again",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     errors: [],
     isValid: true
@@ -88,5 +95,10 @@ export const mockValidationStatusResponseList4: ValidationStatusResponse = {
 
 export const mockValidationStatusResponsePreOct2009: ValidationStatusResponse = {
     errors: [mockValidationStatusErrorPreOct2009],
+    isValid: false
+}
+
+export const mockValidationStatusResponseEtag: ValidationStatusResponse = {
+    errors: [mockValidationStatusErrorEtag],
     isValid: false
 }
