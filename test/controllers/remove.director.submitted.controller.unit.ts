@@ -1,6 +1,8 @@
 jest.mock("../../src/middleware/company.authentication.middleware");
 jest.mock("../../src/services/remove.directors.check.answers.service");
 jest.mock("../../src/services/company.profile.service");
+jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../src/services/company.appointments.service");
 jest.mock("../../src/utils/api.enumerations");
 
 import mocks from "../mocks/all.middleware.mock";
@@ -9,30 +11,45 @@ import app from "../../src/app";
 
 import { REMOVE_DIRECTOR_SUBMITTED_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
-import { mockCompanyOfficer, mockCompanyOfficerMissingResignedOn } from "../mocks/remove.director.check.answers.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
-import { getDirectorAndTerminationDate } from "../../src/services/remove.directors.check.answers.service";
+import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
+import { validCompanyAppointment } from "../mocks/company.appointment.mock";
+import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
-const mockGetDirectorAndTerminationDate = getDirectorAndTerminationDate as jest.Mock;
+
+const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
-mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficer);
+
+mockGetOfficerFiling.mockResolvedValue({
+    referenceAppointmentId: "app1",
+    referenceEtag: "ETAG",
+    resignedOn: "2008-08-08"
+});
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
 const COMPANY_NUMBER = "12345678";
+const TRANSACTION_ID = "11223344";
+const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Removal of director submitted";
 const WHAT_HAPPENS_NEXT = "We'll send a confirmation email to you which contains your reference number."
 const FEEDBACK = "This is a new service. Help us improve it by completing our";
-const SUBMITTED_URL = REMOVE_DIRECTOR_SUBMITTED_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const SUBMITTED_URL = REMOVE_DIRECTOR_SUBMITTED_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Remove director submitted controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
     mocks.mockSessionMiddleware.mockClear();
-    mockGetDirectorAndTerminationDate.mockClear();
+    mockGetOfficerFiling.mockClear();
+    mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
@@ -47,23 +64,26 @@ describe("Remove director submitted controller tests", () => {
     it("Should display removal summary for the director", async () => {
       const response = await request(app).get(SUBMITTED_URL);
 
-      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
       expect(mockGetCompanyProfile).toHaveBeenCalled();
+      expect(mockGetOfficerFiling).toHaveBeenCalled();
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+
       expect(response.text).toContain("Company name");
       expect(response.text).toContain("Test Company");
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name of director");
-      expect(response.text).toContain("JOHN MiddleName DOE");
+      expect(response.text).toContain("John Elizabeth Doe");
       expect(response.text).toContain("Date removed");
-      expect(response.text).toContain("4 December 2022");
+      expect(response.text).toContain("8 August 2008");
     });
 
     it("Should display required subtitles & information", async () => {
       const response = await request(app).get(SUBMITTED_URL);
 
-      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
       expect(mockGetCompanyProfile).toHaveBeenCalled();
+      expect(mockGetOfficerFiling).toHaveBeenCalled();
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
 
       expect(response.text).toContain("What happens next");
       expect(response.text).toContain(WHAT_HAPPENS_NEXT);
@@ -73,7 +93,25 @@ describe("Remove director submitted controller tests", () => {
     });    
   
     it("Should throw an internal server error if resigned on date is missing", async () => {
-      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingResignedOn);
+      mockGetOfficerFiling.mockResolvedValue({
+        httpStatusCode: 200,
+        resource: {
+          referenceAppointmentId: "app1",
+          referenceEtag: "ETAG",
+        }
+      });
+      const response = await request(app).get(SUBMITTED_URL);
+      expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
+
+    it("Should throw an internal server error if appointment Id is missing", async () => {
+      mockGetOfficerFiling.mockResolvedValue({
+        httpStatusCode: 200,
+        resource: {
+          referenceEtag: "ETAG",
+          resignedOn: "2008-08-08"
+        }
+      });
       const response = await request(app).get(SUBMITTED_URL);
       expect(response.text).toContain("Sorry, there is a problem with this service");
     });

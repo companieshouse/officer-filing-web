@@ -6,6 +6,36 @@ import ApiClient from "@companieshouse/api-sdk-node/dist/client";
 import { ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
 import { OfficerFiling, FilingResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
+/**
+ * GET an officer filing object with the given transaction ID and submissionId/filingId. 
+ * @param session The current session to connect to the api
+ * @param transactionId The filings associated transaction ID
+ * @param submissionId The only field set on the filing object
+ * @returns The Officer Filing
+ */
+
+export const getOfficerFiling = async (session: Session, transactionId: string, submissionId: string): Promise<OfficerFiling> => {
+  const apiClient: ApiClient = createPublicOAuthApiClient(session);
+
+  logger.debug(`Retrieving officer filing for director removal for transaction ${transactionId}`);
+  const sdkResponse: Resource<OfficerFiling> | ApiErrorResponse = await apiClient.officerFiling.getOfficerFiling(transactionId, submissionId);
+
+  if (!sdkResponse) {
+    throw createAndLogError(`Officer filing GET request returned no response for transaction ${transactionId}`);
+  }
+  if (!sdkResponse.httpStatusCode || sdkResponse.httpStatusCode >= 400) {
+    throw createAndLogError(`Http status code ${sdkResponse.httpStatusCode} - Failed to get officer filing for transaction ${transactionId}`);
+  }
+
+  const castedSdkResponse: Resource<OfficerFiling> = sdkResponse as Resource<OfficerFiling>;
+  if (!castedSdkResponse.resource) {
+    throw createAndLogError(`Officer filing API GET request returned no resource for transaction ${transactionId}`);
+  }
+
+  logger.debug(`Retrieved Officer Filing ${JSON.stringify(sdkResponse)}`);
+  return castedSdkResponse.resource;
+};
+
 
 /**
  * POST an officer filing object for the given transaction ID and appointment ID. 
