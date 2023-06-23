@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     if(officerFiling.referenceAppointmentId === undefined){
       throw Error("Reference appointment ID is missing for submissionId: " + submissionId);
     }
-    else if (officerFiling.resignedOn === undefined) {
+    if (officerFiling.resignedOn === undefined) {
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
     }
 
