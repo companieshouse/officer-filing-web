@@ -33,8 +33,13 @@ const mockCloseTransaction = closeTransaction as jest.Mock;
 const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
+const SUBMISSION_ID = "987654321";
+const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
-const CHECK_ANSWERS_URL = REMOVE_DIRECTOR_CHECK_ANSWERS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const CHECK_ANSWERS_URL = REMOVE_DIRECTOR_CHECK_ANSWERS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Remove director check answers controller tests", () => {
@@ -149,7 +154,7 @@ describe("Remove director check answers controller tests", () => {
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).toHaveBeenCalled();
-      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/00006400/transaction/020002-120116-793219/submission/1/remove-director-submitted");
+      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted");
     });
 
     it("Should redirect to appropriate stop screen if validation status errors (DISSOLVED)", async () => {

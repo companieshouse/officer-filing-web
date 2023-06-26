@@ -79,7 +79,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     await closeTransaction(session, companyNumber, submissionId, transactionId);
   
-    return res.redirect(REMOVE_DIRECTOR_SUBMITTED_PATH);
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req);
+
+    return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }

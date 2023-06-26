@@ -10,26 +10,32 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
       <form action="" method="post">
-        {{ govukPanel({
-          titleText: "Removal of director submitted",
-          html: "Reference number<br><strong>HDJ2123F</strong>"
-        }) }}
+
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+            Removal of director submitted
+          </h1>
+          <div class="govuk-panel__body">
+            Reference number<br><strong>{{ referenceNumber }}</strong>
+          </div>
+        </div>
+
         {{ govukSummaryList({
           rows: [
-            {
-              key: {
-                text: "Company Number"
-              },
-              value: {
-                text: ""
-              }
-            },
             {
               key: {
                 text: "Company name"
               },
               value: {
-                text: ""
+                text: companyName
+              }
+            },
+            {
+              key: {
+                text: "Company number"
+              },
+              value: {
+                text: companyNumber
               }
             },
             {
@@ -37,7 +43,7 @@
                 text: "Name of director"
               },
               value: {
-                html: ""
+                text: name
               }
             },
             {
@@ -45,7 +51,7 @@
                 text: "Date removed"
               },
               value: {
-                html: ""
+                text: resignedOn
               }
             }
           ]
@@ -53,9 +59,7 @@
 
         <h3 class="govuk-heading-m">What happens next</h3>
 
-        <p class="govuk-body">We'll send a confirmation email to
-          <strong></strong>
-          which contains your reference number.</p>
+        <p class="govuk-body">We'll send a confirmation email to you which contains your reference number.</p>
 
           <p class="govuk-body">We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.</p>
 
