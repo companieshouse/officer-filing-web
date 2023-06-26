@@ -1,10 +1,10 @@
-import { mockValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponseList2, mockValidationStatusResponseList3, mockValidationStatusResponseList4 } from "../mocks/validation.status.response.mock";
+import { mockValidationStatusResponse, mockValidationStatusResponseEtag, mockValidationStatusResponseList, mockValidationStatusResponseList2, mockValidationStatusResponseList3, mockValidationStatusResponseList4, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { STOP_TYPE } from "../../src/utils/constants";
 
 describe("Test remove director error keys service", () => {
 
-  describe("retrieveErrorMessageToDisplay tests", () => {
+  describe("retrieve error message tests", () => {
 
     it("Should return first web error message that matches priority order", async () => {
       const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList);
@@ -32,7 +32,7 @@ describe("Test remove director error keys service", () => {
     });
   });
 
-  describe("Test remove director error keys service", () => {
+  describe("retrieve stop type tests", () => {
     it("Should return first stop query that matches priority order", async () => {
       const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponseList);
       expect(stopQuery).toEqual(STOP_TYPE.DISSOLVED);
@@ -41,6 +41,16 @@ describe("Test remove director error keys service", () => {
     it("Should return empty string if stop query is not found", async () => {
       const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponseList2);
       expect(stopQuery).toEqual("");
+    });
+
+    it("Should return pre october 2009 stop type", async () => {
+      const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponsePreOct2009);
+      expect(stopQuery).toEqual(STOP_TYPE.PRE_OCTOBER_2009);
+    });
+
+    it("Should return etag stop type", async () => {
+      const stopQuery = retrieveStopPageTypeToDisplay(mockValidationStatusResponseEtag);
+      expect(stopQuery).toEqual(STOP_TYPE.ETAG);
     });
   });
 });

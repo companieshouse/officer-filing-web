@@ -90,7 +90,8 @@ export enum STOP_TYPE {
   DISSOLVED = "dissolved",
   LIMITED_UNLIMITED = "limited-unlimited",
   NO_DIRECTORS = "no directors",
-  PRE_OCTOBER_2009 = "pre-october-2009"
+  PRE_OCTOBER_2009 = "pre-october-2009",
+  ETAG = "etag"
 }
 
 export const STOP_PAGE_CONTENT = 
@@ -132,5 +133,12 @@ export const STOP_PAGE_CONTENT =
       <p>If the date entered is not correct, you can <a href="` + REMOVE_DIRECTOR_PATH + `" data-event-id="enter-a-different-date-link">enter a different date</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
       `
-  }
+    },
+    etag:{
+      pageHeader: "Someone has already made updates for this director",
+      pageBody: `<p>Since you started using this service, someone else has submitted an update to this director's details.</p>
+      <p>If you still need to submit this update, you'll need to <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+      `
+    },
 }

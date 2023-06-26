@@ -53,7 +53,9 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
     else if (listOfValidationKeys.includes("removal-date-after-2009")) {
         return STOP_TYPE.PRE_OCTOBER_2009;
     }
+    else if (listOfValidationKeys.includes("etag-invalid")) {
+        return STOP_TYPE.ETAG;
+    }
 
     return "";
   };
-  

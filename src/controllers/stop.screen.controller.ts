@@ -66,6 +66,12 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId)
             }
         }
+        case STOP_TYPE.ETAG: { 
+            return {
+                pageHeader: STOP_PAGE_CONTENT.etag.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.etag.pageBody
+            }
+        }
         default: { 
            throw Error("Unrecognised stop screen type: " + stopType); 
         } 
