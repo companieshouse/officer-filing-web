@@ -9,6 +9,7 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyProfile } from "../services/company.profile.service";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,7 +37,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
       name: companyOfficer.name,
-      resignedOn: toReadableFormat(officerFiling.resignedOn)
+      resignedOn: toReadableFormat(officerFiling.resignedOn),
+      removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req)
     });
   } catch (e) {
     return next(e);
