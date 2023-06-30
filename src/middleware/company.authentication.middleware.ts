@@ -8,6 +8,10 @@ import { Templates } from "../types/template.paths";
 
 export const companyAuthenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
+  if (req.originalUrl.includes("/stop-page")) {
+    return next();
+  }
+
   const companyNumber: string = req.params[urlParams.PARAM_COMPANY_NUMBER];
 
   const authMiddlewareConfig: AuthOptions = {
