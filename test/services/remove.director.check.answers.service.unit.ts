@@ -37,7 +37,7 @@ describe("Test check your answers service", () => {
     };
 
     mockGetDirectorAndTerminationDate.mockReturnValueOnce(resource);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const response = await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
 
     expect(mockGetDirectorAndTerminationDate).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
@@ -53,7 +53,7 @@ describe("Test check your answers service", () => {
     };
 
     mockGetDirectorAndTerminationDate.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest({ access_token: "token" });
+    const session =  getSessionRequest();
     const expectedMessage = "Error retrieving TM01 check your answers details: " + JSON.stringify(errorResponse);
     let actualMessage;
 
