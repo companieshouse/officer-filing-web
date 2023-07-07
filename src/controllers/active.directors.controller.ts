@@ -27,11 +27,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
 
     // Redirect to stop screen if there are no directors
-    if(directorDtoList.length === 0){
-      var stopPageRedirectUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
-      stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
-      return res.redirect(stopPageRedirectUrl);
-    }
+    // if(directorDtoList.length === 0){
+    //   var stopPageRedirectUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+    //   stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
+    //   return res.redirect(stopPageRedirectUrl);
+    // }
 
     const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
