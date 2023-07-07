@@ -7,7 +7,7 @@ import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
-import { STOP_TYPE } from "../utils/constants";
+import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/officer-filing-web")
@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
     }
-    else if(companyProfile.type !== "private-unlimited" && companyProfile.type !== "ltd" &&  companyProfile.type !== "plc"){
+    else if(!allowedCompanyTypes.includes(companyProfile.type)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
     }
     else{

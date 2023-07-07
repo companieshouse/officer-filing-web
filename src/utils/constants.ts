@@ -94,6 +94,15 @@ export enum STOP_TYPE {
   ETAG = "etag"
 }
 
+export const allowedCompanyTypes = new Array(
+  "private-unlimited", 
+  "ltd", 
+  "plc", 
+  "private-limited-guarant-nsc-limited-exemption", 
+  "private-limited-guarant-nsc", 
+  "private-unlimited-nsc",
+  "private-limited-shares-section-30-exemption");
+
 export const STOP_PAGE_CONTENT = 
 {
     dissolved:{
