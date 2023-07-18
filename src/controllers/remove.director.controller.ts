@@ -80,7 +80,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if (validationStatus.errors) {
       const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
       if (errorMessage) {
-        return displayErrorMessage(errorMessage, req, res);
+        return displayErrorMessage(errorMessage, appointment, req, res);
       }
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
      if (stopPageType) {
@@ -101,7 +101,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Return the page with the rendered error message
  */
-function displayErrorMessage(errorMessage: string, req: Request, res: Response<any, Record<string, any>>) {
+function displayErrorMessage(errorMessage: string, appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
   const errors = formatValidationError(errorMessage);
   const dates = {
     [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
@@ -109,6 +109,7 @@ function displayErrorMessage(errorMessage: string, req: Request, res: Response<a
   const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
+    directorName: appointment.name,
     backLinkUrl: backLink,
     templateName: Templates.REMOVE_DIRECTOR,
     ...req.body,
