@@ -83,14 +83,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// const companyMetricsUrl = (url: string, companyNumber: string): string =>
-//   url.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber);
-
 const companyHasNoDirectors = async (companyNumber: string) => {
   const companyMetrics: MetricsApi = await getCompanyMetrics(companyNumber);
   console.log("Company metrics: ");
   console.info(companyMetrics);
-  return true;
+  return companyMetrics?.counts?.appointments?.activeDirectorsCount == 0;
 }
 
 const createNewOfficerFiling = async (session: Session) => {
