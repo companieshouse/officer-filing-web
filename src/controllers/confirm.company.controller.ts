@@ -88,7 +88,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 const companyHasNoDirectors = async (companyNumber: string) => {
   const companyMetrics: MetricsApi = await getCompanyMetrics(companyNumber);
-  console.log("Company metrics: " + companyMetrics);
+  console.log("Company metrics: ");
+  console.info(companyMetrics);
   return true;
 }
 
