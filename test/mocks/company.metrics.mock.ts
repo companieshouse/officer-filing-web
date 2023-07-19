@@ -18,37 +18,7 @@ export const companyMetrics: MetricsApi = {
     mortgage: { 
         satisfiedCount: 133, 
         partSatisfiedCount: 0, 
-        totalCount: 817 },
-    registers: {
-        directors: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        members: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        secretaries: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        usualResidentialAddress: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        personsWithSignificantControl: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        llpMembers: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        llpUsualResidentialAddress: {
-            registerMovedTo: "",
-            movedOn: ""
-        }
-    }
+        totalCount: 817 }
 };
 
 export const companyMetricsNoDirectors: MetricsApi = {
@@ -66,37 +36,7 @@ export const companyMetricsNoDirectors: MetricsApi = {
     mortgage: { 
         satisfiedCount: 133, 
         partSatisfiedCount: 0, 
-        totalCount: 817 },
-    registers: {
-        directors: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        members: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        secretaries: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        usualResidentialAddress: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        personsWithSignificantControl: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        llpMembers: {
-            registerMovedTo: "",
-            movedOn: ""
-        },
-        llpUsualResidentialAddress: {
-            registerMovedTo: "",
-            movedOn: ""
-        }
-    }
+        totalCount: 817 }
 };
 
 export const companyMetricsResource: Resource<MetricsApi> = {
