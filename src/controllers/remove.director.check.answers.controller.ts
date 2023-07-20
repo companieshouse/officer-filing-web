@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ACTIVE_DIRECTORS_PATH, REMOVE_DIRECTOR_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DATE_DIRECTOR_REMOVED_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
@@ -46,15 +46,15 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.REMOVE_DIRECTOR_CHECK_ANSWERS, {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
-      backLinkUrl: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
+      backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
       company: companyProfile,
       name: companyOfficer.name,
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
-      changeLink: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
-      cancelLink:  urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req)
+      changeLink: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
+      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
     });
   } catch (e) {
     return next(e);

@@ -10,7 +10,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { REMOVE_DIRECTOR_PATH, urlParams } from "../../src/types/page.urls";
+import { DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -39,7 +39,7 @@ const APPOINTMENT_ID = "987654321";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "When was the director removed from the company?";
-const REMOVE_DIRECTOR_URL = REMOVE_DIRECTOR_PATH
+const REMOVE_DIRECTOR_URL = DATE_DIRECTOR_REMOVED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, APPOINTMENT_ID);
@@ -107,7 +107,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "08",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
@@ -125,7 +125,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "12",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
@@ -206,7 +206,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "1",
                 "removal_date-year": "2008" });
 
-        expect(response.text).toEqual("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/appointment/987654321/stop-page?stopType=pre-october-2009");
+        expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/appointment/987654321/cannot-use?stopType=pre-october-2009");
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     });
 

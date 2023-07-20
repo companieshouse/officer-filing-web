@@ -10,7 +10,7 @@ import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.se
 import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 
 export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web")
+  return url.startsWith("/appoint-update-remove-company-officer")
 };
 
 export const redirectToUrl = (url: string, res: Response) => { 

@@ -7,7 +7,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { ACTIVE_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
+import { CURRENT_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
@@ -23,8 +23,8 @@ mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
 const COMPANY_NUMBER = "12345678";
 const PAGE_HEADING = "Test Company";
-const ACTIVE_DIRECTOR_DETAILS_URL = ACTIVE_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
-const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=no%20directors";
+const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 
 describe("Active directors controller tests", () => {
 

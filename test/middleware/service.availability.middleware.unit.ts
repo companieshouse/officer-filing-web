@@ -15,14 +15,14 @@ describe("service availability middleware tests", () => {
 
   it("should return 500 error page", async () => {
     mockIsActiveFeature.mockReturnValueOnce(false);
-    const response = await request(app).get("/officer-filing-web");
+    const response = await request(app).get("/appoint-update-remove-company-officer");
 
     expect(response.text).toContain("Sorry, there is a problem with this service");
   });
 
   it("should not return 500 error page", async () => {
     mockIsActiveFeature.mockReturnValueOnce(true);
-    const response = await request(app).get("/officer-filing-web");
+    const response = await request(app).get("/appoint-update-remove-company-officer");
 
     expect(response.text).not.toContain("Sorry, there is a problem with this service");
   });

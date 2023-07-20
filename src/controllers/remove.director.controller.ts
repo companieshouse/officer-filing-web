@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { 
-  ACTIVE_DIRECTORS_PATH, 
+  CURRENT_DIRECTORS_PATH, 
   ACTIVE_OFFICERS_PATH_END, 
   REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, 
-  REMOVE_DIRECTOR_PATH_END, 
+  DATE_DIRECTOR_REMOVED_PATH_END, 
   OFFICER_FILING, 
   urlParams,
   URL_QUERY_PARAM,
@@ -42,7 +42,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.REMOVE_DIRECTOR, {
       directorName: appointment.name,
       templateName: Templates.REMOVE_DIRECTOR,
-      backLinkUrl: urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req),
+      backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     });
   } catch (e) {
     return next(e);
@@ -106,7 +106,7 @@ function displayErrorMessage(errorMessage: string, req: Request, res: Response<a
   const dates = {
     [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
   };
-  const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
+  const backLink = OFFICER_FILING + req.route.path.replace(DATE_DIRECTOR_REMOVED_PATH_END, ACTIVE_OFFICERS_PATH_END);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
     backLinkUrl: backLink,

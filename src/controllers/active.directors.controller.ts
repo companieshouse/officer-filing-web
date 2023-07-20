@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   DIRECTOR_DETAILS_ERROR,
@@ -48,7 +48,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     // Create pagination element to navigate pages
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
-    const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req));
+    const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
@@ -115,7 +115,7 @@ const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCa
     .filter(officer => getAppointmentIdFromSelfLink(officer).length)
     .map(officer => {
       return {
-        removeUrl: urlUtils.getUrlToPath(REMOVE_DIRECTOR_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, getAppointmentIdFromSelfLink(officer)),
+        removeUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, getAppointmentIdFromSelfLink(officer)),
         officer: officer
       }
     })
