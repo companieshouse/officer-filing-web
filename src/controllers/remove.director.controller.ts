@@ -22,6 +22,7 @@ import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filin
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
 
 var filingId: string;
 
@@ -40,7 +41,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
     return res.render(Templates.REMOVE_DIRECTOR, {
-      directorName: appointment.name,
+      directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
       templateName: Templates.REMOVE_DIRECTOR,
       backLinkUrl: urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req),
     });
@@ -109,7 +110,7 @@ function displayErrorMessage(errorMessage: string, appointment: CompanyAppointme
   const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
-    directorName: appointment.name,
+    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
     backLinkUrl: backLink,
     templateName: Templates.REMOVE_DIRECTOR,
     ...req.body,

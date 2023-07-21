@@ -1,5 +1,7 @@
-import { formatDateOfBirth, formatAppointmentDate, formatTitleCase, toUpperCase } from "../../src/utils/format";
+import { formatDateOfBirth, formatAppointmentDate, formatTitleCase, toUpperCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromOfficer } from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
+import {mockCompanyOfficer, mockCompanyOfficerMissingMiddleName, mockCompanyOfficerMissingName, mockCorporateCompanyOfficer} from "../mocks/remove.director.check.answers.mock";
 
 describe("formatTitleCase tests", () => {
   it("should return title case", () => {
@@ -63,5 +65,35 @@ describe("toUpperCase tests", () => {
   it("should return empty string if passed undefined", () => {
     const result: string = toUpperCase(undefined);
     expect(result).toBe("");
+  });
+});
+
+describe("retrieveDirectorNameFromAppointments tests", () => {
+  it("should return the appropriate value of the directors name", () => {
+
+    const directorNameFull: string = retrieveDirectorNameFromAppointment(validCompanyAppointment);
+    const directorName: string = retrieveDirectorNameFromAppointment(companyAppointmentMissingMiddleName);
+    const directorNameCorporate: string = retrieveDirectorNameFromAppointment(companyAppointmentCorporateDirector);
+    const missingDirectorName: string = retrieveDirectorNameFromAppointment(companyAppointmentMissingName);
+
+    expect(directorNameFull).toBe("John Elizabeth Doe");
+    expect(directorName).toBe("John Doe");
+    expect(directorNameCorporate).toBe("REACTIONLIQUOR CESSPOOLLIQUOR REGRET");
+    expect(missingDirectorName).toBe("");
+  });
+});
+
+describe("retrieveDirectorNameFromOfficer tests", () => {
+  it("should return the appropriate value of the directors name", () => {
+
+    const directorNameFull: string = retrieveDirectorNameFromOfficer(mockCompanyOfficer);
+    const directorName: string = retrieveDirectorNameFromOfficer(mockCompanyOfficerMissingMiddleName);
+    const directorNameCorporate: string = retrieveDirectorNameFromOfficer(mockCorporateCompanyOfficer);
+    const missingDirectorName: string = retrieveDirectorNameFromOfficer(mockCompanyOfficerMissingName);
+
+    expect(directorNameFull).toBe("John Middlename Doe");
+    expect(directorName).toBe("John Doe");
+    expect(directorNameCorporate).toBe("Blue Enterprises");
+    expect(missingDirectorName).toBe("");
   });
 });
