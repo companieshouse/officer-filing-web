@@ -1,7 +1,7 @@
 import { postTransaction } from "../services/transaction.service";
 import { NextFunction, Request, Response } from "express";
 import { urlUtils } from "../utils/url";
-import { CURRENT_DIRECTORS_PATH, TRADING_STATUS_PATH, urlParams, URL_QUERY_PARAM } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, urlParams } from "../types/page.urls";
 import { DESCRIPTION, REFERENCE } from "../utils/constants";
 import { Session } from "@companieshouse/node-session-handler";
 import { Transaction } from "@companieshouse/api-sdk-node/dist/services/transaction/types";
