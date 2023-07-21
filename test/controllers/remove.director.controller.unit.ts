@@ -144,7 +144,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-year": "2010" });
 
         expect(response.text).toContain("Day must include numbers only");
-        expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
@@ -159,7 +159,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-year": "2010" });
 
         expect(response.text).toContain("Date must be a real date");
-        expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
@@ -174,7 +174,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-year": "" });
 
         expect(response.text).toContain("Date the director was removed must include a year");
-        expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });

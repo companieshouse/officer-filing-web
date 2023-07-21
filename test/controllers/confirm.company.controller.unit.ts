@@ -1,5 +1,6 @@
 jest.mock("../../src/utils/logger");
 jest.mock("../../src/services/company.profile.service");
+jest.mock("../../src/services/company.metrics.service");
 jest.mock("../../src/services/confirm.company.service");
 jest.mock("../../src/utils/date");
 jest.mock("../../src/services/stop.page.validation.service");
@@ -12,10 +13,13 @@ import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile, overseaCompanyCompanyProfile } from "../mocks/company.profile.mock";
 import { formatForDisplay } from "../../src/services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../../src/services/stop.page.validation.service";
+import { getCompanyMetrics } from "../../src/services/company.metrics.service";
+import { companyMetrics, companyMetricsNoDirectors } from "../mocks/company.metrics.mock";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockFormatForDisplay = formatForDisplay as jest.Mock;
 const mockGetCurrentOrFutureDissolved = getCurrentOrFutureDissolved as jest.Mock;
+const mockGetCompanyMetrics = getCompanyMetrics as jest.Mock;
 
 const companyNumber = "12345678";
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
@@ -24,6 +28,7 @@ describe("Confirm company controller tests", () => {
   const PAGE_HEADING = "Confirm this is the correct company";
   const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved";
   const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited";
+  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=no%20directors";
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -67,6 +72,7 @@ describe("Confirm company controller tests", () => {
 
   it("Should call private sdk client and redirect to transaction using company number in profile retrieved from database", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockGetCompanyMetrics.mockResolvedValueOnce(companyMetrics);
     mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
     const response = await request(app)
@@ -94,6 +100,17 @@ describe("Confirm company controller tests", () => {
       .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
 
     expect(response.text).toEqual(LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
+
+  it("Should redirect to no directors stop screen when company has no active directors", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockGetCompanyMetrics.mockResolvedValueOnce(companyMetricsNoDirectors)
+
+    const response = await request(app)
+      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+
+    expect(response.text).toEqual(NO_DIRECTORS_PAGE_REDIRECT_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
 });
