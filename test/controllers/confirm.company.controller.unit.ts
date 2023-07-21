@@ -28,7 +28,7 @@ describe("Confirm company controller tests", () => {
   const PAGE_HEADING = "Confirm this is the correct company";
   const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved";
   const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited";
-  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=no%20directors";
+  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 
   beforeEach(() => {
     jest.clearAllMocks();
