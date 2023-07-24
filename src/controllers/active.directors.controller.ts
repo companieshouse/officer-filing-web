@@ -18,6 +18,8 @@ import { getListActiveDirectorDetails } from "../services/active.directors.detai
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
+import { isActiveFeature } from "../utils/feature.flag";
+import { AP01_ACTIVE } from "../utils/properties";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -50,12 +52,20 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
     const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req));
 
+    let appointDisabled = '""'
+    // Hide the appoint button if feature is disabled
+    if(!isActiveFeature(AP01_ACTIVE))
+    {
+      appointDisabled = "display:none"
+    }
+
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,
       company: companyProfile,
-      pagination: paginationElement
+      pagination: paginationElement,
+      appointDisabled: appointDisabled
     });
   } catch (e) {
     return next(e);
