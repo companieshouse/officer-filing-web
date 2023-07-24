@@ -1,66 +1,192 @@
 import { DateTime } from "luxon";
-import { ErrorMessages } from "./error.messages";
+import { RemovalDateErrorMessageKey } from "../utils/api.enumerations.keys";
+import { DateValidationType, FormattedValidationErrors, ValidationError } from "../model/validation.model";
+import { RemovalDateField } from "../model/date.model";
+import { lookupWebValidationMessage } from "../utils/api.enumerations";
 
 
-export const checkDateIsNotCompletelyEmpty = (day: string, month: string, year: string) => {
-  if ( !day.trim() && !month.trim() && !year.trim() ) {
-    return false;
+// Configuration required for date validation error messages
+const DateValidation: DateValidationType = {
+  MissingValue: {
+      Day: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_DAY,
+          source: [RemovalDateField.DAY],
+          link: RemovalDateField.DAY
+      },
+      Month: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_MONTH,
+          source: [RemovalDateField.MONTH],
+          link: RemovalDateField.MONTH
+      },
+      Year: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_YEAR,
+          source: [RemovalDateField.YEAR],
+          link: RemovalDateField.YEAR
+      },
+      DayMonth: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_DAY_MONTH,
+          source: [RemovalDateField.DAY, RemovalDateField.MONTH],
+          link: RemovalDateField.DAY
+      },
+      DayYear: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_DAY_YEAR,
+          source: [RemovalDateField.DAY, RemovalDateField.YEAR],
+          link: RemovalDateField.DAY
+      },
+      MonthYear: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_MONTH_YEAR,
+          source: [RemovalDateField.MONTH, RemovalDateField.YEAR],
+          link: RemovalDateField.MONTH
+      },
+      DayMonthYear: {
+          messageKey: RemovalDateErrorMessageKey.MISSING_DAY_MONTH_YEAR,
+          source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+          link: RemovalDateField.DAY
+      },
+  },
+  InvalidValue: {
+      Day: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.DAY],
+          link: RemovalDateField.DAY
+      },
+      Month: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.MONTH],
+          link: RemovalDateField.MONTH
+      },
+      Year: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.YEAR],
+          link: RemovalDateField.YEAR
+      },
+      DayMonth: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.DAY, RemovalDateField.MONTH],
+          link: RemovalDateField.DAY
+      },
+      DayYear: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.DAY, RemovalDateField.YEAR],
+          link: RemovalDateField.DAY
+      },
+      MonthYear: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.MONTH, RemovalDateField.YEAR],
+          link: RemovalDateField.MONTH
+      },
+      DayMonthYear: {
+          messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
+          source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+          link: RemovalDateField.DAY
+      },
   }
-  return true;
-};
-
-export const checkDateValueIsValid = (dayStr: string, monthStr: string, yearStr: string) => {
-  const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
-  if (checkIsNumber(dayStr) && checkIsNumber(monthStr) && checkIsNumber(yearStr)) {
-    if( !DateTime.utc(year, month, day).isValid){
-      throw new Error(ErrorMessages.INVALID_DATE);
-    }
-  }
-};
-
-export const checkIsNumber = (numStr: string) => {
-  if(numStr.match("^[0-9]+$")){
-    return true;
-  }
-  return false;
 }
 
-export const checkDateFieldDay = (dayStr: string, monthStr: string, yearStr: string): boolean => {
-  if (!checkDateIsNotCompletelyEmpty(dayStr, monthStr, yearStr)) {
-    throw new Error(ErrorMessages.ENTER_DATE);
+/**
+ * Validate date field - checks for missing values, non-numeric characters
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+export const validateDate = (dayStr: string, monthStr: string, yearStr: string): ValidationError | undefined => {
+  // Missing values
+  const missingValuesValidationResult = validateMissingValues(dayStr, monthStr, yearStr);
+  if (missingValuesValidationResult) {
+    return missingValuesValidationResult;
   }
-  else if (dayStr === "") {
-    throw new Error(ErrorMessages.DAY);
-  }
-  else if(!checkIsNumber(dayStr) && monthStr != "" && yearStr != ""){
-    throw new Error(ErrorMessages.DAY_INVALID_CHARACTER);
-  }
-  else if (checkIsNumber(dayStr) && checkIsNumber(monthStr) && checkIsNumber(yearStr)) {
-    checkDateValueIsValid(dayStr, monthStr, yearStr);
-  }
-  return true;
-};
 
-export const checkDateFieldMonth = (dayStr: string, monthStr: string, yearStr: string): boolean => {
-  if (monthStr === "" && dayStr !== "") {
-    throw new Error(ErrorMessages.MONTH);
+  // Invalid values
+  const invalidValuesValidationResult = validateInvalidValues(dayStr, monthStr, yearStr);
+  if (invalidValuesValidationResult) {
+    return invalidValuesValidationResult;
   }
-  else if(dayStr !== "" && yearStr !== "" && checkIsNumber(dayStr) && !checkIsNumber(monthStr)){
-    throw new Error(ErrorMessages.MONTH_INVALID_CHARACTER);
+
+  // Date cannot exist
+  const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
+  if( !DateTime.utc(year, month, day).isValid){
+    return DateValidation.InvalidValue.DayMonthYear;
   }
-  return true;
-};
+  return undefined;
+}
 
-export const checkDateFieldYear = (dayStr: string, monthStr: string, yearStr: string): boolean => {
-  if (yearStr === "" && dayStr !== "" && monthStr !== "") {
-      throw new Error(ErrorMessages.YEAR);
-    }
-  else if(dayStr !== "" && monthStr !== "" && checkIsNumber(dayStr) && checkIsNumber(monthStr) && !checkIsNumber(yearStr)){
-    throw new Error(ErrorMessages.YEAR_INVALID_CHARACTER);
+/**
+ * Validate the date fields and return a validation error if any of the fields are empty 
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateMissingValues = (dayStr: string, monthStr: string, yearStr: string): ValidationError | undefined => {
+  if(dayStr === "" && monthStr !== "" && yearStr !== "") {
+    return DateValidation.MissingValue.Day;
   }
-  return true;
-};
+  else if(dayStr !== "" && monthStr === "" && yearStr !== "") {
+    return DateValidation.MissingValue.Month;
+  } 
+  else if(dayStr !== "" && monthStr !== "" && yearStr === "") {
+    return DateValidation.MissingValue.Year;
+  } 
+  else if(dayStr === "" && monthStr === "" && yearStr !== "") {
+    return DateValidation.MissingValue.DayMonth;
+  } 
+  else if(dayStr === "" && monthStr !== "" && yearStr === "") {
+    return DateValidation.MissingValue.DayYear;
+  } 
+  else if(dayStr !== "" && monthStr === "" && yearStr === "") {
+    return DateValidation.MissingValue.MonthYear
+  } 
+  else if (dayStr === "" && monthStr === "" && yearStr === "") {
+    return DateValidation.MissingValue.DayMonthYear;
+  }
+  return undefined;
+}
 
+/**
+ * Validate the date fields and return a validation error if any of the fields contain non-numeric characters
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateInvalidValues = (dayStr: string, monthStr: string, yearStr: string): ValidationError | undefined => {
+  const validDay = checkIsNumber(dayStr), validMonth = checkIsNumber(monthStr), validYear = checkIsNumber(yearStr);
+  if (!validDay && validMonth && validYear) {
+    return DateValidation.InvalidValue.Day;
+  }
+  else if (validDay && !validMonth && validYear) {
+    return DateValidation.InvalidValue.Month;
+  }
+  else if (validDay && validMonth && !validYear) {
+    return DateValidation.InvalidValue.Year;
+  }
+  else if (!validDay && !validMonth && validYear) {
+    return DateValidation.InvalidValue.DayMonth;
+  }
+  else if (!validDay && validMonth && !validYear) {
+    return DateValidation.InvalidValue.DayYear;
+  }
+  else if (validDay && !validMonth && !validYear) {
+    return DateValidation.InvalidValue.MonthYear;
+  }
+  else if (!validDay && !validMonth && !validYear) {
+    return DateValidation.InvalidValue.DayMonthYear;
+  }
+  return undefined;
+}
 
+const checkIsNumber = (numStr: string) => {
+  return numStr.match("^[0-9]+$");
+}
 
+/**
+ * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.
+ * @param validationResult Contains the error message, the fields to highlight, and the field to link when the error message is clicked
+ * @returns A validation errors object to display on the page
+ */
+export function formatValidationError(validationResult: ValidationError): FormattedValidationErrors {
+  const errors = { errorList: [] } as any;
+  const errorMessage = lookupWebValidationMessage(validationResult.messageKey);
 
+    // errors.errorList[] relates to the linked error messages at the top of the page
+    errors.errorList.push({ href: '#' + validationResult.link, text: errorMessage });
+
+    // errors[] relates to the highlighed fields and the message just above those fields
+    validationResult.source.forEach(field => {
+      errors[field] = { text: errorMessage };
+    });
+
+  return errors;
+}

@@ -11,11 +11,10 @@ import {
   APPID_STOP_PAGE_PATH} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { ValidationStatusResponse, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { FormattedValidationErrors } from "../middleware/validation.middleware"
 import { getValidationStatus } from "../services/validation.status.service";
 import {
-  RemovalDateKey,
-  RemovalDateKeys
+  RemovalDateField,
+  RemovalDateKey
 } from "../model/date.model";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
 import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
@@ -23,6 +22,8 @@ import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
+import { formatValidationError, validateDate } from "../validation/date.validation";
+import { ValidationError } from "../model/validation.model";
 
 var filingId: string;
 
@@ -57,15 +58,21 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const session: Session = req.session as Session;
-
-    // Get date of resignation
-    const day = req.body[RemovalDateKeys[0]];
-    const month = req.body[RemovalDateKeys[1]];
-    const year = req.body[RemovalDateKeys[2]];
-    const resignationDate = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
-
+    
     // Get current etag within the appointment
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+    // Get date of resignation
+    const day = req.body[RemovalDateField.DAY];
+    const month = req.body[RemovalDateField.MONTH];
+    const year = req.body[RemovalDateField.YEAR];
+    const resignationDate = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
+
+    // Validate the date fields (JS)
+    const dateValidationResult = validateDate(day, month, year);
+    if (dateValidationResult) {
+      return displayErrorMessage(dateValidationResult, appointment, req, res);
+    }
 
     // Patch filing with etag and resignation date
     const officerFiling: OfficerFiling = {
@@ -74,14 +81,17 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
     await patchOfficerFiling(session, transactionId, filingId, officerFiling);
 
-    // Validate the filing
+    // Validate the filing (API)
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
-
-    // Handle any errors
     if (validationStatus.errors) {
       const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
       if (errorMessage) {
-        return displayErrorMessage(errorMessage, appointment, req, res);
+        const validationResult: ValidationError = {
+          messageKey: errorMessage,
+          source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+          link: RemovalDateField.DAY
+        }
+        return displayErrorMessage(validationResult, appointment, req, res);
       }
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
      if (stopPageType) {
@@ -102,10 +112,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Return the page with the rendered error message
  */
-function displayErrorMessage(errorMessage: string, appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
-  const errors = formatValidationError(errorMessage);
+function displayErrorMessage(validationResult: ValidationError, appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+  const errors = formatValidationError(validationResult);
   const dates = {
-    [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
+    [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: req.body[key as string] }), {})
   };
   const backLink = OFFICER_FILING + req.route.path.replace(DATE_DIRECTOR_REMOVED_PATH_END, ACTIVE_OFFICERS_PATH_END);
 
@@ -117,16 +127,4 @@ function displayErrorMessage(errorMessage: string, appointment: CompanyAppointme
     ...dates,
     errors
   });
-}
-
-/**
- * Format the validation errors to always highlight the 'day' field when clicked
- * @param errorMessage The message to be displayed to the user
- * @returns A validation errors object to display on the page
- */
-export function formatValidationError(errorMessage: string): FormattedValidationErrors {
-  const errors = { errorList: [] } as any;
-    errors.errorList.push({ href: '#removal_date-day', text: errorMessage });
-    errors["removal_date-day"] = { text: errorMessage };
-  return errors;
 }

@@ -1,49 +1,30 @@
+{# Setup vars that will be used in page #}
 {% set removalDateErrorMessage = '' %}
 {% set isremovalDateDayError = false %}
 {% set isremovalDateMonthError = false %}
 {% set isremovalDateYearError = false %}
 
-{# We are constrained by the generic validation handling so have to manipulate the error data in the template rather than the controller #}
-{# We need to loop through the errors returned to pick out the first removal_date error #}
-{# to prevent duplicate messages on the same field. #}
-{# We can use its message text and then work out which of the day/month/year fields #}
-{# to mark as 'red' using the error style class #}
 
-{% if errors %}
-  {% for key, value in errors %}
+{# Decide if any field is in error and set boolean that will highlight it in red #}
+{% for key, value in errors %}
+  {% if "removal_date" in key|string %}
+    {% set removalDateErrorMessage = value %}
 
-    {# only look at first matching error #}
-    {% if not removalDateErrorMessage %}
-      {% if "removal_date" == key|string %}
-        {# if the matching error is for the whole date field, look at the data to see what has not been populated in the date #}
-        {% set removalDateErrorMessage = value %}
-        {% if removal_date %}
-          {% if not removal_date["removal_date-day"] %}
-            {% set isremovalDateDayError = true %}
-          {% endif %}
-          {% if not removal_date["removal_date-month"] %}
-            {% set isremovalDateMonthError = true %}
-          {% endif %}
-          {% if not removal_date["removal_date-year"] %}
-            {% set isremovalDateYearError = true %}
-          {% endif %}
-        {% endif %}
-      {% elif "removal_date" in key|string %}
-        {# if the matching error is for a -day,-month,-year field, set the flag to mark that field as in error #}
-        {% set removalDateErrorMessage = value %}
-        {% if "-day" in key|string %}
-          {% set isremovalDateDayError = true %}
-        {% elif "-month" in key|string %} 
-          {% set isremovalDateMonthError = true %}
-        {% elif "-year" in key|string %} 
-          {% set isremovalDateYearError = true %}
-        {% endif %}
-      {% endif %}
+    {% if "-day" in key|string %}
+      {% set isremovalDateDayError = true %}
     {% endif %}
-  {% endfor %}    
-{% endif %}
+    {% if "-month" in key|string %} 
+      {% set isremovalDateMonthError = true %}
+    {% endif %}
+    {% if "-year" in key|string %} 
+      {% set isremovalDateYearError = true %}
+    {% endif %}
+
+  {% endif %}
+{% endfor %}
 
 
+{# Set classes on the 3 date input fields (including error classes if applicable) #}
 {% set removal_date_classes_year = "govuk-input--width-4 govuk-input" %}
 {% set removal_date_classes_month = "govuk-input--width-2 govuk-input" %}
 {% set removal_date_classes_day = "govuk-input--width-2 govuk-input" %}
@@ -59,6 +40,7 @@
 {% endif %}
 
 
+{# Render #}
 {{ govukDateInput({
   errorMessage: removalDateErrorMessage,
   id: "removal_date",

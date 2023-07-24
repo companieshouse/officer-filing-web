@@ -20,6 +20,7 @@ import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
+import { lookupWebValidationMessage } from "../../src/utils/api.enumerations";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -32,6 +33,7 @@ const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockRetrieveErrorMessageToDisplay = retrieveErrorMessageToDisplay as jest.Mock;
 const mockRetrieveStopPageTypeToDisplayy = retrieveStopPageTypeToDisplay as jest.Mock;
+const mockLookupWebValidationMessage = lookupWebValidationMessage as jest.Mock;
 
 
 const COMPANY_NUMBER = "12345678";
@@ -56,6 +58,7 @@ describe("Remove director date controller tests", () => {
     mockPatchOfficerFiling.mockClear();
     mockRetrieveErrorMessageToDisplay.mockClear();
     mockRetrieveStopPageTypeToDisplayy.mockClear();
+    mockLookupWebValidationMessage.mockClear();
   });
 
   describe("get tests", () => {
@@ -136,6 +139,7 @@ describe("Remove director date controller tests", () => {
 
     it("Should display error before patching if day is not a number", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -143,7 +147,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "8",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Day must include numbers only");
+        expect(response.text).toContain("Date the director was removed must be a real date");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -151,6 +155,7 @@ describe("Remove director date controller tests", () => {
 
     it("Should display error before patching if month cannot exist", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -158,7 +163,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "15",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Date must be a real date");
+        expect(response.text).toContain("Date the director was removed must be a real date");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -166,6 +171,7 @@ describe("Remove director date controller tests", () => {
 
     it("Should display error before patching if year is missing", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must include a year");
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -179,9 +185,10 @@ describe("Remove director date controller tests", () => {
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
-    it("Should display error if validation status returns errors", async () => {
+    it("Should display error if get validation status returns errors", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
       mockRetrieveErrorMessageToDisplay.mockReturnValueOnce("The date you enter must be after the company's incorporation date");
+      mockLookupWebValidationMessage.mockReturnValueOnce("The date you enter must be after the company's incorporation date");
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)

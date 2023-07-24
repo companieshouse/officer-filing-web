@@ -39,10 +39,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
-      var corporateDirector = false;
-      if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
-        corporateDirector = true;
-      }
+    var corporateDirector = false;
+    if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
+      corporateDirector = true;
+    }
 
     return res.render(Templates.REMOVE_DIRECTOR_CHECK_ANSWERS, {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
