@@ -12,7 +12,7 @@ import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
 
 export const isValidUrl = (url: string) => { 
-  return url.startsWith("/officer-filing-web")
+  return url.startsWith("/appoint-update-remove-company-officer")
 };
 
 export const redirectToUrl = (url: string, res: Response) => { 

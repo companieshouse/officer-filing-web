@@ -10,7 +10,7 @@ import { logger } from "../../src/utils/logger";
 const mockLoggerErrorRequest = logger.errorRequest as jest.Mock;
 
 const EXPECTED_TEXT = "Page not found";
-const INCORRECT_URL = "/officer-filing-web/company-numberr";
+const INCORRECT_URL = "/appoint-update-remove-company-officer/company-numberr";
 
 describe("Error controller test", () => {
 
