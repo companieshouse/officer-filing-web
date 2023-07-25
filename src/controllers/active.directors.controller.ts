@@ -3,7 +3,6 @@ import { Templates } from "../types/template.paths";
 import { ACTIVE_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, REMOVE_DIRECTOR_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
-  DIRECTOR_DETAILS_ERROR,
   OFFICER_ROLE, 
   STOP_TYPE} from "../utils/constants";
   import {
