@@ -1,6 +1,6 @@
-import { RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { CompanyOfficer, DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN } from "./constants";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
@@ -59,3 +59,44 @@ export const toUpperCase = (str: string | undefined): string => {
 export const equalsIgnoreCase = (compareTo: string, compare: string): boolean => {
   return compare.localeCompare(compareTo, LOCALE_EN, { sensitivity: 'accent' }) === 0;
 };
+
+export const retrieveDirectorNameFromAppointment = (appointment: CompanyAppointment ): string => {
+  if (appointment.forename) { appointment.forename = appointment.forename.trim()}
+  if (appointment.otherForenames) { appointment.otherForenames = appointment.otherForenames.trim()}
+  if (appointment.surname) { appointment.surname = appointment.surname.trim()}
+  if (appointment.name) { appointment.name = appointment.name.trim()}
+
+  if (appointment.forename && appointment.otherForenames && appointment.surname) {
+    return appointment.forename + " "  + appointment.otherForenames + " " + appointment.surname;
+  }
+  else if (appointment.forename && appointment.surname) {
+    return appointment.forename + " " + appointment.surname;
+  }
+  else if (appointment.name) {
+    return appointment.name;
+  }
+  else {
+    return "";
+  }
+}
+
+export const retrieveDirectorNameFromOfficer = (officer: CompanyOfficer ): string => {
+  if (officer.forename) { officer.forename = officer.forename.trim()}
+  if (officer.otherForenames) { officer.otherForenames = officer.otherForenames.trim()}
+  if (officer.surname) { officer.surname = officer.surname.trim()}
+  if (officer.name) { officer.name = officer.name.trim()}
+
+  if (officer.forename && officer.otherForenames && officer.surname) {
+    return officer.forename + " "  + officer.otherForenames + " " + officer.surname;
+  }
+  else if (officer.forename && officer.surname) {
+    return officer.forename + " " + officer.surname;
+  }
+  else if (officer.name) {
+    return officer.name;
+  }
+  else {
+    return "";
+  }
+}
+

@@ -12,7 +12,7 @@ import { getDirectorAndTerminationDate } from "../services/remove.directors.chec
 import { retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
-import { equalsIgnoreCase } from "../utils/format";
+import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromOfficer  } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -48,7 +48,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
       backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
       company: companyProfile,
-      name: companyOfficer.name,
+      name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),

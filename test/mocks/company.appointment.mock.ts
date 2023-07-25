@@ -26,6 +26,75 @@ export const validCompanyAppointment: CompanyAppointment = {
     isPre1992Appointment: false
 };
 
+export const companyAppointmentMissingMiddleName: CompanyAppointment = {
+    serviceAddress: {
+        addressLine1: "address line 1",
+        addressLine2: "address line 2",
+        country: "UK",
+        locality: "locality"
+    },
+    links: {
+        self: "self-link",
+        officer: {
+            appointments: "appointments-link"
+        }
+    },
+    name: "Doe, John",
+    forename: "John",
+    surname: "Doe",
+    otherForenames: "",
+    officerRole: "director",
+    etag: "etag",
+    personNumber: "123456",
+    isPre1992Appointment: false
+};
+
+export const companyAppointmentMissingName: CompanyAppointment = {
+    serviceAddress: {
+        addressLine1: "address line 1",
+        addressLine2: "address line 2",
+        country: "UK",
+        locality: "locality"
+    },
+    links: {
+        self: "self-link",
+        officer: {
+            appointments: "appointments-link"
+        }
+    },
+    name: "",
+    forename: "",
+    surname: "",
+    otherForenames: "",
+    officerRole: "director",
+    etag: "etag",
+    personNumber: "123456",
+    isPre1992Appointment: false
+};
+
+export const companyAppointmentCorporateDirector: CompanyAppointment = {
+    serviceAddress: {
+        addressLine1: "address line 1",
+        addressLine2: "address line 2",
+        country: "UK",
+        locality: "locality"
+    },
+    links: {
+        self: "self-link",
+        officer: {
+            appointments: "appointments-link"
+        }
+    },
+    name: "REACTIONLIQUOR CESSPOOLLIQUOR REGRET",
+    forename: "",
+    surname: "",
+    otherForenames: "",
+    officerRole: "corporate-director",
+    etag: "etag",
+    personNumber: "123456",
+    isPre1992Appointment: true
+};
+
 export const validCompanyAppointmentResource: Resource<CompanyAppointment> = {
     httpStatusCode: 200,
     resource: validCompanyAppointment,

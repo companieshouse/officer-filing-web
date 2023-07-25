@@ -38,7 +38,10 @@ export const mockCompanyOfficer: CompanyOfficer = {
   countryOfResidence: "UNITED KINGDOM",
   dateOfBirth: dateOfBirth,
   links: companyOfficerLinks,
-  name: "JOHN MiddleName DOE",
+  name: "Doe, John Middlename",
+  forename: "John",
+  surname: "Doe",
+  otherForenames: "Middlename",
   officerRole: "DIRECTOR",
   resignedOn: "2022-12-04",
 };
@@ -72,6 +75,30 @@ export const mockCompanyOfficerMissingResignedOn: CompanyOfficer = {
   links: companyOfficerLinks,
   name: "JOHN MiddleName DOE",
   officerRole: "DIRECTOR"
+};
+
+export const mockCompanyOfficerMissingMiddleName: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  dateOfBirth: dateOfBirth,
+  links: companyOfficerLinks,
+  name: "JOHN Middlename DOE",
+  forename: "John",
+  surname: "Doe",
+  officerRole: "DIRECTOR",
+  resignedOn: "2022-12-04",
+};
+
+export const mockCompanyOfficerMissingName: CompanyOfficer = {
+  address: mockAddress1,
+  appointedOn: "2022-12-01",
+  countryOfResidence: "UNITED KINGDOM",
+  dateOfBirth: dateOfBirth,
+  links: companyOfficerLinks,
+  name: "",
+  officerRole: "DIRECTOR",
+  resignedOn: "2022-12-04",
 };
 
 export const mockCorporateCompanyOfficer: CompanyOfficer = {

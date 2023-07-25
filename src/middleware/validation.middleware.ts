@@ -12,6 +12,7 @@ import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
 
 export async function checkValidations(req: Request, res: Response, next: NextFunction) {
   try {
@@ -34,7 +35,7 @@ export async function checkValidations(req: Request, res: Response, next: NextFu
       const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
       return res.render(Templates.REMOVE_DIRECTOR, {
-        directorName: appointment.name,
+        directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
         backLinkUrl: backLink,
         templateName: Templates.REMOVE_DIRECTOR,
         ...req.body,
