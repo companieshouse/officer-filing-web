@@ -61,6 +61,11 @@ export const equalsIgnoreCase = (compareTo: string, compare: string): boolean =>
 };
 
 export const retrieveDirectorNameFromAppointment = (appointment: CompanyAppointment ): string => {
+  if (appointment.forename) { appointment.forename = appointment.forename.trim()}
+  if (appointment.otherForenames) { appointment.otherForenames = appointment.otherForenames.trim()}
+  if (appointment.surname) { appointment.surname = appointment.surname.trim()}
+  if (appointment.name) { appointment.name = appointment.name.trim()}
+
   if (appointment.forename && appointment.otherForenames && appointment.surname) {
     return appointment.forename + " "  + appointment.otherForenames + " " + appointment.surname;
   }
@@ -76,6 +81,11 @@ export const retrieveDirectorNameFromAppointment = (appointment: CompanyAppointm
 }
 
 export const retrieveDirectorNameFromOfficer = (officer: CompanyOfficer ): string => {
+  if (officer.forename) { officer.forename = officer.forename.trim()}
+  if (officer.otherForenames) { officer.otherForenames = officer.otherForenames.trim()}
+  if (officer.surname) { officer.surname = officer.surname.trim()}
+  if (officer.name) { officer.name = officer.name.trim()}
+
   if (officer.forename && officer.otherForenames && officer.surname) {
     return officer.forename + " "  + officer.otherForenames + " " + officer.surname;
   }
