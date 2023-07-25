@@ -73,20 +73,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const activeOfficerDetailsBtnValue = req.body.activeOfficers;
-
-    return res.render(Templates.ACTIVE_DIRECTORS, {
-      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
-      officerErrorMsg: DIRECTOR_DETAILS_ERROR,
-      templateName: Templates.ACTIVE_DIRECTORS,
-    });
-  } catch (e) {
-    return next(e);
-  }
+  // Not yet implemented
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
