@@ -154,7 +154,7 @@ describe("Remove director check answers controller tests", () => {
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).toHaveBeenCalled();
-      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted");
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted");
     });
 
     it("Should redirect to appropriate stop screen if validation status errors (DISSOLVED)", async () => {
@@ -165,7 +165,7 @@ describe("Remove director check answers controller tests", () => {
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).not.toHaveBeenCalled();
-      expect(response.text).toContain("Found. Redirecting to /officer-filing-web/company/12345678/stop-page?stopType=dissolved");
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved");
     });
 
     it("Should redirect to error 500 screen if close transaction returns errors", async () => {

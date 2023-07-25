@@ -34,11 +34,11 @@ router.post(urls.CONFIRM_COMPANY, confirmCompanyRoute.post);
 
 router.get(urls.CREATE_TRANSACTION, createTransactionRoute.get);
 
-router.get(urls.ACTIVE_DIRECTORS, activeDirectors.get);
-router.post(urls.ACTIVE_DIRECTORS, activeDirectors.post);
+router.get(urls.CURRENT_DIRECTORS, activeDirectors.get);
+router.post(urls.CURRENT_DIRECTORS, activeDirectors.post);
 
-router.get(urls.REMOVE_DIRECTOR, removeDirector.get);
-router.post(urls.REMOVE_DIRECTOR, ...removalDataValidations, checkValidations, removeDirector.post);
+router.get(urls.DATE_DIRECTOR_REMOVED, removeDirector.get);
+router.post(urls.DATE_DIRECTOR_REMOVED, ...removalDataValidations, checkValidations, removeDirector.post);
 
 router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);

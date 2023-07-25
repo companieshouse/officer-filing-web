@@ -1,4 +1,4 @@
-import { COMPANY_LOOKUP, REMOVE_DIRECTOR_PATH } from "../types/page.urls";
+import { COMPANY_LOOKUP, DATE_DIRECTOR_REMOVED_PATH } from "../types/page.urls";
 
 export const STATEMENT_OF_CAPITAL_ERROR = "Select yes if the statement of capital is correct";
 export const TRADING_STATUS_ERROR = "Select yes if the company trading status is correct";
@@ -110,7 +110,7 @@ export const STOP_PAGE_CONTENT =
         pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
 
         <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
-        <p>If this is the wrong company, <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+        <p>If this is the wrong company, <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
         <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
         `
     },
@@ -139,14 +139,14 @@ export const STOP_PAGE_CONTENT =
       pageHeader: "You cannot use this service",
       pageBody: `<p>The date the director was removed is before 1 October 2009.</p>
       <p>You'll need to file the <a href="https://webarchive.nationalarchives.gov.uk/ukgwa/20140103090023/http://www.companieshouse.gov.uk/forms/formsOnline1985.shtml" data-event-id="288b-form-link">288b form 'Terminating appointment as director or secretary'</a> on paper for directors removed before this date.</p>
-      <p>If the date entered is not correct, you can <a href="` + REMOVE_DIRECTOR_PATH + `" data-event-id="enter-a-different-date-link">enter a different date</a>.</p>
+      <p>If the date entered is not correct, you can <a href="` + DATE_DIRECTOR_REMOVED_PATH + `" data-event-id="enter-a-different-date-link">enter a different date</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
       `
     },
     etag:{
       pageHeader: "Someone has already made updates for this director",
       pageBody: `<p>Since you started using this service, someone else has submitted an update to this director's details.</p>
-      <p>If you still need to submit this update, you'll need to <a href="/officer-filing-web" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+      <p>If you still need to submit this update, you'll need to <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
       `
     },

@@ -12,7 +12,7 @@ describe("start controller tests", () => {
 
   it("should return start page", async () => {
     const response = await request(app)
-      .get("/officer-filing-web");
+      .get("/appoint-update-remove-company-officer");
 
     expect(response.text).toContain(EXPECTED_TEXT);
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
@@ -20,7 +20,7 @@ describe("start controller tests", () => {
 
   it("should return start page when url has trailing slash", async () => {
     const response = await request(app)
-      .get("/officer-filing-web/");
+      .get("/appoint-update-remove-company-officer/");
 
     expect(response.text).toContain(EXPECTED_TEXT);
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();

@@ -9,7 +9,7 @@ import { BASIC_STOP_PAGE_PATH } from "../../src/types/page.urls";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
-const SHOW_STOP_PAGE_PATH_URL = "/officer-filing-web/company/12345678/stop-page?stopType=";
+const SHOW_STOP_PAGE_PATH_URL = "/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=";
 const SHOW_STOP_PAGE_PATH_URL_DISSOLVED = SHOW_STOP_PAGE_PATH_URL + "dissolved";
 const SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED = SHOW_STOP_PAGE_PATH_URL + "limited-unlimited";
 const SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS = SHOW_STOP_PAGE_PATH_URL + "no directors";

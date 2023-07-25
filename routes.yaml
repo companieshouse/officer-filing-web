@@ -3,4 +3,4 @@ group: web
 
 weight: 100
 routes:
-  1: ^/officer-filing-web/*
+  1: ^/appoint-update-remove-company-officer/*

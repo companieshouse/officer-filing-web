@@ -1,7 +1,7 @@
 import { postTransaction } from "../services/transaction.service";
 import { NextFunction, Request, Response } from "express";
 import { urlUtils } from "../utils/url";
-import { ACTIVE_DIRECTORS_PATH, TRADING_STATUS_PATH, urlParams, URL_QUERY_PARAM } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, urlParams } from "../types/page.urls";
 import { DESCRIPTION, REFERENCE } from "../utils/constants";
 import { Session } from "@companieshouse/node-session-handler";
 import { Transaction } from "@companieshouse/api-sdk-node/dist/services/transaction/types";
@@ -15,7 +15,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = transaction.id as string;
       req.params[urlParams.PARAM_TRANSACTION_ID] = transactionId;
       req.params[urlParams.PARAM_SUBMISSION_ID] = "645d1188c794645afe15f5cc";
-      var nextPageUrl = urlUtils.getUrlToPath(ACTIVE_DIRECTORS_PATH, req)
+      var nextPageUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
       return res.redirect(nextPageUrl);
 
   } catch (e) {

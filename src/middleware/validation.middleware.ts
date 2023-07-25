@@ -7,7 +7,7 @@ import {
 
 import { logger } from '../utils/logger';
 import { Templates } from "../types/template.paths";
-import { ACTIVE_OFFICERS_PATH_END, OFFICER_FILING, REMOVE_DIRECTOR_PATH_END } from "../types/page.urls";
+import { ACTIVE_OFFICERS_PATH_END, OFFICER_FILING, DATE_DIRECTOR_REMOVED_PATH_END } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
@@ -31,7 +31,7 @@ export async function checkValidations(req: Request, res: Response, next: NextFu
         [RemovalDateKey]: RemovalDateKeys.reduce((o, key) => Object.assign(o, { [key]: req.body[key] }), {})
       };
 
-      const backLink = OFFICER_FILING + req.route.path.replace(REMOVE_DIRECTOR_PATH_END, ACTIVE_OFFICERS_PATH_END);
+      const backLink = OFFICER_FILING + req.route.path.replace(DATE_DIRECTOR_REMOVED_PATH_END, ACTIVE_OFFICERS_PATH_END);
       const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
       return res.render(Templates.REMOVE_DIRECTOR, {
