@@ -36,6 +36,15 @@
       </span>
       <h1 class="govuk-heading-l">Current directors</h1>
 
+        {{ govukButton({
+          attributes: {
+            id: "submit",
+            style: appointDisabled,
+            "data-event-id": "appoint-new-director-button"
+          },
+          text: "Appoint new director"
+        }) }}
+
       {% if directorsList|length %}
         {% for officerCard in directorsList %}
           {% if ((officerCard.officer.officerRole == "Director") or (officerCard.officer.officerRole == "Nominee-director")) %}

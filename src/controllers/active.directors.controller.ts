@@ -3,7 +3,6 @@ import { Templates } from "../types/template.paths";
 import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
-  DIRECTOR_DETAILS_ERROR,
   OFFICER_ROLE, 
   STOP_TYPE} from "../utils/constants";
   import {
@@ -18,6 +17,8 @@ import { getListActiveDirectorDetails } from "../services/active.directors.detai
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
+import { isActiveFeature } from "../utils/feature.flag";
+import { AP01_ACTIVE } from "../utils/properties";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -50,12 +51,20 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
     const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
 
+    let appointDisabled = '""'
+    // Hide the appoint button if feature is disabled
+    if(!isActiveFeature(AP01_ACTIVE))
+    {
+      appointDisabled = "display:none"
+    }
+
     return res.render(Templates.ACTIVE_DIRECTORS, {
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,
       company: companyProfile,
-      pagination: paginationElement
+      pagination: paginationElement,
+      appointDisabled: appointDisabled
     });
   } catch (e) {
     return next(e);
@@ -63,20 +72,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const activeOfficerDetailsBtnValue = req.body.activeOfficers;
-
-    return res.render(Templates.ACTIVE_DIRECTORS, {
-      backLinkUrl: urlUtils.getUrlToPath(CONFIRM_COMPANY_PATH, req),
-      officerErrorMsg: DIRECTOR_DETAILS_ERROR,
-      templateName: Templates.ACTIVE_DIRECTORS,
-    });
-  } catch (e) {
-    return next(e);
-  }
+  // Not yet implemented
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
