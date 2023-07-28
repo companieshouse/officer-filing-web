@@ -10,8 +10,6 @@ import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
-import { removalDataValidations } from "../validation/fields/date.input.validation";
-import { checkValidations } from "../middleware/validation.middleware";
 
 
 export const router: Router = Router();
@@ -38,7 +36,7 @@ router.get(urls.CURRENT_DIRECTORS, activeDirectors.get);
 router.post(urls.CURRENT_DIRECTORS, activeDirectors.post);
 
 router.get(urls.DATE_DIRECTOR_REMOVED, removeDirector.get);
-router.post(urls.DATE_DIRECTOR_REMOVED, ...removalDataValidations, checkValidations, removeDirector.post);
+router.post(urls.DATE_DIRECTOR_REMOVED, removeDirector.post);
 
 router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);

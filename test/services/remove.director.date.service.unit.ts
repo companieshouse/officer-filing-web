@@ -7,7 +7,7 @@ describe("Test remove director date service", () => {
 
     it("Should return first web error message that matches priority order", async () => {
       const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList);
-      expect(newMessage).toEqual("Date director was removed must be a real date");
+      expect(newMessage).toEqual("Date the director was removed must be a real date");
     });
     
     it("Should return next web error message that matches priority order", async () => {

@@ -1,6 +1,7 @@
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api.enumerations";
 import { STOP_TYPE } from "../utils/constants";
+import { ErrorMessageKey, RemovalDateErrorMessageKey } from "../utils/api.enumerations.keys";
 
 export const retrieveErrorMessageToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
 
@@ -14,17 +15,17 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
       listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
 
-    if (listOfValidationKeys.includes("removal-date-invalid")) {
-        return lookupWebValidationMessage("removal-date-invalid");
+    if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.INVALID_DATE)) {
+        return lookupWebValidationMessage(RemovalDateErrorMessageKey.INVALID_DATE);
     }
-    else if (listOfValidationKeys.includes("removal-date-in-past")) {
-        return lookupWebValidationMessage("removal-date-in-past");
+    else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.IN_PAST)) {
+        return lookupWebValidationMessage(RemovalDateErrorMessageKey.IN_PAST);
     }
-    else if (listOfValidationKeys.includes("removal-date-after-incorporation-date")) {
-        return lookupWebValidationMessage("removal-date-after-incorporation-date");
+    else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.AFTER_INCORPORATION_DATE)) {
+        return lookupWebValidationMessage(RemovalDateErrorMessageKey.AFTER_INCORPORATION_DATE);
     }
-    else if (listOfValidationKeys.includes("removal-date-after-appointment-date")) {
-        return lookupWebValidationMessage("removal-date-after-appointment-date");
+    else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE)) {
+        return lookupWebValidationMessage(RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE);
     }
 
     return "";
@@ -47,13 +48,13 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
         listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
 
-    if (listOfValidationKeys.includes("company-dissolved")) {
+    if (listOfValidationKeys.includes(ErrorMessageKey.COMPANY_DISSOLVED)) {
         return STOP_TYPE.DISSOLVED;
     }
-    else if (listOfValidationKeys.includes("removal-date-after-2009")) {
+    else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.AFTER_2009)) {
         return STOP_TYPE.PRE_OCTOBER_2009;
     }
-    else if (listOfValidationKeys.includes("etag-invalid")) {
+    else if (listOfValidationKeys.includes(ErrorMessageKey.ETAG_INVALID)) {
         return STOP_TYPE.ETAG;
     }
 
