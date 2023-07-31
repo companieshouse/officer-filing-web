@@ -56,10 +56,9 @@ const DateValidation: DateValidationType = {
           link: RemovalDateField.MONTH
       },
       Year: {
-        //temporary bug fix to highlight all fields red
           messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
-          source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
-          link: RemovalDateField.DAY
+          source: [RemovalDateField.YEAR],
+          link: RemovalDateField.YEAR
       },
       DayMonth: {
           messageKey: RemovalDateErrorMessageKey.INVALID_DATE,
