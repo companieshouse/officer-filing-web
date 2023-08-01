@@ -142,7 +142,7 @@ const validateMissingValues = (dayStr: string, monthStr: string, yearStr: string
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateInvalidValues = (dayStr: string, monthStr: string, yearStr: string): ValidationError | undefined => {
-  const validDay = checkIsNumber(dayStr), validMonth = checkIsNumber(monthStr), validYear = checkIsNumber(yearStr);
+  const validDay = checkIsNumber(dayStr), validMonth = checkIsNumber(monthStr), validYear = checkIsValidYear(yearStr);
   if (!validDay && validMonth && validYear) {
     return DateValidation.InvalidValue.Day;
   }
@@ -169,6 +169,10 @@ const validateInvalidValues = (dayStr: string, monthStr: string, yearStr: string
 
 const checkIsNumber = (numStr: string) => {
   return numStr.match("^[0-9]+$");
+}
+
+const checkIsValidYear = (numStr: string) => {
+  return numStr.match("^[0-9]{4}$");
 }
 
 /**
