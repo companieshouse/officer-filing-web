@@ -17,13 +17,14 @@ import {
   RemovalDateKey
 } from "../model/date.model";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
-import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
+import { patchOfficerFiling, postOfficerFiling, getOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
 import { formatValidationError, validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
+import { getTransaction } from "../services/transaction.service";
 
 var filingId: string;
 
@@ -36,10 +37,29 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     
     // Create and post officer filing and retrieve filing ID
     const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
-    filingId = filingResponse.id;
+
+
+    //filingId = filingResponse.id;
+    var filingId;
+    const transaction = await getTransaction(session, transactionId);
+    if (transaction.resources) {
+      if (transaction.resources[0].kind == "officer-filing") {
+        var resourceLink = transaction.resources[0].links.resource.split('/');
+        filingId = resourceLink[4];
+      }
+    }
+
+    // Get the officer filing
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, filingId);
 
     // Get the director name from company appointments
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+    // Check if there is an already existing resigned on date to display
+    if (officerFiling.resignedOn) {
+      var dateFields = officerFiling.resignedOn.split('-');
+      return displayPopulatedPage(dateFields, appointment, req, res);
+    }
 
     return res.render(Templates.REMOVE_DIRECTOR, {
       directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
@@ -126,5 +146,21 @@ function displayErrorMessage(validationResult: ValidationError, appointment: Com
     ...req.body,
     ...dates,
     errors
+  });
+}
+
+function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+  const dates = {
+    [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: dateFields.forEach }), {})
+  };
+  const backLink = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
+  console.log(dates);
+
+  return res.render(Templates.REMOVE_DIRECTOR, {
+    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
+    backLinkUrl: backLink,
+    templateName: Templates.REMOVE_DIRECTOR,
+    ...req.body,
+    ...dates,
   });
 }
