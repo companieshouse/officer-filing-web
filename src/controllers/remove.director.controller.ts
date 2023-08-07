@@ -35,7 +35,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     
     // Create and post officer filing and retrieve filing ID
-    const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+    const officerFiling: OfficerFiling = {
+      referenceAppointmentId: appointmentId
+    };
+    const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
     filingId = filingResponse.id;
 
     // Get the director name from company appointments
