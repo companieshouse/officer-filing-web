@@ -7,6 +7,7 @@ import * as createTransactionRoute from "../controllers/create.transaction.contr
 import * as activeDirectors from "../controllers/active.directors.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as stopPathRoute from "../controllers/stop.screen.controller";
+import * as accessibilityStatementRoute from "../controllers/accessibility.statement.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as urls from "../types/page.urls";
@@ -48,3 +49,5 @@ router.post(urls.SIGNOUT_PATH, signoutRoute.post);
 
 router.get(urls.BASIC_STOP_PAGE, stopPathRoute.get);
 router.get(urls.APPID_STOP_PAGE, stopPathRoute.get);
+
+router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
