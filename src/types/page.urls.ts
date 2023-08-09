@@ -36,7 +36,7 @@ export const OFFICER_FILING = "/appoint-update-remove-company-officer";
 export const COMPANY_NUMBER = "/company-number";
 export const DIRECTOR_ID = "/director-id";
 export const COMPANY_LOOKUP = "/company-lookup/search?forward="+OFFICER_FILING+"/confirm-company?companyNumber={companyNumber}";
-// export const ACCESSIBILITY_STATEMENT_PATH = OFFICER_FILING + ACCESSIBILITY_STATEMENT;
+export const ACCESSIBILITY_STATEMENT_PATH = OFFICER_FILING + ACCESSIBILITY_STATEMENT;
 export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
 export const SIGNOUT_PATH = "/signout";
 export const CREATE_TRANSACTION = COMPANY_AUTH_PROTECTED_BASE + "/transaction";
