@@ -4,7 +4,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
