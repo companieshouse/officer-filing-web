@@ -8,7 +8,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { CURRENT_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
