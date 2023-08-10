@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams, DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   OFFICER_ROLE, 
@@ -10,7 +10,7 @@ import {
     formatTitleCase,
     formatDateOfBirth,
   } from "../utils/format";
-import { CompanyOfficer, OfficerCard } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer, OfficerCard, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
 import { getListActiveDirectorDetails } from "../services/active.directors.details.service";
@@ -19,6 +19,7 @@ import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
 import { AP01_ACTIVE } from "../utils/properties";
+import { postOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -72,7 +73,20 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  // Not yet implemented
+  const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  const session: Session = req.session as Session;
+
+  // Create and post officer filing and retrieve filing ID
+  // Temporarily hard-code a name here for AP01 testing purposes - Remove this once directors name page is complete
+  const officerFiling: OfficerFiling = {
+    firstName: "Jamie",
+    middleNames: "Anthony",
+    lastName: "Ditchburn"
+  };
+  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+
+  const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);
+  return res.redirect(nextPageUrl);
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {

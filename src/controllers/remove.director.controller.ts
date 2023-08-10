@@ -35,7 +35,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     
     // Create and post officer filing and retrieve filing ID
-    const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+    const officerFiling: OfficerFiling = {
+      referenceAppointmentId: appointmentId
+    };
+    const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
     filingId = filingResponse.id;
 
     // Get the director name from company appointments
@@ -117,7 +120,7 @@ function displayErrorMessage(validationResult: ValidationError, appointment: Com
   const dates = {
     [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: req.body[key as string] }), {})
   };
-  const backLink = OFFICER_FILING + req.route.path.replace(DATE_DIRECTOR_REMOVED_PATH_END, ACTIVE_OFFICERS_PATH_END);
+  const backLink = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
     directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
