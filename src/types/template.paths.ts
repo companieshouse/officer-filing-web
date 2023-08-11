@@ -16,5 +16,12 @@ export enum Templates {
   DIRECTOR_DATE_OF_BIRTH = "director-date-of-birth",
   DIRECTOR_NATIONALITY = "director-nationality",
   DIRECTOR_OCCUPATION = "director-occupation",
-  DIRECTOR_APPOINTED_DATE = "director-appointed-date"
+  DIRECTOR_APPOINTED_DATE = "director-appointed-date",
+  DIRECTOR_CORRESPONDENCE_ADDRESS = "director-correspondence-address",
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH = "director-correspondence-address-search",
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL = "director-correspondence-address-manual",
+  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS = "director-confirm-correspondence-address",
+  DIRECTOR_RESIDENTIAL_ADDRESS = "director-residential-address",
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH = "director-residential-address-search",
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL = "director-residential-address-manual"
 }
