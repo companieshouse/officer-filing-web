@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import * as accessibilityStatementRoute from "../controllers/accessibility.statement.controller";
 import * as activeDirectors from "../controllers/active.directors.controller";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
@@ -56,6 +57,8 @@ router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
 router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);
 
 router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
+
+router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
 
 // AP01
 router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), directorName.get);
