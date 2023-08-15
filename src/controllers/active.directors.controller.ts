@@ -19,6 +19,7 @@ import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
 import { AP01_ACTIVE } from "../utils/properties";
+import { postOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -72,7 +73,21 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  // Not yet implemented
+  // const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  // const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
+  // const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+  // const session: Session = req.session as Session;
+  
+  // const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+  // const filingId = filingResponse.id;
+  
+  //var removeLink = document.thi
+  
+  
+
+  // const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req);
+  // return res.redirect(nextPageUrl);
+  console.log(req.body);
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
@@ -116,6 +131,10 @@ const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCa
       }
     })
 };
+
+ export const postFiling = function(val) {
+  console.log(val);
+}
 
 /**
  * Extract the referenced appointment ID from the officers self link URL

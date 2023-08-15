@@ -39,15 +39,15 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
 
 
-    //filingId = filingResponse.id;
-    var filingId;
-    const transaction = await getTransaction(session, transactionId);
-    if (transaction.resources) {
-      if (transaction.resources[0].kind == "officer-filing") {
-        var resourceLink = transaction.resources[0].links.resource.split('/');
-        filingId = resourceLink[4];
-      }
-    }
+    filingId = filingResponse.id;
+    // var filingId;
+    // const transaction = await getTransaction(session, transactionId);
+    // if (transaction.resources) {
+    //   //if (transaction.resources.kind == "officer-filing") {
+    //     var resourceLink = transaction.resources[0].links.resource.split('/');
+    //     filingId = resourceLink[4];
+    //  // }
+    // }
 
     // Get the officer filing
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, filingId);
