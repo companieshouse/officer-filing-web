@@ -14,7 +14,7 @@ import { DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { postOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import {  patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
@@ -24,7 +24,6 @@ import { lookupWebValidationMessage } from "../../src/utils/api.enumerations";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
-const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
@@ -44,14 +43,14 @@ const PAGE_HEADING = "When was the director removed from the company?";
 const REMOVE_DIRECTOR_URL = DATE_DIRECTOR_REMOVED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, APPOINTMENT_ID);
+  .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, APPOINTMENT_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Remove director date controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
     mocks.mockSessionMiddleware.mockClear();
-    mockPostOfficerFiling.mockClear();
     mockGetCompanyProfile.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetValidationStatus.mockClear();
@@ -64,14 +63,6 @@ describe("Remove director date controller tests", () => {
   describe("get tests", () => {
 
     it("Should navigate to date of removal page", async () => {
-      mockPostOfficerFiling.mockResolvedValueOnce({
-        httpStatusCode: 200,
-        resource: {
-          submissionId: SUBMISSION_ID,
-          name: "name"
-        }
-      });
-
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
 
@@ -79,14 +70,6 @@ describe("Remove director date controller tests", () => {
     });
 
     it("Should display date of removal fields and directors name", async () => {
-      mockPostOfficerFiling.mockResolvedValueOnce({
-        httpStatusCode: 200,
-        resource: {
-          submissionId: SUBMISSION_ID,
-          name: "name"
-        }
-      });
-
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
 
@@ -110,10 +93,10 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "08",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
           referenceEtag: "etag",
           resignedOn: "2010-08-07"
         });
@@ -128,10 +111,10 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "12",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/undefined/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, undefined, {
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
           referenceEtag: "etag",
           resignedOn: "2010-12-27"
         });

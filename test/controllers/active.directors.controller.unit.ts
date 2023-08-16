@@ -2,6 +2,7 @@ jest.mock("../../src/middleware/company.authentication.middleware");
 jest.mock("../../src/services/active.directors.details.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/utils/api.enumerations");
+jest.mock("../../src/services/officer.filing.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -13,6 +14,7 @@ import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } fro
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
+import { postOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -20,10 +22,14 @@ const mockGetCompanyOfficers = getListActiveDirectorDetails as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficersExtended);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
+const APPOINTMENT_ID = "987654321";
+const SUBMISSION_ID = "55555555";
+const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
-const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
 const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 
 describe("Active directors controller tests", () => {
@@ -33,6 +39,7 @@ describe("Active directors controller tests", () => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
+    mockPostOfficerFiling.mockClear();
   });
 
   describe("get tests", () => {
@@ -116,5 +123,22 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Date appointed");
         expect(response.text).toContain("Before 1992");
       }); 
+  });
+
+  describe("post tests", () => {
+    it("Should post filing and redirect to next page", async () => {
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
+      });
+
+      const response = await request(app)
+        .post(ACTIVE_DIRECTOR_DETAILS_URL)
+        .send({ "appointmentId": APPOINTMENT_ID });
+
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/date-director-removed");
+
+        expect(mockPostOfficerFiling).toHaveBeenCalled();
+    });
+
   });
 });

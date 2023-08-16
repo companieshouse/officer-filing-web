@@ -73,21 +73,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  // const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-  // const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
-  // const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-  // const session: Session = req.session as Session;
-  
-  // const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
-  // const filingId = filingResponse.id;
-  
-  //var removeLink = document.thi
-  
-  
+  const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  const appointmentId = req.body.appointmentId;
 
-  // const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req);
-  // return res.redirect(nextPageUrl);
-  console.log(req.body);
+  const session: Session = req.session as Session;
+  
+  const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+  const filingId = filingResponse.id;
+  
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
+  
+  const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId), req);
+  return res.redirect(nextPageUrl);
+  
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
@@ -126,15 +124,11 @@ const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCa
     .filter(officer => getAppointmentIdFromSelfLink(officer).length)
     .map(officer => {
       return {
-        removeUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, getAppointmentIdFromSelfLink(officer)),
+        appointmentId: getAppointmentIdFromSelfLink(officer),
         officer: officer
       }
     })
 };
-
- export const postFiling = function(val) {
-  console.log(val);
-}
 
 /**
  * Extract the referenced appointment ID from the officers self link URL

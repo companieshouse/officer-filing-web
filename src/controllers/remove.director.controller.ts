@@ -26,20 +26,17 @@ import { formatValidationError, validateDate } from "../validation/date.validati
 import { ValidationError } from "../model/validation.model";
 import { getTransaction } from "../services/transaction.service";
 
-var filingId: string;
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     
     // Create and post officer filing and retrieve filing ID
-    const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+    //const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
 
-
-    filingId = filingResponse.id;
     // var filingId;
     // const transaction = await getTransaction(session, transactionId);
     // if (transaction.resources) {
@@ -50,16 +47,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     // }
 
     // Get the officer filing
-    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, filingId);
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     // Get the director name from company appointments
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
     // Check if there is an already existing resigned on date to display
-    if (officerFiling.resignedOn) {
-      var dateFields = officerFiling.resignedOn.split('-');
-      return displayPopulatedPage(dateFields, appointment, req, res);
-    }
+    // if (officerFiling.resignedOn) {
+    //   var dateFields = officerFiling.resignedOn.split('-');
+    //   return displayPopulatedPage(dateFields, appointment, req, res);
+    // }
 
     return res.render(Templates.REMOVE_DIRECTOR, {
       directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
@@ -73,7 +70,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
@@ -99,10 +96,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       referenceEtag: appointment.etag,
       resignedOn: resignationDate
     }
-    await patchOfficerFiling(session, transactionId, filingId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     // Validate the filing (API)
-    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
+    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     if (validationStatus.errors) {
       const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
       if (errorMessage) {
