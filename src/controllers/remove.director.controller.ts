@@ -27,9 +27,7 @@ import { ValidationError } from "../model/validation.model";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
 
