@@ -13,11 +13,10 @@ import { OfficerFiling, FilingResponse } from "@companieshouse/api-sdk-node/dist
  * @param submissionId The only field set on the filing object
  * @returns The Officer Filing
  */
-
 export const getOfficerFiling = async (session: Session, transactionId: string, submissionId: string): Promise<OfficerFiling> => {
   const apiClient: ApiClient = createPublicOAuthApiClient(session);
 
-  logger.debug(`Retrieving officer filing for director removal for transaction ${transactionId}`);
+  logger.debug(`Retrieving officer filing for transaction ${transactionId}`);
   const sdkResponse: Resource<OfficerFiling> | ApiErrorResponse = await apiClient.officerFiling.getOfficerFiling(transactionId, submissionId);
 
   if (!sdkResponse) {
@@ -36,22 +35,17 @@ export const getOfficerFiling = async (session: Session, transactionId: string, 
   return castedSdkResponse.resource;
 };
 
-
 /**
- * POST an officer filing object for the given transaction ID and appointment ID. 
- * Only the referenced appointment ID has been set on the filing object, any further information will be sent via a series of patches.
+ * POST an officer filing object for the given transaction ID. The information within this filing can be built upon using patches.
  * @param session The current session to connect to the api
  * @param transactionId The filings associated transaction ID
  * @param appointmentId The only field set on the filing object
  * @returns The FilingResponse contains the submission ID for the newly created filing
  */
-export const postOfficerFiling = async (session: Session, transactionId: string, appointmentId: string): Promise<FilingResponse> => {
+export const postOfficerFiling = async (session: Session, transactionId: string, officerFiling: OfficerFiling): Promise<FilingResponse> => {
   const apiClient: ApiClient = createPublicOAuthApiClient(session);
-  const officerFiling: OfficerFiling = {
-    referenceAppointmentId: appointmentId
-  };
-
-  logger.debug(`Posting officer filing for director removal for transaction ${transactionId}`);
+  
+  logger.debug(`Posting officer filing for transaction ${transactionId}`);
   const sdkResponse: Resource<FilingResponse> | ApiErrorResponse = await apiClient.officerFiling.postOfficerFiling(transactionId, officerFiling);
 
   if (!sdkResponse) {
@@ -81,7 +75,7 @@ export const postOfficerFiling = async (session: Session, transactionId: string,
 export const patchOfficerFiling = async (session: Session, transactionId: string, filingId: string, officerFiling: OfficerFiling): Promise<FilingResponse> => {
   const apiClient: ApiClient = createPublicOAuthApiClient(session);
 
-  logger.debug(`Patching officer filing for director removal for transaction ${transactionId}`);
+  logger.debug(`Patching officer filing for transaction ${transactionId}`);
   const sdkResponse: Resource<FilingResponse> | ApiErrorResponse = await apiClient.officerFiling.patchOfficerFiling(transactionId, filingId, officerFiling);
 
   if (!sdkResponse) {

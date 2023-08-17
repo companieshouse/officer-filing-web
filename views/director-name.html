@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% set title = "What is the director's name?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+
+        <h1 class="govuk-heading-l">What is the director's name?</h1>
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

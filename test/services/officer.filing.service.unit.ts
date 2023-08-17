@@ -28,7 +28,6 @@ mockCreateAndLogError.mockReturnValue(ERROR);
 let session: any;
 const TRANSACTION_ID = "2222";
 const APPOINTMENT_ID = "987";
-const COMPANY_NUMBER = "12345678";
 const SUBMISSION_ID = "764347373";
 
 describe("officer filing service tests", () => {
@@ -88,20 +87,24 @@ describe("officer filing service tests", () => {
       mockPostOfficerFiling.mockResolvedValueOnce({
         httpStatusCode: 200,
         resource: {
-          submissionId: SUBMISSION_ID,
-          name: "name"
+          id: SUBMISSION_ID
         }
       });
-      const filingResponse: FilingResponse = await postOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID);
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
+      const filingResponse: FilingResponse = await postOfficerFiling(session, TRANSACTION_ID, officerFiling);
 
-      expect(filingResponse.submissionId).toEqual(SUBMISSION_ID);
-      expect(filingResponse.name).toEqual("name");
+      expect(filingResponse.id).toEqual(SUBMISSION_ID);
     });
 
     it("Should throw an error when no officer filing api response", async () => {
       mockPostOfficerFiling.mockResolvedValueOnce(undefined);
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
 
-      await expect(postOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID)).rejects.toThrow(ERROR);
+      await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
       expect(mockCreateAndLogError).toBeCalledWith("Officer filing POST request returned no response for transaction 2222");
     });
 
@@ -109,8 +112,11 @@ describe("officer filing service tests", () => {
       mockPostOfficerFiling.mockResolvedValueOnce({
         httpStatusCode: 404
       });
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
 
-      await expect(postOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID)).rejects.toThrow(ERROR);
+      await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
       expect(mockCreateAndLogError).toBeCalledWith("Http status code 404 - Failed to post officer filing for transaction 2222");
     });
 
@@ -118,8 +124,11 @@ describe("officer filing service tests", () => {
       mockPostOfficerFiling.mockResolvedValueOnce({
         httpStatusCode: 200
       });
+      const officerFiling: OfficerFiling = {
+        referenceAppointmentId: APPOINTMENT_ID
+      };
 
-      await expect(postOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID)).rejects.toThrow(ERROR);
+      await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
       expect(mockCreateAndLogError).toBeCalledWith("Officer filing API POST request returned no resource for transaction 2222");
     });
 

@@ -74,7 +74,6 @@ describe("Remove director date controller tests", () => {
         .get(REMOVE_DIRECTOR_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain("name");
       expect(response.text).toContain("Day");
       expect(response.text).toContain("Month");
       expect(response.text).toContain("Year");
