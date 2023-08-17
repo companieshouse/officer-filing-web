@@ -123,19 +123,3 @@ function displayErrorMessage(validationResult: ValidationError, appointment: Com
     errors
   });
 }
-
-function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
-  const dates = {
-    [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: dateFields.forEach }), {})
-  };
-  const backLink = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
-  console.log(dates);
-
-  return res.render(Templates.REMOVE_DIRECTOR, {
-    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
-    backLinkUrl: backLink,
-    templateName: Templates.REMOVE_DIRECTOR,
-    ...req.body,
-    ...dates,
-  });
-}
