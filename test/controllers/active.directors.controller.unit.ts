@@ -25,10 +25,11 @@ mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
-const TRANSACTION_ID = "11223344";
+const APPOINTMENT_ID = "987654321";
 const SUBMISSION_ID = "55555555";
+const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
-const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER);
+const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
 const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 const CURRENT_DIRECTORS_URL = CURRENT_DIRECTORS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -41,6 +42,7 @@ describe("Active directors controller tests", () => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
+    mockPostOfficerFiling.mockClear();
   });
 
   describe("get tests", () => {
@@ -128,7 +130,19 @@ describe("Active directors controller tests", () => {
 
   describe("post tests", () => {
 
-    it("Should post and redirect to next page", async () => {
+    it("Should post filing and redirect to next page TM01", async () => {
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
+      });
+
+      const response = await request(app)
+        .post(ACTIVE_DIRECTOR_DETAILS_URL)
+        .send({ "appointmentId": APPOINTMENT_ID });
+
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/date-director-removed");
+    });
+
+    it("Should post and redirect to next page AP01", async () => {
       mockPostOfficerFiling.mockResolvedValueOnce({
         id: SUBMISSION_ID,
       });
@@ -139,7 +153,5 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
         expect(mockPostOfficerFiling).toHaveBeenCalled();
     });
-
   });
-
 });

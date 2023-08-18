@@ -74,19 +74,35 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  const appointmentId = req.body.appointmentId;
   const session: Session = req.session as Session;
 
-  // Create and post officer filing and retrieve filing ID
-  // Temporarily hard-code a name here for AP01 testing purposes - Remove this once directors name page is complete
-  const officerFiling: OfficerFiling = {
+  //If there is no appoinmentId sent in the post, it must be an AP01
+  if (!appointmentId) {
+
+    // Create and post officer filing and retrieve filing ID
+    // Temporarily hard-code a name here for AP01 testing purposes - Remove this once directors name page is complete
+    
+    const officerFiling: OfficerFiling = {
     firstName: "Jamie",
     middleNames: "Anthony",
     lastName: "Ditchburn"
-  };
-  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+    };
+    const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
 
-  const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);
+    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);
+    return res.redirect(nextPageUrl);
+  }
+
+  
+  const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+  const filingId = filingResponse.id;
+  
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
+  
+  const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId), req);
   return res.redirect(nextPageUrl);
+  
 };
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
@@ -125,7 +141,7 @@ const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCa
     .filter(officer => getAppointmentIdFromSelfLink(officer).length)
     .map(officer => {
       return {
-        removeUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, getAppointmentIdFromSelfLink(officer)),
+        appointmentId: getAppointmentIdFromSelfLink(officer),
         officer: officer
       }
     })
