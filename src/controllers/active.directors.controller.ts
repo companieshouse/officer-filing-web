@@ -94,8 +94,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return res.redirect(nextPageUrl);
   }
 
+  const officerFiling: OfficerFiling = {
+    referenceAppointmentId: appointmentId
+  };
   
-  const filingResponse = await postOfficerFiling(session, transactionId, appointmentId);
+  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   const filingId = filingResponse.id;
   
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
