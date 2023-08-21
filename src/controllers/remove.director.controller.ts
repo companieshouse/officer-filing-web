@@ -17,7 +17,7 @@ import {
   RemovalDateKey
 } from "../model/date.model";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
-import { patchOfficerFiling, postOfficerFiling } from "../services/officer.filing.service";
+import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
@@ -25,21 +25,11 @@ import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/f
 import { formatValidationError, validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 
-var filingId: string;
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    
-    // Create and post officer filing and retrieve filing ID
-    const officerFiling: OfficerFiling = {
-      referenceAppointmentId: appointmentId
-    };
-    const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
-    filingId = filingResponse.id;
 
     // Get the director name from company appointments
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
@@ -56,7 +46,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
@@ -82,10 +72,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       referenceEtag: appointment.etag,
       resignedOn: resignationDate
     }
-    await patchOfficerFiling(session, transactionId, filingId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     // Validate the filing (API)
-    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, filingId);
+    const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     if (validationStatus.errors) {
       const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
       if (errorMessage) {
