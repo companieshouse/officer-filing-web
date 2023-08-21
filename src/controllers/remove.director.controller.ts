@@ -22,8 +22,9 @@ import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
-import { formatValidationError, validateDate } from "../validation/date.validation";
+import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
+import { formatValidationErrors } from "../validation/validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -116,7 +117,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
  * Return the page with the rendered error message
  */
 function displayErrorMessage(validationResult: ValidationError, appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
-  const errors = formatValidationError(validationResult);
+  const errors = formatValidationErrors([validationResult]);
   const dates = {
     [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: req.body[key as string] }), {})
   };

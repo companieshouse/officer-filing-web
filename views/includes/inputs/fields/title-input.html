@@ -1,0 +1,13 @@
+{{ govukInput({
+  errorMessage: errors.personal_title if errors,
+  label: {
+    text: "Professional or honorary title (if relevant)"
+  },
+  hint: {
+    text: "Start typing a title, such as Dr or Professor, then choose from the list."
+  },
+  classes: "govuk-input--width-20",
+  id: "personal_title",
+  name: "personal_title",
+  value: personal_title
+}) }}

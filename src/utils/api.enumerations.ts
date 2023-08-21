@@ -35,11 +35,9 @@ export const convertAPIMessageToKey = (validationMessage: string): string => {
 
   for (const element of Object.keys(officerFilingMessages.validation)) {
     var message = lookupAPIValidationMessage(element);
-    
     message = message.replace(/<.*>/g,"(.*)");
 
     const matchMessages = new RegExp(message);
-
     if (matchMessages.test(validationMessage)) {
       return element;
     }
