@@ -14,7 +14,7 @@ import { DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
-import {  patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { patchOfficerFiling, getOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
@@ -30,6 +30,7 @@ const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as j
 mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockRetrieveErrorMessageToDisplay = retrieveErrorMessageToDisplay as jest.Mock;
 const mockRetrieveStopPageTypeToDisplayy = retrieveStopPageTypeToDisplay as jest.Mock;
 const mockLookupWebValidationMessage = lookupWebValidationMessage as jest.Mock;
@@ -55,6 +56,7 @@ describe("Remove director date controller tests", () => {
     mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetValidationStatus.mockClear();
     mockPatchOfficerFiling.mockClear();
+    mockGetOfficerFiling.mockClear();
     mockRetrieveErrorMessageToDisplay.mockClear();
     mockRetrieveStopPageTypeToDisplayy.mockClear();
     mockLookupWebValidationMessage.mockClear();
@@ -63,6 +65,8 @@ describe("Remove director date controller tests", () => {
   describe("get tests", () => {
 
     it("Should navigate to date of removal page", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({});
+
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
 
@@ -70,6 +74,8 @@ describe("Remove director date controller tests", () => {
     });
 
     it("Should display date of removal fields and directors name", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({});
+      
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
 
@@ -77,6 +83,23 @@ describe("Remove director date controller tests", () => {
       expect(response.text).toContain("Day");
       expect(response.text).toContain("Month");
       expect(response.text).toContain("Year");
+    });
+
+    it("Should pre-populate removal date fields if data has been previously entered", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({
+        resignedOn: "2023-02-01"
+      });
+
+      const response = await request(app)
+        .get(REMOVE_DIRECTOR_URL);
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("Day");
+      expect(response.text).toContain("Month");
+      expect(response.text).toContain("Year");
+      expect(response.text).toContain("01");
+      expect(response.text).toContain("02");
+      expect(response.text).toContain("2023");
     });
 
   });
