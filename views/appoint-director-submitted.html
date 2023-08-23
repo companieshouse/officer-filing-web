@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% set title = "Appointment submitted" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+
+        <h1 class="govuk-heading-l">Appointment submitted</h1>
+        <!-- This is the page for the appointment submitted screen -->
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
