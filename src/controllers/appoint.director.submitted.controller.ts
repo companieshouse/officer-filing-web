@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { urlUtils } from "../utils/url";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
