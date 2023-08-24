@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express";
 import * as accessibilityStatementRoute from "../controllers/accessibility.statement.controller";
 import * as activeDirectors from "../controllers/active.directors.controller";
+import * as appointDirectorCheckAnswers from "../controllers/appoint.director.check.answers.controller";
+import * as appointDirectorSubmitted from "../controllers/appoint.director.submitted.controller";
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
@@ -9,6 +11,8 @@ import * as directorCorrespondeAddress from "../controllers/director.corresponde
 import * as directorCorrespondeAddressSearch from "../controllers/director.correspondence.address.search.controller";
 import * as directorCorrespondeAddressManual from "../controllers/director.correspondence.address.manual.controller";
 import * as directorConfirmCorrespondeAddress from "../controllers/director.confirm.correspondence.address.controller";
+import * as directorConfirmResidentialAddress from "../controllers/director.confirm.residential.address.controller";
+import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
@@ -103,3 +107,14 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, directorResidentialAddress
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressManual.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddressManual.post);
+
+router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
+router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
+
+router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), directorProtectedDetails.get);
+router.post(urls.DIRECTOR_PROTECTED_DETAILS, directorProtectedDetails.post);
+
+router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), appointDirectorCheckAnswers.get);
+router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.post);
+
+router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);

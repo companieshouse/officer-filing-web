@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% set title = "Does the director have their personal information protected at Companies House?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+
+        <h1 class="govuk-heading-l">Does the director have their personal information protected at Companies House?</h1>
+        <!-- This is the page for director protected details selection -->
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
