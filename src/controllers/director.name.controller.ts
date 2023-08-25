@@ -27,7 +27,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       first_name: officerFiling.firstName,
       middle_names: officerFiling.middleNames,
       last_name: officerFiling.lastName,
-      previous_name: officerFiling.formerNames,
+      previous_names: officerFiling.formerNames,
       titles: TITLE_LIST
     });
   } catch (e) {
@@ -69,7 +69,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         first_name: officerFiling.firstName,
         middle_names: officerFiling.middleNames,
         last_name: officerFiling.lastName,
-        previous_name: officerFiling.formerNames
+        previous_names: officerFiling.formerNames
       });
     }
 
