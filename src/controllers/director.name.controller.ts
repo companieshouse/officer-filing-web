@@ -10,6 +10,7 @@ import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
 import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
+import { TITLE_LIST } from "../utils/properties";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -26,7 +27,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       first_name: officerFiling.firstName,
       middle_names: officerFiling.middleNames,
       last_name: officerFiling.lastName,
-      previous_name: officerFiling.formerNames
+      previous_name: officerFiling.formerNames,
+      titles: TITLE_LIST
     });
   } catch (e) {
     return next(e);

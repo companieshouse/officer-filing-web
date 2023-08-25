@@ -49,3 +49,5 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const RADIO_BUTTON_VALUE_LOG_LENGTH = parseInt(getEnvironmentVariable("RADIO_BUTTON_VALUE_LOG_LENGTH", "50"), 10);
   
   export const EWF_URL = getEnvironmentVariable("EWF_URL");
+
+  export const TITLE_LIST = getEnvironmentVariable("TITLE_LIST", "");

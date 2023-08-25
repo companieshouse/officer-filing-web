@@ -68,9 +68,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
     }
     // get number of active directors - if none go straight to stop screen and do not create transaction
-    else if(await companyHasNoDirectors(companyNumber)){
-      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
-    }
+    //else if(await companyHasNoDirectors(companyNumber)){
+   //   nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
+  //  }
     else{
       await createNewOfficerFiling(session);
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
