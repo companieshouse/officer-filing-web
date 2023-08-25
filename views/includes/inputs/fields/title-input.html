@@ -1,17 +1,3 @@
-{{ govukInput({
-  errorMessage: errors.personal_title if errors,
-  label: {
-    text: "Professional or honorary title (if relevant)"
-  },
-  hint: {
-    text: "Start typing a title, such as Dr or Professor, then choose from the list."
-  },
-  classes: "govuk-input--width-20",
-  id: "personal_title",
-  name: "personal_title",
-  value: personal_title
-}) }}
-
 <div id="my-autocomplete-container" class="govuk-form-group">
 <label for="personal_title" class="govuk-label" >Professional or honorary title (if relevant)</label>
 <div id="personal_title-hint" class="govuk-hint">
@@ -28,7 +14,9 @@ const titleArray = titles.split(",")
 accessibleAutocomplete({
   element: document.querySelector('#my-autocomplete-container'),
   id: 'personal_title', // To match it to the existing <label>.
-  source: titleArray
+  source: titleArray,
+  name: 'personal_title',
+  defaultValue:'{{personal_title}}'
 })
 
 </script>

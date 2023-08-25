@@ -63,7 +63,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       return res.render(Templates.DIRECTOR_NAME, {
         templateName: Templates.DIRECTOR_NAME,
         backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
-        errors: errors
+        errors: errors,
+        titles: TITLE_LIST,
+        personal_title: officerFiling.title,
+        first_name: officerFiling.firstName,
+        middle_names: officerFiling.middleNames,
+        last_name: officerFiling.lastName,
+        previous_name: officerFiling.formerNames
       });
     }
 
