@@ -18,7 +18,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-
+    
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     return res.render(Templates.DIRECTOR_NAME, {
