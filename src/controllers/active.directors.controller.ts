@@ -81,8 +81,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   if (!appointmentId) {
 
     // Create and post officer filing and retrieve filing ID
-    const officerFiling: OfficerFiling = {};
-    const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+    const emptyFiling: OfficerFiling = {};
+    const filingResponse = await postOfficerFiling(session, transactionId, emptyFiling);
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);
     return res.redirect(nextPageUrl);
@@ -91,7 +91,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId
   };
-  
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   const filingId = filingResponse.id;
   

@@ -135,27 +135,27 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   const validationErrors: ValidationError[] = [];
 
   // Title
-  var errorMessageKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, titleErrorMessageKey);
-  if (errorMessageKey) {
-    validationErrors.push(createValidationError(errorMessageKey, DirectorField.TITLE));
+  var titleKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, titleErrorMessageKey);
+  if (titleKey) {
+    validationErrors.push(createValidationError(titleKey, DirectorField.TITLE));
   }
 
   // First name
-  var errorMessageKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, firstNameErrorMessageKey);
-  if (errorMessageKey) {
-    validationErrors.push(createValidationError(errorMessageKey, DirectorField.FIRST_NAME));
+  var firstNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, firstNameErrorMessageKey);
+  if (firstNameKey) {
+    validationErrors.push(createValidationError(firstNameKey, DirectorField.FIRST_NAME));
   }
 
   // Middle names
-  var errorMessageKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, middleNameErrorMessageKey);
-  if (errorMessageKey) {
-    validationErrors.push(createValidationError(errorMessageKey, DirectorField.MIDDLE_NAMES));
+  var middleNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, middleNameErrorMessageKey);
+  if (middleNameKey) {
+    validationErrors.push(createValidationError(middleNameKey, DirectorField.MIDDLE_NAMES));
   }
 
   // Last name
-  var errorMessageKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, lastNameErrorMessageKey);
-  if (errorMessageKey) {
-    validationErrors.push(createValidationError(errorMessageKey, DirectorField.LAST_NAME));
+  var lastNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, lastNameErrorMessageKey);
+  if (lastNameKey) {
+    validationErrors.push(createValidationError(lastNameKey, DirectorField.LAST_NAME));
   }
 
   // Former names - includes JS validation around the radio button selection
@@ -169,9 +169,9 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
       validationErrors.push(createValidationError(errorMessage, DirectorField.PREVIOUS_NAMES));
     }
 
-    var errorMessageKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, formerNamesErrorMessageKey);
-    if (errorMessageKey) {
-      validationErrors.push(createValidationError(errorMessageKey, DirectorField.PREVIOUS_NAMES));
+    var formerNamesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, formerNamesErrorMessageKey);
+    if (formerNamesKey) {
+      validationErrors.push(createValidationError(formerNamesKey, DirectorField.PREVIOUS_NAMES));
     }
   }
 
