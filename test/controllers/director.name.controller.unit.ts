@@ -9,12 +9,13 @@ import app from "../../src/app";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { mockValidValidationStatusResponse, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle, mockValidationStatusResponseDirectorName } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.name.controller";
 import { formerNamesErrorMessageKey, lastNameErrorMessageKey, titleErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 
+const req = {} as Request;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
@@ -46,11 +47,8 @@ describe("Director name controller tests", () => {
   
       it("Should navigate to director name page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          httpStatusCode: 200,
-          resource: {
-            referenceAppointmentId: "app1",
-            referenceEtag: "ETAG"
-          }
+          referenceAppointmentId: "app1",
+          referenceEtag: "ETAG"
         });
         const response = await request(app).get(DIRECTOR_NAME_URL);
   
@@ -64,6 +62,25 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
+      it("Should populate filing data on the page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer"
+        });
+
+        const response = await request(app).get(DIRECTOR_NAME_URL);
+  
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("testTitle");
+        expect(response.text).toContain("testFirst");
+        expect(response.text).toContain("testMiddle");
+        expect(response.text).toContain("testLast");
+        expect(response.text).toContain("testFormer");
+      });
+
     });
 
     describe("post tests", () => {
@@ -71,7 +88,9 @@ describe("Director name controller tests", () => {
       it("Should redirect to date of birth page", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         
-        const response = await request(app).post(DIRECTOR_NAME_URL);
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({ "previous_names_radio": "No" });
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_OF_BIRTH_URL);
       });
@@ -89,36 +108,62 @@ describe("Director name controller tests", () => {
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
+      
+    });
 
-      it("buildValidationErrors should return title validation errors", async () => {
+    describe("buildValidationErrors tests", () => {
+
+      it("should return title validation error", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [mockValidationStatusErrorTitle],
           isValid: false
         }
 
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'No', '');
 
         expect(validationErrors.map(error => error.messageKey)).toContain(titleErrorMessageKey.TITLE_LENGTH);
       });
 
-      it("buildValidationErrors should return formerNames validation errors", async () => {
+      it("should return formerNames validation error", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [mockValidationStatusErrorFormerNames],
           isValid: false
         }
 
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', 'abc');
 
         expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_CHARACTERS);
       });
 
-      it("buildValidationErrors should return multiple validation errors, one for each input field", async () => {
+      it("should return formerNames validation error no radio button is selected", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [mockValidationStatusErrorFormerNames],
+          isValid: false
+        }
+
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, '', 'abc');
+
+        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
+      });
+
+      it("should return formerNames validation error if Yes is selected but a value is not entered", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [mockValidationStatusErrorFormerNames],
+          isValid: false
+        }
+
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', '');
+
+        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
+      });
+
+      it("should return multiple validation errors, one for each input field", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [mockValidationStatusErrorTitle, mockValidationStatusErrorLastName, mockValidationStatusErrorFormerNames],
           isValid: false
         }
 
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', 'abc');
 
         expect(validationErrors.map(error => error.messageKey)).toContain(titleErrorMessageKey.TITLE_LENGTH);
         expect(validationErrors.map(error => error.messageKey)).toContain(lastNameErrorMessageKey.LAST_NAME_BLANK);

@@ -81,13 +81,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   if (!appointmentId) {
 
     // Create and post officer filing and retrieve filing ID
-    // Temporarily hard-code a name here for AP01 testing purposes - Remove this once directors name page is complete
-    
-    const officerFiling: OfficerFiling = {
-    firstName: "Jamie",
-    middleNames: "Anthony",
-    lastName: "Ditchburn"
-    };
+    const officerFiling: OfficerFiling = {};
     const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);

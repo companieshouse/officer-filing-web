@@ -28,6 +28,7 @@
 
         {% set enterPreviousNamesHtml %}
         {{ govukInput({
+          errorMessage: errors.previous_names if errors,
           id: "previous_names",
           name: "previous_names",
           value: previous_names,
@@ -43,7 +44,9 @@
         {% endset -%}
 
         {{ govukRadios({
-          name: "previous-names-radio",
+          errorMessage: errors.previous_names_radio if errors,
+          id: "previous_names_radio",
+          name: "previous_names_radio",
           fieldset: {
             legend: {
               text: "Has the director used a different name for business purposes in the last 20 years?"
@@ -51,6 +54,7 @@
           },
           items: [
             {
+              id: "Yes",
               value: "Yes",
               text: "Yes",
               conditional: {
@@ -58,6 +62,7 @@
               }
             },
             {
+              id: "No",
               value: "No",
               text: "No"
             }

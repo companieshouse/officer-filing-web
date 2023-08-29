@@ -37,7 +37,7 @@ export function formatValidationErrors(validationErrors: ValidationError[]): For
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
     var listOfValidationKeys = new Array();
-    if (!validationStatusResponse.errors) {
+    if (!validationStatusResponse || !validationStatusResponse.errors) {
         return "";
     }
   

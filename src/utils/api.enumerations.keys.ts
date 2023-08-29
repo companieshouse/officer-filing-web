@@ -48,5 +48,7 @@ export enum lastNameErrorMessageKey {
 
 export enum formerNamesErrorMessageKey {
   FORMER_NAMES_LENGTH = "former-names-length",
-  FORMER_NAMES_CHARACTERS = "former-names-characters"
+  FORMER_NAMES_CHARACTERS = "former-names-characters",
+  FORMER_NAMES_MISSING = "Enter the director’s previous name or names",
+  FORMER_NAMES_RADIO_UNSELECTED = "Select yes if the director used a different name for business purposes in the last 20 years"
 }
