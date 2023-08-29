@@ -1,0 +1,13 @@
+{{ govukInput({
+  errorMessage: errors.middle_names if errors,
+  label: {
+    text: "Middle names"
+  },
+  hint: {
+    text: "Enter the director's full middle name or names."
+  },
+  classes: "govuk-input--width-20",
+  id: "middle_names",
+  name: "middle_names",
+  value: middle_names
+}) }}

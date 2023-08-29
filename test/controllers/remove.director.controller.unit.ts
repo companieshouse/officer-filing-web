@@ -192,8 +192,8 @@ describe("Remove director date controller tests", () => {
 
     it("Should display error if get validation status returns errors", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
-      mockRetrieveErrorMessageToDisplay.mockReturnValueOnce("The date you enter must be after the company's incorporation date");
-      mockLookupWebValidationMessage.mockReturnValueOnce("The date you enter must be after the company's incorporation date");
+      mockRetrieveErrorMessageToDisplay.mockReturnValue("removal-date-after-incorporation-date");
+      mockLookupWebValidationMessage.mockReturnValue("The date you enter must be after the company's incorporation date");
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)

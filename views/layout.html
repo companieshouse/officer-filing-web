@@ -11,6 +11,7 @@
 {% from "govuk/components/warning-text/macro.njk"        import govukWarningText %}
 {% from "govuk/components/radios/macro.njk"              import govukRadios %}
 {% from "govuk/components/table/macro.njk"               import govukTable %}
+{% from "govuk/components/input/macro.njk"               import govukInput %}
 {% from "govuk/components/tag/macro.njk"                 import govukTag %}
 {% from "govuk/components/date-input/macro.njk"          import govukDateInput %}
 {% from "govuk/components/panel/macro.njk"               import govukPanel %}
@@ -25,6 +26,8 @@
   <!--[if !IE 8]><!-->
   <link href="{{assetPath}}/stylesheets/govuk-frontend/v4.6.0/govuk-frontend-4.6.0.min.css" rel="stylesheet" />
   <!--<![endif]-->
+  <link rel="stylesheet" href="{{assetPath}}/stylesheets/accessible-autocomplete/autocomplete.min.css" />
+
 
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
   {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
