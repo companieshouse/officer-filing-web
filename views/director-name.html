@@ -15,10 +15,68 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
 
         <h1 class="govuk-heading-l">What is the director's name?</h1>
+
+        {% include "includes/inputs/fields/title-input.html" %}
+        {% include "includes/inputs/fields/first-name-input.html" %}
+        {% include "includes/inputs/fields/middle-names-input.html" %}
+        {% include "includes/inputs/fields/last-name-input.html" %}
+
+
+        {% set enterPreviousNamesHtml %}
+        {{ govukInput({
+          errorMessage: errors.previous_names if errors,
+          id: "previous_names",
+          name: "previous_names",
+          value: previous_names,
+          spellcheck: false,
+          classes: "govuk-!-width-two-thirds",
+          hint: {
+            text: "If the director has more than one previous name, separate each name with a comma."
+          },
+          label: {
+            text: "Previous names"
+          }
+        }) }}
+        {% endset -%}
+
+        {{ govukRadios({
+          errorMessage: errors.previous_names_radio if errors,
+          id: "previous_names_radio",
+          name: "previous_names_radio",
+          value: previous_names_radio,
+          fieldset: {
+            legend: {
+              text: "Has the director used a different name for business purposes in the last 20 years?"
+            }
+          },
+          items: [
+            {
+              id: "Yes",
+              value: "Yes",
+              text: "Yes",
+              conditional: {
+                html: enterPreviousNamesHtml
+              }
+            },
+            {
+              id: "No",
+              value: "No",
+              text: "No"
+            }
+          ]
+        }) }}
+
+
+        {{ govukInsetText({
+          html: '
+            <h2 class="govuk-heading-m">What information we’ll show on the public register</h2>
+            <p>We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant.</p>
+            '
+        }) }}
 
         {{ govukButton({
           attributes: {

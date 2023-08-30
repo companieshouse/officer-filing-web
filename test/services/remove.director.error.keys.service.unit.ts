@@ -13,7 +13,7 @@ describe("Test remove director error keys service", () => {
   
     it("Should return next web error message that matches priority order", async () => {
       const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList2);
-      expect(newMessage).toEqual("Enter a date that is in the past");
+      expect(newMessage).toEqual("Enter a date that is today or in the past");
     });
   
     it("Should return next web error message that matches priority order", async () => {

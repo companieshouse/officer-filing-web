@@ -63,6 +63,34 @@ export const mockValidationStatusErrorEtag: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusErrorFirstName: ValidationStatusError = {
+    error: "First name must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
+export const mockValidationStatusErrorTitle: ValidationStatusError = {
+    error: "Title can be no longer than 50 characters",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
+export const mockValidationStatusErrorLastName: ValidationStatusError = {
+    error: "Enter the director’s last name",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
+export const mockValidationStatusErrorFormerNames: ValidationStatusError = {
+    error: "Previous name must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+  }
+
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     errors: [],
     isValid: true
@@ -100,5 +128,10 @@ export const mockValidationStatusResponsePreOct2009: ValidationStatusResponse = 
 
 export const mockValidationStatusResponseEtag: ValidationStatusResponse = {
     errors: [mockValidationStatusErrorEtag],
+    isValid: false
+}
+
+export const mockValidationStatusResponseDirectorName: ValidationStatusResponse = {
+    errors: [mockValidationStatusErrorFirstName, mockValidationStatusErrorLastName],
     isValid: false
 }
