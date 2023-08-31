@@ -1,8 +1,7 @@
 import { DateTime } from "luxon";
 import { RemovalDateErrorMessageKey } from "../utils/api.enumerations.keys";
-import { DateValidationType, FormattedValidationErrors, ValidationError } from "../model/validation.model";
+import { DateValidationType, ValidationError } from "../model/validation.model";
 import { RemovalDateField } from "../model/date.model";
-import { lookupWebValidationMessage } from "../utils/api.enumerations";
 
 
 // Configuration required for date validation error messages
@@ -173,24 +172,4 @@ const checkIsNumber = (numStr: string) => {
 
 const checkIsValidYear = (numStr: string) => {
   return numStr.match("^[0-9]{4}$");
-}
-
-/**
- * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.
- * @param validationResult Contains the error message, the fields to highlight, and the field to link when the error message is clicked
- * @returns A validation errors object to display on the page
- */
-export function formatValidationError(validationResult: ValidationError): FormattedValidationErrors {
-  const errors = { errorList: [] } as any;
-  const errorMessage = lookupWebValidationMessage(validationResult.messageKey);
-
-    // errors.errorList[] relates to the linked error messages at the top of the page
-    errors.errorList.push({ href: '#' + validationResult.link, text: errorMessage });
-
-    // errors[] relates to the highlighed fields and the message just above those fields
-    validationResult.source.forEach(field => {
-      errors[field] = { text: errorMessage };
-    });
-
-  return errors;
 }
