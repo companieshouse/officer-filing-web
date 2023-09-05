@@ -1,0 +1,15 @@
+<script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
+
+
+<script type="text/javascript">
+const titles = "{{typeahead_array}}"
+const titleArray = titles.split(",")
+accessibleAutocomplete({
+  element: document.querySelector('#my-autocomplete-container'),
+  id: 'typeahead_input', // To match it to the existing <label>.
+  source: titleArray,
+  name: 'typeahead_input',
+  defaultValue:'{{typeahead_value}}'
+})
+
+</script>

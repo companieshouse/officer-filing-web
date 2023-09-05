@@ -12,6 +12,7 @@ import { DirectorField } from "../model/director.model";
 import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { TITLE_LIST } from "../utils/properties";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
+import { getField } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,8 +25,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_NAME, {
       templateName: Templates.DIRECTOR_NAME,
       backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
-      titles: TITLE_LIST,
-      personal_title: officerFiling.title,
+      typeahead_array: TITLE_LIST,
+      typeahead_value: officerFiling.title,
       first_name: officerFiling.firstName,
       middle_names: officerFiling.middleNames,
       last_name: officerFiling.lastName,
@@ -111,17 +112,6 @@ const getPreviousNamesForFiling = (req: Request): string|undefined => {
   }
   return undefined;
 }
-
-/**
- * Get field from the form. If the field is populated then it will be returned, else undefined.
- */
-const getField = (req: Request, fieldName: string): string|undefined => {
-  const field: string = req.body[fieldName];
-  if (field && field.trim().length > 0) {
-    return field;
-  }
-  return undefined;
-};
 
 /**
  * Build a list of error objects that will be displayed on the page, based on the result from getValidation.
