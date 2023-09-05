@@ -2,14 +2,25 @@
 
 
 <script type="text/javascript">
-const titles = "{{typeahead_array}}"
-const titleArray = titles.split(",")
+const typeahead = "{{typeahead_array}}"
+const typeaheadArray = typeahead.split(",")
 accessibleAutocomplete({
   element: document.querySelector('#my-autocomplete-container'),
   id: 'typeahead_input', // To match it to the existing <label>.
-  source: titleArray,
+  source: typeaheadArray,
   name: 'typeahead_input',
   defaultValue:'{{typeahead_value}}'
 })
+
+// Mimic nunjucks error generation
+window.onload = function(){
+    const typeaheadError = "{{errors.typeahead_input.text}}";
+      if(typeaheadError){
+      document.getElementById("my-autocomplete-container").className = "govuk-form-group govuk-form-group--error";
+      const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
+      const element = document.getElementById("typeahead-hint");
+      element.insertAdjacentHTML("afterend", errorHtml);
+    }
+  }
 
 </script>

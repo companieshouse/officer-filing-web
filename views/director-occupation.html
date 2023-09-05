@@ -22,11 +22,14 @@
         <div class="govuk-!-padding-bottom-6">
           <span class="govuk-caption-l">  </span>
           <div id="my-autocomplete-container" class="govuk-form-group">
-          <h1 class="govuk-label-wrapper"><label for="typeahead-input" class="govuk-label govuk-label--l">What is the director's occupation?</label></h1>
+          <h1 class="govuk-label-wrapper">
+            <label for="typeahead-input" class="govuk-label govuk-label--l">What is the director's occupation?</label></h1>
           <p class="govuk-body">This is optional. If you do not enter anything, we'll show the director's occupation as 'none' on the public Companies House register. 
           </p>
           <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Occupation</h2>
-          <p class="govuk-hint">Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.</p>
+          <div id="typeahead-hint" class="govuk-hint">
+          Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.
+        </div>
           {% include "includes/inputs/fields/typeahead-input.html" %}
         </div>
       </div>

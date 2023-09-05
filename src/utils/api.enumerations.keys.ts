@@ -52,3 +52,8 @@ export enum formerNamesErrorMessageKey {
   FORMER_NAMES_MISSING = "Enter the director’s previous name or names",
   FORMER_NAMES_RADIO_UNSELECTED = "Select yes if the director used a different name for business purposes in the last 20 years"
 }
+
+export enum occupationErrorMessageKey {
+  OCCUPATION_CHARACTERS = "occupation-characters",
+  OCCUPATION_LENGTH = "occupation-length"
+}
