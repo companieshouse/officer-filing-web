@@ -44,7 +44,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   };
   await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
   const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-  const validationErrors = buildValidationErrors(validationStatus, req.body[DirectorField.PREVIOUS_NAMES_RADIO], req.body[DirectorField.PREVIOUS_NAMES]);
+  const validationErrors = buildValidationErrors(validationStatus);
 
   if (validationErrors.length > 0) {
     return res.render(Templates.DIRECTOR_OCCUPATION, {
@@ -71,10 +71,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
  * @param validationStatusResponse Response from running getValidation. Contains the api validation messages
  * @returns A list of ValidationError objects that contain the messages and info to display on the page
  */
-export const buildValidationErrors = (validationStatusResponse: ValidationStatusResponse, previousNamesRadio: string, previousNames: string): ValidationError[] => {
+export const buildValidationErrors = (validationStatusResponse: ValidationStatusResponse): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
 
-  // Title
+  // Occupation
   var occupationKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, occupationErrorMessageKey);
   if (occupationKey) {
     validationErrors.push(createValidationError(occupationKey, DirectorField.OCCUPATION));

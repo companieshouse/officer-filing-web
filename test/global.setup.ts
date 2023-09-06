@@ -23,4 +23,5 @@ export default () => {
   process.env.SERVICE_NAME = 'Appoint and remove a company director';
   process.env.AP01_ACTIVE = 'true';
   process.env.TITLE_LIST = 'DR';
+  process.env.OCCUPATION_LIST = 'Astronaut';
 };
