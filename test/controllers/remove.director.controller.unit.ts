@@ -44,7 +44,6 @@ const PAGE_HEADING = "When was the director removed from the company?";
 const REMOVE_DIRECTOR_URL = DATE_DIRECTOR_REMOVED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, APPOINTMENT_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Remove director date controller tests", () => {
@@ -65,7 +64,9 @@ describe("Remove director date controller tests", () => {
   describe("get tests", () => {
 
     it("Should navigate to date of removal page", async () => {
-      mockGetOfficerFiling.mockReturnValueOnce({});
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
@@ -74,7 +75,9 @@ describe("Remove director date controller tests", () => {
     });
 
     it("Should display date of removal fields and directors name", async () => {
-      mockGetOfficerFiling.mockReturnValueOnce({});
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
       
       const response = await request(app)
         .get(REMOVE_DIRECTOR_URL);
@@ -87,7 +90,8 @@ describe("Remove director date controller tests", () => {
 
     it("Should pre-populate removal date fields if data has been previously entered", async () => {
       mockGetOfficerFiling.mockReturnValueOnce({
-        resignedOn: "2023-02-01"
+        resignedOn: "2023-02-01",
+        referenceAppointmentId: APPOINTMENT_ID
       });
 
       const response = await request(app)
@@ -108,6 +112,9 @@ describe("Remove director date controller tests", () => {
 
     it("Should redirect to next page if no errors", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -115,7 +122,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "08",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
@@ -126,6 +133,9 @@ describe("Remove director date controller tests", () => {
     
     it("Should redirect to next page if no errors - day and month are larger than 10", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -133,7 +143,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "12",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/remove-director-check-answers");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/remove-director-check-answers");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
@@ -145,6 +155,9 @@ describe("Remove director date controller tests", () => {
     it("Should display error before patching if day is not a number", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
       mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -161,6 +174,9 @@ describe("Remove director date controller tests", () => {
     it("Should display error before patching if month cannot exist", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
       mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -177,6 +193,9 @@ describe("Remove director date controller tests", () => {
     it("Should display error before patching if year is missing", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
       mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must include a year");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -194,6 +213,9 @@ describe("Remove director date controller tests", () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
       mockRetrieveErrorMessageToDisplay.mockReturnValue("removal-date-after-incorporation-date");
       mockLookupWebValidationMessage.mockReturnValue("The date you enter must be after the company's incorporation date");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -211,6 +233,9 @@ describe("Remove director date controller tests", () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponsePreOct2009);
       mockRetrieveErrorMessageToDisplay.mockReturnValueOnce("");
       mockRetrieveStopPageTypeToDisplayy.mockReturnValueOnce("pre-october-2009");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
 
       const response = await request(app)
         .post(REMOVE_DIRECTOR_URL)
@@ -218,7 +243,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "1",
                 "removal_date-year": "2008" });
 
-        expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/appointment/987654321/cannot-use?stopType=pre-october-2009");
+                expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/appointment/987654321/cannot-use?stopType=pre-october-2009");
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     });
 

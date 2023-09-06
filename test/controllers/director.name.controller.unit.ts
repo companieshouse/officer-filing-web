@@ -104,7 +104,7 @@ describe("Director name controller tests", () => {
   
         const response = await request(app).post(DIRECTOR_NAME_URL);
   
-        expect(response.text).toContain("Title can be no longer than 50 characters");
+        expect(response.text).toContain("Title must be 50 characters or less");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });

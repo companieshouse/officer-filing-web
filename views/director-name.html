@@ -60,12 +60,18 @@
               text: "Yes",
               conditional: {
                 html: enterPreviousNamesHtml
+              },
+              attributes: {
+                "data-event-id": "yes-previous-names"
               }
             },
             {
               id: "No",
               value: "No",
-              text: "No"
+              text: "No",
+              attributes: {
+                "data-event-id": "no-previous-names"
+              }
             }
           ]
         }) }}

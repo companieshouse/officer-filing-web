@@ -25,30 +25,30 @@ export enum RemovalDateErrorMessageKey {
 }
 
 export enum titleErrorMessageKey {
+  TITLE_CHARACTERS = "title-characters",
   TITLE_LENGTH = "title-length",
-  TITLE_CHARACTERS = "title-characters"
 }
 
 export enum firstNameErrorMessageKey {
   FIRST_NAME_BLANK = "first-name-blank",
+  FIRST_NAME_CHARACTERS = "first-name-characters",
   FIRST_NAME_LENGTH = "first-name-length",
-  FIRST_NAME_CHARACTERS = "first-name-characters"
 }
 
 export enum middleNameErrorMessageKey {
+  MIDDLE_NAME_CHARACTERS = "middle-name-characters",
   MIDDLE_NAME_LENGTH = "middle-name-length",
-  MIDDLE_NAME_CHARACTERS = "middle-name-characters"
 }
 
 export enum lastNameErrorMessageKey {
   LAST_NAME_BLANK = "last-name-blank",
+  LAST_NAME_CHARACTERS = "last-name-characters",
   LAST_NAME_LENGTH = "last-name-length",
-  LAST_NAME_CHARACTERS = "last-name-characters"
 }
 
 export enum formerNamesErrorMessageKey {
-  FORMER_NAMES_LENGTH = "former-names-length",
-  FORMER_NAMES_CHARACTERS = "former-names-characters",
+  FORMER_NAMES_RADIO_UNSELECTED = "Select yes if the director used a different name for business purposes in the last 20 years",
   FORMER_NAMES_MISSING = "Enter the director’s previous name or names",
-  FORMER_NAMES_RADIO_UNSELECTED = "Select yes if the director used a different name for business purposes in the last 20 years"
+  FORMER_NAMES_CHARACTERS = "former-names-characters",
+  FORMER_NAMES_LENGTH = "former-names-length",
 }

@@ -1,11 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { 
-  CURRENT_DIRECTORS_PATH, 
-  ACTIVE_OFFICERS_PATH_END, 
-  REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, 
-  DATE_DIRECTOR_REMOVED_PATH_END, 
-  OFFICER_FILING, 
+  CURRENT_DIRECTORS_PATH,
+  REMOVE_DIRECTOR_CHECK_ANSWERS_PATH,
   urlParams,
   URL_QUERY_PARAM,
   APPID_STOP_PAGE_PATH} from "../types/page.urls";
@@ -28,17 +25,19 @@ import { formatValidationErrors } from "../validation/validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-
     const session: Session = req.session as Session;
+
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const appointmentId = officerFiling.referenceAppointmentId;
+    if (appointmentId === undefined) {
+      throw new Error("Appointment id is undefined");
+    }
 
     // Get the director name from company appointments
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-
-    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     if (officerFiling.resignedOn) {
       var dateFields = officerFiling.resignedOn.split('-');
@@ -60,9 +59,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const session: Session = req.session as Session;
     
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const appointmentId = officerFiling.referenceAppointmentId;
+    if (appointmentId === undefined) {
+      throw new Error("Appointment id is undefined");
+    }
+
     // Get current etag within the appointment
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
@@ -79,11 +83,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Patch filing with etag and resignation date
-    const officerFiling: OfficerFiling = {
+    const updateFiling: OfficerFiling = {
       referenceEtag: appointment.etag,
       resignedOn: resignationDate
     }
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, updateFiling);
 
     // Validate the filing (API)
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
@@ -106,7 +110,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Successfully progress to next page
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req);
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);

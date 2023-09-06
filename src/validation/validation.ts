@@ -32,7 +32,7 @@ export function formatValidationErrors(validationErrors: ValidationError[]): For
 /**
  * Maps API error messages to an error key in the given enum
  * @param validationStatusResponse Response from getValidation endpoint, this contains all errors from the validation
- * @param allowedKeyEnum Enum containining the errors that are allowed to be mapped
+ * @param allowedKeyEnum Enum containining the errors that are allowed to be mapped. The order of the values within this enum defines priority order of the messages.
  * @returns An allowed error message key, or an empty string
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
@@ -46,7 +46,7 @@ export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse:
       listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
   
-    // If the errorMessageKey of the validation response matches one of the given allowed keys then allow it
+    // If the errorMessageKey of the validation response matches one of the given allowed keys then allow it - these values are ordered by priority
     for (var key of Object.values(allowedKeyEnum)) {
       if (listOfValidationKeys.includes(key)) {
         return key as string;
@@ -62,10 +62,21 @@ export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse:
  * @param sourceAndLink The page element that will be both highlighted and linked to
  * @returns An error object to display on the page
  */
-export const createValidationError = (messageKey: string, sourceAndLink: string): ValidationError => {
-    return {
-        messageKey: messageKey,
-        source: [sourceAndLink],
-        link: sourceAndLink
-    };
+export const createValidationErrorBasic = (messageKey: string, sourceAndLink: string): ValidationError => {
+    return createValidationError(messageKey, [sourceAndLink], sourceAndLink);
+};
+
+/**
+ * Create a Validation Error object that will contain the necessary information to display on the page
+ * @param messageKey The message to show to the user
+ * @param source The page element that will be highlighted on the page
+ * @param link The page element that will be linked to on the error
+ * @returns An error object to display on the page
+ */
+export const createValidationError = (messageKey: string, source: string[], link: string): ValidationError => {
+  return {
+      messageKey: messageKey,
+      source: source,
+      link: link
+  };
 };
