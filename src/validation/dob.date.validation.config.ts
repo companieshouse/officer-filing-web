@@ -1,9 +1,9 @@
-import { dobDateErrorMessageKey } from "../utils/api.enumerations.keys"; // ANONA: add to api-enumerations??
+import { dobDateErrorMessageKey } from "../utils/api.enumerations.keys";
 import { DateValidationType } from "../model/validation.model";
 import { DobDateField } from "model/date.model";
 
 // Configuration required for date validation error messages
-export const DateValidation: DateValidationType = {
+export const DobDateValidation: DateValidationType = {
     MissingValue: {
         Day: {
             messageKey: dobDateErrorMessageKey.MISSING_DAY,

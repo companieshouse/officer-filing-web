@@ -3,7 +3,7 @@ import { DateValidationType } from "../model/validation.model";
 import { RemovalDateField } from "../model/date.model";
 
 // Configuration required for date validation error messages
-export const DateValidation: DateValidationType = {
+export const RemovalDateValidation: DateValidationType = {
     MissingValue: {
         Day: {
             messageKey: RemovalDateErrorMessageKey.MISSING_DAY,
