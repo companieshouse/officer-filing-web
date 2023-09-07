@@ -21,6 +21,7 @@ import { getValidationStatus } from "../../src/services/validation.status.servic
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { lookupWebValidationMessage } from "../../src/utils/api.enumerations";
+import { Response } from "superagent";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -104,6 +105,19 @@ describe("Remove director date controller tests", () => {
       expect(response.text).toContain("01");
       expect(response.text).toContain("02");
       expect(response.text).toContain("2023");
+    });
+
+    it("Should error if appointment id doesn't exist", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({});
+
+      let res: Response;
+      try {
+        res = await request(app)
+          .get(REMOVE_DIRECTOR_URL)
+          .expect(500);
+      } catch(e) {
+        expect(e).toContain("Appointment id is undefined");
+      }
     });
 
   });
@@ -245,6 +259,22 @@ describe("Remove director date controller tests", () => {
 
                 expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/appointment/987654321/cannot-use?stopType=pre-october-2009");
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+    it("Should error if appointment id doesn't exist", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({});
+
+      let res: Response;
+      try {
+        res = await request(app)
+          .post(REMOVE_DIRECTOR_URL)
+          .send({ "removal_date-day": "1",
+                  "removal_date-month": "1",
+                  "removal_date-year": "2008" })
+          .expect(500);
+      } catch(e) {
+        expect(e).toContain("Appointment id is undefined");
+      }
     });
 
   });

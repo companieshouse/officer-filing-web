@@ -78,9 +78,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const session: Session = req.session as Session;
   
   if (appointmentId) {
-    return await beginTerminationJourney(req, res, session, transactionId, appointmentId);
+    return beginTerminationJourney(req, res, session, transactionId, appointmentId);
   }
-  return await beginAppointmentJourney(req, res, session, transactionId);
+  return beginAppointmentJourney(req, res, session, transactionId);
 };
 
 /**
