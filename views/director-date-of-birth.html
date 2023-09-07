@@ -18,7 +18,14 @@
       
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">What is the director's date of birth?</h1>
+        <!-- <h1 class="govuk-heading-l">What is the director's date of birth?</h1> -->
+
+        {% include "includes/inputs/date/dob-date-input.html" %}
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">What information we'll show on the public register</h2>
+            <p>We will only show the director's month and year of birth on the public Companies House register.</p>
+        </div>
 
         {{ govukButton({
           attributes: {
