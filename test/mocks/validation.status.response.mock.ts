@@ -71,7 +71,7 @@ export const mockValidationStatusErrorFirstName: ValidationStatusError = {
 }
 
 export const mockValidationStatusErrorTitle: ValidationStatusError = {
-    error: "Title can be no longer than 50 characters",
+    error: "Title must be 50 characters or less",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
     type: "ch:validation",
     locationType: "json-path"
@@ -85,7 +85,7 @@ export const mockValidationStatusErrorLastName: ValidationStatusError = {
 }
 
 export const mockValidationStatusErrorFormerNames: ValidationStatusError = {
-    error: "Previous name must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
+    error: "Previous names must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
     type: "ch:validation",
     locationType: "json-path"

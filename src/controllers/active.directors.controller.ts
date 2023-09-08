@@ -76,78 +76,86 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const appointmentId = req.body.appointmentId;
   const session: Session = req.session as Session;
-
-  //If there is no appoinmentId sent in the post, it must be an AP01
-  if (!appointmentId) {
-
-    // Create and post officer filing and retrieve filing ID
-    const emptyFiling: OfficerFiling = {};
-    const filingResponse = await postOfficerFiling(session, transactionId, emptyFiling);
-
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH.replace(`:${urlParams.PARAM_SUBMISSION_ID}`, filingResponse.id), req);
-    return res.redirect(nextPageUrl);
+  
+  if (appointmentId) {
+    return beginTerminationJourney(req, res, session, transactionId, appointmentId);
   }
+  return beginAppointmentJourney(req, res, session, transactionId);
+};
 
+/**
+ * Post an officer filing and redirect to the first page in the TM01 journey.
+*/
+async function beginTerminationJourney(req: Request, res: Response, session: Session, transactionId: string, appointmentId: any) {
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
-  const filingId = filingResponse.id;
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-  req.params[urlParams.PARAM_SUBMISSION_ID] = filingId;
-  
-  const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId), req);
+  const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req);
   return res.redirect(nextPageUrl);
+}
+
+/**
+ * Post an officer filing and redirect to the first page in the AP01 journey.
+*/
+async function beginAppointmentJourney(req: Request, res: Response, session: Session, transactionId: string) {
+  const officerFiling: OfficerFiling = {};
+  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-};
+  const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req);
+  return res.redirect(nextPageUrl);
+}
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
-    .map(officer => {
-      const appointedOn = setAppointedOnDate(officer);
-      return {
-        name: officer.name,
-        officerRole: formatTitleCase(officer.officerRole),
-        dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
-        appointedOn: appointedOn,
-        links: officer.links
-      };
-    });
+  .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
+  .map(officer => {
+    const appointedOn = setAppointedOnDate(officer);
+    return {
+      name: officer.name,
+      officerRole: formatTitleCase(officer.officerRole),
+      dateOfBirth: formatDateOfBirth(officer.dateOfBirth),
+      appointedOn: appointedOn,
+      links: officer.links
+    };
+  });
 };
 
 const buildCorporateDirectorsList = (officers: CompanyOfficer[]): any[] => {
   return officers
-    .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
-    .map(officer => {
-      const appointedOn = setAppointedOnDate(officer);
-      return {
-        name: officer.name,
-        officerRole: formatTitleCase(officer.officerRole),
-        appointedOn: appointedOn,
-        links: officer.links
-      };
-    });
+  .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR))
+  .map(officer => {
+    const appointedOn = setAppointedOnDate(officer);
+    return {
+      name: officer.name,
+      officerRole: formatTitleCase(officer.officerRole),
+      appointedOn: appointedOn,
+      links: officer.links
+    };
+  });
 };
 
 const getConfirmCompanyUrl = (companyNumber: string): string => `${CONFIRM_COMPANY_PATH}?companyNumber=${companyNumber}`;
 
 const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCard[] => {
   return officers
-    .filter(officer => getAppointmentIdFromSelfLink(officer).length)
-    .map(officer => {
-      return {
-        appointmentId: getAppointmentIdFromSelfLink(officer),
-        officer: officer
-      }
-    })
+  .filter(officer => getAppointmentIdFromSelfLink(officer).length)
+  .map(officer => {
+    return {
+      appointmentId: getAppointmentIdFromSelfLink(officer),
+      officer: officer
+    }
+  })
 };
 
 /**
  * Extract the referenced appointment ID from the officers self link URL
  * @param officer The officer containing the link
  * @returns The appointment ID if available, or an empty string if not
- */
+*/
 const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   if (officer.links != undefined) {
     const self = officer.links.self;
