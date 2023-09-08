@@ -11,7 +11,7 @@ import { getField } from "../utils/web";
 import { logger } from "../utils/logger";
 import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
-import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
+import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { occupationErrorMessageKey } from "../utils/api.enumerations.keys";
 
 
@@ -77,7 +77,7 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   // Occupation
   var occupationKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, occupationErrorMessageKey);
   if (occupationKey) {
-    validationErrors.push(createValidationError(occupationKey, DirectorField.OCCUPATION));
+    validationErrors.push(createValidationErrorBasic(occupationKey, DirectorField.OCCUPATION));
   }
 
   return validationErrors;
