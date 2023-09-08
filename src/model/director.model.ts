@@ -5,5 +5,7 @@ export enum DirectorField {
   LAST_NAME = "last_name",
   PREVIOUS_NAMES = "previous_names",
   PREVIOUS_NAMES_RADIO = "previous_names_radio",
-  OCCUPATION = "typeahead_input"
+  OCCUPATION = "typeahead_input",
+  YES = "Yes",
+  NO = "No"
 }

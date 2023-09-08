@@ -46,14 +46,14 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.REMOVE_DIRECTOR_CHECK_ANSWERS, {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
-      backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
+      backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
       company: companyProfile,
       name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
-      changeLink: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req),
+      changeLink: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
     });
   } catch (e) {
@@ -79,7 +79,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     await closeTransaction(session, companyNumber, submissionId, transactionId);
   
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH.replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, req.params[urlParams.PARAM_APPOINTMENT_ID]), req);
+    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH, req);
 
     return res.redirect(nextPageUrl);
   } catch (e) {

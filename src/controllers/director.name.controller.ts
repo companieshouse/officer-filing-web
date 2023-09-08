@@ -9,7 +9,7 @@ import { firstNameErrorMessageKey, formerNamesErrorMessageKey, lastNameErrorMess
 import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
-import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
+import { createValidationError, createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { TITLE_LIST } from "../utils/properties";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
 import { getField } from "../utils/web";
@@ -88,13 +88,13 @@ const calculatePreviousNamesRadioFromFiling = (formerNames: string | undefined):
     return undefined;
   }
   if (formerNames === "") {
-    return "No";
+    return DirectorField.NO;
   }
-  return "Yes";
+  return DirectorField.YES;
 }
 
 /**
- * Get previous names value to save on the filing. This value is dependent on the radio choice.
+ * Get previous names value to save on the filing. This value is dependent on the radio button choice.
  * @returns The string|undefined value to save on the filing
  */
 const getPreviousNamesForFiling = (req: Request): string|undefined => {
@@ -104,10 +104,10 @@ const getPreviousNamesForFiling = (req: Request): string|undefined => {
   if (!previousNamesRadio) {
     return undefined;
   } 
-  if (previousNamesRadio == "Yes") {
+  if (previousNamesRadio == DirectorField.YES) {
     return previousNames;
   }
-  if (previousNamesRadio == "No") {
+  if (previousNamesRadio == DirectorField.NO) {
     return "";
   }
   return undefined;
@@ -127,41 +127,41 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   // Title
   var titleKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, titleErrorMessageKey);
   if (titleKey) {
-    validationErrors.push(createValidationError(titleKey, DirectorField.TITLE));
+    validationErrors.push(createValidationErrorBasic(titleKey, DirectorField.TITLE));
   }
 
   // First name
   var firstNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, firstNameErrorMessageKey);
   if (firstNameKey) {
-    validationErrors.push(createValidationError(firstNameKey, DirectorField.FIRST_NAME));
+    validationErrors.push(createValidationErrorBasic(firstNameKey, DirectorField.FIRST_NAME));
   }
 
   // Middle names
   var middleNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, middleNameErrorMessageKey);
   if (middleNameKey) {
-    validationErrors.push(createValidationError(middleNameKey, DirectorField.MIDDLE_NAMES));
+    validationErrors.push(createValidationErrorBasic(middleNameKey, DirectorField.MIDDLE_NAMES));
   }
 
   // Last name
   var lastNameKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, lastNameErrorMessageKey);
   if (lastNameKey) {
-    validationErrors.push(createValidationError(lastNameKey, DirectorField.LAST_NAME));
+    validationErrors.push(createValidationErrorBasic(lastNameKey, DirectorField.LAST_NAME));
   }
 
   // Former names - includes JS validation around the radio button selection
   if (!previousNamesRadio) {
     const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
-    validationErrors.push(createValidationError(errorMessage, DirectorField.PREVIOUS_NAMES_RADIO));
+    validationErrors.push(createValidationError(errorMessage, [DirectorField.PREVIOUS_NAMES_RADIO], DirectorField.YES));
   } 
-  else if (previousNamesRadio == "Yes") {
+  else if (previousNamesRadio == DirectorField.YES) {
     if (!previousNames || previousNames.length == 0) {
       const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
-      validationErrors.push(createValidationError(errorMessage, DirectorField.PREVIOUS_NAMES));
+      validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
     }
 
     var formerNamesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, formerNamesErrorMessageKey);
     if (formerNamesKey) {
-      validationErrors.push(createValidationError(formerNamesKey, DirectorField.PREVIOUS_NAMES));
+      validationErrors.push(createValidationErrorBasic(formerNamesKey, DirectorField.PREVIOUS_NAMES));
     }
   }
 

@@ -139,7 +139,7 @@ describe("Active directors controller tests", () => {
         .post(ACTIVE_DIRECTOR_DETAILS_URL)
         .send({ "appointmentId": APPOINTMENT_ID });
 
-        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/appointment/987654321/date-director-removed");
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/date-director-removed");
     });
 
     it("Should post and redirect to next page AP01", async () => {
