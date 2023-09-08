@@ -51,3 +51,5 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const EWF_URL = getEnvironmentVariable("EWF_URL");
 
   export const TITLE_LIST = getEnvironmentVariable("TITLE_LIST");
+
+  export const OCCUPATION_LIST = getEnvironmentVariable("OCCUPATION_LIST");

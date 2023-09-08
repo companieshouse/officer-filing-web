@@ -91,6 +91,13 @@ export const mockValidationStatusErrorFormerNames: ValidationStatusError = {
     locationType: "json-path"
   }
 
+  export const mockValidationStatusErrorOccupation: ValidationStatusError = {
+    error: "Occupation must be 100 characters or less",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     errors: [],
     isValid: true
