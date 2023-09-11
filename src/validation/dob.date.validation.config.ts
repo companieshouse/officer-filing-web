@@ -1,6 +1,6 @@
 import { dobDateErrorMessageKey } from "../utils/api.enumerations.keys";
 import { DateValidationType } from "../model/validation.model";
-import { DobDateField } from "model/date.model";
+import { DobDateField } from "../model/date.model";
 
 // Configuration required for date validation error messages
 export const DobDateValidation: DateValidationType = {

@@ -21,10 +21,21 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
+    var dateFields = officerFiling.dateOfBirth ? officerFiling.dateOfBirth.split('-') : [];
+
+    const dates = {
+      date_of_birth : {
+        "date_of_birth-day" : dateFields[2],
+        "date_of_birth-month" : dateFields[1],
+        "date_of_birth-year" : dateFields[0]
+      }
+    }
+
     return res.render(Templates.DIRECTOR_DATE_OF_BIRTH, {
       templateName: Templates.DIRECTOR_DATE_OF_BIRTH,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
-      // TODO: Pre-render fields from officerFiling object
+      // Pre-render fields from officerFiling object
+      ...dates,
     });
   } catch (e) {
     return next(e);
@@ -45,7 +56,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   // Validate the date fields (JS)
   const dateValidationResult = validateDate(day, month, year, DobDateValidation);
   if (dateValidationResult) {
-    return res.render(Templates.DIRECTOR_NAME, {
+    return res.render(Templates.DIRECTOR_DATE_OF_BIRTH, {
       templateName: Templates.DIRECTOR_DATE_OF_BIRTH,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
       errors: formatValidationErrors([dateValidationResult]),
@@ -57,11 +68,24 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const validationStatus = await getValidationStatus(session, transactionId, submissionId);
   const validationErrors = buildValidationErrors(validationStatus);
   if (validationErrors.length > 0) {
-    return res.render(Templates.DIRECTOR_NAME, {
+
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    var dateFields = officerFiling.dateOfBirth ? officerFiling.dateOfBirth.split('-') : [];
+
+    const dates = {
+      date_of_birth : {
+        "date_of_birth-day" : dateFields[2],
+        "date_of_birth-month" : dateFields[1],
+        "date_of_birth-year" : dateFields[0]
+      }
+    }
+
+    return res.render(Templates.DIRECTOR_DATE_OF_BIRTH, {
       templateName: Templates.DIRECTOR_DATE_OF_BIRTH,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
       errors: formatValidationErrors(validationErrors),
-      // TODO: Render field values
+      // Render field values
+      ...dates,
     });
   }
 
