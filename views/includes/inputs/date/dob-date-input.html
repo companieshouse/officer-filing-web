@@ -1,0 +1,79 @@
+{# Setup vars that will be used in page #}
+{% set dobDateErrorMessage = '' %}
+{% set isDobDateDayError = false %}
+{% set isDobDateMonthError = false %}
+{% set isDobDateYearError = false %}
+
+
+{# Decide if any field is in error and set boolean that will highlight it in red #}
+{% for key, value in errors %}
+  {% if "dob_date" in key|string %}
+    {% set dobDateErrorMessage = value %}
+
+    {% if "-day" in key|string %}
+      {% set isDobDateDayError = true %}
+    {% endif %}
+    {% if "-month" in key|string %} 
+      {% set isDobDateMonthError = true %}
+    {% endif %}
+    {% if "-year" in key|string %} 
+      {% set isDobDateYearError = true %}
+    {% endif %}
+
+  {% endif %}
+{% endfor %}
+
+
+{# Set classes on the 3 date input fields (including error classes if applicable) #}
+{% set dob_date_classes_year = "govuk-input--width-4 govuk-input" %}
+{% set dob_date_classes_month = "govuk-input--width-2 govuk-input" %}
+{% set dob_date_classes_day = "govuk-input--width-2 govuk-input" %}
+
+{% if isDobDateDayError %}
+  {% set dob_date_classes_day = dob_date_classes_day + "--error" %}
+{% endif %}
+{% if isDobDateMonthError %}
+  {% set dob_date_classes_month = dob_date_classes_month + "--error" %}
+{% endif %}
+{% if isDobDateYearError %}
+  {% set dob_date_classes_year = dob_date_classes_year + "--error" %}
+{% endif %}
+
+
+{# Render #}
+{{ govukDateInput({
+  errorMessage: dobDateErrorMessage,
+  id: "dob_date",
+  name: "dobDate",
+  namePrefix: "dob_date",
+  fieldset: {
+    legend: {
+      text: "What is the director's date of birth?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "For example, 27 3 1995"
+  },
+  items: [
+    {
+      classes: dob_date_classes_day,
+      name: "day",
+      value: dob_date["dob_date-day"] if dob_date,
+      pattern: "*"
+    },
+    {
+      classes: dob_date_classes_month,
+      name: "month",
+      value: dob_date["dob_date-month"] if dob_date,
+      pattern: "*"
+    },
+    {
+      classes: dob_date_classes_year,
+      name: "year",
+      value: dob_date["dob_date-year"] if dob_date,
+      pattern: "*"
+    }
+  ]
+}) }}

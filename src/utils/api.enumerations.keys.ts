@@ -24,6 +24,22 @@ export enum RemovalDateErrorMessageKey {
   AFTER_2009 = "removal-date-after-2009"
 }
 
+/**
+ * Error message keys relating to the date of birth
+ */
+export enum dobDateErrorMessageKey {
+  MISSING_DAY = "dob-date-missing-day",
+  MISSING_MONTH = "dob-date-missing-month",
+  MISSING_YEAR = "dob-date-missing-year",
+  MISSING_DAY_MONTH = "dob-date-missing-day-month",
+  MISSING_DAY_YEAR = "dob-date-missing-day-year",
+  MISSING_MONTH_YEAR = "dob-date-missing-month-year",
+  MISSING_DAY_MONTH_YEAR = "dob-date-missing-day-month-year",
+  INVALID_DATE = "dob-date-invalid",
+  DIRECTOR_UNDERAGE = "date-of-birth-underage",
+  DIRECTOR_OVERAGE = "date-of-birth-overage"
+}
+
 export enum titleErrorMessageKey {
   TITLE_CHARACTERS = "title-characters",
   TITLE_LENGTH = "title-length",
