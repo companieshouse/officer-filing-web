@@ -91,8 +91,15 @@ export const mockValidationStatusErrorFormerNames: ValidationStatusError = {
     locationType: "json-path"
   }
 
-  export const mockValidationStatusErrorOccupation: ValidationStatusError = {
+export const mockValidationStatusErrorOccupation: ValidationStatusError = {
     error: "Occupation must be 100 characters or less",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
+export const mockValidationStatusErrorDob: ValidationStatusError = {
+    error: "You can only appoint a person as a director if they are at least 16 years old",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
     type: "ch:validation",
     locationType: "json-path"

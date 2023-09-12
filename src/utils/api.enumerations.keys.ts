@@ -24,7 +24,6 @@ export enum RemovalDateErrorMessageKey {
   AFTER_2009 = "removal-date-after-2009"
 }
 
-// ANONA: do these need added to api enumerations instead?
 /**
  * Error message keys relating to the date of birth
  */
@@ -37,16 +36,8 @@ export enum dobDateErrorMessageKey {
   MISSING_MONTH_YEAR = "dob-date-missing-month-year",
   MISSING_DAY_MONTH_YEAR = "dob-date-missing-day-month-year",
   INVALID_DATE = "dob-date-invalid",
-
-  //new
-  DIRECTOR_UNDERAGE = "dob-date-underage",
-  DIRECTOR_OVERAGE = "dob-date-overage"
-
-  // not used for DOB
-  // IN_PAST = "dob-date-in-past",
-  // AFTER_APPOINTMENT_DATE = "dob-date-after-appointment-date",
-  // AFTER_INCORPORATION_DATE = "dob-date-after-incorporation-date",
-  // AFTER_2009 = "dob-date-after-2009"
+  DIRECTOR_UNDERAGE = "date-of-birth-underage",
+  DIRECTOR_OVERAGE = "date-of-birth-overage"
 }
 
 export enum titleErrorMessageKey {
