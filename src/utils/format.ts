@@ -1,4 +1,4 @@
-import { CompanyOfficer, DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 
@@ -100,3 +100,22 @@ export const retrieveDirectorNameFromOfficer = (officer: CompanyOfficer ): strin
   }
 }
 
+export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string => {
+  if (filing.firstName) { filing.firstName = filing.firstName.trim()}
+  if (filing.middleNames) { filing.middleNames = filing.middleNames.trim()}
+  if (filing.lastName) { filing.lastName = filing.lastName.trim()}
+  if (filing.name) { filing.name = filing.name.trim()}
+
+  if (filing.firstName && filing.middleNames && filing.lastName) {
+    return filing.firstName + " "  + filing.middleNames + " " + filing.lastName;
+  }
+  else if (filing.firstName && filing.lastName) {
+    return filing.firstName + " " + filing.lastName;
+  }
+  else if (filing.name) {
+    return filing.name;
+  }
+  else {
+    return "";
+  }
+}
