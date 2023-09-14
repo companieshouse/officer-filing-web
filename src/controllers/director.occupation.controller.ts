@@ -49,12 +49,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const validationErrors = buildValidationErrors(validationStatus);
 
   if (validationErrors.length > 0) {
+    const formattedErrors = formatValidationErrors(validationErrors);
     return res.render(Templates.DIRECTOR_OCCUPATION, {
       templateName: Templates.DIRECTOR_OCCUPATION,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: officerFiling.occupation,
-      errors: formatValidationErrors(validationErrors)
+      errors: formattedErrors,
+      typeahead_errors: JSON.stringify(formattedErrors)
   });
 }
 

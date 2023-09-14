@@ -2,50 +2,62 @@
 
 
 <script type="text/javascript">
-const typeahead = "{{typeahead_array}}"
-const typeaheadArray = typeahead.split(",")
-accessibleAutocomplete({
-  element: document.querySelector('#my-autocomplete-container'),
-  id: 'typeahead_input', // To match it to the existing <label>.
-  source: typeaheadArray,
-  name: 'typeahead_input',
-  defaultValue:'{{typeahead_value}}'
-})
+//Split this on | to get an array of values
+const typeaheadArray = "{{typeahead_array}}".split("|")
+const defaultValueArray = "{{typeahead_value}}".split("|")
 
+for (var i = 0; i < typeaheadArray.length; i++) {
+  accessibleAutocomplete({
+    element: document.querySelector('#my-autocomplete-container'),
+    id: 'typeahead_input_' + i, // To match it to the existing <label>.
+    source: typeaheadArray[i].split(","),
+    name: 'typeahead_input_' + i,
+    defaultValue:defaultValueArray[i]
+  })
+}
+
+  // Add observer for each typeahead_input
   // Mimic nunjucks error generation
   window.onload = function () {
-    // Set up observor to correct css classname when accessible-autocomplete rewrites the input field.
-    const typeaheadNode = document.getElementById("typeahead_input");
-    const typeaheadError = "{{errors.typeahead_input.text}}";
-    var callback;
-    var inputClass;
+    for (var i = 0; i < typeaheadArray.length; i++) {
+      // Set up observor to correct css classname when accessible-autocomplete rewrites the input field.
+      const typeaheadNode = document.getElementById("typeahead_input_" + i);
+      var callback;
+      var inputClass;
+      var errors;
+      
+      if("{{typeahead_errors}}"){
+        errors = JSON.parse("{{typeahead_errors}}".replace(/&quot;/g,'"'));
+      }
 
-    if (typeaheadError) {
-      document.getElementById("my-autocomplete-container").className = "govuk-form-group govuk-form-group--error";
-      const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
-      const element = document.getElementById("typeahead-hint");
-      element.insertAdjacentHTML("afterend", errorHtml);
-      inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
-      typeaheadNode.className = inputClass;
-    }
-    else {
-      inputClass = "govuk-input govuk-input--width-20";
-      typeaheadNode.className = inputClass;
-    }
+      if (errors && errors["typeahead_input_" + i]) {
+        const typeaheadError = errors["typeahead_input_" + i].text;
+        document.getElementById("my-autocomplete-container").className = "govuk-form-group govuk-form-group--error";
+        const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
+        const element = document.getElementById("typeahead-hint-" + i);
+        element.insertAdjacentHTML("afterend", errorHtml);
+        inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
+        typeaheadNode.className = inputClass;
+      }
+      else {
+        inputClass = "govuk-input govuk-input--width-20";
+        typeaheadNode.className = inputClass;
+      }
 
-    callback = (mutationList, observer) => {
-      for (const mutation of mutationList) {
-        if (mutation.type === "attributes") {
-          if (typeaheadNode.className !== inputClass) {
-            typeaheadNode.className = inputClass;
+      callback = (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          if (mutation.type === "attributes") {
+            if (typeaheadNode.className !== inputClass) {
+              typeaheadNode.className = inputClass;
+            }
           }
         }
-      }
-    };
-    const config = { attributes: true, childList: false, subtree: false };
-    const observer = new MutationObserver(callback);
-    observer.observe(typeaheadNode, config);
+      };
+      const config = { attributes: true, childList: false, subtree: false };
+      const observer = new MutationObserver(callback);
+      observer.observe(typeaheadNode, config);
   }
+}
 
 
 </script>
