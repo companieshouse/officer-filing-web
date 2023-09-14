@@ -7,7 +7,7 @@ locals {
   docker_repo               = "officer-filing-web"
   lb_listener_rule_priority = 10
   lb_listener_paths         = ["/officer-filing*"]
-  healthcheck_path          = "/officer-filing" #healthcheck path for confirmation statement web
+  healthcheck_path          = "/officer-filing" #healthcheck path for officer filing web
   healthcheck_matcher       = "200-302" # no explicit healthcheck in this service yet, change this when added!
 
   service_secrets           = jsondecode(data.vault_generic_secret.service_secrets.data_json)
