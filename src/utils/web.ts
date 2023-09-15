@@ -7,5 +7,5 @@ export const getField = (req: Request, fieldName: string): string|undefined => {
   if (field && field.trim().length > 0) {
     return field;
   }
-  return undefined;
+  return "";
 };
