@@ -3,7 +3,7 @@ import { DateValidationType } from "../model/validation.model";
 import { AppointmentDateField } from "../model/date.model";
 
 // Configuration required for date validation error messages
-export const DobDateValidation: DateValidationType = {
+export const AppointmentDateValidation: DateValidationType = {
     MissingValue: {
         Day: {
             messageKey: appointmentDateErrorMessageKey.MISSING_DAY,
