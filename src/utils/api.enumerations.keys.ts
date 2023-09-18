@@ -40,6 +40,23 @@ export enum dobDateErrorMessageKey {
   DIRECTOR_OVERAGE = "date-of-birth-overage"
 }
 
+/**
+ * Error message keys relating to the date of appointment
+ */
+export enum appointmentDateErrorMessageKey {
+  MISSING_DAY = "appointment-date-missing-day",
+  MISSING_MONTH = "appointment-date-missing-month",
+  MISSING_YEAR = "appointment-date-missing-year",
+  MISSING_DAY_MONTH = "appointment-date-missing-day-month",
+  MISSING_DAY_YEAR = "appointment-date-missing-day-year",
+  MISSING_MONTH_YEAR = "appointment-date-missing-month-year",
+  MISSING_DAY_MONTH_YEAR = "appointment-date-missing-day-month-year",
+  INVALID_DATE = "appointment-date-invalid",
+  IN_PAST = "appointment-date-in-past",
+  AFTER_INCORPORATION_DATE = "appointment-date-after-incorporation-date",
+  DIRECTOR_UNDERAGE = "appointment-date-underage",
+}
+
 export enum titleErrorMessageKey {
   TITLE_CHARACTERS = "title-characters",
   TITLE_LENGTH = "title-length",
