@@ -99,6 +99,8 @@
       if ("{{nationality2_hidden}}" === "true") {
         $('#my-autocomplete-container-1').show();
         $('#nationality-2-link').hide();
+        radiobtn = document.getElementById("nationality_2_radio_yes");
+        radiobtn.checked = true;
       }
       else {
         $('#nationality-2-link').click(function () {
@@ -114,6 +116,8 @@
       if ("{{nationality3_hidden}}" === "true") {
         $('#my-autocomplete-container-2').show();
         $('#nationality-3-link').hide();
+        radiobtn = document.getElementById("nationality_3_radio_yes");
+        radiobtn.checked = true;
       }
       else {
         $('#nationality-3-link').click(function () {
