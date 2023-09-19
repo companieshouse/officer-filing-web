@@ -26,7 +26,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      nationality2_hidden: officerFiling.nationality2Link,
+      nationality3_hidden: officerFiling.nationality3Link
     });
   } catch (e) {
     return next(e);
@@ -39,15 +41,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     // Patch filing with updated information
-    const officerFiling: OfficerFiling = {
+    var officerFiling: OfficerFiling = {
       nationality1: getField(req, DirectorField.NATIONALITY_1),
       nationality2: getField(req, DirectorField.NATIONALITY_2),
-      nationality3: getField(req, DirectorField.NATIONALITY_3)
+      nationality3: getField(req, DirectorField.NATIONALITY_3),
+      nationality2Link: getField(req, DirectorField.NATIONALITY_2_RADIO),
+      nationality3Link: getField(req, DirectorField.NATIONALITY_3_RADIO)
     };
-    console.log("Patching officer filing" + JSON.stringify(officerFiling))
+    console.log("Patching officer filing" + JSON.stringify(req.body))
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, officerFiling);
+    officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
@@ -58,7 +63,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        nationality2_hidden: officerFiling.nationality2Link,
+        nationality3_hidden: officerFiling.nationality3Link
       });
     }
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req);

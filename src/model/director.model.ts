@@ -9,6 +9,8 @@ export enum DirectorField {
   NATIONALITY_1 = "typeahead_input_0",
   NATIONALITY_2 = "typeahead_input_1",
   NATIONALITY_3 = "typeahead_input_2",
+  NATIONALITY_2_RADIO = "nationality_2_radio",
+  NATIONALITY_3_RADIO = "nationality_3_radio",
   YES = "Yes",
   NO = "No"
 }
