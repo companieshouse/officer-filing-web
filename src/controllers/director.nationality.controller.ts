@@ -41,7 +41,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     // Patch filing with updated information
-    var officerFiling: OfficerFiling = {
+    const officerFiling: OfficerFiling = {
       nationality1: getField(req, DirectorField.NATIONALITY_1),
       nationality2: getField(req, DirectorField.NATIONALITY_2),
       nationality3: getField(req, DirectorField.NATIONALITY_3),
@@ -52,7 +52,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, officerFiling);
-    officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
