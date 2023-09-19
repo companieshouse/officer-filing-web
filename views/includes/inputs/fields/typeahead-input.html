@@ -7,15 +7,17 @@ const typeaheadArray = "{{typeahead_array}}".split("|")
 const defaultValueArray = "{{typeahead_value}}".split("|")
 
 for (var i = 0; i < typeaheadArray.length; i++) {
-  accessibleAutocomplete({
-    element: document.querySelector('#my-autocomplete-container'),
+  var autocompleteConfig = {
+    element: document.querySelector('#my-autocomplete-container-' + i),
     id: 'typeahead_input_' + i, // To match it to the existing <label>.
     source: typeaheadArray[i].split(","),
-    name: 'typeahead_input_' + i,
-    defaultValue:defaultValueArray[i]
-  })
+    name: 'typeahead_input_' + i
+  }
+  if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
+    autocompleteConfig.defaultValue = defaultValueArray[i]
+  }
+  accessibleAutocomplete(autocompleteConfig)
 }
-
   // Add observer for each typeahead_input
   // Mimic nunjucks error generation
   window.onload = function () {
@@ -25,14 +27,14 @@ for (var i = 0; i < typeaheadArray.length; i++) {
       var callback;
       var inputClass;
       var errors;
-      
+
       if("{{typeahead_errors}}"){
         errors = JSON.parse("{{typeahead_errors}}".replace(/&quot;/g,'"'));
       }
 
       if (errors && errors["typeahead_input_" + i]) {
         const typeaheadError = errors["typeahead_input_" + i].text;
-        document.getElementById("my-autocomplete-container").className = "govuk-form-group govuk-form-group--error";
+        document.getElementById("my-autocomplete-container-" + i).className = "govuk-form-group govuk-form-group--error";
         const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
         const element = document.getElementById("typeahead-hint-" + i);
         element.insertAdjacentHTML("afterend", errorHtml);

@@ -17,8 +17,38 @@
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
+        <div id="my-autocomplete-container-0" class="govuk-form-group">
+          <span class="govuk-caption-l">{{directorName}}</span>
+          <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="typeahead_input_0">What is the director's nationality?</label></h1>
+          <div id="typeahead-hint-0" class="govuk-hint">
+          Start typing a nationality, then choose from the list
+        </div>
+        </div>
+        <p id="nationality-2-link" class="govuk-body">
+          <a href="#" id="second-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a second nationality</a>
+        </p>
 
-        <h1 class="govuk-heading-l">What is the director's nationality?</h1>
+        <div id="my-autocomplete-container-1" class="govuk-form-group" style="display: none;">
+          <label class="govuk-label" for="typeahead_input_1">Second nationality (if relevant)</label>
+          <div id="typeahead-hint-1" class="govuk-hint">
+            Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.
+        </div>
+        </div>
+        <p id= "nationality-3-link" class="govuk-body">
+          <a href="#" id="third-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a third nationality</a>
+        </p>
+
+        <div id="my-autocomplete-container-2" class="govuk-form-group" style="display: none;">
+          <label class="govuk-label" for="typeahead_input_2">Third nationality (if relevant)</label>
+          <div id="typeahead-hint-2" class="govuk-hint">
+            Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries.
+        </div>
+        </div>
+
+        {{ govukInsetText({
+          html: "<h2 class='govuk-heading-m'>What information we'll show on the public register</h2>
+          <p>We will show the director's nationality on the public Companies House register.</p>"
+        }) }}
 
         {{ govukButton({
           attributes: {
@@ -29,5 +59,6 @@
 
       </form>
     </div>
+    {% include "includes/inputs/fields/typeahead-input.html" %}
   </div>
 {% endblock %}
