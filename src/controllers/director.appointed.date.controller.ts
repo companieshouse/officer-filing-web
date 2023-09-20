@@ -1,25 +1,25 @@
+import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
+import { AppointmentDateField } from "../model/date.model";
+import { ValidationError } from "../model/validation.model";
+import { formatTitleCase } from "../services/confirm.company.service";
+import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { getValidationStatus } from "../services/validation.status.service";
 import { DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
-import { urlUtils } from "../utils/url";
-import { ValidationError } from "../model/validation.model";
-import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { appointmentDateErrorMessageKey } from "../utils/api.enumerations.keys";
-import { AppointmentDateField } from "../model/date.model";
-import { validateDate } from "../validation/date.validation";
-import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
-import { getValidationStatus } from "../services/validation.status.service";
-import { Session } from "@companieshouse/node-session-handler";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
+import { urlUtils } from "../utils/url";
+import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
+import { validateDate } from "../validation/date.validation";
+import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const session: Session = req.session as Session;
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     var dateFields = officerFiling.appointedOn ? officerFiling.appointedOn.split('-').reverse() : [];
