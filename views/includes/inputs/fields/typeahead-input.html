@@ -1,16 +1,24 @@
 <script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
-
-
 <script type="text/javascript">
-const typeahead = "{{typeahead_array}}"
-const typeaheadArray = typeahead.split(",")
-accessibleAutocomplete({
-  element: document.querySelector('#my-autocomplete-container'),
-  id: 'typeahead_input', // To match it to the existing <label>.
-  source: typeaheadArray,
-  name: 'typeahead_input',
-  defaultValue:'{{typeahead_value}}'
-})
+
+  const typeahead = "{{typeahead_array}}"
+  const typeaheadArray = typeahead.split(',');
+
+  accessibleAutocomplete({
+    element: document.querySelector('#my-autocomplete-container'),
+    id: 'typeahead_input', // To match it to the existing <label>.
+    source: typeaheadArray,
+    name: 'typeahead_input',
+    defaultValue:'{{typeahead_value}}'
+  })
+
+  // Add hint to JS-enabled title
+  const hintElement = document.createElement('div');
+  hintElement.id = 'typeahead-hint';
+  hintElement.className = 'govuk-hint';
+  hintElement.innerHTML = '{{typeaheadHint}}';
+  const autocompleteContainer = document.getElementById("my-autocomplete-container");
+  autocompleteContainer.insertBefore(hintElement, autocompleteContainer.childNodes[2]);
 
   // Mimic nunjucks error generation
   window.onload = function () {
@@ -46,6 +54,27 @@ accessibleAutocomplete({
     const observer = new MutationObserver(callback);
     observer.observe(typeaheadNode, config);
   }
-
-
 </script>
+
+<!-- Javascript disabled -->
+<noscript>
+  {% set DROPDOWN = [
+    { value: '', text: dropdownDefaultText }
+  ] %}
+
+  {% for i in typeahead_array.split(',') %}
+    {% set dropdownObject = { value: i, text: i, selected: typeahead_value === i } %}
+    {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
+  {% endfor %}
+
+  {{ govukSelect({
+    errorMessage: errors.typeahead_input.text if errors,
+    id: "typeahead_input",
+    name: "typeahead_input",
+    value: typeahead_value,
+    hint: {
+      text: dropdownHint
+    },
+    items: DROPDOWN
+  }) }}
+</noscript>
