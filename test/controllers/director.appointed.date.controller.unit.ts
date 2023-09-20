@@ -10,9 +10,9 @@ import { DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } fr
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorDob } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorAppointmentDate } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors } from "../../src/controllers/director.date.of.birth.controller";
+import { buildValidationErrors } from "../../src/controllers/director.appointed.date.controller";
 import { appointmentDateErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 import * as apiEnumerations from "../../src/utils/api.enumerations";
 
@@ -115,7 +115,114 @@ describe("Director appointed date controller tests", () => {
         appointedOn: "2021-09-10"
       });
     });
-    
+
+    it("Should display errors on page if get validation status returns errors", async () => {
+      const mockValidationStatusResponse: ValidationStatusResponse = {
+        errors: [mockValidationStatusErrorAppointmentDate],
+        isValid: false
+      }
+      
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID,
+        firstName: "John",
+        middleNames: "James",
+        lastName: "Smith"
+      });
+
+      const response = await request(app)
+        .post(DIRECTOR_APPOINTED_DATE_URL)
+        .send({ "appointment_date-day": "10",
+                "appointment_date-month": "09",
+                "appointment_date-year": "2021" });
+
+      expect(response.text).toContain("Date the director was appointed must be on or after the incorporation date");
+      expect(response.text).toContain("John James Smith");
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("10");
+      expect(response.text).toContain("09");
+      expect(response.text).toContain("2021");
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
+        appointedOn: "2021-09-10"
+      });
+    });
+
+    it("Should display error before patching if day is not a number", async () => {
+      jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must be a real date");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID,
+      });
+
+      const response = await request(app)
+        .post(DIRECTOR_APPOINTED_DATE_URL)
+        .send({ "appointment_date-day": "not a number",
+                "appointment_date-month": "09",
+                "appointment_date-year": "2021" });
+
+      expect(response.text).toContain("Date the director was appointed must be a real date");
+      expect(mockGetValidationStatus).not.toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it("Should display error before patching if month cannot exist", async () => {
+      jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must be a real date");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID,
+      });
+
+      const response = await request(app)
+        .post(DIRECTOR_APPOINTED_DATE_URL)
+        .send({ "appointment_date-day": "10",
+                "appointment_date-month": "13",
+                "appointment_date-year": "2021" });
+
+      expect(response.text).toContain("Date the director was appointed must be a real date");
+      expect(mockGetValidationStatus).not.toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it("Should display error before patching if year is missing", async () => {
+      jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must include a year");
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID,
+      });
+
+      const response = await request(app)
+        .post(DIRECTOR_APPOINTED_DATE_URL)
+        .send({ "appointment_date-day": "10",
+                "appointment_date-month": "09",
+                "appointment_date-year": "" });
+
+      expect(response.text).toContain("Date the director was appointed must include a year");
+      expect(mockGetValidationStatus).not.toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
   });
 
+  describe("buildValidationErrors tests", () => {
+
+    it("should return appointment date prior to incorporation date validation error", async () => {
+      const mockValidationStatusResponse: ValidationStatusResponse = {
+        errors: [mockValidationStatusErrorAppointmentDate],
+        isValid: false
+      }
+      const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+
+      expect(validationErrors.length).toBe(1);
+      expect(validationErrors.map(error => error.messageKey)).toContain(appointmentDateErrorMessageKey.AFTER_INCORPORATION_DATE);
+    });
+
+    it("should ignore unrelated validation error", async () => {
+      const mockValidationStatusResponse: ValidationStatusResponse = {
+        errors: [mockValidationStatusError],
+        isValid: false
+      }
+      const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+
+      expect(validationErrors.length).toBe(0);
+    });
+    
+  });
 });
