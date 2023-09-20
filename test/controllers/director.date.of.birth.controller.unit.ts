@@ -37,7 +37,7 @@ const DIRECTOR_APPOINTED_DATE_URL = DIRECTOR_APPOINTED_DATE_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-describe("Director name controller tests", () => {
+describe("Director date of birth controller tests", () => {
 
     beforeEach(() => {
       mocks.mockAuthenticationMiddleware.mockClear();

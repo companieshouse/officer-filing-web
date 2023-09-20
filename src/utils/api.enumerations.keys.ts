@@ -54,7 +54,7 @@ export enum appointmentDateErrorMessageKey {
   INVALID_DATE = "appointment-date-invalid",
   IN_PAST = "appointment-date-in-past",
   AFTER_INCORPORATION_DATE = "appointment-date-after-incorporation-date",
-  DIRECTOR_UNDERAGE = "appointment-date-underage",
+  DIRECTOR_UNDERAGE = "date-of-birth-underage",
 }
 
 export enum titleErrorMessageKey {
