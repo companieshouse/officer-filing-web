@@ -13,6 +13,7 @@ import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { occupationErrorMessageKey } from "../utils/api.enumerations.keys";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,7 +26,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.DIRECTOR_OCCUPATION,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       typeahead_array: OCCUPATION_LIST,
-      typeahead_value: officerFiling.occupation
+      typeahead_value: officerFiling.occupation,
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
     });
   } catch (e) {
     return next(e);

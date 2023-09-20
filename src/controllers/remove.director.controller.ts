@@ -22,6 +22,7 @@ import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/f
 import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "../validation/validation";
+import { RemovalDateValidation} from "../validation/remove.date.validation.config";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -77,7 +78,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const resignationDate = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
 
     // Validate the date fields (JS)
-    const dateValidationResult = validateDate(day, month, year);
+    const dateValidationResult = validateDate(day, month, year, RemovalDateValidation);
     if (dateValidationResult) {
       return displayErrorMessage(dateValidationResult, appointment, req, res);
     }

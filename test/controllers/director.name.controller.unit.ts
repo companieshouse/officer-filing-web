@@ -9,7 +9,7 @@ import app from "../../src/app";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { mockValidValidationStatusResponse, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.name.controller";
 import { formerNamesErrorMessageKey, lastNameErrorMessageKey, titleErrorMessageKey } from "../../src/utils/api.enumerations.keys";
@@ -168,6 +168,17 @@ describe("Director name controller tests", () => {
         expect(validationErrors.map(error => error.messageKey)).toContain(titleErrorMessageKey.TITLE_LENGTH);
         expect(validationErrors.map(error => error.messageKey)).toContain(lastNameErrorMessageKey.LAST_NAME_BLANK);
         expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_CHARACTERS);
+      });
+
+      it("should ignore unrelated validation error", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [mockValidationStatusError],
+          isValid: false
+        }
+
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'No', '');
+
+        expect(validationErrors).toHaveLength(0);
       });
       
     });

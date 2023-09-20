@@ -71,6 +71,31 @@ describe("Director occupation controller tests", () => {
         expect(response.text).toContain("Astronaut");
       });
 
+      it("Should display full director name on the page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "Jim",
+          middleNames: "Mid",
+          lastName: "Smith"
+        });
+
+        const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
+
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("Jim Mid Smith");
+      });
+
+      it("Should display director name without middle name on the page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "Jim",
+          lastName: "Smith"
+        });
+
+        const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
+
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("Jim Smith");
+      });
+
     });
 
     describe("post tests", () => {
