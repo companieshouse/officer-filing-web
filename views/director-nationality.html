@@ -17,32 +17,35 @@
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
-        <div id="my-autocomplete-container-0" class="govuk-form-group">
+        <div id="typeahead-form-group-0" class="govuk-form-group">
           <span class="govuk-caption-l">{{directorName}}</span>
           <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="typeahead_input_0">What is the director's nationality?</label></h1>
           <div id="typeahead-hint-0" class="govuk-hint">
           Start typing a nationality, then choose from the list
         </div>
+        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
         </div>
         <p id="nationality-2-link" class="govuk-body">
           <a data-event-id="nationality-2-link" href="#" id="second-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a second nationality</a>
         </p>
 
-        <div id="my-autocomplete-container-1" class="govuk-form-group" style="display: none;">
+        <div id="typeahead-form-group-1" class="govuk-form-group" style="display: none;">
           <label class="govuk-label" for="typeahead_input_1">Second nationality (if relevant)</label>
           <div id="typeahead-hint-1" class="govuk-hint">
             Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.
         </div>
+        <div id="my-autocomplete-container-1" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
         </div>
         <p id= "nationality-3-link" class="govuk-body">
           <a data-event-id="nationality-3-link" href="#" id="third-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a third nationality</a>
         </p>
 
-        <div id="my-autocomplete-container-2" class="govuk-form-group" style="display: none;">
+        <div id="typeahead-form-group-2" class="govuk-form-group" style="display: none;">
           <label class="govuk-label" for="typeahead_input_2">Third nationality (if relevant)</label>
           <div id="typeahead-hint-2" class="govuk-hint">
             Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries.
         </div>
+        <div id="my-autocomplete-container-2" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
         </div>
 
         {{ govukInsetText({
@@ -97,14 +100,14 @@
     $(document).ready(function () {
       // If link has already been clicked, set up the page as it was before
       if ("{{nationality2_hidden}}" === "true") {
-        $('#my-autocomplete-container-1').show();
+        $('#typeahead-form-group-1').show();
         $('#nationality-2-link').hide();
         radiobtn = document.getElementById("nationality_2_radio_yes");
         radiobtn.checked = true;
       }
       else {
         $('#nationality-2-link').click(function () {
-          $('#my-autocomplete-container-1').show();
+          $('#typeahead-form-group-1').show();
           $('#nationality-3-link').show();
           $('#nationality-2-link').hide();
           radiobtn = document.getElementById("nationality_2_radio_yes");
@@ -114,14 +117,14 @@
       }
 
       if ("{{nationality3_hidden}}" === "true") {
-        $('#my-autocomplete-container-2').show();
+        $('#typeahead-form-group-2').show();
         $('#nationality-3-link').hide();
         radiobtn = document.getElementById("nationality_3_radio_yes");
         radiobtn.checked = true;
       }
       else {
         $('#nationality-3-link').click(function () {
-          $('#my-autocomplete-container-2').show();
+          $('#typeahead-form-group-2').show();
           $('#nationality-3-link').hide();
           radiobtn = document.getElementById("nationality_3_radio_yes");
           radiobtn.checked = true;

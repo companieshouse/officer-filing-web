@@ -34,30 +34,13 @@ for (var i = 0; i < typeaheadArray.length; i++) {
 
       if (errors && errors["typeahead_input_" + i]) {
         const typeaheadError = errors["typeahead_input_" + i].text;
-        document.getElementById("my-autocomplete-container-" + i).className = "govuk-form-group govuk-form-group--error";
-        const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
+        document.getElementById("typeahead-form-group-" + i).className = "govuk-form-group govuk-form-group--error";
+        const errorHtml = '<p class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
         const element = document.getElementById("typeahead-hint-" + i);
         element.insertAdjacentHTML("afterend", errorHtml);
-        inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
-        typeaheadNode.className = inputClass;
+        //inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
+        typeaheadNode.className = typeaheadNode.className + " govuk-input--error";
       }
-      else {
-        inputClass = "govuk-input govuk-input--width-20";
-        typeaheadNode.className = inputClass;
-      }
-
-      callback = (mutationList, observer) => {
-        for (const mutation of mutationList) {
-          if (mutation.type === "attributes") {
-            if (typeaheadNode.className !== inputClass) {
-              typeaheadNode.className = inputClass;
-            }
-          }
-        }
-      };
-      const config = { attributes: true, childList: false, subtree: false };
-      const observer = new MutationObserver(callback);
-      observer.observe(typeaheadNode, config);
   }
 }
 
