@@ -98,6 +98,20 @@ export const mockValidationStatusErrorOccupation: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusErrorNationalityInvalid: ValidationStatusError = {
+    error: "Select a nationality from the list",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
+export const mockValidationStatusErrorNationalityLength: ValidationStatusError = {
+    error: "For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidationStatusErrorDob: ValidationStatusError = {
     error: "You can only appoint a person as a director if they are at least 16 years old",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",

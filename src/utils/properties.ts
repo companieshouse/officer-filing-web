@@ -53,3 +53,5 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const TITLE_LIST = getEnvironmentVariable("TITLE_LIST");
 
   export const OCCUPATION_LIST = getEnvironmentVariable("OCCUPATION_LIST");
+
+  export const NATIONALITY_LIST = getEnvironmentVariable("NATIONALITY_LIST");

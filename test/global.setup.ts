@@ -24,4 +24,5 @@ export default () => {
   process.env.AP01_ACTIVE = 'true';
   process.env.TITLE_LIST = 'DR';
   process.env.OCCUPATION_LIST = 'Astronaut';
+  process.env.NATIONALITY_LIST = 'British';
 };

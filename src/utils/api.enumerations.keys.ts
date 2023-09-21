@@ -90,3 +90,25 @@ export enum occupationErrorMessageKey {
   OCCUPATION_CHARACTERS = "occupation-characters",
   OCCUPATION_LENGTH = "occupation-length"
 }
+
+export enum nationalityErrorMessageKey{
+  NATIONALITY_INVALID = "invalid-nationality"
+}
+
+export enum nationalityOneErrorMessageKey {
+  NATIONALITY_MISSING = "nationality-blank",
+  NATIONALITY_LENGTH_50 = "nationality-length",
+  NATIONALITY_LENGTH_48 = "nationality-length48",
+  NATIONALITY_LENGTH_49 = "nationality-length49",
+}
+
+export enum nationalityTwoErrorMessageKey {
+  NATIONALITY_LENGTH_48 = "nationality-length48",
+  NATIONALITY_LENGTH_49 = "nationality-length49",
+  NATIONALITY_2_DUPLICATE = "duplicate-nationality2",
+}
+
+export enum nationalityThreeErrorMessageKey {
+  NATIONALITY_LENGTH_48 = "nationality-length48",
+  NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
+}
