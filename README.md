@@ -1,6 +1,22 @@
 # officer-filing-web
 Web front end for Officer Filing service 
 
+## DISCLAIMER ***********************************************************************
+Due to a problem with where GOV-UK Frontened looks for it's fonts, we have had to add an override
+in styles.html.
+The problem was that we are using the newer version of GOVUK-Frontend. Version 4.6.0.
+
+This newer version looks for the fonts in a different place to the older versions, it looks for them 
+in {cdnHost}/assets/fonts/{font name}
+
+older versions look for it in {cdnHost}/fonts/{font name}. So because the older versions looked for it there,  
+the cdn builder builds it and puts the fonts in that location, so when using the new GOV-UK Frontend,  
+it doesn’t find the fonts.
+
+We have added an override to tell it to look in the /fonts location instead, this will fix the symptom, 
+but not cure the problem, as any changes to the fonts urls in future GOV-UK Frontend releases, 
+will mean it will stop working.
+
 ### Requirements
 
 In order to run the service locally you will need the following:
