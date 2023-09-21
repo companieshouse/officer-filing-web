@@ -28,6 +28,10 @@ sonar:
 test:
 	npm run coverage
 
+.PHONY: test-unit
+test-unit:
+	npm run test
+
 .PHONY: package
 package: build
 ifndef version
