@@ -18,8 +18,16 @@
       
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">When was the director appointed?</h1>
+        <span class="govuk-caption-xl gem-c-title__context">
+          {{directorName}}
+        </span>
+        {% include "includes/inputs/date/appoint-date-input.html" %}
 
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">What information we'll show on the public register</h2>
+            <p>We will show the date the director was appointed on the public Companies House register.</p>
+        </div>
+        
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
