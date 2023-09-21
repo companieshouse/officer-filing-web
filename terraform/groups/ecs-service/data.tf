@@ -3,7 +3,7 @@ data "vault_generic_secret" "stack_secrets" {
 }
 
 data "aws_kms_key" "kms_key" {
-  key_id = var.kms_alias
+  key_id = local.kms_alias
 }
 
 data "vault_generic_secret" "service_secrets" {
@@ -25,12 +25,12 @@ data "aws_iam_role" "ecs_cluster_iam_role" {
   name = "${local.name_prefix}-ecs-task-execution-role"
 }
 
-data "aws_lb" "filing_maintain_lb" {
+data "aws_lb" "service_lb" {
   name = "${var.environment}-chs-chgovuk"
 }
 
-data "aws_lb_listener" "filing_maintain_lb_listener" {
-  load_balancer_arn = data.aws_lb.filing_maintain_lb.arn
+data "aws_lb_listener" "service_lb_listener" {
+  load_balancer_arn = data.aws_lb.service_lb.arn
   port = 443
 }
 
