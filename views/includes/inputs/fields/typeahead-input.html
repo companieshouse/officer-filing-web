@@ -1,6 +1,4 @@
 <script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
-
-
 <script type="text/javascript">
 //Split this on | to get an array of values
 const typeaheadArray = "{{typeahead_array}}".split("|")
@@ -17,6 +15,14 @@ for (var i = 0; i < typeaheadArray.length; i++) {
     autocompleteConfig.defaultValue = defaultValueArray[i]
   }
   accessibleAutocomplete(autocompleteConfig)
+
+  // Add hint to JS-enabled title
+  const hintElement = document.createElement('div');
+  hintElement.id = 'typeahead-hint-' + i;
+  hintElement.className = 'govuk-hint';
+  hintElement.innerHTML = '{{typeaheadHint}}';
+  const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+  autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
 }
   // Add observer for each typeahead_input
   // Mimic nunjucks error generation
@@ -43,6 +49,27 @@ for (var i = 0; i < typeaheadArray.length; i++) {
       }
   }
 }
-
-
 </script>
+
+<!-- Javascript disabled -->
+<noscript>
+  {% set DROPDOWN = [
+    { value: '', text: dropdownDefaultText }
+  ] %}
+
+  {% for i in typeahead_array.split(',') %}
+    {% set dropdownObject = { value: i, text: i, selected: typeahead_value === i } %}
+    {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
+  {% endfor %}
+
+  {{ govukSelect({
+    errorMessage: errors.typeahead_input.text if errors,
+    id: "typeahead_input",
+    name: "typeahead_input",
+    value: typeahead_value,
+    hint: {
+      text: dropdownHint
+    },
+    items: DROPDOWN
+  }) }}
+</noscript>
