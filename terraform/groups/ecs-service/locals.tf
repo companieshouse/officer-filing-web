@@ -5,7 +5,7 @@ locals {
   service_name              = "officer-filing-web"
   container_port            = "3000" # default node port required here until prod docker container is built allowing port change via env var
   docker_repo               = "officer-filing-web"
-  lb_listener_rule_priority = 29
+  lb_listener_rule_priority = 40
   lb_listener_paths         = ["/officer-filing*"]
   healthcheck_path          = "/officer-filing" #healthcheck path for officer filing web
   healthcheck_matcher       = "200-302" # no explicit healthcheck in this service yet, change this when added!
