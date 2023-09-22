@@ -21,6 +21,234 @@
         <h1 class="govuk-heading-l">Check your answers before submitting the appointment</h1>
         <!-- This is the page for the appoint a director check your answers screen -->
 
+        <h2 class="govuk-heading-m">Company details</h2>
+
+        {{ govukSummaryList({
+          classes: 'govuk-!-margin-bottom-9',
+          rows: [
+            {
+              key: {
+                text: "Company name"
+              },
+              value: {
+                text: "Company name here"
+                <!-- text: company.companyName -->
+              }
+            },
+            {
+              key: {
+                text: "Company number"
+              },
+              value: {
+                text: "Company number here"
+                <!-- text: company.companyNumber -->
+              }
+            }
+          ]
+        }) }}
+
+        <h2 class="govuk-heading-m">Director details</h2>
+
+        {{ govukSummaryList({
+          classes: 'govuk-!-margin-bottom-9',
+          rows: [
+            {
+              key: {
+                text: "Name"
+              },
+              value: {
+                text: "Director name here"
+                <!-- text: director title, first name etc -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " name"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Previous names"
+              },
+              value: {
+                text: "Previous names here"
+                <!-- text: previous names -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " name"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Date of birth"
+              },
+              value: {
+                text: "DOB here"
+                <!-- text: dob as string? -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " date of birth"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Date appointed"
+              },
+              value: {
+                text: "Date appointed here"
+                <!-- text: date appointed as string? -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " appointed on date"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Nationality"
+              },
+              value: {
+                text: "Nationality list here"
+                <!-- text: nationality 1, nationality 2, nationality 3 -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " nationality"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Occupation"
+              },
+              value: {
+                text: "Occupation here"
+                <!-- text: Occupation -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " occupation title"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Has the director applied to protect their details at Companies House?"
+              },
+              value: {
+                text: "protected details yes or no here"
+                <!-- text: protected details -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " contact details"
+                    <!-- the above looks wrong -->
+                  }
+                ]
+              }
+            }
+          ]
+        }) }} 
+
+        {{ govukSummaryList({
+          classes: 'govuk-!-margin-bottom-9',
+          rows: [
+            {
+              key: {
+                text: "Address details"
+              },
+              value: {
+                <!-- text: no text -->
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: " the director's address details."
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Correspondence address"
+              },
+              value: {
+                text: "Correspondence address here"
+                <!-- text: correspondance address / The correspondence address is the same as the registered office address -->
+              }
+            },
+            {
+              key: {
+                text: "Correspondence address"
+              },
+              value: {
+                text: "Correspondence address here"
+                <!-- text: correspondance address / The correspondence address is the same as the registered office address -->
+              }
+            },
+            {
+              key: {
+                text: "Home address"
+              },
+              value: {
+                text: "Home address here"
+                <!-- text: home address -->
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukCheckboxes({
+          name: "director-consent",
+          fieldset: {
+            legend: {
+              text: "Consent to act as a director",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              value: "director-consent",
+              text: "By submitting this information, you are confirming that the person named has consented to act as a director."
+            }
+          ]
+        }) }}
+
         {{ govukButton({
           attributes: {
             "data-event-id": "confirm-and-submit-button"
@@ -30,5 +258,5 @@
 
       </form>
     </div>
-  </div>
+
 {% endblock %}
