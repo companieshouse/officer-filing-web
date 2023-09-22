@@ -79,6 +79,7 @@ locals {
     { "name": "REDIRECT_URI", "value": "${var.redirect_uri}" },
     { "name": "SERVICE_NAME", "value": "${var.service_name}" },
     { "name": "SHOW_SERVICE_OFFLINE_PAGE", "value": "${var.show_service_offline_page}" },
-    { "name": "TITLE_LIST", "value": "${var.title_list}" }
+    { "name": "TITLE_LIST", "value": "${var.title_list}" },
+    { "name": "OCCUPATION_LIST", "value": "${var.occupation_list}" }
   ]
 }
