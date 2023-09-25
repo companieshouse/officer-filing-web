@@ -128,3 +128,15 @@ variable "api_url" {
 variable "piwik_start_goal_id" {
   type        = string
 }
+variable "occupation_list" {
+  type        = string
+}
+variable "nationality_list" {
+  type        = string
+}
+variable "country_list" {
+  type        = string
+}
+variable "uk_country_list" {
+  type        = string
+}
