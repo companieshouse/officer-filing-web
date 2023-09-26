@@ -44,7 +44,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const officerFiling: OfficerFiling = {
     occupation: getField(req, DirectorField.OCCUPATION)
   };
-  await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+  const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
   const validationStatus = await getValidationStatus(session, transactionId, submissionId);
   const validationErrors = buildValidationErrors(validationStatus);
 
@@ -56,7 +56,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: officerFiling.occupation,
       errors: formattedErrors,
-      typeahead_errors: JSON.stringify(formattedErrors)
+      typeahead_errors: JSON.stringify(formattedErrors),
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data))
   });
 }
 

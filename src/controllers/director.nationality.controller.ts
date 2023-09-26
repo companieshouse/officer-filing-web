@@ -49,7 +49,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       nationality3Link: getField(req, DirectorField.NATIONALITY_3_RADIO)
     };
     console.log("Patching officer filing" + JSON.stringify(req.body))
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, officerFiling);
 
@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data)),
         nationality2_hidden: officerFiling.nationality2Link,
         nationality3_hidden: officerFiling.nationality3Link
       });
