@@ -50,7 +50,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     };
     console.log("Patching officer filing" + JSON.stringify(req.body))
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-    console.log("Patched filing returned " + JSON.stringify(patchedFiling))
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, officerFiling);
 
