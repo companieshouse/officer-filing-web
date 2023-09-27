@@ -76,7 +76,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 export const buildValidationErrors = (validationStatusResponse: ValidationStatusResponse, officerFiling: OfficerFiling): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
-  const nationalityList = NATIONALITY_LIST.split(",");
+  const nationalityList = NATIONALITY_LIST.split(";");
   // Nationality
   // If nationality is invalid, raise error for that field. Otherwise raise errors as returned by the API.
   if (officerFiling.nationality1 && !nationalityList.includes(officerFiling.nationality1)) {

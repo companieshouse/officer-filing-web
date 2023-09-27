@@ -12,5 +12,12 @@ export enum DirectorField {
   NATIONALITY_2_RADIO = "nationality_2_radio",
   NATIONALITY_3_RADIO = "nationality_3_radio",
   YES = "Yes",
-  NO = "No"
+  NO = "No",
+  RESIDENTIAL_ADDRESS_PREMISES = "residential_address_premises",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1 = "residential_address_line_1",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_2 = "residential_address_line_2",
+  RESIDENTIAL_ADDRESS_CITY = "residential_address_city",
+  RESIDENTIAL_ADDRESS_COUNTY = "residential_address_county",
+  RESIDENTIAL_ADDRESS_COUNTRY = "typeahead_input_0",
+  RESIDENTIAL_ADDRESS_POSTCODE = "residential_address_postcode",
 }
