@@ -6,8 +6,8 @@ locals {
   container_port            = "3000" # default node port required here until prod docker container is built allowing port change via env var
   docker_repo               = "officer-filing-web"
   lb_listener_rule_priority = 40
-  lb_listener_paths         = ["/officer-filing*"]
-  healthcheck_path          = "/officer-filing" #healthcheck path for officer filing web
+  lb_listener_paths         = ["/appoint-update-remove-company-officer*"]
+  healthcheck_path          = "/appoint-update-remove-company-officer" #healthcheck path for officer filing web
   healthcheck_matcher       = "200-302" # no explicit healthcheck in this service yet, change this when added!
 
   kms_alias                 = "alias/${var.aws_profile}/environment-services-kms"

@@ -77,12 +77,18 @@ describe("Director nationality controller tests", () => {
           errors: [mockValidationStatusErrorNationalityInvalid, mockValidationStatusErrorNationalityLength],
           isValid: false
         }
+        const mockPatchOfficerFilingResponse = { 
+          data:  {firstName: "John",
+                  lastName: "Smith"}
+        }
+        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
         mockGetField.mockReturnValue("dj");
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
   
         expect(response.text).toContain("Select a nationality from the list");
         expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas")).toEqual(false);
+        expect(response.text).toContain("John Smith");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
@@ -92,6 +98,11 @@ describe("Director nationality controller tests", () => {
           errors: [mockValidationStatusErrorNationalityLength],
           isValid: false
         }
+        const mockPatchOfficerFilingResponse = { 
+          data:  {firstName: "John",
+                  lastName: "Smith"}
+        }
+        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
         mockGetField.mockReturnValue("British");
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
