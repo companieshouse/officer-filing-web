@@ -30,6 +30,7 @@
 
             {% set dropdownHint = "For example, carpenter." %}
             {% set dropdownDefaultText = "Choose occupation" %}
+            {% set errorMessage = errors.typeahead_input_0 %}
             {% set typeaheadHint = 'Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.' | safe %}
 
             {% include "includes/inputs/fields/typeahead-input.html" %}
