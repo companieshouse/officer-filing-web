@@ -10,7 +10,7 @@ import { DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } fr
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorAppointmentDate } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorAppointmentDate, mockValidationStatusErrorUnderageAppointment } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.appointed.date.controller";
 import { appointmentDateErrorMessageKey } from "../../src/utils/api.enumerations.keys";
@@ -212,6 +212,17 @@ describe("Director appointed date controller tests", () => {
 
       expect(validationErrors.length).toBe(1);
       expect(validationErrors.map(error => error.messageKey)).toContain(appointmentDateErrorMessageKey.AFTER_INCORPORATION_DATE);
+    });
+
+    it("should return underage validation error", async () => {
+      const mockValidationStatusResponse: ValidationStatusResponse = {
+        errors: [mockValidationStatusErrorUnderageAppointment],
+        isValid: false
+      }
+
+      const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+
+      expect(validationErrors.map(error => error.messageKey)).toContain(appointmentDateErrorMessageKey.APPOINTMENT_DATE_UNDERAGE);
     });
 
     it("should ignore unrelated validation error", async () => {

@@ -119,6 +119,13 @@ export const mockValidationStatusErrorDob: ValidationStatusError = {
     locationType: "json-path"
 }
 
+export const mockValidationStatusErrorUnderageAppointment: ValidationStatusError = {
+    error: "You can only appoint a person as director if they are at least 16 years old on their appointment date",
+    location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
+    type: "ch:validation",
+    locationType: "json-path"
+}
+
 export const mockValidationStatusErrorAppointmentDate: ValidationStatusError = {
     error: "Date the director was appointed must be on or after the incorporation date",
     location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
