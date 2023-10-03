@@ -25,9 +25,8 @@
           <p class="govuk-body">This is optional. If you do not enter anything, we'll show the director's occupation as 'none' on the public Companies House register. 
           </p>
           <div id="typeahead-form-group-0" class="govuk-form-group">
-          <h2 class="govuk-heading-s govuk-!-margin-bottom-1"> <label for="typeahead_input_0"> Occupation</label></h2>
         <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
-
+            {% set typeaheadTitle = "<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='typeahead_input_0'> Occupation</label></h2>" | safe %}
             {% set dropdownHint = "For example, carpenter." %}
             {% set dropdownDefaultText = "Choose occupation" %}
             {% set errorMessage = errors.typeahead_input_0 %}

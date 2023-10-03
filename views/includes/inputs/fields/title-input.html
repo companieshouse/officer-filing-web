@@ -1,7 +1,7 @@
 <div id="typeahead-form-group-0" class="govuk-form-group">
-<label for="typeahead_input_0" class="govuk-label" >Professional or honorary title (if relevant)</label>
 <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
 
+  {% set typeaheadTitle = "<label for='typeahead_input_0' class='govuk-label' >Professional or honorary title (if relevant)</label>" | safe %}
   {% set dropdownHint = "For example, Doctor or Professor." %}
   {% set dropdownDefaultText = "Choose title" %}
   {% set typeaheadHint = "Start typing a title, such as Dr or Professor, then choose from the list." %}

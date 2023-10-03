@@ -4,6 +4,7 @@
 const typeaheadArray = "{{typeahead_array}}".split("|")
 const defaultValueArray = "{{typeahead_value}}".split("|")
 const hintArray = "{{typeaheadHint}}".split("|")
+const titleArray = "{{typeaheadTitle}}".split("|")
 
 for (var i = 0; i < typeaheadArray.length; i++) {
   var autocompleteConfig = {
@@ -17,12 +18,14 @@ for (var i = 0; i < typeaheadArray.length; i++) {
   }
   accessibleAutocomplete(autocompleteConfig)
 
-  // Add hint to JS-enabled title
+  const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+  // Add title to JS-enabled typeahead
+  autocompleteContainer.insertAdjacentHTML("beforeBegin", titleArray[i]);
+  // Add hint to JS-enabled typeahead
   const hintElement = document.createElement('div');
   hintElement.id = 'typeahead-hint-' + i;
   hintElement.className = 'govuk-hint';
   hintElement.innerHTML = hintArray[i];
-  const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
   autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
 }
   // Add observer for each typeahead_input

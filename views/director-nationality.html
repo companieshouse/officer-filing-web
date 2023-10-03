@@ -17,6 +17,8 @@
   {% set dropdownTwoError =  errors.typeahead_input_1 %}
   {% set dropdownThreeError =  errors.typeahead_input_2 %}
 {% endif %}
+{% set typeaheadHint = "Start typing a nationality, then choose from the list|Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.|Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries." %}
+{% set typeaheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>What is the director's nationality?</label></h1>|<label class='govuk-label' for='typeahead_input_1'>Second nationality (if relevant)</label>|<label class='govuk-label' for='typeahead_input_2'>Third nationality (if relevant)</label>" | safe %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
@@ -27,9 +29,9 @@
         {% set dropdownDefaultText = "Choose nationality" %}
         <span class="govuk-caption-l">{{directorName}}</span>
         <div id="typeahead-form-group-0" class="govuk-form-group">
-          <h1 class="govuk-label-wrapper"><label class="govuk-label govuk-label--l" for="typeahead_input_0">What is the director's nationality?</label></h1>
         <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
         {% set dropdownNumber = "0" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
         {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownOneError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
@@ -39,10 +41,10 @@
         </p>
 
         <div id="typeahead-form-group-1" class="govuk-form-group">
-          <label class="govuk-label" for="typeahead_input_1">Second nationality (if relevant)</label>
         <div id="my-autocomplete-container-1" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
-        {% set dropdownHint = "Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country." %}
         {% set dropdownNumber = "1" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
         {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownTwoError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
@@ -52,10 +54,10 @@
         </p>
 
         <div id="typeahead-form-group-2" class="govuk-form-group">
-          <label class="govuk-label" for="typeahead_input_2">Third nationality (if relevant)</label>
         <div id="my-autocomplete-container-2" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
-        {% set dropdownHint = "Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries." %}
         {% set dropdownNumber = "2" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
         {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownThreeError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
@@ -106,7 +108,6 @@
 
       </form>
     </div>
-    {% set typeaheadHint = "Start typing a nationality, then choose from the list|Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.|Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries." %}
     {% include "includes/inputs/fields/typeahead-input.html" %}
   </div>
   <script type="text/javascript">
