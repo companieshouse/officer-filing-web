@@ -19,26 +19,28 @@
       <form action="" method="post">
 
 
-        <div class="govuk-!-padding-bottom-6">
+        <div>
           <span class="govuk-caption-l">{{directorName}}</span>
           <h1 class="govuk-heading-l"> What is the director's occupation?</h1>
           <p class="govuk-body">This is optional. If you do not enter anything, we'll show the director's occupation as 'none' on the public Companies House register. 
           </p>
-          <div id="my-autocomplete-container" class="govuk-form-group">
-          <h2 class="govuk-heading-s govuk-!-margin-bottom-1"> <label for="typeahead_input"> Occupation</label></h2>
-          <div id="typeahead-hint" class="govuk-hint">
-          Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.
-        </div>
-          {% include "includes/inputs/fields/typeahead-input.html" %}
-        </div>
-        </div>
+          <div id="typeahead-form-group-0" class="govuk-form-group">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1"> <label for="typeahead_input_0"> Occupation</label></h2>
+        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
 
+            {% set dropdownHint = "For example, carpenter." %}
+            {% set dropdownDefaultText = "Choose occupation" %}
+            {% set typeaheadHint = 'Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.' | safe %}
+
+            {% include "includes/inputs/fields/typeahead-input.html" %}
+          </div>
+        </div>
 
         {{ govukInsetText({
           html: "<h2 class='govuk-heading-m'>What information we'll show on the public register</h2>
           <p>We will show the director's occupation on the public Companies House register.</p>"
         }) }}
-        
+    
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"

@@ -1,51 +1,76 @@
 <script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
-
-
 <script type="text/javascript">
-const typeahead = "{{typeahead_array}}"
-const typeaheadArray = typeahead.split(",")
-accessibleAutocomplete({
-  element: document.querySelector('#my-autocomplete-container'),
-  id: 'typeahead_input', // To match it to the existing <label>.
-  source: typeaheadArray,
-  name: 'typeahead_input',
-  defaultValue:'{{typeahead_value}}'
-})
+  //Split this on | to get an array of values
+  const typeaheadArray = "{{typeahead_array}}".split("|")
+  const defaultValueArray = "{{typeahead_value}}".split("|")
 
-  // Mimic nunjucks error generation
-  window.onload = function () {
-    // Set up observor to correct css classname when accessible-autocomplete rewrites the input field.
-    const typeaheadNode = document.getElementById("typeahead_input");
-    const typeaheadError = "{{errors.typeahead_input.text}}";
-    var callback;
-    var inputClass;
-
-    if (typeaheadError) {
-      document.getElementById("my-autocomplete-container").className = "govuk-form-group govuk-form-group--error";
-      const errorHtml = '<p id="nationality-error" class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
-      const element = document.getElementById("typeahead-hint");
-      element.insertAdjacentHTML("afterend", errorHtml);
-      inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
-      typeaheadNode.className = inputClass;
+  for (var i = 0; i < typeaheadArray.length; i++) {
+    var autocompleteConfig = {
+      element: document.querySelector('#my-autocomplete-container-' + i),
+      id: 'typeahead_input_' + i, // To match it to the existing <label>.
+      source: typeaheadArray[i].split(";"),
+      name: 'typeahead_input_' + i
     }
-    else {
-      inputClass = "govuk-input govuk-input--width-20";
-      typeaheadNode.className = inputClass;
+    if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
+      autocompleteConfig.defaultValue = defaultValueArray[i]
     }
+    accessibleAutocomplete(autocompleteConfig)
 
-    callback = (mutationList, observer) => {
-      for (const mutation of mutationList) {
-        if (mutation.type === "attributes") {
-          if (typeaheadNode.className !== inputClass) {
-            typeaheadNode.className = inputClass;
-          }
-        }
-      }
-    };
-    const config = { attributes: true, childList: false, subtree: false };
-    const observer = new MutationObserver(callback);
-    observer.observe(typeaheadNode, config);
+    // Add hint to JS-enabled title
+    const hintElement = document.createElement('div');
+    hintElement.id = 'typeahead-hint-' + i;
+    hintElement.className = 'govuk-hint';
+    hintElement.innerHTML = '{{typeaheadHint}}';
+    const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+    autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
   }
 
+  // Add observer for each typeahead_input
+  // Mimic nunjucks error generation
+  window.onload = function () {
+    for (var i = 0; i < typeaheadArray.length; i++) {
+      // Set up observor to correct css classname when accessible-autocomplete rewrites the input field.
+      const typeaheadNode = document.getElementById("typeahead_input_" + i);
+      var callback;
+      var inputClass;
+      var errors;
 
+      if("{{typeahead_errors}}"){
+        errors = JSON.parse("{{typeahead_errors}}".replace(/&quot;/g,'"'));
+      }
+
+      if (errors && errors["typeahead_input_" + i]) {
+        const typeaheadError = errors["typeahead_input_" + i].text;
+        document.getElementById("typeahead-form-group-" + i).className = "govuk-form-group govuk-form-group--error";
+        const errorHtml = '<p class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
+        const element = document.getElementById("typeahead-hint-" + i);
+        element.insertAdjacentHTML("afterend", errorHtml);
+        //inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
+        typeaheadNode.className = typeaheadNode.className + " govuk-input--error";
+      }
+  }
+}
 </script>
+
+<!-- Javascript disabled -->
+<noscript>
+  {% set DROPDOWN = [
+    { value: '', text: dropdownDefaultText }
+  ] %}
+
+  {% for i in typeahead_array.split(';') %}
+    {% set dropdownObject = { value: i, text: i, selected: typeahead_value === i } %}
+    {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
+  {% endfor %}
+
+  {{ govukSelect({
+    errorMessage: errors.typeahead_input_0.text if errors,
+    id: "typeahead_input_0",
+    name: "typeahead_input_0",
+    value: typeahead_value,
+    hint: {
+      text: dropdownHint
+    },
+    items: DROPDOWN
+  }) }}
+</noscript>

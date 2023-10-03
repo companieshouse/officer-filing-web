@@ -114,11 +114,17 @@ describe("Director occupation controller tests", () => {
           errors: [mockValidationStatusErrorOccupation],
           isValid: false
         }
+        const mockPatchOfficerFilingResponse = { 
+          data:  {firstName: "John",
+                  lastName: "Smith"}
+        }
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
   
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
   
         expect(response.text).toContain("Occupation must be 100 characters or less");
+        expect(response.text).toContain("John Smith");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });

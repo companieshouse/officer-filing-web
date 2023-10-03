@@ -1,0 +1,79 @@
+{# Setup vars that will be used in page #}
+{% set appointDateErrorMessage = '' %}
+{% set isAppointDateDayError = false %}
+{% set isAppointDateMonthError = false %}
+{% set isAppointDateYearError = false %}
+
+
+{# Decide if any field is in error and set boolean that will highlight it in red #}
+{% for key, value in errors %}
+  {% if "appointment_date" in key|string %}
+    {% set appointDateErrorMessage = value %}
+
+    {% if "-day" in key|string %}
+      {% set isAppointDateDayError = true %}
+    {% endif %}
+    {% if "-month" in key|string %} 
+      {% set isAppointDateMonthError = true %}
+    {% endif %}
+    {% if "-year" in key|string %} 
+      {% set isAppointDateYearError = true %}
+    {% endif %}
+
+  {% endif %}
+{% endfor %}
+
+
+{# Set classes on the 3 date input fields (including error classes if applicable) #}
+{% set appointment_date_classes_year = "govuk-input--width-4 govuk-input" %}
+{% set appointment_date_classes_month = "govuk-input--width-2 govuk-input" %}
+{% set appointment_date_classes_day = "govuk-input--width-2 govuk-input" %}
+
+{% if isAppointDateDayError %}
+  {% set appointment_date_classes_day = appointment_date_classes_day + "--error" %}
+{% endif %}
+{% if isAppointDateMonthError %}
+  {% set appointment_date_classes_month = appointment_date_classes_month + "--error" %}
+{% endif %}
+{% if isAppointDateYearError %}
+  {% set appointment_date_classes_year = appointment_date_classes_year + "--error" %}
+{% endif %}
+
+
+{# Render #}
+{{ govukDateInput({
+  errorMessage: appointDateErrorMessage,
+  id: "appointment_date",
+  name: "appointDate",
+  namePrefix: "appointment_date",
+  fieldset: {
+    legend: {
+      text: "When was the director appointed?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "For example, 27 4 2021"
+  },
+  items: [
+    {
+      classes: appointment_date_classes_day,
+      name: "day",
+      value: appointment_date["appointment_date-day"] if appointment_date,
+      pattern: "*"
+    },
+    {
+      classes: appointment_date_classes_month,
+      name: "month",
+      value: appointment_date["appointment_date-month"] if appointment_date,
+      pattern: "*"
+    },
+    {
+      classes: appointment_date_classes_year,
+      name: "year",
+      value: appointment_date["appointment_date-year"] if appointment_date,
+      pattern: "*"
+    }
+  ]
+}) }}

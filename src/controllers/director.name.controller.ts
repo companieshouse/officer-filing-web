@@ -58,10 +58,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, req.body[DirectorField.PREVIOUS_NAMES_RADIO], req.body[DirectorField.PREVIOUS_NAMES]);
     if (validationErrors.length > 0) {
+      const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NAME, {
         templateName: Templates.DIRECTOR_NAME,
         backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
-        errors: formatValidationErrors(validationErrors),
+        errors: formattedErrors,
+        typeahead_errors: JSON.stringify(formattedErrors),
         typeahead_array: TITLE_LIST,
         typeahead_value: officerFiling.title,
         first_name: officerFiling.firstName,
