@@ -112,3 +112,46 @@ export enum nationalityThreeErrorMessageKey {
   NATIONALITY_LENGTH_48 = "nationality-length48",
   NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
 }
+
+
+export enum residentialAddressPremisesErrorMessageKey {
+  RESIDENTIAL_ADDRESS_PREMISES_BLANK = "residential-premises-blank",
+  RESIDENTIAL_ADDRESS_PREMISES_CHARACTERS = "residential-premises-characters",
+  RESIDENTIAL_ADDRESS_PREMISES_LENGTH = "residential-premises-length",
+}
+
+export enum residentialAddressAddressLineOneErrorMessageKey {
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_BLANK = "residential-address-line-one-blank",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_CHARACTERS = "residential-address-line-one-characters",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_LENGTH = "residential-address-line-one-length",
+}
+
+export enum residentialAddressAddressLineTwoErrorMessageKey {
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_2_CHARACTERS = "residential-address-line-two-characters",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_2_LENGTH = "residential-address-line-two-length",
+}
+
+export enum residentialAddressLocalityErrorMessageKey {
+  RESIDENTIAL_ADDRESS_LOCALITY_BLANK = "residential-locality-blank",
+  RESIDENTIAL_ADDRESS_LOCALITY_CHARACTERS = "residential-locality-characters",
+  RESIDENTIAL_ADDRESS_LOCALITY_LENGTH = "residential-locality-length",
+}
+
+export enum residentialAddressRegionErrorMessageKey {
+  RESIDENTIAL_ADDRESS_REGION_BLANK = "residential-region-blank",
+  RESIDENTIAL_ADDRESS_REGION_CHARACTERS = "residential-region-characters",
+  RESIDENTIAL_ADDRESS_REGION_LENGTH = "residential-region-length",
+}
+
+export enum residentialAddressCountryErrorMessageKey {
+  RESIDENTIAL_ADDRESS_COUNTRY_BLANK = "residential-country-blank",
+  RESIDENTIAL_ADDRESS_COUNTRY_CHARACTERS = "residential-country-characters",
+  RESIDENTIAL_ADDRESS_COUNTRY_LENGTH = "residential-country-length",
+}
+
+export enum residentialAddressPostcodeErrorMessageKey {
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_BLANK = "residential-postal-code-blank",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_CHARACTERS = "residential-postal-code-characters",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_LENGTH = "residential-postal-code-length",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "residential-postal-code-without-country",
+}
