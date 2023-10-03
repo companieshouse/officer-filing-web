@@ -1,33 +1,33 @@
 <script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
 <script type="text/javascript">
-//Split this on | to get an array of values
-const typeaheadArray = "{{typeahead_array}}".split("|")
-const defaultValueArray = "{{typeahead_value}}".split("|")
-const hintArray = "{{typeaheadHint}}".split("|")
-const titleArray = "{{typeaheadTitle}}".split("|")
+  //Split this on | to get an array of values
+  const typeaheadArray = "{{typeahead_array}}".split("|")
+  const defaultValueArray = "{{typeahead_value}}".split("|")
+  const hintArray = "{{typeaheadHint}}".split("|")
+  const titleArray = "{{typeaheadTitle}}".split("|")
 
-for (var i = 0; i < typeaheadArray.length; i++) {
-  var autocompleteConfig = {
-    element: document.querySelector('#my-autocomplete-container-' + i),
-    id: 'typeahead_input_' + i, // To match it to the existing <label>.
-    source: typeaheadArray[i].split(","),
-    name: 'typeahead_input_' + i
-  }
-  if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
-    autocompleteConfig.defaultValue = defaultValueArray[i]
-  }
-  accessibleAutocomplete(autocompleteConfig)
-
-  const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
-  // Add title to JS-enabled typeahead
-  autocompleteContainer.insertAdjacentHTML("beforeBegin", titleArray[i]);
-  // Add hint to JS-enabled typeahead
-  const hintElement = document.createElement('div');
-  hintElement.id = 'typeahead-hint-' + i;
-  hintElement.className = 'govuk-hint';
-  hintElement.innerHTML = hintArray[i];
-  autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
+  for (var i = 0; i < typeaheadArray.length; i++) {
+    var autocompleteConfig = {
+      element: document.querySelector('#my-autocomplete-container-' + i),
+      id: 'typeahead_input_' + i, // To match it to the existing <label>.
+      source: typeaheadArray[i].split(";"),
+      name: 'typeahead_input_' + i
+    }
+    if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
+      autocompleteConfig.defaultValue = defaultValueArray[i]
+    }
+    accessibleAutocomplete(autocompleteConfig)
+    const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+    // Add title to JS-enabled typeahead
+    autocompleteContainer.insertAdjacentHTML("beforeBegin", titleArray[i]);
+    // Add hint to JS-enabled typeahead
+    const hintElement = document.createElement('div');
+    hintElement.id = 'typeahead-hint-' + i;
+    hintElement.className = 'govuk-hint';
+    hintElement.innerHTML = hintArray[i];
+    autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
 }
+
   // Add observer for each typeahead_input
   // Mimic nunjucks error generation
   window.onload = function () {
@@ -61,4 +61,5 @@ for (var i = 0; i < typeaheadArray.length; i++) {
   {% if not '|' in typeahead_array %}
     {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
   {% endif %}
+
 </noscript>
