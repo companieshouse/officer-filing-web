@@ -53,3 +53,7 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const TITLE_LIST = getEnvironmentVariable("TITLE_LIST");
 
   export const OCCUPATION_LIST = getEnvironmentVariable("OCCUPATION_LIST");
+
+  export const POSTCODE_VALIDATION_URL = getEnvironmentVariable("POSTCODE_VALIDATION_URL");
+
+  export const POSTCODE_ADDRESSES_LOOKUP_URL = getEnvironmentVariable("POSTCODE_ADDRESSES_LOOKUP_URL");
