@@ -47,7 +47,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     // Patch filing with updated information
-    const officerFiling: OfficerFiling = {
+    let officerFiling: OfficerFiling = {
       residentialAddress: {
         premises: getField(req, DirectorField.RESIDENTIAL_ADDRESS_PREMISES),
         addressLine1: getField(req, DirectorField.RESIDENTIAL_ADDRESS_ADDRESS_LINE_1),
@@ -58,7 +58,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         postalCode: getField(req, DirectorField.RESIDENTIAL_ADDRESS_POSTCODE),
       }
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
 
     // Validate filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
