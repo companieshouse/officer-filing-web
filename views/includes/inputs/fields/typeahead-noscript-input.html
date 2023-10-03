@@ -21,7 +21,7 @@
   {% set dropdownTitle = typeaheadTitle %}
   {% endif %}
 
-  {% for i in dropdownArray[dropdownNumber].split(',') %}
+  {% for i in dropdownArray[dropdownNumber].split(';') %}
     {% set dropdownObject = { value: i, text: i, selected: dropdownValue === i } %}
     {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
     
