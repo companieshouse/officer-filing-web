@@ -27,6 +27,7 @@ export const mockValidationStatusErrorOccupation: ValidationStatusError = create
 export const mockValidationStatusErrorNationalityInvalid: ValidationStatusError = createMockValidationStatusError("Select a nationality from the list");
 export const mockValidationStatusErrorNationalityLength: ValidationStatusError = createMockValidationStatusError("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas");
 export const mockValidationStatusErrorDob: ValidationStatusError = createMockValidationStatusError("You can only appoint a person as a director if they are at least 16 years old");
+export const mockValidationStatusErrorUnderageAppointment: ValidationStatusError = createMockValidationStatusError("You can only appoint a person as director if they are at least 16 years old on their appointment date");
 export const mockValidationStatusErrorAppointmentDate: ValidationStatusError = createMockValidationStatusError("Date the director was appointed must be on or after the incorporation date");
 
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
