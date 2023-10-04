@@ -39,7 +39,9 @@ const NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
 describe("Director name controller tests", () => {
 
     beforeEach(() => {
+      jest.clearAllMocks();
       mocks.mockSessionMiddleware.mockClear();
+      mockGetValidationStatus.mockReset();
     });
 
     describe("get tests", () => {
@@ -84,7 +86,6 @@ describe("Director name controller tests", () => {
       });
 
       it("Should navigate to error page when get officer filing throws an error", async () => {
-        mockIsActiveFeature.mockReturnValueOnce(true);
         mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
 
         const response = await request(app).get(PAGE_URL);
@@ -98,6 +99,12 @@ describe("Director name controller tests", () => {
   
       it("Should redirect to confirm director correspondence address page", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith"
+          }
+        });
         
         const response = await request(app).post(PAGE_URL);
 
@@ -138,7 +145,6 @@ describe("Director name controller tests", () => {
       });
 
       it("Should redirect to error page when patch officer filing throws an error", async () => {
-        mockIsActiveFeature.mockReturnValueOnce(true);
         mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error patching officer filing"));
 
         const response = await request(app).post(PAGE_URL);
@@ -147,7 +153,6 @@ describe("Director name controller tests", () => {
       });
 
       it("Should redirect to error page when get validation status throws an error", async () => {
-        mockIsActiveFeature.mockReturnValueOnce(true);
         mockGetValidationStatus.mockRejectedValueOnce(new Error("Error getting validation status"));
 
         const response = await request(app).post(PAGE_URL);
@@ -156,16 +161,23 @@ describe("Director name controller tests", () => {
       });
 
       it("Should display errors on page if get validation status returns errors", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
+        console.log("THIS IS THE TEST");
+        mockGetValidationStatus.mockResolvedValueOnce({
           errors: [createMockValidationStatusError("Enter a property name or number for the director's correspondence address"), createMockValidationStatusError("Enter a city or town for the director's correspondence address")],
           isValid: false
-        }
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith"
+          }
+        });
   
         const response = await request(app).post(PAGE_URL);
   
         expect(response.text).toContain("Enter a property name or number");
         expect(response.text).toContain("Enter a city or town");
+        expect(mockGetOfficerFiling).not.toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
