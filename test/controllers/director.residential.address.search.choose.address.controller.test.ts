@@ -7,10 +7,13 @@ import { isActiveFeature } from "../../src/utils/feature.flag";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
-import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS } from "types/page.urls";
+import {
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS
+} from "types/page.urls";
 
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS;
-const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS;
+const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH;
 const PAGE_HEADING = "Choose an address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 

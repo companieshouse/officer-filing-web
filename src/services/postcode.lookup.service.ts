@@ -10,7 +10,7 @@ export const getUKAddressesFromPostcode = async (postcodeAddressesLookupURL: str
 
     const castedSdkResponse: Resource<UKAddress[]> = await apiClient.postCodeLookup.getListOfValidPostcodeAddresses(postcodeAddressesLookupURL, postcode);
 
-    if(castedSdkResponse.resource === undefined) {
+    if(!castedSdkResponse.resource) {
         throw createAndLogError(`Failed to get UK addresses for postcode ${postcode}`);
     }
 
