@@ -34,9 +34,9 @@ export const validatePremiseAndPostcode = (postcode: string,
             validationErrors.push(invalidPremisesCharacterValidationResult);
         }
 
-        const invalidPostcodeLengthValidationResult = validateLengthForPremise(premise, premisesValidationType);
-        if(invalidPostcodeLengthValidationResult) {
-            validationErrors.push(invalidPostcodeLengthValidationResult);
+        const invalidPremisesLengthValidationResult = validateLengthForPremise(premise, premisesValidationType);
+        if(invalidPremisesLengthValidationResult) {
+            validationErrors.push(invalidPremisesLengthValidationResult);
         }
     }
 

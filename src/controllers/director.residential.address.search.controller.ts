@@ -53,7 +53,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
     const jsValidationErrors = validatePremiseAndPostcode(postalCode, PostcodeValidation, PremiseValidation, premise);
 
-    const officerFiling: OfficerFiling = {
+    const prepareOfficerFiling: OfficerFiling = {
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
                            "locality": "",
@@ -63,13 +63,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, officerFiling, jsValidationErrors);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, officerFiling, jsValidationErrors);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Look up the addresses, as by now validated postcode is valid and exist
@@ -97,7 +97,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Redirect user to choose addresses if premises not supplied or not found in addresses array
     logger.debug(`Patching officer filing with postcode ${postalCode}`);
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     return res.redirect(nextPageUrl);
 
