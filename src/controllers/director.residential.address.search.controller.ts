@@ -5,7 +5,9 @@ import {
   DIRECTOR_RESIDENTIAL_ADDRESS,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -53,12 +55,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
     const jsValidationErrors = validatePremiseAndPostcode(postalCode, PostcodeValidation, PremiseValidation, premise);
 
+    const returnUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     const prepareOfficerFiling: OfficerFiling = {
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
                            "locality": "",
                            "postalCode": postalCode,
                            "country" : ""},
+      residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       };
 
     // Validate formatting errors for fields, render errors if found.
@@ -85,9 +89,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
               "locality": ukAddress.postTown,
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)},
+            residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END
           };
           // Patch filing with updated information
-          logger.debug(`Patching officer filing with premise ${premise} for a postcode ${postalCode}`);
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
           return res.redirect(nextPageUrlForConfirm);

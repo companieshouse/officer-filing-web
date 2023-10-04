@@ -1,21 +1,35 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_PROTECTED_DETAILS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
+import { Session } from "@companieshouse/node-session-handler";
+import { getOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  let returnPageUrl = req.headers.referer!;
-  if(returnPageUrl?.endsWith(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END)) {
-    returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
-  } else {
-    returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-  }
   try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    let returnPageUrl = officerFiling.residentialAddressBackLink;
+    if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END)) {
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
+    } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END)){
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req);
+    } else {
+      //edge case should not happen
+      returnPageUrl = req.headers.referer!
+    }
     return res.render(Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
       backLinkUrl: returnPageUrl,
