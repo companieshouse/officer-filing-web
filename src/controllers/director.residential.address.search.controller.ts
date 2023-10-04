@@ -49,7 +49,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const postalCode : string = (req.body[DirectorField.POSTCODE])?.replace(/\s/g,'')?.trim();
+    const postalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
     const jsValidationErrors = validatePremiseAndPostcode(postalCode, PostcodeValidation, PremiseValidation, premise);
 
@@ -67,13 +67,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
-    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode, PostcodeValidation, jsValidationErrors) ;
+    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, officerFiling, jsValidationErrors);
     }
 
     // Look up the addresses, as by now validated postcode is valid and exist
-    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode);
+    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g,''));
     // If premises is entered by user, loop through addresses to find user entered premise
     if(premise) {
       for(const ukAddress of ukAddresses) {
