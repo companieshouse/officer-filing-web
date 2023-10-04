@@ -55,7 +55,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
     const jsValidationErrors = validatePremiseAndPostcode(postalCode, PostcodeValidation, PremiseValidation, premise);
 
-    const returnUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     const prepareOfficerFiling: OfficerFiling = {
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
