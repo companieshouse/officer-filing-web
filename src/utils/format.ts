@@ -30,13 +30,6 @@ export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string 
   return dateOfBirthStr;
 };
 
-export const formatGenericStringField = (fieldValue: string | undefined): string => {
-  if(!fieldValue) {
-    return "";
-  }
-  return fieldValue;
-}
-
 export const formatAppointmentDate = (appointedOn: string | undefined): string =>  {
   if (!appointedOn || appointedOn === "") {
     return "";

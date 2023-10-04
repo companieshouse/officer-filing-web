@@ -13,7 +13,7 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { formatGenericStringField, formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../model/director.model";
 import { logger } from "../utils/logger";
@@ -26,20 +26,18 @@ import { PostcodeValidation, PremiseValidation } from "../validation/address.val
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
+  const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+  const session: Session = req.session as Session;
+  const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const postcode = officerFiling.residentialAddress?.postalCode;
-    const premises = officerFiling.residentialAddress?.premises;
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      postcode: formatGenericStringField(postcode),
-      premises: formatGenericStringField(premises)
+      postcode: officerFiling.residentialAddress?.postalCode,
+      premises: officerFiling.residentialAddress?.premises
     });
   } catch (e) {
     return next(e);

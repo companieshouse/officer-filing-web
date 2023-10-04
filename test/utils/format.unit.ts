@@ -4,8 +4,7 @@ import {
   formatTitleCase,
   toUpperCase,
   retrieveDirectorNameFromAppointment,
-  retrieveDirectorNameFromOfficer,
-  formatGenericStringField
+  retrieveDirectorNameFromOfficer
 } from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
@@ -103,25 +102,5 @@ describe("retrieveDirectorNameFromOfficer tests", () => {
     expect(directorName).toBe("John Doe");
     expect(directorNameCorporate).toBe("Blue Enterprises");
     expect(missingDirectorName).toBe("");
-  });
-});
-
-describe("formatGenericStringField tests", () => {
-  it("should return the empty string if passed undefined", () => {
-    const genericStringField: string = formatGenericStringField(undefined);
-
-    expect(genericStringField).toBe("");
-  });
-
-  it("should return the string if passed non empty value", () => {
-    const genericStringField: string = formatGenericStringField("Some value");
-
-    expect(genericStringField).toBe("Some value");
-  });
-
-  it("should return the empty string if passed empty string", () => {
-    const genericStringField: string = formatGenericStringField("");
-
-    expect(genericStringField).toBe("");
   });
 });
