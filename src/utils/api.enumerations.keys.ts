@@ -112,3 +112,7 @@ export enum nationalityThreeErrorMessageKey {
   NATIONALITY_LENGTH_48 = "nationality-length48",
   NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
 }
+
+export enum whereDirectorLiveErrorMessageKey {
+  NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
+}

@@ -1,4 +1,4 @@
-jest.mock("../../src/utils/feature.flag")
+jest.mock("../../src/utils/feature.flag");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -26,34 +26,34 @@ const NEXT_PAGE_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
 
 describe("Director protected details controller tests", () => {
 
-    beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
-    });
-  
-    describe("get tests", () => {
-  
-      it("Should navigate to director protected details page", async () => {
-        const response = await request(app).get(PAGE_URL);
-  
-        expect(response.text).toContain(PAGE_HEADING);
-      });
+  beforeEach(() => {
+    mocks.mockSessionMiddleware.mockClear();
+  });
 
-      it("Should navigate to error page when feature flag is off", async () => {
-        mockIsActiveFeature.mockReturnValueOnce(false);
-        const response = await request(app).get(PAGE_URL);
-  
-        expect(response.text).toContain(ERROR_PAGE_HEADING);
-      });
+  describe("get tests", () => {
 
+    it("Should navigate to director protected details page", async () => {
+      const response = await request(app).get(PAGE_URL);
+
+      expect(response.text).toContain(PAGE_HEADING);
     });
 
-    describe("post tests", () => {
-  
-      it("Should redirect to appoint director check answers page", async () => {
-        const response = await request(app).post(PAGE_URL);
+    it("Should navigate to error page when feature flag is off", async () => {
+      mockIsActiveFeature.mockReturnValueOnce(false);
+      const response = await request(app).get(PAGE_URL);
 
-        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
-      });
-      
+      expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
+
+  });
+
+  describe("post tests", () => {
+
+    it("Should redirect to appoint director check answers page", async () => {
+      const response = await request(app).post(PAGE_URL);
+
+      expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+    });
+
+  });
 });
