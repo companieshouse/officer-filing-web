@@ -5,14 +5,6 @@
  {{ SERVICE_NAME }} - GOV.UK
 {% endblock %}
 
-<!-- No service name header-->
-{% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk",
-    containerClasses: "govuk-width-container"})
-}}
-{% endblock %}
-
 {% block signoutBar %}
 {# Remove signout bar on this page by replacing it with nothing #}
 {% endblock %}

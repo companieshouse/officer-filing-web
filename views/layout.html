@@ -51,9 +51,15 @@
 {% endblock %}
 
 {% block header %}
+{% if AP01_ACTIVE === "true" %}
+  {% set serviceName = "Appoint and remove a company director" %}
+{% else %}
+  {% set serviceName = "Remove a company director" %}
+{% endif %}
+
   {{ govukHeader({
     homepageUrl: "https://www.gov.uk",
-    serviceName: "Remove a company director",
+    serviceName: serviceName,
     serviceUrl: "/appoint-update-remove-company-officer",
     containerClasses: "govuk-width-container"})
   }}
