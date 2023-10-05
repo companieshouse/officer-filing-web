@@ -26,11 +26,11 @@ import { PostcodeValidation, PremiseValidation } from "../validation/address.val
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-  const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-  const session: Session = req.session as Session;
-  const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
   try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
