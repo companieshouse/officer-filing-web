@@ -18,14 +18,15 @@
       
       <form action="" method="post">
 
+        <span class="govuk-caption-xl govuk-!-padding-bottom-1">Doe, John Doe</span>
+
         <h1 class="govuk-heading-l">Where does the director live?</h1>
         <!-- This is the first page for the residential address -->
-
-        <span class="govuk-caption-xl govuk-!-padding-bottom-1">Doe, John Doe</span>
 
         <p class="govuk-hint">Tell us the director's home address. Only give a business address if they also live there.</p>
 
         {{ govukRadios({
+          errorMessage: errors.director_address if errors,
           idPrefix: "director_address",
           name: "director_address",
           fieldset: {
