@@ -21,6 +21,47 @@
         <h1 class="govuk-heading-l">Where does the director live?</h1>
         <!-- This is the first page for the residential address -->
 
+        <span class="govuk-caption-xl govuk-!-padding-bottom-1">Doe, John Doe</span>
+
+        <p class="govuk-hint">Tell us the director's home address. Only give a business address if they also live there.</p>
+
+        {{ govukRadios({
+          idPrefix: "director_address",
+          name: "director_address",
+          fieldset: {
+            legend: {
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "director_service_address",
+              text: "15 New Road, Cardiff, Wales CF5 1BR",
+              checked: director_address === "director_service_address",
+              attributes: {
+                "data-event-id": "director-service-address"
+              }
+            },
+            {
+              value: "director_different_address",
+              text: "A different address",
+              checked: director_address === "director_different_address",
+              attributes: {
+                "data-event-id": "director-different-address"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">What information we'll show on the public register</h2>
+            <p>We will not show this address on the public Companies House register, 
+              unless it's also used for the company's registered office address or 
+              the director's correspondence address.
+            </p>
+        </div>
+
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
