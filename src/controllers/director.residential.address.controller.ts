@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH } from "../types/page.urls";
+import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from '@companieshouse/node-session-handler';
@@ -39,7 +39,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     directorAddressChoice.set("director-address-choice", selectedSraAddressChoice);
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_service_address") {
-      nextPageUrl = urlUtils.getUrlToPath(IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH, req);
+      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
       return res.redirect(nextPageUrl);
     }
     nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, req);

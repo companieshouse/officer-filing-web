@@ -3,7 +3,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH, urlParams } from '../../src/types/page.urls';
+import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, urlParams } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
@@ -22,7 +22,7 @@ const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const DIRECTOR_PROTECTED_INFORMATION_PAGE_URL = IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH
+const DIRECTOR_PROTECTED_INFORMATION_PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -90,12 +90,12 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
     });
 
-    it(`should redirect to ${IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH} page if service address is selected`, async () => {
+    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director-different-address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
     });
 
-    it(`should redirect to ${IS_DIRECTOR_PERSONAL_INFORMATION_PROTECTED_PATH} page if service address is selected`, async () => {
+    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({
         director_address: "director_service_address"
       }));
