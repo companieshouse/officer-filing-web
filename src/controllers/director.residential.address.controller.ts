@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
-import { Session } from '@companieshouse/node-session-handler';
 import { whereDirectorLiveErrorMessageKey } from '../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
 import { ValidationError } from "../model/validation.model";

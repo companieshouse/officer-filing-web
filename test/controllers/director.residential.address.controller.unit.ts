@@ -3,7 +3,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, urlParams } from '../../src/types/page.urls';
+import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, urlParams } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
@@ -77,7 +77,7 @@ describe("Director name controller tests", () => {
       get(mockReq, mockRes, mockNext);
       expect(mockNext).toBeCalledTimes(1);
       expect(mockNext).toBeCalledWith(error);
-    });
+      expect(mockNext).toReturnTimes(1);
 
   });
 
