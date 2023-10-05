@@ -37,9 +37,11 @@ const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
 
 describe("Director residential address manual controller tests", () => {
 
-    beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
-    });
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mocks.mockSessionMiddleware.mockClear();
+    mockGetValidationStatus.mockReset();
+  });
   
     describe("get tests", () => {
   
@@ -94,9 +96,15 @@ describe("Director residential address manual controller tests", () => {
     });
 
     describe("post tests", () => {
-  
+    
       it("Should redirect to confirm director residential address page", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith"
+          }
+        });
         
         const response = await request(app).post(PAGE_URL);
 
@@ -160,6 +168,12 @@ describe("Director residential address manual controller tests", () => {
           isValid: false
         }
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith"
+          }
+        });
   
         const response = await request(app).post(PAGE_URL);
   

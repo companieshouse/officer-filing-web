@@ -20,4 +20,11 @@ export enum DirectorField {
   RESIDENTIAL_ADDRESS_COUNTY = "residential_address_county",
   RESIDENTIAL_ADDRESS_COUNTRY = "typeahead_input_0",
   RESIDENTIAL_ADDRESS_POSTCODE = "residential_address_postcode",
+  CORRESPONDENCE_ADDRESS_PREMISES = "correspondence_address_premises",
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1 = "correspondence_address_line_1",
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2 = "correspondence_address_line_2",
+  CORRESPONDENCE_ADDRESS_CITY = "correspondence_address_city",
+  CORRESPONDENCE_ADDRESS_COUNTY = "correspondence_address_county",
+  CORRESPONDENCE_ADDRESS_COUNTRY = "typeahead_input_0",
+  CORRESPONDENCE_ADDRESS_POSTCODE = "correspondence_address_postcode",
 }

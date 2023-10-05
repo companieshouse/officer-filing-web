@@ -12,14 +12,89 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
 
+        <span class="govuk-caption-l">{{directorName}}</span>
         <h1 class="govuk-heading-l">What is the director's correspondence address?</h1>
-        <!-- This is the manual input page for the correspondence address -->
+
+        <div id="correspondence-property-address-hint" class="govuk-hint">
+          Tell us the director's home address. Only give a business address if they also live there.
+        </div>
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_premises if errors,
+          label: {
+            html: 'Property name or number'
+          },
+          hint: {
+            text: "For example, 'The Mill', '116' or 'Flat 37a'"
+          },
+          id: "correspondence_address_premises",
+          name: "correspondence_address_premises",
+          value: correspondence_address_premises
+        }) }}
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_line_1 if errors,
+          label: {
+            text: "Address line 1"
+          },
+          id: "correspondence_address_line_1",
+          name: "correspondence_address_line_1",
+          value: correspondence_address_line_1
+        }) }}
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_line_2 if errors,
+          label: {
+            text: "Address line 2 (optional)"
+          },
+          id: "correspondence_address_line_2",
+          name: "correspondence_address_line_2",
+          value: correspondence_address_line_2
+        }) }}
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_city if errors,
+          label: {
+            text: "City or town"
+          },
+          id: "correspondence_address_city",
+          name: "correspondence_address_city",
+          value: correspondence_address_city
+        }) }}
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_county if errors,
+          label: {
+            text: "County, state, province or region (optional)"
+          },
+          id: "correspondence_address_county",
+          name: "correspondence_address_county",
+          value: correspondence_address_county
+        }) }}
+
+        {% include "includes/inputs/fields/country-input.html" %}
+
+        {{ govukInput({
+          errorMessage: errors.correspondence_address_postcode if errors,
+          label: {
+            text: "Postcode or ZIP"
+          },
+          classes: "govuk-input govuk-input--width-10",
+          id: "correspondence_address_postcode",
+          name: "correspondence_address_postcode",
+          value: correspondence_address_postcode
+        }) }}
+
+        {{ govukInsetText({
+          html: "<h2 class='govuk-heading-m'>What information we’ll show on the public register</h2>
+          <p>We will not show this address on the public Companies House register, unless it’s also used for the company's registered office address or the director’s correspondence address.</p>"
+        }) }}
 
         {{ govukButton({
           attributes: {
@@ -32,3 +107,4 @@
     </div>
   </div>
 {% endblock %}
+
