@@ -17,7 +17,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       director_address: directorAddressChoice.get("director-address-choice")
     });
   } catch (e) {
-    return next(e);
+    next(e);
   }
 };
 
@@ -40,11 +40,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if (selectedSraAddressChoice === "director_service_address") {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
       return res.redirect(nextPageUrl);
-    }
+    } 
+
     nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, req);
     return res.redirect(nextPageUrl);
+    
   } catch (e) {
-    return next(e);
+    next(e);
   }
 };
 

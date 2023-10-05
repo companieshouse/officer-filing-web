@@ -74,11 +74,11 @@ describe("Director name controller tests", () => {
         throw error;
       });
 
-      get(mockReq, mockRes, mockNext);
+      get(mockReq, mockRes, mockNext.mockReturnValue(error));
       expect(mockNext).toBeCalledTimes(1);
       expect(mockNext).toBeCalledWith(error);
-      expect(mockNext).toReturnTimes(1);
-
+      expect(mockNext).toReturnWith(error);
+    });
   });
 
   describe("post tests", () => {
@@ -91,7 +91,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
-      const response = (await request(app).post(PAGE_URL).send({ director_address: "director-different-address" }));
+      const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
     });
 
@@ -102,6 +102,5 @@ describe("Director name controller tests", () => {
 
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
-
   });
 });
