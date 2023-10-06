@@ -92,6 +92,12 @@ describe("Director name controller tests", () => {
       expect(mockNext).toBeCalledWith(error);
       expect(mockNext).toReturnWith(error);
     });
+
+    it("should catch error if getofficerfiling error", async () => {
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).not.toContain(PAGE_HEADING);
+      expect(response.text).toContain(ERROR_PAGE_HEADING)
+    });
   });
 
   describe("post tests", () => {
