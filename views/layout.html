@@ -52,7 +52,7 @@
 
 {% block header %}
 {% if AP01_ACTIVE === "true" %}
-  {% set serviceName = "Appoint and remove a company director" %}
+  {% set serviceName = SERVICE_NAME %}
 {% else %}
   {% set serviceName = "Remove a company director" %}
 {% endif %}
