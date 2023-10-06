@@ -12,7 +12,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
       typehead_array: TITLE_LIST,
     });
   } catch (e) {
-    return next(e);
+    next(e);
   }
 };
 
@@ -21,7 +21,7 @@ export const post = (req: Request, res: Response, next: NextFunction) => {
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
     return res.redirect(nextPageUrl);
   } catch (e) {
-    return next(e);
+    next(e);
   }
 };
 
