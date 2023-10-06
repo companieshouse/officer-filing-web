@@ -1,16 +1,22 @@
 jest.mock("../../src/utils/feature.flag");
+jest.mock("../../src/services/officer.filing.service")
+
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
 import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, urlParams } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
 import { Session } from "@companieshouse/node-session-handler";
+import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
+const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+const mockNext = jest.fn();
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -44,8 +50,11 @@ const mockReq = {
   body: {},
 } as Request;
 
-const mockNext = jest.fn();
-
+const directorNameMock = {
+  firstName: "John",
+  middleName: "NewLand",
+  lastName: "Doe"
+}
 describe("Director name controller tests", () => {
 
   beforeEach(() => {
@@ -55,8 +64,12 @@ describe("Director name controller tests", () => {
   describe("get tests", () => {
 
     it("Should navigate to director address page", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
     });
 
@@ -84,11 +97,29 @@ describe("Director name controller tests", () => {
   describe("post tests", () => {
 
     it(`Should render where director lives page if no radio button is selected`, async () => {
+      const mockPatchOfficerFilingResponse = {
+        data: {
+          ...directorNameMock
+        }
+      };
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({}));
       expect(response.text).toContain("Select the address where the director lives");
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(mockPatchOfficerFiling).toHaveBeenCalled();
     });
+
+    it("should catch error if patch officer filing failed", async () => {
+      const mockPatchOfficerFilingResponse = {
+      };
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+      const response = (await request(app).post(PAGE_URL).send({}));
+      expect(response.text).not.toContain("Select the address where the director lives");
+      expect(response.text).not.toContain(PAGE_HEADING);
+      expect(response.text).toContain(ERROR_PAGE_HEADING)
+    })
 
     it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
