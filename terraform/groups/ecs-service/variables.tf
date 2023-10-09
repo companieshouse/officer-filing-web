@@ -140,3 +140,9 @@ variable "country_list" {
 variable "uk_country_list" {
   type        = string
 }
+variable "postcode_validation_url" {
+  type        = string
+}
+variable "postcode_address_lookup_url" {
+  type        = string
+}

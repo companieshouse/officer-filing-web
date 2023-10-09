@@ -11,6 +11,8 @@ export enum DirectorField {
   NATIONALITY_3 = "typeahead_input_2",
   NATIONALITY_2_RADIO = "nationality_2_radio",
   NATIONALITY_3_RADIO = "nationality_3_radio",
+  PREMISES = "premises",
+  POSTCODE = "postcode",
   YES = "Yes",
   NO = "No",
   RESIDENTIAL_ADDRESS_PREMISES = "residential_address_premises",
