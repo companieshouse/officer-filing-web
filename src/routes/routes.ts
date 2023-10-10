@@ -21,6 +21,8 @@ import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
 import * as directorManualAddressLookup from "../controllers/director.manual.address.lookup.controller";
+import * as directorResidentialAddressList from "../controllers/director.residential.address.lists.controller";
+import * as directorResidentialAddressSelectionConfirmation from "../controllers/director.confirm.manual.residential.address.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
@@ -109,6 +111,9 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, directorResidentialAddress
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressManual.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddressManual.post);
 
+router.get(urls.DIRECTOR_ADDRESS_RESIDENTIAL_ADDRESS_LIST, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressList.get);
+router.post(urls.DIRECTOR_ADDRESS_RESIDENTIAL_ADDRESS_LIST, directorResidentialAddressList.post);
+
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
 
@@ -122,3 +127,6 @@ router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appoi
 
 router.get(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, isFeatureEnabled(AP01_ACTIVE), directorManualAddressLookup.get);
 router.post(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, directorManualAddressLookup.post);
+
+router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_SELECTION, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSelectionConfirmation.get);
+router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_SELECTION, directorResidentialAddressSelectionConfirmation.post);

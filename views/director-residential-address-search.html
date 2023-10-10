@@ -15,11 +15,46 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      
       <form action="" method="post">
 
+        <span class="govuk-caption-l">{{directorName}}</span>
         <h1 class="govuk-heading-l">Where does the director live?</h1>
-        <!-- This is the search page for the residential address -->
+
+        <div id="residential-property-address-hint" class="govuk-hint">
+          Tell us the director's home address. Only give a business address if they also live there.
+        </div>
+
+        {{ govukInput({
+          errorMessage: errors.uk_post_code if errors,
+          label: {
+            html: 'UK postcode'
+          },
+          classes: "govuk-input--width-10",
+          id: "uk_post_code",
+          name: "uk_post_code",
+          value: uk_post_code
+        }) }}
+
+        {{ govukInput({
+          errorMessage: errors.director_home_address_name_or_number if errors,
+          label: {
+            text: "Property name or number"
+          },
+          hint: {
+            text: "For example, 'The Mill', '116' or 'Flat 37a'"
+          },
+          classes: "govuk-input--width-10",
+          id: "director_home_address_name_or_number",
+          name: "director_home_address_name_or_number",
+          value: director_home_address_name_or_number
+        }) }}
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "find-address"
+          },
+          text: "Find address"
+        }) }}
 
         <div class="govuk-body">
           <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Enter address manually</a>

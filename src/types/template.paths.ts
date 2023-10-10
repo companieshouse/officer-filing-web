@@ -29,5 +29,7 @@ export enum Templates {
   APPOINT_DIRECTOR_CHECK_ANSWERS = "appoint-director-check-answers",
   APPOINT_DIRECTOR_SUBMITTED = "appoint-director-submitted",
   DIRECTOR_PERSONAL_INFORMATION = "director-personal-information-protected",
-  DIRECTOR_MANUAL_ADDRESS_LOOKUP = "director-manual-address-lookup"
+  DIRECTOR_MANUAL_ADDRESS_LOOKUP = "director-manual-address-lookup",
+  DIRECTOR_ADDRESS_RESIDENTIAL_ADDRESS_LIST = "director-address_residential_address_list",
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_SELECTION_PATH = "director_residential_manual_address_confirmation"
 }
