@@ -35,3 +35,27 @@ export interface DateValidationType {
         DayMonthYear: ValidationError,
     }
 }
+
+export interface PostcodeValidationType {
+    MissingValue: {
+        Postcode: ValidationError
+    },
+    InvalidCharacters: {
+        Postcode: ValidationError
+    },
+    InvalidValue: {
+        Postcode: ValidationError
+    },
+    InvalidLength: {
+        Postcode: ValidationError
+    }
+}
+
+export interface PremiseValidationType {
+    InvalidCharacters: {
+        Premise: ValidationError
+    },
+    InvalidLength: {
+        Premise: ValidationError
+    }
+}

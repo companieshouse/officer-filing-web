@@ -1,0 +1,11 @@
+{{ govukInput({
+    errorMessage: errors.postcode if errors,
+    label: {
+      text: "UK Postcode"
+    },
+    classes: "govuk-input--width-10",
+    id: "postcode",
+    name: "postcode",
+    value: postcode,
+    autocomplete: "postal-code"
+  }) }}

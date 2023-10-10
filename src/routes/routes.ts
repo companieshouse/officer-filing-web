@@ -15,6 +15,7 @@ import * as directorConfirmResidentialAddress from "../controllers/director.conf
 import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
+import * as directorResidentialAddressSearchChooseAddress from "../controllers/director.residential.address.search.choose.address.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
 import * as directorDateOfBirth from "../controllers/director.date.of.birth.controller";
 import * as directorName from "../controllers/director.name.controller";
@@ -104,6 +105,9 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, directorResidentialAddress.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSearch.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, directorResidentialAddressSearch.post);
+
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSearchChooseAddress.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, directorResidentialAddressSearchChooseAddress.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressManual.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddressManual.post);
