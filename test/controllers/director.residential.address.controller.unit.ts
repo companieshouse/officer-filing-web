@@ -81,7 +81,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`catch error when rendering ${PAGE_URL} page`, () => {
-      const error = new TypeError("Cannot read properties of undefined (reading 'companyNumber')");
+      const error = new TypeError("Cannot read properties of undefined (reading 'transactionId')");
 
       (mockRes.render as jest.Mock).mockImplementationOnce(() => {
         throw error;
