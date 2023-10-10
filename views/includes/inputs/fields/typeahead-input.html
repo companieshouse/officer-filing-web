@@ -3,6 +3,8 @@
   //Split this on | to get an array of values
   const typeaheadArray = "{{typeahead_array}}".split("|")
   const defaultValueArray = "{{typeahead_value}}".split("|")
+  const hintArray = "{{typeaheadHint}}".split("|")
+  const titleArray = "{{typeaheadTitle}}".split("|")
 
   for (var i = 0; i < typeaheadArray.length; i++) {
     var autocompleteConfig = {
@@ -15,15 +17,16 @@
       autocompleteConfig.defaultValue = defaultValueArray[i]
     }
     accessibleAutocomplete(autocompleteConfig)
-
-    // Add hint to JS-enabled title
+    const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+    // Add title to JS-enabled typeahead
+    autocompleteContainer.insertAdjacentHTML("beforeBegin", titleArray[i]);
+    // Add hint to JS-enabled typeahead
     const hintElement = document.createElement('div');
     hintElement.id = 'typeahead-hint-' + i;
     hintElement.className = 'govuk-hint';
-    hintElement.innerHTML = '{{typeaheadHint}}';
-    const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);
+    hintElement.innerHTML = hintArray[i];
     autocompleteContainer.insertAdjacentElement("beforeBegin", hintElement);
-  }
+}
 
   // Add observer for each typeahead_input
   // Mimic nunjucks error generation
@@ -54,23 +57,9 @@
 
 <!-- Javascript disabled -->
 <noscript>
-  {% set DROPDOWN = [
-    { value: '', text: dropdownDefaultText }
-  ] %}
+  <!-- If there is a single typeahead box, add noscript for it here. If not they will need to be included separately-->
+  {% if not '|' in typeahead_array %}
+    {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
+  {% endif %}
 
-  {% for i in typeahead_array.split(';') %}
-    {% set dropdownObject = { value: i, text: i, selected: typeahead_value === i } %}
-    {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
-  {% endfor %}
-
-  {{ govukSelect({
-    errorMessage: errors.typeahead_input_0.text if errors,
-    id: "typeahead_input_0",
-    name: "typeahead_input_0",
-    value: typeahead_value,
-    hint: {
-      text: dropdownHint
-    },
-    items: DROPDOWN
-  }) }}
 </noscript>
