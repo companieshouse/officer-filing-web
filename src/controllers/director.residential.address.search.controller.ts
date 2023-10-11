@@ -24,7 +24,6 @@ import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-l
 import { validatePremiseAndPostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
-import { PostcodeKey, PremiseKey } from "../model/address.model";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,12 +64,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
+      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
+      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
@@ -122,19 +123,13 @@ export const getCountryFromKey = (country: string): string => {
 }
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
-  const postcode = {
-    [PostcodeKey]: req.body.postcode
-  };
-  const premises = {
-    [PremiseKey]: req.body.premises
-  };
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS, req),
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    ...postcode,
-    ...premises,
+    postcode: officerFiling.residentialAddress?.postalCode,
+    premises: officerFiling.residentialAddress?.premises,
     errors: formatValidationErrors(validationErrors),
   });
 }
