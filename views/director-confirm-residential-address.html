@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Confirm where the director lives" %}
+{% set title = "Where does the director live?" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -15,19 +15,34 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      
       <form action="" method="post">
-
+        <span class="govuk-caption-l">{{ directorName }}</span>
         <h1 class="govuk-heading-l">Confirm where the director lives</h1>
-        <!-- This is the confirmation page for the residential address -->
-
+        <ul class="govuk-list">
+          <li>{{ premises }}</li>
+          <li>{{ addressLine1 }}</li>
+          <li>{{ addressLine2 }}</li>
+          <li>{{ region }}</li>
+          <li>{{ locality }}</li>
+          <li>{{ country }}</li>
+          <li>{{ postalCode }}</li>
+        </ul>
+        {% if addressLine1 %}
+          <div class="govuk-body">
+            <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Edit address</a>
+          </div>
+        {% endif %}
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">What information we'll show on the public register</h2>
+            <p>We will not show this address on the public Companies House register, unless it's also used for the company's registered office address or the director's correspondence address.</p>
+        </div>
+        
         {{ govukButton({
           attributes: {
-            "data-event-id": "continue-button"
+            "data-event-id": "confirm-and-continue-button"
           },
           text: "Confirm and continue"
         }) }}
-
       </form>
     </div>
   </div>

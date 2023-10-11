@@ -128,7 +128,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING)
     });
 
-    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
+    it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
     });

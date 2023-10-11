@@ -12,6 +12,7 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,11 +29,15 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req);
     } else {
       //edge case should not happen
-      returnPageUrl = req.headers.referer!
+      // returnPageUrl = req.headers.referer!
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     }
     return res.render(Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
       backLinkUrl: returnPageUrl,
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
+      ...officerFiling.residentialAddress
     });
   } catch (e) {
     return next(e);
