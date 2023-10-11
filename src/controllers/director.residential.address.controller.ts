@@ -10,7 +10,6 @@ import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
-const directorAddressChoice = new Map();
 const directorChoiceHtmlField: string = "director_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +21,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req),
-      director_address: directorAddressChoice.get("director-address-choice"),
+      director_address: session.getExtraData("director_address_choice"),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     });
   } catch (e) {
@@ -37,6 +36,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
+    session.setExtraData("director_address_choice", selectedSraAddressChoice);
 
     const officerFiling: OfficerFiling = {
       //field to be retrieved
@@ -51,11 +51,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
         backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req),
         errors: formattedErrors,
+        director_address: session.getExtraData("director_address_choice"),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data)),
       });
     }
 
-    directorAddressChoice.set("director-address-choice", selectedSraAddressChoice);
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_service_address") {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);

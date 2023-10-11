@@ -45,10 +45,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try {
   const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
   return res.redirect(nextPageUrl);
-  } catch(e) {
-    return next(e);
-  } 
 };
