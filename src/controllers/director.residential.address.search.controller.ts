@@ -24,6 +24,7 @@ import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-l
 import { validatePremiseAndPostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
+import { PostcodeKey, PremiseKey } from "../model/address.model";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -121,11 +122,19 @@ export const getCountryFromKey = (country: string): string => {
 }
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
+  const postcode = {
+    [PostcodeKey]: req.body.postcode
+  };
+  const premises = {
+    [PremiseKey]: req.body.premises
+  };
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
     backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    errors: formatValidationErrors(validationErrors)
+    ...postcode,
+    ...premises,
+    errors: formatValidationErrors(validationErrors),
   });
 }
