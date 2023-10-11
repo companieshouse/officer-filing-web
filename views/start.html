@@ -29,8 +29,8 @@
         <p class="govuk-body">Use this service to appoint or remove (terminate the appointment of) a director of a limited company.</p>
         <p class="govuk-body">You can use this service to:</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>appoint a new director - for now, you can only appoint a director who is a person</li>
-          <li>remove a director - you can remove a director who is a person or a corporate director</li>
+          <li>appoint a new director – for now, you can only appoint a director who is a person</li>
+          <li>remove a director – you can remove a director who is a person or a corporate director</li>
         </ul>
         <p class="govuk-body">To appoint a corporate director, you'll need to use our 
           <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1" class="govuk-link">WebFiling service</a> or file a 
@@ -45,7 +45,7 @@
         {% endset %}
 
         {{ govukDetails({
-          summaryHtml: '<div data-event-id="start-now-accordion-expansion"> What a corporate director is</div>',
+          summaryHtml: '<div data-event-id="start-now-accordion-expansion"> What is a corporate director?</div>',
           html: corporateDetails
         }) }}
 
@@ -54,7 +54,7 @@
         {% endif %}
         <p class="govuk-body">You'll need:</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>a Companies House account - we'll ask you to sign in or create one</li>
+          <li>a Companies House account – we'll ask you to sign in or create one</li>
           <li>the company number</li>
           <li>the <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link">company authentication code</a> </li>
           {% if AP01_ACTIVE !== "true" %}
