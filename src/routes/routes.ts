@@ -21,7 +21,6 @@ import * as directorDateOfBirth from "../controllers/director.date.of.birth.cont
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
-import * as directorManualAddressLookup from "../controllers/director.manual.address.lookup.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
@@ -123,6 +122,3 @@ router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), a
 router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.post);
 
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);
-
-router.get(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, isFeatureEnabled(AP01_ACTIVE), directorManualAddressLookup.get);
-router.post(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, directorManualAddressLookup.post);

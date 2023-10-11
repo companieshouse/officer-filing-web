@@ -87,6 +87,11 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
+      it("should catch error if getofficerfiling error", async () => {
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).not.toContain(PAGE_HEADING);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
     });
 
     describe("post tests", () => {
@@ -96,6 +101,5 @@ describe("Director confirm residential address controller tests", () => {
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
       });
-      
     });
 });
