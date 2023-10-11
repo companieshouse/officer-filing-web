@@ -11,6 +11,7 @@ import e, { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import mockSessionMiddleware from "../mocks/session.middleware.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -125,7 +126,7 @@ describe("Director name controller tests", () => {
       expect(response.text).not.toContain("Select the address where the director lives");
       expect(response.text).not.toContain(PAGE_HEADING);
       expect(response.text).toContain(ERROR_PAGE_HEADING)
-    })
+    });
 
     it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
