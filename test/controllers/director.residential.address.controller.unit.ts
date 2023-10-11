@@ -5,7 +5,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, urlParams } from '../../src/types/page.urls';
+import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import e, { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
@@ -32,7 +32,7 @@ const DIRECTOR_PROTECTED_INFORMATION_PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH
+const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -81,7 +81,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`catch error when rendering ${PAGE_URL} page`, () => {
-      const error = new TypeError("Cannot read properties of undefined (reading 'companyNumber')");
+      const error = new TypeError("Cannot read properties of undefined (reading 'transactionId')");
 
       (mockRes.render as jest.Mock).mockImplementationOnce(() => {
         throw error;
@@ -127,7 +127,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING)
     })
 
-    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
+    it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH} page if service address is selected`, async () => {
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
     });

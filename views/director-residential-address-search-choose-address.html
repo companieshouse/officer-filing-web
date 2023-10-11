@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Where does the director live?" %}
+{% set title = "Choose a home address" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -17,28 +17,21 @@
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
-
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Where does the director live?</h1>
+        <h1 class="govuk-heading-l">Choose a home address</h1>
         <!-- This is the search page for the residential address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
-        <div id="typeahead-hint" class="govuk-hint">
-          Tell us the director's home address. Only give a business address if they also live there.
+
+        <div class="govuk-body">
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Enter address manually</a>
         </div>
-        {% include "includes/inputs/fields/postcode-input.html" %}
-        {% include "includes/inputs/fields/postcode-premises-input.html" %}
 
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Find address"
+          text: "Continue"
         }) }}
-
-
-        <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Enter address manually</a>
-        </div>
 
       </form>
     </div>

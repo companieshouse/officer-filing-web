@@ -15,14 +15,12 @@ import * as directorConfirmResidentialAddress from "../controllers/director.conf
 import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
+import * as directorResidentialAddressSearchChooseAddress from "../controllers/director.residential.address.search.choose.address.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
 import * as directorDateOfBirth from "../controllers/director.date.of.birth.controller";
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
-import * as directorManualAddressLookup from "../controllers/director.manual.address.lookup.controller";
-import * as directorResidentialAddressList from "../controllers/director.residential.address.lists.controller";
-import * as directorResidentialAddressSelectionConfirmation from "../controllers/director.confirm.manual.residential.address.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
@@ -108,11 +106,11 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, directorResidentialAddress.post);
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSearch.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, directorResidentialAddressSearch.post);
 
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSearchChooseAddress.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, directorResidentialAddressSearchChooseAddress.post);
+
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressManual.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddressManual.post);
-
-router.get(urls.DIRECTOR_ADDRESS_RESIDENTIAL_ADDRESS_LIST, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressList.get);
-router.post(urls.DIRECTOR_ADDRESS_RESIDENTIAL_ADDRESS_LIST, directorResidentialAddressList.post);
 
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
@@ -124,9 +122,3 @@ router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), a
 router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.post);
 
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);
-
-router.get(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, isFeatureEnabled(AP01_ACTIVE), directorManualAddressLookup.get);
-router.post(urls.DIRECTOR_MANUAL_ADDRESS_LOOK_UP, directorManualAddressLookup.post);
-
-router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_SELECTION, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddressSelectionConfirmation.get);
-router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_SELECTION, directorResidentialAddressSelectionConfirmation.post);

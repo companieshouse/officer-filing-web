@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
+import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { whereDirectorLiveErrorMessageKey } from '../utils/api.enumerations.keys';
@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       return res.redirect(nextPageUrl);
     } 
 
-    nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PATH, req);
+    nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
     return res.redirect(nextPageUrl);
     
   } catch (e) {
