@@ -23,6 +23,13 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req),
       director_address: session.getExtraData("director_address_choice"),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorServiceAddress:  `
+                                ${officerFiling.serviceAddress?.addressLine1}, 
+                                ${officerFiling.serviceAddress?.locality},
+                                ${officerFiling.serviceAddress?.country} 
+                                ${officerFiling.serviceAddress?.postalCode}
+                              `,
+      manualAddress: true
     });
   } catch (e) {
     next(e);
@@ -53,6 +60,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         errors: formattedErrors,
         director_address: session.getExtraData("director_address_choice"),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data)),
+        directorServiceAddress:  `
+                                ${officerFiling.serviceAddress?.addressLine1}, 
+                                ${officerFiling.serviceAddress?.locality},
+                                ${officerFiling.serviceAddress?.country} 
+                                ${officerFiling.serviceAddress?.postalCode}
+                              `,
+        manualAddress: true
       });
     }
 
