@@ -64,12 +64,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
+      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
+      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
@@ -124,8 +126,10 @@ const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS, req),
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    errors: formatValidationErrors(validationErrors)
+    postcode: officerFiling.residentialAddress?.postalCode,
+    premises: officerFiling.residentialAddress?.premises,
+    errors: formatValidationErrors(validationErrors),
   });
 }
