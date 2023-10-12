@@ -3,7 +3,7 @@ import { createAndLogError } from "./logger";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { formatAppointmentDate } from "./format";
 
-export const toReadableFormat = (dateToConvert: string): string => {
+export const toReadableFormat = (dateToConvert: string | undefined): string => {
   if (!dateToConvert) {
     return "";
   }

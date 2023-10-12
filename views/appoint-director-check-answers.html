@@ -51,6 +51,20 @@
           ]
         }) }}
 
+        {% if not officerFiling.formerNames %}
+          {% set formerNames = "None" %}
+        {% else %}
+        {% set formerNames = officerFiling.formerNames %}
+        {% endif %}
+
+        {% set nationality = officerFiling.nationality1 %}
+        {% if officerFiling.nationality2 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality2 %}
+        {% endif %}
+        {% if officerFiling.nationality3 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
+        {% endif %}
+
         <h2 class="govuk-heading-m">Director details</h2>
 
         {{ govukSummaryList({
@@ -60,7 +74,7 @@
                 text: "Name"
               },
               value: {
-                text: "Director name here"
+                text: name
               },
               actions: {
                 items: [
@@ -77,7 +91,7 @@
                 text: "Previous names"
               },
               value: {
-                text: "Previous names here"
+                text: formerNames
               },
               actions: {
                 items: [
@@ -94,7 +108,7 @@
                 text: "Date of birth"
               },
               value: {
-                text: "DOB here"
+                text: dateOfBirth
               },
               actions: {
                 items: [
@@ -111,7 +125,7 @@
                 text: "Date appointed"
               },
               value: {
-                text: "Date appointed here"
+                text: appointedOn
               },
               actions: {
                 items: [
@@ -128,7 +142,7 @@
                 text: "Nationality"
               },
               value: {
-                text: "Nationality list here"
+                html: nationality
               },
               actions: {
                 items: [
@@ -145,7 +159,7 @@
                 text: "Occupation"
               },
               value: {
-                text: "Occupation here"
+                text: officerFiling.occupation
               },
               actions: {
                 items: [
