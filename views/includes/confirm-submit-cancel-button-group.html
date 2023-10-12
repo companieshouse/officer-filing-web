@@ -1,0 +1,10 @@
+<div class="govuk-button-group">
+    {{ govukButton({
+      attributes: {
+        id: "submit",
+        "data-event-id": "confirm-and-submit-button"
+      },
+      text: "Confirm and submit"
+    }) }}
+    <a class="govuk-link" href="{{cancelLink}}" data-event-id="cancel-link">Cancel</a>
+</div>

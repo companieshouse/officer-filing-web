@@ -13,7 +13,7 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
       
@@ -25,22 +25,27 @@
         <h2 class="govuk-heading-m">Company details</h2>
 
         {{ govukSummaryList({
-          classes: 'govuk-!-margin-bottom-9',
+          attributes: {
+            "style": "width:auto"
+          },
           rows: [
             {
+              classes: "govuk-summary-list__row--no-actions",
               key: {
                 text: "Company name"
               },
               value: {
-                text: "Company name here"
+                text: company.companyName
               }
             },
             {
+              classes: "govuk-summary-list__row--no-actions",
+              
               key: {
                 text: "Company number"
               },
               value: {
-                text: "Company number here"
+                text: company.companyNumber
               }
             }
           ]
@@ -49,7 +54,6 @@
         <h2 class="govuk-heading-m">Director details</h2>
 
         {{ govukSummaryList({
-          classes: 'govuk-!-margin-bottom-9',
           rows: [
             {
               key: {
@@ -63,7 +67,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " name"
+                    visuallyHiddenText: "Name"
                   }
                 ]
               }
@@ -80,7 +84,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " name"
+                    visuallyHiddenText: "Previous name"
                   }
                 ]
               }
@@ -97,7 +101,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " date of birth"
+                    visuallyHiddenText: "Date of birth"
                   }
                 ]
               }
@@ -114,7 +118,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " appointed on date"
+                    visuallyHiddenText: "Appointed on date"
                   }
                 ]
               }
@@ -131,7 +135,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " nationality"
+                    visuallyHiddenText: "Nationality"
                   }
                 ]
               }
@@ -148,7 +152,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " occupation title"
+                    visuallyHiddenText: "Occupation"
                   }
                 ]
               }
@@ -165,7 +169,7 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " contact details"
+                    visuallyHiddenText: "Protected details"
                   }
                 ]
               }
@@ -174,11 +178,11 @@
         }) }} 
 
         {{ govukSummaryList({
-          classes: 'govuk-!-margin-bottom-9',
           rows: [
             {
               key: {
-                text: "Address details"
+                text: "Address details",
+                classes: "govuk-heading-m"
               },
               value: {
               },
@@ -187,17 +191,9 @@
                   {
                     href: "#",
                     text: "Change",
-                    visuallyHiddenText: " the director's address details."
+                    visuallyHiddenText: "Director's address details"
                   }
                 ]
-              }
-            },
-            {
-              key: {
-                text: "Correspondence address"
-              },
-              value: {
-                text: "Correspondence address here"
               }
             },
             {
@@ -236,12 +232,7 @@
           ]
         }) }}
 
-        {{ govukButton({
-          attributes: {
-            "data-event-id": "confirm-and-submit-button"
-          },
-          text: "Confirm and submit"
-        }) }}
+        {% include "includes/confirm-submit-cancel-button-group.html" %}
 
       </form>
     </div>
