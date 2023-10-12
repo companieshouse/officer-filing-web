@@ -17,14 +17,14 @@ export const validatePostcode = (postcode: string,
     const invalidPostcodeCharacterValidationResult = validateCharacterForPostcode(postcode, postcodeValidationType);
     if (invalidPostcodeCharacterValidationResult) {
       validationErrors.push(invalidPostcodeCharacterValidationResult);
-      return validationErrors
+      return validationErrors;
     }
 
     //Invalid length
     const invalidPostcodeLengthValidationResult = validateLengthForPostcode(postcode, postcodeValidationType);
     if (invalidPostcodeLengthValidationResult) {
       validationErrors.push(invalidPostcodeLengthValidationResult);
-      return validationErrors
+      return validationErrors;
     }
 
     return validationErrors;

@@ -18,7 +18,7 @@ export const validatePremise = (premise: string,
 		//Length validation
 		if(invalidPremisesLengthValidationResult) {
 			validationErrors.push(invalidPremisesLengthValidationResult);
-			return validationErrors
+			return validationErrors;
 		}
 	}
 	return validationErrors;
