@@ -1,7 +1,7 @@
 import {PostcodeValidationType, PremiseValidationType, ValidationError} from "model/validation.model";
 
 const REGEX_FOR_POSTCODE = /^[A-Za-z0-9\s]*$/;
-const REGEX_FOR_PREMISE = /^[-,.:;A-Za-z0-9&@$£¥€'"«»?!/\\()\[\]{}<>=#%ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž\s]*$/;
+const REGEX_FOR_PREMISE = /^[-,.:;A-Za-z0-9&@$£¥€'"«»?!/\\()\[\]{}<>=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž\s]*$/;
 export const validatePremiseAndPostcode = (postcode: string,
                                            postcodeValidationType : PostcodeValidationType,
                                            premisesValidationType: PremiseValidationType,
