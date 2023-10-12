@@ -1,0 +1,44 @@
+<noscript>
+  {% set DROPDOWN = [
+    { value: '', text: dropdownDefaultText }
+  ] %}
+
+  {% set dropdownArray = typeahead_array.split("|") %}
+
+  {% if not dropdownNumber %}
+  {% set dropdownNumber = "0" %}
+  {% endif %}
+
+  {% if not inputClass %}
+  {% set inputClass = "govuk-!-width-two-thirds" %}
+  {% endif %}
+
+  {% if not dropdownValue %}
+  {% set dropdownValue = typeahead_value %}
+  {% endif %}
+
+  {% if not dropdownTitle %}
+  {% set dropdownTitle = typeaheadTitle %}
+  {% endif %}
+
+  {% for i in dropdownArray[dropdownNumber].split(';') %}
+    {% set dropdownObject = { value: i, text: i, selected: dropdownValue === i } %}
+    {% set DROPDOWN = DROPDOWN.concat(dropdownObject) %}
+    
+  {% endfor %}
+
+  {{ govukSelect({
+    errorMessage: errorMessage,
+    label: {
+      html: dropdownTitle
+    },
+    id: "typeahead_input_" + dropdownNumber,
+    name: "typeahead_input_" + dropdownNumber,
+    value: dropdownValue,
+    classes: inputClass,
+    hint: {
+      text: dropdownHint
+    },
+    items: DROPDOWN
+  }) }}
+</noscript>

@@ -24,6 +24,7 @@ export enum Templates {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS = "director-confirm-residential-address",
   DIRECTOR_RESIDENTIAL_ADDRESS = "director-residential-address",
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH = "director-residential-address-search",
+  DIRECTOR_RESIDENTIAL_CHOOSE_ADDRESS = "director-residential-address-search-choose-address",
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL = "director-residential-address-manual",
   DIRECTOR_PROTECTED_DETAILS = "director-protected-details",
   APPOINT_DIRECTOR_CHECK_ANSWERS = "appoint-director-check-answers",

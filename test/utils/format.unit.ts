@@ -1,4 +1,11 @@
-import { formatDateOfBirth, formatAppointmentDate, formatTitleCase, toUpperCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromOfficer } from "../../src/utils/format";
+import {
+  formatDateOfBirth,
+  formatAppointmentDate,
+  formatTitleCase,
+  toUpperCase,
+  retrieveDirectorNameFromAppointment,
+  retrieveDirectorNameFromOfficer
+} from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
 import {mockCompanyOfficer, mockCompanyOfficerMissingMiddleName, mockCompanyOfficerMissingName, mockCorporateCompanyOfficer} from "../mocks/remove.director.check.answers.mock";

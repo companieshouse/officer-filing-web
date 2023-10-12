@@ -54,7 +54,7 @@ export enum appointmentDateErrorMessageKey {
   INVALID_DATE = "appointment-date-invalid",
   IN_PAST = "appointment-date-in-past",
   AFTER_INCORPORATION_DATE = "appointment-date-after-incorporation-date",
-  DIRECTOR_UNDERAGE = "date-of-birth-underage",
+  APPOINTMENT_DATE_UNDERAGE = "appointment-date-underage",
 }
 
 export enum titleErrorMessageKey {
@@ -91,6 +91,18 @@ export enum occupationErrorMessageKey {
   OCCUPATION_LENGTH = "occupation-length"
 }
 
+export enum postcodeErrorMessageKey {
+  POSTCODE_CHARACTERS = "postal-code-characters",
+  POSTCODE_LENGTH = "postal-code-length",
+  POSTCODE_INVALID = "postal-code-invalid",
+  POSTCODE_BLANK = "postal-code-blank"
+}
+
+export enum premisesErrorMessageKey {
+  PREMISES_CHARACTERS = "premises-characters",
+  PREMISES_LENGTH = "premises-length"
+}
+
 export enum nationalityErrorMessageKey{
   NATIONALITY_INVALID = "invalid-nationality"
 }
@@ -111,4 +123,93 @@ export enum nationalityTwoErrorMessageKey {
 export enum nationalityThreeErrorMessageKey {
   NATIONALITY_LENGTH_48 = "nationality-length48",
   NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
+}
+
+
+export enum residentialAddressPremisesErrorMessageKey {
+  RESIDENTIAL_ADDRESS_PREMISES_BLANK = "residential-premises-blank",
+  RESIDENTIAL_ADDRESS_PREMISES_CHARACTERS = "residential-premises-characters",
+  RESIDENTIAL_ADDRESS_PREMISES_LENGTH = "residential-premises-length",
+}
+
+export enum residentialAddressAddressLineOneErrorMessageKey {
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_BLANK = "residential-address-line-one-blank",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_CHARACTERS = "residential-address-line-one-characters",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_LENGTH = "residential-address-line-one-length",
+}
+
+export enum residentialAddressAddressLineTwoErrorMessageKey {
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_2_CHARACTERS = "residential-address-line-two-characters",
+  RESIDENTIAL_ADDRESS_ADDRESS_LINE_2_LENGTH = "residential-address-line-two-length",
+}
+
+export enum residentialAddressLocalityErrorMessageKey {
+  RESIDENTIAL_ADDRESS_LOCALITY_BLANK = "residential-locality-blank",
+  RESIDENTIAL_ADDRESS_LOCALITY_CHARACTERS = "residential-locality-characters",
+  RESIDENTIAL_ADDRESS_LOCALITY_LENGTH = "residential-locality-length",
+}
+
+export enum residentialAddressRegionErrorMessageKey {
+  RESIDENTIAL_ADDRESS_REGION_BLANK = "residential-region-blank",
+  RESIDENTIAL_ADDRESS_REGION_CHARACTERS = "residential-region-characters",
+  RESIDENTIAL_ADDRESS_REGION_LENGTH = "residential-region-length",
+}
+
+export enum residentialAddressCountryErrorMessageKey {
+  RESIDENTIAL_ADDRESS_COUNTRY_BLANK = "residential-country-blank",
+  RESIDENTIAL_ADDRESS_COUNTRY_CHARACTERS = "residential-country-characters",
+  RESIDENTIAL_ADDRESS_COUNTRY_LENGTH = "residential-country-length",
+}
+
+export enum residentialAddressPostcodeErrorMessageKey {
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_BLANK = "residential-postal-code-blank",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_CHARACTERS = "residential-postal-code-characters",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_LENGTH = "residential-postal-code-length",
+  RESIDENTIAL_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "residential-postal-code-without-country",
+}
+
+export enum correspondenceAddressPremisesErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_PREMISES_BLANK = "correspondence-premises-blank",
+  CORRESPONDENCE_ADDRESS_PREMISES_CHARACTERS = "correspondence-premises-characters",
+  CORRESPONDENCE_ADDRESS_PREMISES_LENGTH = "correspondence-premises-length",
+}
+
+export enum correspondenceAddressAddressLineOneErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1_BLANK = "correspondence-address-line-one-blank",
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1_CHARACTERS = "correspondence-address-line-one-characters",
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1_LENGTH = "correspondence-address-line-one-length",
+}
+
+export enum correspondenceAddressAddressLineTwoErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2_CHARACTERS = "correspondence-address-line-two-characters",
+  CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2_LENGTH = "correspondence-address-line-two-length",
+}
+
+export enum correspondenceAddressLocalityErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_LOCALITY_BLANK = "correspondence-locality-blank",
+  CORRESPONDENCE_ADDRESS_LOCALITY_CHARACTERS = "correspondence-locality-characters",
+  CORRESPONDENCE_ADDRESS_LOCALITY_LENGTH = "correspondence-locality-length",
+}
+
+export enum correspondenceAddressRegionErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_REGION_BLANK = "correspondence-region-blank",
+  CORRESPONDENCE_ADDRESS_REGION_CHARACTERS = "correspondence-region-characters",
+  CORRESPONDENCE_ADDRESS_REGION_LENGTH = "correspondence-region-length",
+}
+
+export enum correspondenceAddressCountryErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_COUNTRY_BLANK = "correspondence-country-blank",
+  CORRESPONDENCE_ADDRESS_COUNTRY_CHARACTERS = "correspondence-country-characters",
+  CORRESPONDENCE_ADDRESS_COUNTRY_LENGTH = "correspondence-country-length",
+}
+
+export enum correspondenceAddressPostcodeErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_POSTAL_CODE_BLANK = "correspondence-postal-code-blank",
+  CORRESPONDENCE_ADDRESS_POSTAL_CODE_CHARACTERS = "correspondence-postal-code-characters",
+  CORRESPONDENCE_ADDRESS_POSTAL_CODE_LENGTH = "correspondence-postal-code-length",
+  CORRESPONDENCE_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "correspondence-postal-code-without-country",
+}
+
+export enum whereDirectorLiveErrorMessageKey {
+  NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
 }

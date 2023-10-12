@@ -1,0 +1,14 @@
+{{ govukInput({
+    errorMessage: errors.premises if errors,
+    label: {
+      text: "Property name or number"
+    },
+    hint: {
+      text: "For example, 'The Mill', '116' or 'Flat 37a'"
+    },
+    classes: "govuk-input--width-10",
+    id: "premises",
+    name: "premises",
+    value: premises,
+    autocomplete: "premises"
+  }) }}
