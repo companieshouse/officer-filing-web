@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { POSTCODE_ADDRESSES_LOOKUP_URL, POSTCODE_VALIDATION_URL} from "../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
@@ -21,9 +20,10 @@ import { formatValidationErrors } from "../validation/validation";
 import { ValidationError } from "../model/validation.model";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
-import { validatePremiseAndPostcode } from "../validation/postcode.validation";
+import { validatePostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
+import { validatePremise } from "../validation/premise.validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -51,7 +51,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const postalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
-    const jsValidationErrors = validatePremiseAndPostcode(postalCode, PostcodeValidation, PremiseValidation, premise);
+    let jsValidationErrors = validatePostcode(postalCode, PostcodeValidation);
+    if(premise) {
+      jsValidationErrors = validatePremise(premise, PremiseValidation, jsValidationErrors);
+    }
 
     const prepareOfficerFiling: OfficerFiling = {
       residentialAddress: {"premises": premise,
