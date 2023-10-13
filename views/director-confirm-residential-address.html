@@ -19,17 +19,17 @@
         <span class="govuk-caption-l">{{ directorName }}</span>
         <h1 class="govuk-heading-l">Confirm where the director lives</h1>
         <ul class="govuk-list">
-          <li>{{ premises }}</li>
-          <li>{{ addressLine1 }}</li>
-          <li>{{ addressLine2 }}</li>
-          <li>{{ region }}</li>
-          <li>{{ locality }}</li>
-          <li>{{ country }}</li>
+          <li>{{ premises | title  }}</li>
+          <li>{{ addressLine1 | title }}</li>
+          <li>{{ addressLine2 | title }}</li>
+          <li>{{ locality | title }}</li>
+          <li>{{ region | title }}</li>
+          <li>{{ country | title }}</li>
           <li>{{ postalCode }}</li>
         </ul>
         {% if addressLine1 %}
           <div class="govuk-body">
-            <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Edit address</a>
+            <a href="{{enterAddressManuallyUrl}}" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
           </div>
         {% endif %}
         <div class="govuk-inset-text">

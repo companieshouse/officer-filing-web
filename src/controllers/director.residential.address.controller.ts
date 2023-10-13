@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH } from "../types/page.urls";
+import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
+        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH 
+      } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { whereDirectorLiveErrorMessageKey } from '../utils/api.enumerations.keys';
@@ -20,21 +22,37 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req),
+      backLinkUrl: getBackLinkUrl(req),
       director_address: session.getExtraData("director_address_choice"),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      directorServiceAddress:  `
+      directorServiceAddress:  officerFiling.serviceAddress ?
+                              `
                                 ${officerFiling.serviceAddress?.addressLine1}, 
                                 ${officerFiling.serviceAddress?.locality},
                                 ${officerFiling.serviceAddress?.country} 
                                 ${officerFiling.serviceAddress?.postalCode}
-                              `,
-      manualAddress: true
+                              ` : undefined,
+      manualAddress: officerFiling.residentialAddress ? 
+                    `
+                      ${officerFiling.residentialAddress?.addressLine1}, 
+                      ${officerFiling.residentialAddress?.locality},
+                      ${officerFiling.residentialAddress?.country} 
+                      ${officerFiling.residentialAddress?.postalCode}
+                    ` : undefined,
     });
   } catch (e) {
     next(e);
   }
 };
+ 
+export const getBackLinkUrl = (req: Request): string => {
+  const callerUrl = req.headers.referer;
+  if (callerUrl  !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
+    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
+  } else {
+    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
+  }
+}
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -44,19 +62,22 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
     session.setExtraData("director_address_choice", selectedSraAddressChoice);
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const officerFilingBody: OfficerFiling = {};
 
-    const officerFiling: OfficerFiling = {
-      //field to be retrieved
+    if (req.body["director_service_address"]){
+      officerFilingBody.serviceAddress = officerFiling.serviceAddress;
+    } else if (req.body["director_home_address"]) {
+      officerFilingBody.residentialAddress = officerFiling.residentialAddress;
     }
 
-    const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-
+    const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req),
+        backLinkUrl: getBackLinkUrl(req),
         errors: formattedErrors,
         director_address: session.getExtraData("director_address_choice"),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data)),
@@ -66,7 +87,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
                                 ${officerFiling.serviceAddress?.country} 
                                 ${officerFiling.serviceAddress?.postalCode}
                               `,
-        manualAddress: true
+        manualAddress: officerFiling.residentialAddress ? 
+        `
+          ${officerFiling.residentialAddress?.addressLine1}, 
+          ${officerFiling.residentialAddress?.locality},
+          ${officerFiling.residentialAddress?.country} 
+          ${officerFiling.residentialAddress?.postalCode}
+        ` : undefined,     
       });
     }
 

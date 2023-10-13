@@ -18,11 +18,11 @@
 
       {% if manualAddress %}
         {% set manualAddressDisplay = {
-            value: "director_service_address",
-              text: directorServiceAddress,
-              checked: director_address === "director_service_address",
+            value: "director_home_address",
+              text: manualAddress,
+              checked: director_address === "director_home_address",
               attributes: {
-                "data-event-id": "director-service-address"
+                "data-event-id": "director-home-address"
               }
           }
         %}

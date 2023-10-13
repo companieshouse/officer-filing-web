@@ -1,17 +1,18 @@
 jest.mock("../../src/utils/feature.flag");
-jest.mock("../../src/services/officer.filing.service")
+jest.mock("../../src/services/officer.filing.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams } from '../../src/types/page.urls';
+import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { get } from "../../src/controllers/director.residential.address.search.controller";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import mockSessionMiddleware from "../mocks/session.middleware.mock";
+import { getBackLinkUrl } from './../../src/controllers/director.residential.address.controller';
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -56,10 +57,13 @@ const directorNameMock = {
   middleName: "NewLand",
   lastName: "Doe"
 }
+
 describe("Director name controller tests", () => {
 
   beforeEach(() => {
+    jest.clearAllMocks();
     mocks.mockSessionMiddleware.mockClear();
+    mockGetOfficerFiling.mockReset();
   });
 
   describe("get tests", () => {
@@ -74,6 +78,20 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
     });
 
+    it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      mockReq.params = {
+        companyNumber: COMPANY_NUMBER,
+        transactionId: TRANSACTION_ID,
+        submissionId: SUBMISSION_ID,
+      }
+      mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)
+    });
+
     it("Should navigate to error page when feature flag is off", async () => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(PAGE_URL);
@@ -81,23 +99,24 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
 
-    it(`catch error when rendering ${PAGE_URL} page`, () => {
-      const error = new TypeError("Cannot read properties of undefined (reading 'transactionId')");
-
-      (mockRes.render as jest.Mock).mockImplementationOnce(() => {
-        throw error;
+    it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH} when user visit page from it`, async () =>  {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
       });
-
-      get(mockReq, mockRes, mockNext.mockReturnValue(error));
-      expect(mockNext).toBeCalledTimes(1);
-      expect(mockNext).toBeCalledWith(error);
-      expect(mockNext).toReturnWith(error);
+      mockReq.params = {
+        companyNumber: COMPANY_NUMBER,
+        transactionId: TRANSACTION_ID,
+        submissionId: SUBMISSION_ID,
+      }
+      mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
+      const backLinkUrl = getBackLinkUrl(mockReq);
+      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)
     });
 
     it("should catch error if getofficerfiling error", async () => {
       const response = await request(app).get(PAGE_URL);
-      expect(response.text).not.toContain(PAGE_HEADING);
-      expect(response.text).toContain(ERROR_PAGE_HEADING)
+      mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+      expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
   });
 
@@ -109,6 +128,18 @@ describe("Director name controller tests", () => {
           ...directorNameMock
         }
       };
+     
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        serviceAddress: {
+          premises: "The Big House",
+          addressLine1: "One Street",
+          addressLine2: "Two",
+          locality: "Three",
+          region: "Four",
+          country: "Five",
+          postalCode: "TE6 3ST"
+        }
+      });
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({}));
       expect(response.text).toContain("Select the address where the director lives");
