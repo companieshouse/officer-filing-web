@@ -58,6 +58,33 @@ const directorNameMock = {
   lastName: "Doe"
 }
 
+const serviceAddressMock = {
+  serviceAddress: {
+    premises: "The Big House",
+    addressLine1: "One Street",
+    addressLine2: "Two",
+    locality: "Three",
+    region: "Four",
+    country: "Five",
+    postalCode: "TE6 3ST"
+  },
+  residentialAddress: {}
+}
+
+const residentialAddressMock = {
+  serviceAddress: {
+  },
+  residentialAddress: {
+    premises: "The residential House",
+    addressLine1: "residential Street",
+    addressLine2: "residential two",
+    locality: "residential Three",
+    region: "Residential Four",
+    country: "Residential country",
+    postalCode: "RES 3AB"
+  }
+}
+
 describe("Director name controller tests", () => {
 
   beforeEach(() => {
@@ -112,6 +139,46 @@ describe("Director name controller tests", () => {
       const backLinkUrl = getBackLinkUrl(mockReq);
       expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)
     });
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director service address`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    })
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director service address`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+      });
+      const response = await request(app).get(PAGE_URL);
+      console.log(response.text)
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
+    })
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director home address`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...residentialAddressMock,
+      });
+      const response = await request(app).get(PAGE_URL);
+      console.log(response.text)
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
+      expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
+    })
 
     it("should catch error if getofficerfiling error", async () => {
       const response = await request(app).get(PAGE_URL);
