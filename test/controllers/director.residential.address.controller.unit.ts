@@ -197,15 +197,8 @@ describe("Director name controller tests", () => {
       };
      
       mockGetOfficerFiling.mockResolvedValueOnce({
-        serviceAddress: {
-          premises: "The Big House",
-          addressLine1: "One Street",
-          addressLine2: "Two",
-          locality: "Three",
-          region: "Four",
-          country: "Five",
-          postalCode: "TE6 3ST"
-        }
+        ...directorNameMock,
+        ...serviceAddressMock
       });
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({}));
@@ -213,7 +206,10 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(directorNameMock.firstName);
-      expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      expect(mockGetOfficerFiling).toHaveBeenCalled();
+            expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).not.toContain(residentialAddressMock.residentialAddress.addressLine1);
+      expect(response.text).not.toContain(residentialAddressMock.residentialAddress.postalCode);
     });
 
     it("should catch error if patch officer filing failed", async () => {
@@ -232,11 +228,29 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if service address is selected`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
       const response = (await request(app).post(PAGE_URL).send({
         director_address: "director_service_address"
       }));
 
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+    });
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with both director residential address and service address on validation error`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...residentialAddressMock
+      });
+      const response = await request(app).post(PAGE_URL).send({});
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
+      expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
     });
   });
 });
