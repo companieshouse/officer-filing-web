@@ -239,6 +239,18 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
+    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if residential address is selected`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...residentialAddressMock,
+      });
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_home_address"
+      }));
+
+      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+    });
+
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with both director residential address and service address on validation error`, async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,

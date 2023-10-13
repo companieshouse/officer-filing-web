@@ -78,10 +78,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
       return res.redirect(nextPageUrl);
-    };
-
-    nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
-    return res.redirect(nextPageUrl);
+    } else {
+      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
+      return res.redirect(nextPageUrl);
+    }
     
   } catch (e) {
     next(e);
