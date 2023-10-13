@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH } from "../types/page.urls";
+import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -26,8 +26,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       company: companyProfile,
       officerFiling: officerFiling,
       name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      formerNames:  formatTitleCase(officerFiling.formerNames),
+      occupation:  formatTitleCase(officerFiling.occupation),
       dateOfBirth: toReadableFormat(officerFiling.dateOfBirth),
-      appointedOn: toReadableFormat(officerFiling.appointedOn)
+      appointedOn: toReadableFormat(officerFiling.appointedOn),
+      nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
     });
   } catch (e) {
     return next(e);
