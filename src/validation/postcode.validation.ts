@@ -1,11 +1,8 @@
-import {PostcodeValidationType, PremiseValidationType, ValidationError} from "model/validation.model";
+import {PostcodeValidationType, ValidationError} from "model/validation.model";
 
 const REGEX_FOR_POSTCODE = /^[A-Za-z0-9\s]*$/;
-const REGEX_FOR_PREMISE = /^[-,.:;A-Za-z0-9&@$£¥€'"«»?!/\\()\[\]{}<>=#%ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž\s]*$/;
-export const validatePremiseAndPostcode = (postcode: string,
-                                           postcodeValidationType : PostcodeValidationType,
-                                           premisesValidationType: PremiseValidationType,
-                                           premise?: string): ValidationError[] => {
+export const validatePostcode = (postcode: string,
+                                 postcodeValidationType : PostcodeValidationType): ValidationError[] => {
     let validationErrors: ValidationError[] = [];
 
     //Postcode validation
@@ -13,31 +10,21 @@ export const validatePremiseAndPostcode = (postcode: string,
     const missingPostcodeValuesValidationResult = validateMissingValues(postcode, postcodeValidationType);
     if (missingPostcodeValuesValidationResult) {
         validationErrors.push(missingPostcodeValuesValidationResult);
+        return validationErrors;
     }
 
     //Invalid characters
     const invalidPostcodeCharacterValidationResult = validateCharacterForPostcode(postcode, postcodeValidationType);
     if (invalidPostcodeCharacterValidationResult) {
       validationErrors.push(invalidPostcodeCharacterValidationResult);
+      return validationErrors;
     }
 
     //Invalid length
     const invalidPostcodeLengthValidationResult = validateLengthForPostcode(postcode, postcodeValidationType);
     if (invalidPostcodeLengthValidationResult) {
       validationErrors.push(invalidPostcodeLengthValidationResult);
-    }
-
-    //Premise validation
-    if (premise != null) {
-        const invalidPremisesCharacterValidationResult = validateInvalidCharacterValuesForPremise(premise, premisesValidationType);
-        if(invalidPremisesCharacterValidationResult) {
-            validationErrors.push(invalidPremisesCharacterValidationResult);
-        }
-
-        const invalidPremisesLengthValidationResult = validateLengthForPremise(premise, premisesValidationType);
-        if(invalidPremisesLengthValidationResult) {
-            validationErrors.push(invalidPremisesLengthValidationResult);
-        }
+      return validationErrors;
     }
 
     return validationErrors;
@@ -66,17 +53,6 @@ const validateCharacterForPostcode = (postcode: string, postcodeValidationType :
 }
 
 /**
- * Validate the premise field and return a validation error if the field contains invalid characters
- * @returns A ValidationError object if one occurred, else undefined
- */
-const validateInvalidCharacterValuesForPremise = (premise: string, premiseValidationType : PremiseValidationType): ValidationError | undefined => {
-    if (!premise.match(REGEX_FOR_PREMISE)) {
-        return premiseValidationType.InvalidCharacters.Premise;
-    }
-    return undefined;
-}
-
-/**
  * Validate the postcode field and return a validation error if the field length is invalid
  * @returns A ValidationError object if one occurred, else undefined
  */
@@ -84,17 +60,6 @@ const validateInvalidCharacterValuesForPremise = (premise: string, premiseValida
 const validateLengthForPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
     if (postcode.length > 20) {
         return postcodeValidationType.InvalidLength.Postcode;
-    }
-    return undefined;
-}
-
-/**
- * Validate the premise field and return a validation error if the field length is invalid
- * @returns A ValidationError object if one occurred, else undefined
- */
-const validateLengthForPremise = (premise: string, premiseValidationType : PremiseValidationType): ValidationError | undefined => {
-    if (premise.length > 200) {
-        return premiseValidationType.InvalidLength.Premise;
     }
     return undefined;
 }
