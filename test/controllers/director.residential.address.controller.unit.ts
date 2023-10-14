@@ -262,42 +262,5 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
       expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
     });
-
-    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with incomplete director service address on validation error`, async () => {
-      residentialAddressMock.serviceAddress = {
-        addressLine1: "One Street",
-      }
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock,
-        ...residentialAddressMock
-      });
-
-      const response = await request(app).post(PAGE_URL).send({});
-      expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain(directorNameMock.firstName);
-      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
-      expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
-    });
-
-    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with incomplete director residential address on validation error`, async () => {
-      serviceAddressMock.residentialAddress = {
-        addressLine1: "residential Street",
-      }
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock,
-        ...serviceAddressMock
-      });
-
-      const response = await request(app).post(PAGE_URL).send({});
-      expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain(directorNameMock.firstName);
-      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
-      expect(response.text).not.toContain(residentialAddressMock.residentialAddress.postalCode);
-      expect(response.text).not.toContain(residentialAddressMock.residentialAddress.country);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
-    });
   });
 });

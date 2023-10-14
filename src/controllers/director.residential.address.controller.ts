@@ -35,7 +35,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
  
 export const getBackLinkUrl = (req: Request): string => {
   const callerUrl = req.headers.referer;
-  if (callerUrl  !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
+  if (callerUrl !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
     return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
   } else {
     return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
@@ -97,21 +97,19 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 };
 
 const formatDirectorResidentialAddress = (officerFiling: OfficerFiling) => {
- return officerFiling.residentialAddress ?
-      `
-      ${officerFiling.residentialAddress?.addressLine1}, 
-      ${officerFiling.residentialAddress?.locality},
-      ${officerFiling.residentialAddress?.country} 
-      ${officerFiling.residentialAddress?.postalCode}
-    ` : undefined
+  return `
+          ${officerFiling.residentialAddress?.addressLine1}, 
+          ${officerFiling.residentialAddress?.locality},
+          ${officerFiling.residentialAddress?.country} 
+          ${officerFiling.residentialAddress?.postalCode} 
+        `
 }
 
 const formatDirectorServiceAddress = (officerFiling: OfficerFiling) => {
-  return officerFiling.serviceAddress ?
-       `
-       ${officerFiling.serviceAddress?.addressLine1}, 
-       ${officerFiling.serviceAddress?.locality},
-       ${officerFiling.serviceAddress?.country} 
-       ${officerFiling.serviceAddress?.postalCode}
-     ` : undefined
+  return `
+          ${officerFiling.serviceAddress?.addressLine1}, 
+          ${officerFiling.serviceAddress?.locality},
+          ${officerFiling.serviceAddress?.country} 
+          ${officerFiling.serviceAddress?.postalCode}
+        `
  }
