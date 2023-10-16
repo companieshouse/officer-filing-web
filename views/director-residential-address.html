@@ -16,7 +16,11 @@
 
       {% include "includes/list/errors.html" %}
 
-      {% if manualAddress %}
+      {% if 'undefined' not in directorServiceAddress %}
+        {% set directorServiceAddressValue = directorServiceAddress %}
+      {% endif %}
+
+      {% if manualAddress and 'undefined' not in manualAddress %}
         {% set manualAddressDisplay = {
             value: "director_home_address",
               text: manualAddress,
@@ -47,7 +51,7 @@
           items: [
             {
               value: "director_service_address",
-              text: directorServiceAddress,
+              text: directorServiceAddressValue,
               checked: director_address === "director_service_address",
               attributes: {
                 "data-event-id": "director-service-address"
