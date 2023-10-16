@@ -24,6 +24,7 @@ import { validatePostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
+import { getCountryFromKey } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -113,18 +114,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return next(e);
   }
 };
-
-export const getCountryFromKey = (country: string): string => {
-  const countryKeyValueMap: Record<string, string> = {
-    'GB-SCT': 'Scotland',
-    'GB-WLS': 'Wales',
-    'GB-ENG': 'England',
-    'GB-NIR': 'Northern Ireland',
-    'Channel Island': 'Channel Island',
-    'Isle of Man': 'Isle of Man',
-  };
-  return countryKeyValueMap[country];
-}
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
