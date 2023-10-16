@@ -210,6 +210,10 @@ export enum correspondenceAddressPostcodeErrorMessageKey {
   CORRESPONDENCE_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "correspondence-postal-code-without-country",
 }
 
-export enum whereDirectorLiveErrorMessageKey {
+export enum whereDirectorLiveResidentialErrorMessageKey {
   NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
+}
+
+export enum whereDirectorLiveCorrespondenceErrorMessageKey {
+  NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the director’s correspondence address"
 }
