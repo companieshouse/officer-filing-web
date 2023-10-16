@@ -49,6 +49,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const postalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
     const premise : string = (req.body[DirectorField.PREMISES])?.trim();
     let jsValidationErrors = validatePostcode(postalCode, PostcodeValidation);
@@ -56,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       jsValidationErrors = validatePremise(premise, PremiseValidation, jsValidationErrors);
     }
 
-    const prepareOfficerFiling: OfficerFiling = {
+    const prepareOfficerFiling: OfficerFiling = { ...originalOfficerFiling,
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
                            "locality": "",
@@ -65,16 +66,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       };
 
+    // Patch the filing with updated information
+    logger.debug(`Patching officer filing with postcode ${postalCode} and premise ${premise}`);
+    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
+
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
@@ -102,8 +105,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    logger.debug(`Patching officer filing with postcode ${postalCode}`);
-    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     return res.redirect(nextPageUrl);
 
