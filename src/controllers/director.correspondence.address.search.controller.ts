@@ -23,7 +23,7 @@ import { POSTCODE_ADDRESSES_LOOKUP_URL, POSTCODE_VALIDATION_URL } from "../utils
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
 import { logger } from "../utils/logger";
-import { getCountryFromKey } from "../utils/country.key";
+import { getCountryFromKey } from "../utils/web";
 import { validatePostcode } from "../validation/postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
 
