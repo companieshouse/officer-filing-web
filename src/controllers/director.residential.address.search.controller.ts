@@ -57,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if(premise) {
       jsValidationErrors = validatePremise(premise, PremiseValidation, jsValidationErrors);
     }
-    logger.debug(`originalOfficerFiling:::::: ${JSON.stringify(originalOfficerFiling)}`);
+
     const prepareOfficerFiling: OfficerFiling = { ...originalOfficerFiling,
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
