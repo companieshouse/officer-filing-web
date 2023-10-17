@@ -52,24 +52,24 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const postalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
-    const premise : string = (req.body[DirectorField.PREMISES])?.trim();
-    let jsValidationErrors = validatePostcode(postalCode, PostcodeValidation);
-    if(premise) {
-      jsValidationErrors = validatePremise(premise, PremiseValidation, jsValidationErrors);
+    const correspondencePostalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
+    const correspondencePremise : string = (req.body[DirectorField.PREMISES])?.trim();
+    let jsValidationErrors = validatePostcode(correspondencePostalCode, PostcodeValidation);
+    if(correspondencePremise) {
+      jsValidationErrors = validatePremise(correspondencePremise, PremiseValidation, jsValidationErrors);
     }
 
     const prepareOfficerFiling: OfficerFiling = { ...originalOfficerFiling,
-      serviceAddress: {"premises": premise,
+      serviceAddress: {"premises": correspondencePremise,
                        "addressLine1": "",
                        "locality": "",
-                       "postalCode": postalCode,
+                       "postalCode": correspondencePostalCode,
                        "country" : ""},
       serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
     };
 
     // Patch the filing with updated information
-    logger.debug(`Patching officer filing correspondence address with postcode ${postalCode} and premise ${premise}`);
+    logger.debug(`Patching officer filing correspondence address with postcode ${correspondencePostalCode} and premise ${correspondencePremise}`);
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Validate formatting errors for fields, render errors if found.
@@ -78,17 +78,17 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
-    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, postalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
+    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
 
     // Look up the addresses, as by now validated postcode is valid and exist
-    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g,''));
+    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''));
     // If premises is entered by user, loop through addresses to find user entered premise
-    if(premise) {
+    if(correspondencePremise) {
       for(const ukAddress of ukAddresses) {
-        if(ukAddress.premise.toUpperCase() === premise.toUpperCase()) {
+        if(ukAddress.premise.toUpperCase() === correspondencePremise.toUpperCase()) {
           const officerFiling: OfficerFiling = {
             serviceAddress: {"premises": ukAddress.premise,
               "addressLine1": ukAddress.addressLine1,
