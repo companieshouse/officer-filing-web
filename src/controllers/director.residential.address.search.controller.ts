@@ -24,7 +24,7 @@ import { validatePostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
-import { getCountryFromKey } from "../utils/country.key";
+import { getCountryFromKey } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {

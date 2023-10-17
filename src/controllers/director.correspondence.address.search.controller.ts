@@ -6,7 +6,7 @@ import {
   DIRECTOR_CORRESPONDENCE_ADDRESS,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -23,7 +23,7 @@ import { POSTCODE_ADDRESSES_LOOKUP_URL, POSTCODE_VALIDATION_URL } from "../utils
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
 import { logger } from "../utils/logger";
-import { getCountryFromKey } from "../utils/country.key";
+import { getCountryFromKey } from "../utils/web";
 import { validatePostcode } from "../validation/postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
 
