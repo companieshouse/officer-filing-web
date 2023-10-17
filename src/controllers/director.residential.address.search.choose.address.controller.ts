@@ -20,31 +20,20 @@ import { createValidationError, formatValidationErrors } from "../validation/val
 import { residentialAddressErrorMessageKey } from "../utils/api.enumerations.keys";
 import { getCountryFromKey } from "../utils/web";
 
-var officerFiling: OfficerFiling;
-var addressOptions: { premises: string; formattedAddress: string; }[];
-var ukAddresses: UKAddress[] = [];
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const postalCode = officerFiling?.residentialAddress?.postalCode;
     if (!postalCode) {
       throw new Error("Postal code is undefined");
     }
-
-    ukAddresses = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
-    addressOptions = ukAddresses.map((address: UKAddress) => {
-      return {
-        premises: address.premise,
-        formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
-      };
-    }).sort((a, b) => (a.premises > b.premises) ? 1 : -1);
-
-    return renderPage(req, res, []);
+    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
+    
+    return renderPage(req, res, officerFiling, ukAddresses, []);
   } catch (e) {
     return next(e);
   }
@@ -55,11 +44,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
   const session: Session = req.session as Session;
 
+  const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+  const postalCode = officerFiling?.residentialAddress?.postalCode;
+  if (!postalCode) {
+    throw new Error("Postal code is undefined");
+  }
+  const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
+
   const selectedPremises = req.body[DirectorField.ADDRESS_ARRAY];
   const selectedAddress = ukAddresses.find((address: UKAddress) => address.premise === selectedPremises);
   if (!selectedAddress) {
     const validationError = createValidationError(residentialAddressErrorMessageKey.RESIDENTIAL_ADDRESS_BLANK, [DirectorField.ADDRESS_ARRAY], ukAddresses[0]?.premise);
-    return renderPage(req, res, [validationError]);
+    return renderPage(req, res, officerFiling, ukAddresses, [validationError]);
   }
 
   const patchFiling: OfficerFiling = {
@@ -81,7 +77,15 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
  */
-const renderPage = async (req: Request, res: Response, validationErrors: ValidationError[]) => {
+const renderPage = async (req: Request, res: Response, officerFiling: OfficerFiling, ukAddresses: UKAddress[], validationErrors: ValidationError[]) => {
+  // Map the addresses to the format that will be displayed on the page
+  const addressOptions = ukAddresses.map((address: UKAddress) => {
+    return {
+      premises: address.premise,
+      formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
+    };
+  }).sort((a, b) => (a.premises > b.premises) ? 1 : -1);
+
   return res.render(Templates.DIRECTOR_RESIDENTIAL_CHOOSE_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_CHOOSE_ADDRESS,
     confirmAddressUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, req),

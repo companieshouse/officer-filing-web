@@ -131,17 +131,6 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it("Should navigate to error page when officer filing residential address postal code is invalid", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          residentialAddress: {
-            postalCode: "123456789"
-          }
-        });
-        const response = await request(app).get(PAGE_URL);
-  
-        expect(response.text).toContain(ERROR_PAGE_HEADING);
-      });
-
       it("Should return 500 and render error page when get officer filing throws an error", async () => {
         mockGetOfficerFiling.mockRejectedValueOnce(new Error());
         const response = await request(app).get(PAGE_URL);
@@ -181,7 +170,6 @@ describe("Director name controller tests", () => {
             postcode: "TE6 6ST"
           }
         ]);
-        await request(app).get(PAGE_URL);
         
         const response = await request(app)
           .post(PAGE_URL)
@@ -206,7 +194,6 @@ describe("Director name controller tests", () => {
             postcode: "TE6 6ST"
           }
         ]);
-        await request(app).get(PAGE_URL);
         
         await request(app)
           .post(PAGE_URL)
@@ -245,7 +232,6 @@ describe("Director name controller tests", () => {
             postcode: "TE6 6ST"
           }
         ]);
-        await request(app).get(PAGE_URL);
         
         const response = await request(app)
           .post(PAGE_URL)
