@@ -24,7 +24,7 @@ import { validatePostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
-import { getCountryFromKey } from "../utils/country.key";
+import { getCountryFromKey } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -68,7 +68,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       };
 
     // Patch the filing with updated information
-    logger.debug(`Patching officer filing residential address with postcode ${postalCode} and premise ${premise}`);
+    logger.debug(`Patching officer filing with postcode ${postalCode} and premise ${premise}`);
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Validate formatting errors for fields, render errors if found.
