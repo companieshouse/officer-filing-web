@@ -24,6 +24,7 @@ import { validatePostcode } from "../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
+import { getCountryFromKey } from "../utils/country.key";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -56,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if(premise) {
       jsValidationErrors = validatePremise(premise, PremiseValidation, jsValidationErrors);
     }
-
+    logger.debug(`originalOfficerFiling:::::: ${JSON.stringify(originalOfficerFiling)}`);
     const prepareOfficerFiling: OfficerFiling = { ...originalOfficerFiling,
       residentialAddress: {"premises": premise,
                            "addressLine1": "",
@@ -67,7 +68,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       };
 
     // Patch the filing with updated information
-    logger.debug(`Patching officer filing with postcode ${postalCode} and premise ${premise}`);
+    logger.debug(`Patching officer filing residential address with postcode ${postalCode} and premise ${premise}`);
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Validate formatting errors for fields, render errors if found.
@@ -113,18 +114,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return next(e);
   }
 };
-
-export const getCountryFromKey = (country: string): string => {
-  const countryKeyValueMap: Record<string, string> = {
-    'GB-SCT': 'Scotland',
-    'GB-WLS': 'Wales',
-    'GB-ENG': 'England',
-    'GB-NIR': 'Northern Ireland',
-    'Channel Island': 'Channel Island',
-    'Isle of Man': 'Isle of Man',
-  };
-  return countryKeyValueMap[country];
-}
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
