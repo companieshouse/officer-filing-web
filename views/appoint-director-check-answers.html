@@ -55,12 +55,12 @@
           {% set formerNames = "None" %}
         {% endif %}
 
-        {% set nationality = officerFiling.nationality1 %}
-        {% if officerFiling.nationality2 %}
-          {% set nationality = nationality + "<br>" + officerFiling.nationality2 %}
+        {% set nationality = officerFiling.data.nationality1 %}
+        {% if officerFiling.data.nationality2 %}
+          {% set nationality = nationality + "<br>" + officerFiling.data.nationality2 %}
         {% endif %}
-        {% if officerFiling.nationality3 %}
-          {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
+        {% if officerFiling.data.nationality3 %}
+          {% set nationality = nationality + "<br>" + officerFiling.data.nationality3 %}
         {% endif %}
 
         <h2 class="govuk-heading-m">Director details</h2>
@@ -94,7 +94,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: nameLink,
                     text: "Change",
                     visuallyHiddenText: "Previous name"
                   }
@@ -111,7 +111,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: dateOfBirthLink,
                     text: "Change",
                     visuallyHiddenText: "Date of birth"
                   }
@@ -128,7 +128,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: dateAppointedLink,
                     text: "Change",
                     visuallyHiddenText: "Appointed on date"
                   }
@@ -145,7 +145,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: nationalityLink,
                     text: "Change",
                     visuallyHiddenText: "Nationality"
                   }
@@ -162,7 +162,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: occupationLink,
                     text: "Change",
                     visuallyHiddenText: "Occupation"
                   }

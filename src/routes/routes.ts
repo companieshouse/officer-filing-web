@@ -30,6 +30,7 @@ import * as stopPathRoute from "../controllers/stop.screen.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
+import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 
 
 export const router: Router = Router();
@@ -71,21 +72,20 @@ router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post)
 router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
 
 router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
-
 // AP01
-router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), directorName.get);
+router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorName.get);
 router.post(urls.DIRECTOR_NAME, directorName.post);
 
-router.get(urls.DIRECTOR_DATE_OF_BIRTH, isFeatureEnabled(AP01_ACTIVE), directorDateOfBirth.get);
+router.get(urls.DIRECTOR_DATE_OF_BIRTH, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorDateOfBirth.get);
 router.post(urls.DIRECTOR_DATE_OF_BIRTH, directorDateOfBirth.post);
 
-router.get(urls.DIRECTOR_APPOINTED_DATE, isFeatureEnabled(AP01_ACTIVE), directorAppointedDate.get);
+router.get(urls.DIRECTOR_APPOINTED_DATE, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorAppointedDate.get);
 router.post(urls.DIRECTOR_APPOINTED_DATE, directorAppointedDate.post);
 
-router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), directorNationality.get);
+router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get);
 router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);
 
-router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), directorOccupation.get);
+router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);
 
 router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorCorrespondeAddress.get);

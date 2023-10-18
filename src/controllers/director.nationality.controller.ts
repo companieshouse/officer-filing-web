@@ -7,7 +7,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../utils/web";
+import { getField, setBackLink, setRedirectLink } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { getValidationStatus } from "../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
@@ -23,7 +23,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_NATIONALITY, {
       templateName: Templates.DIRECTOR_NATIONALITY,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
@@ -57,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NATIONALITY, {
         templateName: Templates.DIRECTOR_NATIONALITY,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
+        backLinkUrl: setBackLink(req, patchedFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
         typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
         typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
         errors: formattedErrors,
@@ -68,7 +68,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req);
-    return res.redirect(nextPageUrl);
+    return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     return next(e);
   }

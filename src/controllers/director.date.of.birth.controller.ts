@@ -14,6 +14,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
+import { setBackLink, setRedirectLink } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,7 +66,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req);
-    return res.redirect(nextPageUrl);
+    return res.redirect(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl));
 
   } catch (e) {
     return next(e);
@@ -105,7 +106,7 @@ const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, v
 
   return res.render(Templates.DIRECTOR_DATE_OF_BIRTH, {
     templateName: Templates.DIRECTOR_DATE_OF_BIRTH,
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     errors: formatValidationErrors(validationErrors),
     ...dates,
