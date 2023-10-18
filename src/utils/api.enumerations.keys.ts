@@ -125,6 +125,9 @@ export enum nationalityThreeErrorMessageKey {
   NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
 }
 
+export enum residentialAddressErrorMessageKey {
+  RESIDENTIAL_ADDRESS_BLANK = "residential-address-blank"
+}
 
 export enum residentialAddressPremisesErrorMessageKey {
   RESIDENTIAL_ADDRESS_PREMISES_BLANK = "residential-premises-blank",
