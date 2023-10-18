@@ -2,12 +2,30 @@ import { NextFunction, Request, Response } from "express";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
+import { protectedDetailsErrorMessageKey } from '../utils/api.enumerations.keys';
+import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
+import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { getValidationStatus } from "../services/validation.status.service";
+import { ValidationError } from "../model/validation.model";
+import { DirectorField } from "../model/director.model";
+import { getField } from "../utils/web";
+
+import { Session } from "@companieshouse/node-session-handler";
+
+const protectedDetailsHtmlField: string = "protected_details";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req)
+      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req),
+      protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
   } catch (e) {
     return next(e);
@@ -15,6 +33,71 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
-  return res.redirect(nextPageUrl);
+  try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+
+    const validationErrors = buildValidationErrors(req);
+    if (validationErrors.length > 0) {
+      const formattedErrors = formatValidationErrors(validationErrors);
+      return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
+        templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
+        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req),
+        errors: formattedErrors,
+        director_address: directorAppliedToProtectDetailsValue(req),
+      });
+    }
+
+    // Patch filing with updated information
+    const officerFiling: OfficerFiling = {
+      directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
+    };
+    console.log("Patching officer filing" + JSON.stringify(req.body))
+    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+
+    const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    return res.redirect(nextPageUrl);
+  } catch (e) {
+    next(e);
+  };
+}
+
+export const buildValidationErrors = (req: Request): ValidationError[] => {
+  const validationErrors: ValidationError[] = [];
+  if (req.body[protectedDetailsHtmlField] === undefined) {
+    validationErrors.push(createValidationErrorBasic(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED, protectedDetailsHtmlField));
+  }
+  return validationErrors;
 };
+
+const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetails: boolean | undefined): string | undefined => {
+  console.log("log directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
+  console.info("info directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
+  console.error("error directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
+
+  if (directorAppliedToProtectDetails === null) {
+    return undefined;
+  }
+  if (directorAppliedToProtectDetails === true) {
+    return DirectorField.PROTECTED_DETAILS_YES;
+  }
+  if (directorAppliedToProtectDetails === false) {
+    return DirectorField.PROTECTED_DETAILS_NO;
+  }
+}
+
+const directorAppliedToProtectDetailsValue = (req: Request): boolean|undefined => {
+  let directorProtectedDetailsRadio = getField(req, DirectorField.PROTECTED_DETAILS_RADIO);
+
+  if (!directorProtectedDetailsRadio) {
+    return undefined;
+  } 
+  if (directorProtectedDetailsRadio == DirectorField.PROTECTED_DETAILS_YES) {
+    return true;
+  }
+  if (directorProtectedDetailsRadio == DirectorField.PROTECTED_DETAILS_NO) {
+    return false;
+  }
+  return undefined;
+}

@@ -12,7 +12,7 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds">
 
       {% include "includes/list/errors.html" %}
       
@@ -20,6 +20,62 @@
 
         <h1 class="govuk-heading-l">Does the director have their personal information protected at Companies House?</h1>
         <!-- This is the page for director protected details selection -->
+
+        <p class="govuk-hint">This includes if they are waiting for the results of an application to protect their personal information.</p>
+
+        {{ govukRadios({
+          errorMessage: errors.protected_details if errors,
+          idPrefix: "protected_details",
+          name: "protected_details",
+          fieldset: {
+            legend: {
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "protected_details_no",
+              text: "No",
+              checked: protected_details === "protected_details_no",
+              attributes: {
+                "data-event-id": "protected_details_no"
+              }
+            },
+            {
+              value: "protected_details_yes",
+              text: "Yes",
+              hint: {
+                text: "We’ll need to check that the director has applied to protect their details, so your submission will take longer to process."
+              },
+              checked: protected_details === "protected_details_yes",
+              attributes: {
+                "data-event-id": "protected_details_yes"
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukInsetText({
+          text: "We will reject your filing if you select ‘yes’ and the director has not applied to protect their details."
+        }) }}
+
+        {% set accordianDetails %}
+        <p>Some directors can apply to protect personal information from being shown on the Companies House public online register if they meet certain criteria.</p>
+        <p>You should only select ‘yes’ if the director has:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>provided evidence that they are eligible to have their details protected</li>
+          <li>paid the £100 fee</li>
+        </ul>
+        {% endset %}
+
+        {{ govukDetails({
+          summaryHtml: '<div> What having personal information protected means</div>',
+          html: accordianDetails,
+          attributes: {
+            "data-event-id": "protected-details-accordion-expansion"
+          }
+        }) }}
 
         {{ govukButton({
           attributes: {
