@@ -16,17 +16,17 @@
 
       {% include "includes/list/errors.html" %}
 
-      {% if 'undefined' not in directorServiceAddress %}
-        {% set directorServiceAddressValue = directorServiceAddress %}
+      {% if 'undefined' not in directorRegisteredOfficeAddress %}
+        {% set directorRegisteredAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
 
       {% if manualAddress and 'undefined' not in manualAddress %}
         {% set manualAddressDisplay = {
-            value: "director_home_address",
+            value: "director_correspondence_address",
               text: manualAddress,
-              checked: director_address === "director_home_address",
+              checked: director_address === "director_correspondence_address",
               attributes: {
-                "data-event-id": "director-home-address"
+                "data-event-id": "director_correspondence_address"
               }
           }
         %}
@@ -50,11 +50,11 @@
           },
           items: [
             {
-              value: "director_service_address",
-              text: directorServiceAddressValue,
-              checked: director_address === "director_service_address",
+              value: "director_registered_office_address",
+              text: directorRegisteredAddressValue,
+              checked: director_address === "director_registered_office_address",
               attributes: {
-                "data-event-id": "director-service-address"
+                "data-event-id": "director_registered_office_address"
               }
             },
             manualAddressDisplay,
