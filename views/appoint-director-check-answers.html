@@ -55,12 +55,12 @@
           {% set formerNames = "None" %}
         {% endif %}
 
-        {% set nationality = officerFiling.data.nationality1 %}
-        {% if officerFiling.data.nationality2 %}
-          {% set nationality = nationality + "<br>" + officerFiling.data.nationality2 %}
+        {% set nationality = officerFiling.nationality1 %}
+        {% if officerFiling.nationality2 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality2 %}
         {% endif %}
-        {% if officerFiling.data.nationality3 %}
-          {% set nationality = nationality + "<br>" + officerFiling.data.nationality3 %}
+        {% if officerFiling.nationality3 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
         {% endif %}
 
         <h2 class="govuk-heading-m">Director details</h2>
@@ -228,7 +228,7 @@
         }) }}
 
         {{ govukCheckboxes({
-          name: "director-consent",
+          name: "director_consent",
           fieldset: {
             legend: {
               text: "Consent to act as a director",
@@ -236,9 +236,10 @@
               classes: "govuk-fieldset__legend--m"
             }
           },
+          errorMessage: errors.director_consent if errors,
           items: [
             {
-              value: "director-consent",
+              value: "director_consent",
               text: "By submitting this information, you are confirming that the person named has consented to act as a director."
             }
           ]

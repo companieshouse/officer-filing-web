@@ -4,15 +4,21 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { patchOfficerFiling } from "../services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { toReadableFormat } from "../utils/date";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
-import { STOP_TYPE } from "../utils/constants";
+import { CONSENT_TO_ACT_AS_DIRECTOR, STOP_TYPE } from "../utils/constants";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getField } from "../utils/web";
+import { DirectorField } from "../model/director.model";
+import { FormattedValidationErrors } from "../model/validation.model";
+import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
+import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
+  try {
   const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -23,30 +29,15 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       checkYourAnswersLink: ""
   };
   const officerFiling = await patchOfficerFiling(session, transactionId, submissionId, checkYourAnswersLinkPatch);
-  try {
-    return res.render(Templates.APPOINT_DIRECTOR_CHECK_ANSWERS, {
-      templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
-      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
-      company: companyProfile,
-      officerFiling: officerFiling,
-      name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling.data)),
-      formerNames:  formatTitleCase(officerFiling.data.formerNames),
-      occupation:  formatTitleCase(officerFiling.data.occupation),
-      dateOfBirth: toReadableFormat(officerFiling.data.dateOfBirth),
-      appointedOn: toReadableFormat(officerFiling.data.appointedOn),
-      nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
-      dateOfBirthLink: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req),
-      dateAppointedLink: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
-      nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
-      occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)
-    });
+  
+    renderPage(req, res, companyProfile, officerFiling.data, undefined);
   } catch (e) {
     return next(e);
   }
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
+  try {
   const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
   const session: Session = req.session as Session;
   var nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_SUBMITTED_PATH, req);
@@ -55,7 +46,39 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
     nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
   }
-
+  if (getField(req, DirectorField.DIRECTOR_CONSENT) !== DirectorField.DIRECTOR_CONSENT) {
+    const consentError = createValidationErrorBasic(CONSENT_TO_ACT_AS_DIRECTOR, DirectorField.DIRECTOR_CONSENT);
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    return renderPage(req, res, companyProfile, officerFiling, formatValidationErrors([consentError]));
+  }
 
   return res.redirect(nextPageUrl);
+} catch (e) {
+  return next(e);
+}
 };
+
+const renderPage = (req: Request, res: Response, companyProfile: CompanyProfile, officerFiling: OfficerFiling, errors: FormattedValidationErrors | undefined) => {
+  return res.render(Templates.APPOINT_DIRECTOR_CHECK_ANSWERS, {
+    templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
+    cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+    company: companyProfile,
+    officerFiling: officerFiling,
+    name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    formerNames:  formatTitleCase(officerFiling.formerNames),
+    occupation:  formatTitleCase(officerFiling.occupation),
+    dateOfBirth: toReadableFormat(officerFiling.dateOfBirth),
+    appointedOn: toReadableFormat(officerFiling.appointedOn),
+    nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
+    dateOfBirthLink: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req),
+    dateAppointedLink: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
+    nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
+    occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+    errors: errors
+  });
+
+}
