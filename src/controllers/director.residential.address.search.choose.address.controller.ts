@@ -84,7 +84,7 @@ const renderPage = async (req: Request, res: Response, officerFiling: OfficerFil
       premises: address.premise,
       formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
     };
-  }).sort((a, b) => (a.premises > b.premises) ? 1 : -1);
+  });
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_CHOOSE_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_CHOOSE_ADDRESS,
