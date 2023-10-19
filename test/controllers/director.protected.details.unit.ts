@@ -12,6 +12,9 @@ import { buildValidationErrors } from "../../src/validation/protected.details.va
 import { ValidationError } from "../../src/model/validation.model";
 import { protectedDetailsErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
+import { directorAppliedToProtectDetailsValue } from "../../src/controllers/director.protected.details.controller";
+import { DirectorField } from "../../src/model/director.model";
+
 import { 
   DIRECTOR_PROTECTED_DETAILS_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
@@ -26,6 +29,7 @@ mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockBuildValidationErrors = buildValidationErrors as jest.Mock;
+const mockDirectorAppliedToProtectDetailsValue = directorAppliedToProtectDetailsValue as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -121,4 +125,29 @@ describe("Director protected details controller tests", () => {
       });
     });
 
+    describe("directorAppliedToProtectDetailsValue", () => {
+      it("should return undefined if directorProtectedDetailsRadio is not defined", () => {
+        const req = { body: {} } as Request;
+        const result = mockDirectorAppliedToProtectDetailsValue(req);
+        expect(result).toBeUndefined();
+      });
+    
+      it("should return true if directorProtectedDetailsRadio is 'yes'", () => {
+        const req = { body: { [DirectorField.PROTECTED_DETAILS_RADIO]: DirectorField.PROTECTED_DETAILS_YES } } as Request;
+        const result = mockDirectorAppliedToProtectDetailsValue(req);
+        expect(result).toBe(true);
+      });
+    
+      it("should return false if directorProtectedDetailsRadio is 'no'", () => {
+        const req = { body: { [DirectorField.PROTECTED_DETAILS_RADIO]: DirectorField.PROTECTED_DETAILS_NO } } as Request;
+        const result = mockDirectorAppliedToProtectDetailsValue(req);
+        expect(result).toBe(false);
+      });
+    
+      it("should return undefined if directorProtectedDetailsRadio is not 'yes' or 'no'", () => {
+        const req = { body: { [DirectorField.PROTECTED_DETAILS_RADIO]: "invalid" } } as Request;
+        const result = mockDirectorAppliedToProtectDetailsValue(req);
+        expect(result).toBeUndefined();
+      });
+    });
 });

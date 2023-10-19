@@ -73,10 +73,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetails: boolean | undefined): string | undefined => {
-  console.log("log directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
-  console.info("info directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
-  console.error("error directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
-
   if (directorAppliedToProtectDetails === null) {
     return undefined;
   }
@@ -88,7 +84,7 @@ const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetail
   }
 }
 
-const directorAppliedToProtectDetailsValue = (req: Request): boolean|undefined => {
+export const directorAppliedToProtectDetailsValue = (req: Request): boolean|undefined => {
   let directorProtectedDetailsRadio = getField(req, DirectorField.PROTECTED_DETAILS_RADIO);
 
   if (!directorProtectedDetailsRadio) {
