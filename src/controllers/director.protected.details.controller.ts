@@ -10,10 +10,9 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
+import { buildValidationErrors } from "../validation/protected.details.validation";
 
 import { Session } from "@companieshouse/node-session-handler";
-
-const protectedDetailsHtmlField: string = "protected_details";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -74,14 +73,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     next(e);
   };
 }
-
-export const buildValidationErrors = (req: Request): ValidationError[] => {
-  const validationErrors: ValidationError[] = [];
-  if (req.body[protectedDetailsHtmlField] === undefined) {
-    validationErrors.push(createValidationErrorBasic(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED, protectedDetailsHtmlField));
-  }
-  return validationErrors;
-};
 
 const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetails: boolean | undefined): string | undefined => {
   console.log("log directorAppliedToProtectDetails: " + directorAppliedToProtectDetails);
