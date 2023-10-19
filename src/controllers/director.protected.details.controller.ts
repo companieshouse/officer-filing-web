@@ -45,8 +45,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    debugger;
-
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
@@ -62,7 +60,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling: OfficerFiling = {
       directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
     };
-    console.log("Patching officer filing" + JSON.stringify(req.body))
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);

@@ -56,7 +56,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling: OfficerFiling = {
       protectedDetailsBackLink: DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
     };
-    console.log("Patching officer filing" + JSON.stringify(req.body))
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
 
