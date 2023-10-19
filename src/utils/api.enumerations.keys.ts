@@ -171,6 +171,10 @@ export enum residentialAddressPostcodeErrorMessageKey {
   RESIDENTIAL_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "residential-postal-code-without-country",
 }
 
+export enum correspondenceAddressErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_BLANK = "correspondence-address-blank"
+}
+
 export enum correspondenceAddressPremisesErrorMessageKey {
   CORRESPONDENCE_ADDRESS_PREMISES_BLANK = "correspondence-premises-blank",
   CORRESPONDENCE_ADDRESS_PREMISES_CHARACTERS = "correspondence-premises-characters",
