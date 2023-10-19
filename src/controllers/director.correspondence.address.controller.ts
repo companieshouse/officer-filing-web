@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
         DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
+        DIRECTOR_OCCUPATION_PATH_END, 
         DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -11,71 +12,67 @@ import { createValidationErrorBasic, formatValidationErrors } from "../validatio
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ValidationError } from "../model/validation.model";
 import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enumerations.keys";
+import { getCompanyProfile } from "../services/company.profile.service";
+import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
+const directorCorrespondenceAddressRadioChoiceMap = new Map();
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    // retrieve registered office address
+    const companyProfile = await getCompanyProfile(companyNumber);
+
+    if (req.headers.referer?.includes(DIRECTOR_OCCUPATION_PATH_END)){
+      directorCorrespondenceAddressRadioChoiceMap.clear();
+    }
 
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
-      director_correspondence_address: session.getExtraData("director_correspondence_address_choice"),
+      director_correspondence_address: directorCorrespondenceAddressRadioChoiceMap.get("correspondence_choice"),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      directorServiceAddress: formatDirectorServiceAddress(officerFiling),
-      manualAddress: formatDirectorResidentialAddress(officerFiling)
+      directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
     });
   } catch (e) {
     return next(e);
   }
 };
 
-export const getBackLinkUrl = (req: Request): string => {
-  const callerUrl = req.headers.referer;
-  if (callerUrl !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
-    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
-  } else {
-    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
-  }
-}
-
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-  const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
-  session.setExtraData("director_correspondence_address_choice", selectedSraAddressChoice);
-  const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  const validationErrors = buildValidationErrors(req);
+    const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
+    directorCorrespondenceAddressRadioChoiceMap.set("correspondence_choice", selectedSraAddressChoice);
+
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const companyProfile = await getCompanyProfile(companyNumber);
+
+    const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-        backLinkUrl: getBackLinkUrl(req),
+        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
         errors: formattedErrors,
-        director_address: session.getExtraData("director_address_choice"),
+        director_correspondence_address: directorCorrespondenceAddressRadioChoiceMap.get("correspondence_choice"),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-        directorServiceAddress: formatDirectorServiceAddress(officerFiling),
-        manualAddress: formatDirectorResidentialAddress(officerFiling)   
+        directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       });
     }
 
     const officerFilingBody: OfficerFiling = {};
     let nextPageUrl = "";
-    if (selectedSraAddressChoice === "director_registered_service_address") {
-      officerFilingBody.serviceAddress = officerFiling.serviceAddress;
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //expected to go to linking page (yet to be done)
-      return res.redirect(nextPageUrl);
-    } else if (selectedSraAddressChoice === "director_corresponse_manual_address") {
-      officerFilingBody.residentialAddress = officerFiling.residentialAddress;
+    if (selectedSraAddressChoice === "director_registered_office_address") {
+      officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //expected to go to linking page (yet to be done)
       return res.redirect(nextPageUrl);
@@ -88,6 +85,23 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
+  if (!registeredOffice) {
+    return; 
+  }
+  return {
+    addressLine1: registeredOffice.addressLineOne,
+    addressLine2: registeredOffice.addressLineTwo,
+    careOf: registeredOffice.careOf,
+    country: registeredOffice.country,
+    locality: registeredOffice.locality,
+    poBox: registeredOffice.poBox,
+    postalCode: registeredOffice.postalCode,
+    premises: registeredOffice.premises,
+    region: registeredOffice.region
+  } 
+}
+
 export const buildValidationErrors = (req: Request): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
   if (req.body[directorChoiceHtmlField] === undefined) {
@@ -96,20 +110,11 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
   return validationErrors;
 };
 
-const formatDirectorResidentialAddress = (officerFiling: OfficerFiling) => {
+const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
   return `
-          ${officerFiling.residentialAddress?.addressLine1}, 
-          ${officerFiling.residentialAddress?.locality},
-          ${officerFiling.residentialAddress?.country} 
-          ${officerFiling.residentialAddress?.postalCode} 
-        `
-}
-
-const formatDirectorServiceAddress = (officerFiling: OfficerFiling) => {
-  return `
-          ${officerFiling.serviceAddress?.addressLine1}, 
-          ${officerFiling.serviceAddress?.locality},
-          ${officerFiling.serviceAddress?.country} 
-          ${officerFiling.serviceAddress?.postalCode}
+          ${companyProfile.registeredOfficeAddress?.addressLineOne}, 
+          ${companyProfile.registeredOfficeAddress?.locality},
+          ${companyProfile.registeredOfficeAddress?.region} 
+          ${companyProfile.registeredOfficeAddress?.postalCode}
         `
  }

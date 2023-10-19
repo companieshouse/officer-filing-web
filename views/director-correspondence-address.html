@@ -15,21 +15,10 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      {% if 'undefined' not in directorServiceAddress %}
-        {% set directorOfficeAddressValue = directorServiceAddress %}
+      {% if 'undefined' not in directorRegisteredOfficeAddress %}
+        {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
 
-      {% if manualAddress and 'undefined' not in manualAddress %}
-        {% set manualAddressDisplay = {
-            value: "director_corresponse_manual_address",
-              text: manualAddress,
-              checked: director_correspondence_address === "director_corresponse_manual_address",
-              attributes: {
-                "data-event-id": "director_corresponse_manual_address"
-              }
-          }
-        %}
-      {% endif %}
       
       <form action="" method="post">
         <span class="govuk-caption-xl govuk-!-padding-bottom-1">{{directorName}}</span>
@@ -47,25 +36,18 @@
           hint: {
             text: "We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK."
           },
-          fieldset: {
-            legend: {
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--l"
-            }
-          },
           items: [
             {
-              value: "director_service_address",
-              text: directorOfficeAddressValue,
-              checked: director_correspondence_address === "director_registered_service_address",
-              hint: {
-                text: "This is the company's registered office address"
-              },
+              value: "director_registered_office_address",
+              text: directorRegisteredOfficeAddressValue,
+              checked: director_correspondence_address === "director_registered_office_address",
               attributes: {
-                "data-event-id": "director-correspondence-address"
+                "data-event-id": "director_registered_office_address"
+              },
+              hint: {
+                text: "This is the company's registered office address"              
               }
             },
-            manualAddressDisplay,
             {
               value: "director_different_address",
               text: "A different address",
