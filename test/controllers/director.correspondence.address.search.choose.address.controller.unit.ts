@@ -6,15 +6,15 @@ import request from "supertest";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../../src/types/page.urls";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 
-const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS;
+const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH;
 const NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
-const PAGE_HEADING = "Choose an address";
+const PAGE_HEADING = "Choose a correspondence address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 
 describe('Director correspondence address choose address controller test', () => {
