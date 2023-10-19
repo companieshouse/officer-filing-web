@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
-        DIRECTOR_OCCUPATION_PATH_END, 
         DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -15,7 +14,6 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
-const directorCorrespondenceAddressRadioChoiceMap = new Map();
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -27,14 +25,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
 
-    if (req.headers.referer?.includes(DIRECTOR_OCCUPATION_PATH_END)){
-      directorCorrespondenceAddressRadioChoiceMap.clear();
-    }
-
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
-      director_correspondence_address: directorCorrespondenceAddressRadioChoiceMap.get("correspondence_choice"),
+      director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
     });
@@ -50,7 +44,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
-    directorCorrespondenceAddressRadioChoiceMap.set("correspondence_choice", selectedSraAddressChoice);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
@@ -62,7 +55,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
         backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
         errors: formattedErrors,
-        director_correspondence_address: directorCorrespondenceAddressRadioChoiceMap.get("correspondence_choice"),
+        director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       });
