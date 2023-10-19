@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { protectedDetailsErrorMessageKey } from '../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
-import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
@@ -22,9 +22,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    let returnPageUrl = officerFiling.protectedDetailsBackLink;
+    if (returnPageUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+    } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END)) {
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
+    } else {
+      //edge case should not happen
+      returnPageUrl = req.headers.referer!
+    }
+
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req),
+      backLinkUrl: returnPageUrl,
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
   } catch (e) {
@@ -37,6 +47,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+
+    debugger;
 
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
