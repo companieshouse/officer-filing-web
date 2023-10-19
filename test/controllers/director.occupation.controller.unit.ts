@@ -102,6 +102,8 @@ describe("Director occupation controller tests", () => {
   
       it("Should redirect to correspondense page", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
         
         const response = await request(app)
           .post(DIRECTOR_OCCUPATION_URL);

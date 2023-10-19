@@ -50,7 +50,7 @@ describe("Director name controller tests", () => {
           referenceAppointmentId: "app1",
           referenceEtag: "ETAG"
         });
-        const response = await request(app).get(DIRECTOR_NAME_URL);
+        const response = await request(app).get(DIRECTOR_NAME_URL).set({"referer": "director-name"});
   
         expect(response.text).toContain(PAGE_HEADING);
       });
@@ -87,6 +87,9 @@ describe("Director name controller tests", () => {
   
       it("Should redirect to date of birth page", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+  
         
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
@@ -101,6 +104,8 @@ describe("Director name controller tests", () => {
           isValid: false
         }
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
   
         const response = await request(app).post(DIRECTOR_NAME_URL);
   
