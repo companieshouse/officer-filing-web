@@ -3,11 +3,9 @@ import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRE
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
-import { protectedDetailsErrorMessageKey } from '../utils/api.enumerations.keys';
-import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
+import { formatValidationErrors } from '../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
