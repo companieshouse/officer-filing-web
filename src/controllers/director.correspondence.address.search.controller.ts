@@ -120,10 +120,10 @@ const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, 
   return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, {
     templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS, req),
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    postcode: officerFiling.residentialAddress?.postalCode,
-    premises: officerFiling.residentialAddress?.premises,
+    postcode: officerFiling.serviceAddress?.postalCode,
+    premises: officerFiling.serviceAddress?.premises,
     errors: formatValidationErrors(validationErrors)
   });
 }
