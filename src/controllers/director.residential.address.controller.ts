@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
+import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
         DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH 
       } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
@@ -15,7 +15,6 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 const directorChoiceHtmlField: string = "director_address";
-const directorChoiceMap = new Map();
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -26,14 +25,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
 
-    if (req.headers.referer?.includes(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)){
-      directorChoiceMap.clear();
-    }
-
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
       backLinkUrl: getBackLinkUrl(req),
-      director_address: directorChoiceMap.get("director_radio_choice"),
+      director_address: officerFiling.directorCorrespondenceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
       manualAddress: formatDirectorResidentialAddress(officerFiling)
@@ -60,9 +55,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
-    directorChoiceMap.set("director_radio_choice", selectedSraAddressChoice);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
+
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
@@ -70,14 +65,16 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
         backLinkUrl: getBackLinkUrl(req),
         errors: formattedErrors,
-        director_address: directorChoiceMap.get("director_radio_choice"),
+        director_address: selectedSraAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
         manualAddress: formatDirectorResidentialAddress(officerFiling)   
       });
     }
 
-    const officerFilingBody: OfficerFiling = {};
+    const officerFilingBody: OfficerFiling = {
+      directorResidentialAddressChoice: selectedSraAddressChoice
+    };
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
