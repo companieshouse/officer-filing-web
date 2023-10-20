@@ -119,7 +119,7 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddress
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
 
-router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), directorProtectedDetails.get);
+router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorProtectedDetails.get);
 router.post(urls.DIRECTOR_PROTECTED_DETAILS, directorProtectedDetails.post);
 
 router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), appointDirectorCheckAnswers.get);

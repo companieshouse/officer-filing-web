@@ -73,12 +73,25 @@ const renderPage = (req: Request, res: Response, companyProfile: CompanyProfile,
     occupation:  formatTitleCase(officerFiling.occupation),
     dateOfBirth: toReadableFormat(officerFiling.dateOfBirth),
     appointedOn: toReadableFormat(officerFiling.appointedOn),
+    protectedDetails: createDirectorAppliedToProtectDetailsString(officerFiling.directorAppliedToProtectDetails),
     nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
     dateOfBirthLink: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req),
     dateAppointedLink: urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req),
     nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
     occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+    protectedDetailsLink: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
     errors: errors
   });
+}
 
+const createDirectorAppliedToProtectDetailsString = (directorAppliedToProtectDetails: boolean | undefined) : string => {
+  if(directorAppliedToProtectDetails === undefined){
+    return ""
+  }
+  if(directorAppliedToProtectDetails === true){
+    return "Yes"
+  }
+  else{
+    return "No"
+  }
 }
