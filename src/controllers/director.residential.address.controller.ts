@@ -77,7 +77,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     };
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
-      officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+      officerFilingBody.residentialAddress = mapRegisteredOfficeToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
       return res.redirect(nextPageUrl);
@@ -96,7 +96,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
+const mapRegisteredOfficeToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
   if (!registeredOffice) {
     return; 
   }
