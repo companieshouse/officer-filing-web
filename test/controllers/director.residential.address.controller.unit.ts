@@ -94,7 +94,7 @@ describe("Director name controller tests", () => {
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.locality);
+      expect(response.text).toContain("Locality");
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(PAGE_HEADING);
@@ -228,6 +228,10 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH} page if different address is selected`, async () => {
+      const mockPatchOfficerFilingResponse = {
+        directorResidentialAddressChoice: "diff"
+      };
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
     });

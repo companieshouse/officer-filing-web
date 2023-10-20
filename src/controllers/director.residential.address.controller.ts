@@ -57,7 +57,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
-
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
@@ -91,7 +90,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
       return res.redirect(nextPageUrl);
     }
-    
   } catch (e) {
     next(e);
   }
@@ -123,19 +121,19 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 };
 
 const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string => {
-  return `
+  return formatTitleCase(`
           ${officerFiling.serviceAddress?.addressLine1},
+          ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2 : ""}
           ${officerFiling.serviceAddress?.locality},
           ${officerFiling.serviceAddress?.country} 
-          ${officerFiling.serviceAddress?.postalCode}
-        `
+        `) + officerFiling.serviceAddress?.postalCode
 }
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
-  return `
+  return formatTitleCase(`
           ${companyProfile.registeredOfficeAddress?.addressLineOne},
+          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress?.addressLineTwo : ""},
           ${companyProfile.registeredOfficeAddress?.locality},
           ${companyProfile.registeredOfficeAddress?.region} 
-          ${companyProfile.registeredOfficeAddress?.postalCode}
-        `
+        `) + companyProfile.registeredOfficeAddress?.postalCode
  }
