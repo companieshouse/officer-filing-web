@@ -97,19 +97,17 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 };
 
 const formatDirectorResidentialAddress = (officerFiling: OfficerFiling) => {
-  return `
+  return formatTitleCase(`
           ${officerFiling.residentialAddress?.addressLine1}, 
           ${officerFiling.residentialAddress?.locality},
           ${officerFiling.residentialAddress?.country} 
-          ${officerFiling.residentialAddress?.postalCode} 
-        `
+        `) + officerFiling.residentialAddress?.postalCode
 }
 
 const formatDirectorServiceAddress = (officerFiling: OfficerFiling) => {
-  return `
+  return formatTitleCase(`
           ${officerFiling.serviceAddress?.addressLine1}, 
           ${officerFiling.serviceAddress?.locality},
           ${officerFiling.serviceAddress?.country} 
-          ${officerFiling.serviceAddress?.postalCode}
-        `
+        `) + officerFiling.serviceAddress?.postalCode
  }

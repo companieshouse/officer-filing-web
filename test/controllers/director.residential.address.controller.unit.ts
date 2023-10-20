@@ -174,7 +174,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
-      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
+      expect(response.text).toContain("Residential Street");
       expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
     })
 
@@ -259,7 +259,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-      expect(response.text).toContain(residentialAddressMock.residentialAddress.addressLine1);
+      expect(response.text).toContain("Residential Street");
       expect(response.text).toContain(residentialAddressMock.residentialAddress.postalCode);
     });
   });
