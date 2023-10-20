@@ -28,7 +28,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
       backLinkUrl: getBackLinkUrl(req),
-      director_address: officerFiling.directorCorrespondenceAddressChoice,
+      director_address: officerFiling.directorResidentialAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
       manualAddress: formatDirectorResidentialAddress(officerFiling)
@@ -87,6 +87,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //broken as agreed with BA
       return res.redirect(nextPageUrl);
     } else {
+      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
       return res.redirect(nextPageUrl);
     }

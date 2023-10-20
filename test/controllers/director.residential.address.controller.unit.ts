@@ -92,6 +92,11 @@ describe("Director name controller tests", () => {
         ...directorNameMock
       });
       const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.locality);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
@@ -232,6 +237,18 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
+      });
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_registered_office_address"
+      }));
+
+      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+    });
+
+    it(`should patch the residential address if no registered office address`, async () => {
+      mockGetCompanyProfile.mockResolvedValue({});
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
       });
       const response = (await request(app).post(PAGE_URL).send({
         director_address: "director_registered_office_address"
