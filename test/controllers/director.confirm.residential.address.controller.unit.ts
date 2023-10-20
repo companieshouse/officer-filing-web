@@ -50,6 +50,31 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).toContain(PAGE_HEADING);
       });
 
+      it("Should populate details on the page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          residentialAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            region: "London",
+            country: "United Kingdom",
+            postalCode: "SW1A 2AA"
+          }
+        })
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).toContain("John Smith");
+        expect(response.text).toContain("110");
+        expect(response.text).toContain("Test Line 1");
+        expect(response.text).toContain("Downing Street");
+        expect(response.text).toContain("Westminster");
+        expect(response.text).toContain("London");
+        expect(response.text).toContain("United Kingdom");
+        expect(response.text).toContain("SW1A 2AA");
+      });
+
       it("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",

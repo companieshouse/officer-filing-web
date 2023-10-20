@@ -12,18 +12,50 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds">
 
       {% include "includes/list/errors.html" %}
-      
       <form action="" method="post">
 
+        <span class="govuk-caption-l">{{ directorName }}</span>
         <h1 class="govuk-heading-l">Confirm the director's correspondence address</h1>
-        <!-- This is the confirmation page for the correspondence address -->
+        <ul class="govuk-list">
+          <li>{{ premises | title  }}</li>
+          <li>{{ addressLine1 | title }}</li>
+          <li>{{ addressLine2 | title }}</li>
+          <li>{{ locality | title }}</li>
+          <li>{{ region | title }}</li>
+          <li>{{ country | title }}</li>
+          <li>{{ postalCode }}</li>
+        </ul>
 
+        {% if addressLine1 %}
+          <div class="govuk-body">
+            <a href="{{enterAddressManuallyUrl}}" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
+          </div>
+        {% endif %}
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">What information we'll show on the public online register</h2>
+            <p>We will show this address on the public Companies House register.</p>
+        </div>
+
+        {% set correspondenceAddressSameAsHomeAddress %}
+          <p>We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register. </p>
+          <p>If you run your company from home and do not want your home address available to the public, there is a  <a href="https://www.gov.uk/government/publications/formation-and-company-secretarial-agents/company-formation-agents-and-secretarial-agents" class="govuk-link" target="_blank" rel="noopener noreferrer"> list of agents who can provide registered office services (opens in new tab).</a> </p> 
+          <p>A quick online search will show other agents who offer similar services. All providers will charge a fee. </p>
+        {% endset %}
+        {{ govukDetails({
+          summaryHtml: '<div> My correspondence address is the same as my home address </div>',
+          html: correspondenceAddressSameAsHomeAddress,
+          attributes: {
+            "data-event-id": "correspondance-address-accordion-expansion"
+          }
+        }) }}
+        
         {{ govukButton({
           attributes: {
-            "data-event-id": "continue-button"
+            "data-event-id": "confirm-and-continue-button"
           },
           text: "Confirm and continue"
         }) }}
