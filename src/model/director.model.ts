@@ -29,5 +29,9 @@ export enum DirectorField {
   CORRESPONDENCE_ADDRESS_COUNTY = "correspondence_address_county",
   CORRESPONDENCE_ADDRESS_COUNTRY = "typeahead_input_0",
   CORRESPONDENCE_ADDRESS_POSTCODE = "correspondence_address_postcode",
-  DIRECTOR_CONSENT = "director_consent"
+  DIRECTOR_CONSENT = "director_consent",
+  PROTECTED_DETAILS_RADIO = "protected_details",
+  PROTECTED_DETAILS_YES = "protected_details_yes",
+  PROTECTED_DETAILS_NO = "protected_details_no",
+  ADDRESS_ARRAY = "address_array"
 }

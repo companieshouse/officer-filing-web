@@ -15,7 +15,6 @@ import {
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../src/services/postcode.lookup.service";
-import { getCountryFromKey } from "../../src/controllers/director.residential.address.search.controller";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -76,43 +75,6 @@ const mockResponseEmptyBodyCaseInsensitivity : UKAddress[] = [
 
 const mockResponseBodyOfUKAddresses: UKAddress[] = [mockResponseBodyOfUKAddress1, mockResponseBodyOfUKAddress2];
 
-describe('test getCountryFromKey', () => {
-  it('should return Scotland for GB-SCT', () => {
-    const result = getCountryFromKey('GB-SCT');
-    expect(result).toEqual('Scotland');
-  });
-
-  it('should return Wales for GB-WLS', () => {
-    const result = getCountryFromKey('GB-WLS');
-    expect(result).toEqual('Wales');
-  });
-
-  it('should return England for GB-ENG', () => {
-    const result = getCountryFromKey('GB-ENG');
-    expect(result).toEqual('England');
-  });
-
-  it('should return Northern Ireland for GB-NIR', () => {
-    const result = getCountryFromKey('GB-NIR');
-    expect(result).toEqual('Northern Ireland');
-  });
-
-  it('should return Channel Island for Channel Island', () => {
-    const result = getCountryFromKey('Channel Island');
-    expect(result).toEqual('Channel Island');
-  });
-
-  it('should return Isle of Man for Isle of Man', () => {
-    const result = getCountryFromKey('Isle of Man');
-    expect(result).toEqual('Isle of Man');
-  });
-
-  it('should return undefined for an unknown country key', () => {
-    const result = getCountryFromKey('unknown');
-    expect(result).toBeUndefined();
-  });
-});
-
 describe('Director residential address search controller test', () => {
 
   beforeEach(() => {
@@ -154,9 +116,25 @@ describe('Director residential address search controller test', () => {
   describe("post tests",  () => {
 
     // validation error render tests
-    it("Should displays errors on page if get validation status returns errors", async () => {
+    it("Should displays errors and Director name on page if get validation status returns errors", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
       const response = await request(app).post(PAGE_URL)
       .send({"postcode": "%%%%%%", "premises": "ゃ"});
+
+      expect(response.text).toContain("%%%%%%");
+      expect(response.text).toContain("ゃ");
+      expect(response.text).toContain("John Smith");
+      expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
+      expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+    });
+
+    it("Should displays errors on page if get validation status returns errors - order and priority test", async () => {
+      const response = await request(app).post(PAGE_URL)
+      .send({"postcode": "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
+             "premises": "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
 
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");

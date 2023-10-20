@@ -15,7 +15,6 @@ export const getField = (req: Request, fieldName: string): string => {
   return "";
 };
 
-
 /**
  * Set the back link for a page. 
  * Checks whether the user came from the check your answers page and if so,
@@ -45,4 +44,18 @@ export const setRedirectLink = async (req: Request, checkYourAnswersLink: string
   return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
   }
   return backLink;
+  }
+/**
+ * Map the country key returned by postcode lookup to a readable format
+ */
+export const getCountryFromKey = (country: string): string => {
+  const countryKeyValueMap: Record<string, string> = {
+    'GB-SCT': 'Scotland',
+    'GB-WLS': 'Wales',
+    'GB-ENG': 'England',
+    'GB-NIR': 'Northern Ireland',
+    'Channel Island': 'Channel Island',
+    'Isle of Man': 'Isle of Man',
+  };
+  return countryKeyValueMap[country];
 }

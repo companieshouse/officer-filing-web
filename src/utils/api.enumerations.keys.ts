@@ -125,6 +125,9 @@ export enum nationalityThreeErrorMessageKey {
   NATIONALITY_3_DUPLICATE = "duplicate-nationality3"
 }
 
+export enum residentialAddressErrorMessageKey {
+  RESIDENTIAL_ADDRESS_BLANK = "residential-address-blank"
+}
 
 export enum residentialAddressPremisesErrorMessageKey {
   RESIDENTIAL_ADDRESS_PREMISES_BLANK = "residential-premises-blank",
@@ -212,4 +215,8 @@ export enum correspondenceAddressPostcodeErrorMessageKey {
 
 export enum whereDirectorLiveErrorMessageKey {
   NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
+}
+
+export enum protectedDetailsErrorMessageKey {
+  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "Select whether the director has applied to protect their details at Companies House"
 }

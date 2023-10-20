@@ -7,10 +7,11 @@ import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
 import * as directorAppointedDate from "../controllers/director.appointed.date.controller";
-import * as directorCorrespondeAddress from "../controllers/director.correspondence.address.controller";
-import * as directorCorrespondeAddressSearch from "../controllers/director.correspondence.address.search.controller";
-import * as directorCorrespondeAddressManual from "../controllers/director.correspondence.address.manual.controller";
-import * as directorConfirmCorrespondeAddress from "../controllers/director.confirm.correspondence.address.controller";
+import * as directorCorrespondenceAddress from "../controllers/director.correspondence.address.controller";
+import * as directorCorrespondenceAddressSearch from "../controllers/director.correspondence.address.search.controller";
+import * as directorCorrespondenceAddressChooseAddress from "../controllers/director.correspondence.address.search.choose.address.controller";
+import * as directorCorrespondenceAddressManual from "../controllers/director.correspondence.address.manual.controller";
+import * as directorConfirmCorrespondenceAddress from "../controllers/director.confirm.correspondence.address.controller";
 import * as directorConfirmResidentialAddress from "../controllers/director.confirm.residential.address.controller";
 import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
@@ -88,17 +89,20 @@ router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);
 
-router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorCorrespondeAddress.get);
-router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, directorCorrespondeAddress.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddress.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, directorCorrespondenceAddress.post);
 
-router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), directorCorrespondeAddressSearch.get);
-router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, directorCorrespondeAddressSearch.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddressSearch.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, directorCorrespondenceAddressSearch.post);
 
-router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorCorrespondeAddressManual.get);
-router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, directorCorrespondeAddressManual.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddressChooseAddress.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, directorCorrespondenceAddressChooseAddress.post);
 
-router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmCorrespondeAddress.get);
-router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, directorConfirmCorrespondeAddress.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddressManual.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, directorCorrespondenceAddressManual.post);
+
+router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmCorrespondenceAddress.get);
+router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, directorConfirmCorrespondenceAddress.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddress.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, directorResidentialAddress.post);
