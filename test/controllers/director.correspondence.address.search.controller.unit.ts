@@ -124,6 +124,8 @@ describe('Director correspondence address search controller test', () => {
       const response = await request(app).post(PAGE_URL)
         .send({"postcode": "%%%%%%", "premises": "ゃ"});
 
+      expect(response.text).toContain("%%%%%%");
+      expect(response.text).toContain("ゃ");
       expect(response.text).toContain("John Smith");
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
