@@ -94,6 +94,7 @@ describe("Director name controller tests", () => {
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
       expect(response.text).toContain("Locality");
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
@@ -150,6 +151,24 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address line 2 `, async () => {
+      validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).not.toContain("Line2");
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
