@@ -48,22 +48,25 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
         backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req),
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),
       });
     }
 
     // Patch filing with updated information
-    const officerFiling: OfficerFiling = {
+    const officerFilingBody: OfficerFiling = {
       directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
     return res.redirect(nextPageUrl);
