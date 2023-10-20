@@ -6,6 +6,8 @@ import { urlUtils } from "../utils/url";
 import { formatValidationErrors } from '../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { formatTitleCase } from "../services/confirm.company.service";
+import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
@@ -32,6 +34,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
       backLinkUrl: returnPageUrl,
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
   } catch (e) {
