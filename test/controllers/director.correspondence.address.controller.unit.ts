@@ -66,7 +66,27 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(directorNameMock.firstName);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.locality);
+        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
+        expect(response.text).toContain("Locality");
+        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+        expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+        expect(response.text).toContain(ACCORDION_INFORMATION);
+        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END)
+      });
+
+      it(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} page without address line 2`, async () => {
+        validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          ...directorNameMock
+        });
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain(directorNameMock.firstName);
+        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+        expect(response.text).not.toContain("Line2");
+        expect(response.text).toContain("Locality");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
@@ -118,7 +138,7 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(directorNameMock.firstName);
         expect(mockGetOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.locality);
+        expect(response.text).toContain("Locality");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       });

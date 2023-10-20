@@ -106,10 +106,10 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 };
 
 const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
-  return `
+  return formatTitleCase(`
           ${companyProfile.registeredOfficeAddress?.addressLineOne}, 
+          ${companyProfile.registeredOfficeAddress?.addressLineOne ? companyProfile.registeredOfficeAddress.addressLineTwo : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
           ${companyProfile.registeredOfficeAddress?.region} 
-          ${companyProfile.registeredOfficeAddress?.postalCode}
-        `
+        `) + companyProfile.registeredOfficeAddress?.postalCode
  }
