@@ -68,14 +68,14 @@ describe("Director protected details controller tests", () => {
       it("Should navigate to director protected details page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({})
         
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(PAGE_URL).set({"referer": "protected-details"});
   
         expect(response.text).toContain(PAGE_HEADING);
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(PAGE_URL).set({"referer": "protected-details"});
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
@@ -103,6 +103,8 @@ describe("Director protected details controller tests", () => {
     describe("post tests", () => {
       it("should redirect to appoint director check answers page when there are no errors", async () => {
         mockBuildValidationErrors.mockReturnValueOnce([]);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
 
         const response = await request(app).post(PAGE_URL);
 
@@ -118,6 +120,8 @@ describe("Director protected details controller tests", () => {
           }
         ];
         mockBuildValidationErrors.mockReturnValueOnce(validationErrorsResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
 
         const response = await request(app).post(PAGE_URL);
 
