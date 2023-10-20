@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH } from "../types/page.urls";
+import {
+  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
+} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -56,7 +60,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         region: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTY),
         country: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTRY),
         postalCode: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_POSTCODE),
-      }
+      },
+      serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END
     };
     officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
 

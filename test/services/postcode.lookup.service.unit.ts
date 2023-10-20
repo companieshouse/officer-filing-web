@@ -86,4 +86,13 @@ describe("getUKAddressesFromPostcode test", () => {
         expect(JSON.stringify(result[0])).toEqual(JSON.stringify(mockResponseBodyOfUKAddress1));
         expect(JSON.stringify(result[1])).toEqual(JSON.stringify(mockResponseBodyOfUKAddress2));
     });
+
+    it("should sort UK addresses ascendingly", async () => {
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce({httpStatusCode: 200, resource: mockResponseBodyOfUKAddresses.reverse()});
+        const result = await getUKAddressesFromPostcode("http://example.postcode.lookup", "SW1A1AA");
+
+        expect(result).toHaveLength(2);
+        expect(JSON.stringify(result[0])).toEqual(JSON.stringify(mockResponseBodyOfUKAddress1));
+        expect(JSON.stringify(result[1])).toEqual(JSON.stringify(mockResponseBodyOfUKAddress2));
+    });
 });

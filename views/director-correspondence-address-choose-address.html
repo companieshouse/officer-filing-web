@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's correspondence address?" %}
+{% set title = "Choose a correspondence address" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -18,25 +18,20 @@
       
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">What is the director's correspondence address?</h1>
+        <h1 class="govuk-heading-l">Choose a correspondence address</h1>
         <!-- This is the search page for the correspondence address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
-        <div id="typeahead-hint" class="govuk-hint">
-          We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.
-        </div>
-        {% include "includes/inputs/fields/postcode-input.html" %}
-        {% include "includes/inputs/fields/postcode-premises-input.html" %}
-
-        {{ govukButton({
-        attributes: {
-        "data-event-id": "continue-button"
-        },
-        text: "Find address"
-        }) }}
 
         <div class="govuk-body">
           <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-correspondence-address-manual-link">Enter address manually</a>
         </div>
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
 
       </form>
     </div>
