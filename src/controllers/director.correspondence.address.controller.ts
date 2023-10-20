@@ -61,7 +61,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    const officerFilingBody: OfficerFiling = {};
+    const officerFilingBody: OfficerFiling = {
+      directorCorrespondenceAddressChoice: selectedSraAddressChoice
+    };
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
@@ -69,6 +71,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //expected to go to linking page (yet to be done)
       return res.redirect(nextPageUrl);
     } else {
+      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
       return res.redirect(nextPageUrl);
     }
