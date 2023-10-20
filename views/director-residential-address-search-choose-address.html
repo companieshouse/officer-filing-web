@@ -18,12 +18,38 @@
       
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Choose a home address</h1>
-        <!-- This is the search page for the residential address -->
-        {% from "govuk/components/input/macro.njk" import govukInput %}
+
+        {% set ITEMS = [] %}
+        {% for addressOption in addresses %}
+          {% set addressObject = { 
+            id: addressOption.premises,
+            value: addressOption.premises,
+            text: addressOption.formattedAddress,
+            checked: addressOption.premises == currentPremises,
+            attributes: {
+              "data-event-id": "address-option-" + addressOption.premises
+            }
+          } %}
+          {% set ITEMS = ITEMS.concat(addressObject) %}
+        {% endfor %}
+
+        {{ govukRadios({
+          errorMessage: errors.address_array if errors,
+          id: "address_array",
+          name: "address_array",
+          value: address_array,
+          fieldset: {
+            legend: {
+              text: "Choose an address",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: ITEMS
+        }) }}
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}" class="govuk-link">Enter address manually</a>
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-residential-address-manual-link">Enter address manually</a>
         </div>
 
         {{ govukButton({

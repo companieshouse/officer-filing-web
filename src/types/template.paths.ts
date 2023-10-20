@@ -19,6 +19,7 @@ export enum Templates {
   DIRECTOR_APPOINTED_DATE = "director-appointed-date",
   DIRECTOR_CORRESPONDENCE_ADDRESS = "director-correspondence-address",
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH = "director-correspondence-address-search",
+  DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS = "director-correspondence-address-choose-address",
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL = "director-correspondence-address-manual",
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS = "director-confirm-correspondence-address",
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS = "director-confirm-residential-address",

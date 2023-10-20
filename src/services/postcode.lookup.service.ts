@@ -15,7 +15,8 @@ export const getUKAddressesFromPostcode = async (postcodeAddressesLookupURL: str
     }
 
     logger.debug(`Retrieved UK addresses for postcode ${postcode}`);
-    return castedSdkResponse.resource;
+    return castedSdkResponse.resource
+        .sort((a, b) => (a.premise > b.premise) ? 1 : -1);
 }
 
 export const getIsValidUKPostcode = async (postcodeValidationUrl: string, postcode: string): Promise<boolean> => {
