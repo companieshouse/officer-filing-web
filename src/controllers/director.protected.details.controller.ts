@@ -67,7 +67,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     next(e);
-  };
+  }
 }
 
 const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetails: boolean | undefined): string | undefined => {

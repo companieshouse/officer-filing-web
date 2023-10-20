@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, CHECK_YOUR_ANSWERS_PATH_END, CURRENT_DIRECTORS_PATH, DIRECTOR_DATE_OF_BIRTH_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_DATE_OF_BIRTH_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";

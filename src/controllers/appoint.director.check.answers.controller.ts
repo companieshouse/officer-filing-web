@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_DATE_OF_BIRTH, DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../types/page.urls";
+import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -15,7 +15,6 @@ import { getField } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { FormattedValidationErrors } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
-import { logger } from "../utils/logger";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
