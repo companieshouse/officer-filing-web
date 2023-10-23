@@ -12,18 +12,14 @@ import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { mapCompanyProfileToOfficerFilingAddress } from "./director.correspondence.address.controller";
 
-const directorChoiceHtmlField: string = "director_address";
+const directorResidentialChoiceHtmlField: string = "director_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const companyProfile = await getCompanyProfile(companyNumber);
+    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
 
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
@@ -37,7 +33,17 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     next(e);
   }
 };
- 
+
+export const urlUtilsRequestParams = async (req: Request) => {
+  const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+  const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+  const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+  const session: Session = req.session as Session;
+  const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+  const companyProfile = await getCompanyProfile(companyNumber);
+  return { officerFiling, companyProfile, transactionId, submissionId, session };
+}
+
 export const getBackLinkUrl = (req: Request): string => {
   const callerUrl = req.headers.referer;
   if (callerUrl !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
@@ -49,14 +55,8 @@ export const getBackLinkUrl = (req: Request): string => {
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
-
-    const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const companyProfile = await getCompanyProfile(companyNumber);
+    const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
+    const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
@@ -64,7 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
         backLinkUrl: getBackLinkUrl(req),
         errors: formattedErrors,
-        director_address: selectedSraAddressChoice,
+        director_address: officerFiling.directorResidentialAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
         manualAddress: formatDirectorResidentialAddress(officerFiling),
@@ -77,7 +77,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     };
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
-      officerFilingBody.residentialAddress = mapRegisteredOfficeToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+      officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
       return res.redirect(nextPageUrl);
@@ -96,27 +96,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const mapRegisteredOfficeToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
-  if (!registeredOffice) {
-    return; 
-  }
-  return {
-    addressLine1: registeredOffice.addressLineOne,
-    addressLine2: registeredOffice.addressLineTwo,
-    careOf: registeredOffice.careOf,
-    country: registeredOffice.country,
-    locality: registeredOffice.locality,
-    poBox: registeredOffice.poBox,
-    postalCode: registeredOffice.postalCode,
-    premises: registeredOffice.premises,
-    region: registeredOffice.region
-  } 
-}
-
 export const buildValidationErrors = (req: Request): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
-  if (req.body[directorChoiceHtmlField] === undefined) {
-    validationErrors.push(createValidationErrorBasic(whereDirectorLiveResidentialErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorChoiceHtmlField));
+  if (req.body[directorResidentialChoiceHtmlField] === undefined) {
+    validationErrors.push(createValidationErrorBasic(whereDirectorLiveResidentialErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorResidentialChoiceHtmlField));
   }
   return validationErrors;
 };

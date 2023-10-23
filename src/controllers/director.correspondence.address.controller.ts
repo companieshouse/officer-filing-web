@@ -12,18 +12,13 @@ import { ValidationError } from "../model/validation.model";
 import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enumerations.keys";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { urlUtilsRequestParams } from "./director.residential.address.controller";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
-
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const companyProfile = await getCompanyProfile(companyNumber);
+    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
 
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
@@ -48,7 +43,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
 
-    const validationErrors = buildValidationErrors(req);
+    const validationErrors = buildResidentialAddressValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
@@ -80,7 +75,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
+export const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
   if (!registeredOffice) {
     return; 
   }
@@ -97,7 +92,7 @@ const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOff
   } 
 }
 
-export const buildValidationErrors = (req: Request): ValidationError[] => {
+export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
   if (req.body[directorChoiceHtmlField] === undefined) {
     validationErrors.push(createValidationErrorBasic(whereDirectorLiveCorrespondenceErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorChoiceHtmlField));
