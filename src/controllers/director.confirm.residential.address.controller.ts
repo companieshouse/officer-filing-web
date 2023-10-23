@@ -31,8 +31,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req);
     } else {
       //edge case should not happen
-      // returnPageUrl = req.headers.referer!
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
     }
     return res.render(Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,

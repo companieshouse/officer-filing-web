@@ -18,20 +18,15 @@
       <form action="" method="post">
         <span class="govuk-caption-l">{{ directorName }}</span>
         <h1 class="govuk-heading-l">Confirm where the director lives</h1>
-        <ul class="govuk-list">
-          <li>{{ premises | title  }}</li>
-          <li>{{ addressLine1 | title }}</li>
-          <li>{{ addressLine2 | title }}</li>
-          <li>{{ locality | title }}</li>
-          <li>{{ region | title }}</li>
-          <li>{{ country | title }}</li>
-          <li>{{ postalCode }}</li>
-        </ul>
+        
+        {% include "includes/list/address-details.html" %}
+
         {% if addressLine1 %}
           <div class="govuk-body">
             <a href="{{enterAddressManuallyUrl}}" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
           </div>
         {% endif %}
+        
         <div class="govuk-inset-text">
           <h2 class="govuk-heading-m">What information we'll show on the public register</h2>
             <p>We will not show this address on the public Companies House register, unless it's also used for the company's registered office address or the director's correspondence address.</p>
