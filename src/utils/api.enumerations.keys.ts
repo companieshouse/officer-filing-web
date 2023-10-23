@@ -171,6 +171,10 @@ export enum residentialAddressPostcodeErrorMessageKey {
   RESIDENTIAL_ADDRESS_POSTAL_CODE_WITHOUT_COUNTRY = "residential-postal-code-without-country",
 }
 
+export enum correspondenceAddressErrorMessageKey {
+  CORRESPONDENCE_ADDRESS_BLANK = "correspondence-address-blank"
+}
+
 export enum correspondenceAddressPremisesErrorMessageKey {
   CORRESPONDENCE_ADDRESS_PREMISES_BLANK = "correspondence-premises-blank",
   CORRESPONDENCE_ADDRESS_PREMISES_CHARACTERS = "correspondence-premises-characters",
@@ -215,4 +219,8 @@ export enum correspondenceAddressPostcodeErrorMessageKey {
 
 export enum whereDirectorLiveErrorMessageKey {
   NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
+}
+
+export enum protectedDetailsErrorMessageKey {
+  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "Select whether the director has applied to protect their details at Companies House"
 }
