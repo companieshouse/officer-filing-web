@@ -24,11 +24,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     let returnPageUrl = officerFiling.protectedDetailsBackLink;
     if (returnPageUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {
       returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-    } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END)) {
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
     } else {
-      //edge case should not happen
-      returnPageUrl = req.headers.referer!
+      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
     }
 
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
