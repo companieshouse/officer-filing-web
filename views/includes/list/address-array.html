@@ -1,0 +1,28 @@
+{% set ITEMS = [] %}
+{% for addressOption in addresses %}
+    {% set addressObject = { 
+    id: addressOption.premises,
+    value: addressOption.premises,
+    text: addressOption.formattedAddress,
+    checked: addressOption.premises == currentPremises,
+    attributes: {
+        "data-event-id": "address-option-" + addressOption.premises
+    }
+    } %}
+    {% set ITEMS = ITEMS.concat(addressObject) %}
+{% endfor %}
+
+{{ govukRadios({
+    errorMessage: errors.address_array if errors,
+    id: "address_array",
+    name: "address_array",
+    value: address_array,
+    fieldset: {
+    legend: {
+        text: "Choose an address",
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+    }
+    },
+    items: ITEMS
+}) }}

@@ -6,6 +6,8 @@ import { urlUtils } from "../utils/url";
 import { formatValidationErrors } from '../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { formatTitleCase } from "../services/confirm.company.service";
+import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
 import { getField, setBackLink, setRedirectLink } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
@@ -33,6 +35,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(returnPageUrl, req)),
       
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
   } catch (e) {
@@ -58,11 +61,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
         backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req)),
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),
       });
     }
-
+    
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {

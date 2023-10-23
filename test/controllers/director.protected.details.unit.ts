@@ -102,6 +102,9 @@ describe("Director protected details controller tests", () => {
 
     describe("post tests", () => {
       it("should redirect to appoint director check answers page when there are no errors", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director"
+        })
         mockBuildValidationErrors.mockReturnValueOnce([]);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
@@ -112,6 +115,10 @@ describe("Director protected details controller tests", () => {
       });
 
       it("should display an error when no radio button is selected", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director"
+        })
+        
         let validationErrorsResponse: ValidationError[] = [
           {
             messageKey: protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED,
