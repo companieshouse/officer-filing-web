@@ -32,7 +32,7 @@ export const setBackLink = (req: Request, checkYourAnswersLink: string | undefin
  * Checks whether the user came from the check your answers page and if so,
  *  sets the redirect link to the check your answers page instead.
  */
-export const setRedirectLink = async (req: Request, checkYourAnswersLink: string | undefined, backLink: string): Promise<string> => {
+export const setRedirectLink = async (req: Request, checkYourAnswersLink: string | undefined, redirectLink: string): Promise<string> => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
   const session: Session = req.session as Session;
@@ -43,7 +43,7 @@ export const setRedirectLink = async (req: Request, checkYourAnswersLink: string
   await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
   return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
   }
-  return backLink;
+  return redirectLink;
   }
 /**
  * Map the country key returned by postcode lookup to a readable format
