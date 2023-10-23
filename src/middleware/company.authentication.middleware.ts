@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { authMiddleware, AuthOptions } from "@companieshouse/web-security-node";
 import { CHS_URL } from "../utils/properties";
-import { logger } from "../utils/logger";
 import { urlParams } from "../types/page.urls";
-import { urlUtils } from "../utils/url";
-import { Templates } from "../types/template.paths";
 
 export const companyAuthenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
-  if (req.originalUrl.includes("/stop-page")) {
+  if (req.originalUrl.includes("/cannot-use")) {
     return next();
   }
 
