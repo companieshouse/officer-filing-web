@@ -220,3 +220,7 @@ export enum correspondenceAddressPostcodeErrorMessageKey {
 export enum whereDirectorLiveErrorMessageKey {
   NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the address where the director lives"
 }
+
+export enum protectedDetailsErrorMessageKey {
+  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "Select whether the director has applied to protect their details at Companies House"
+}
