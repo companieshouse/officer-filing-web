@@ -12,19 +12,18 @@ import { DirectorField } from "../model/director.model";
 import { createValidationError, createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { TITLE_LIST } from "../utils/properties";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
-import { getField } from "../utils/web";
+import { getField, setBackLink, setRedirectLink } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     return res.render(Templates.DIRECTOR_NAME, {
       templateName: Templates.DIRECTOR_NAME,
-      backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
       typeahead_array: TITLE_LIST,
       typeahead_value: officerFiling.title,
       first_name: officerFiling.firstName,
@@ -52,7 +51,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       lastName: getField(req, DirectorField.LAST_NAME),
       formerNames: getPreviousNamesForFiling(req),
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     // Validate the filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
@@ -61,7 +60,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NAME, {
         templateName: Templates.DIRECTOR_NAME,
-        backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+        backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
         typeahead_array: TITLE_LIST,
@@ -75,7 +74,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req);
-    return res.redirect(nextPageUrl);
+    
+    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     return next(e);
   }

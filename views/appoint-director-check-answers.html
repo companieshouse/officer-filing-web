@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set title = "Check your answers before submitting the appointment" %}
 
@@ -12,7 +13,7 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-three-quarters">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
       
@@ -21,14 +22,256 @@
         <h1 class="govuk-heading-l">Check your answers before submitting the appointment</h1>
         <!-- This is the page for the appoint a director check your answers screen -->
 
-        {{ govukButton({
+        <h2 class="govuk-heading-m">Company details</h2>
+
+        {{ govukSummaryList({
           attributes: {
-            "data-event-id": "confirm-and-submit-button"
+            "style": "width:auto"
           },
-          text: "Confirm and submit"
+          rows: [
+            {
+              classes: "govuk-summary-list__row--no-actions",
+              key: {
+                text: "Company name"
+              },
+              value: {
+                text: company.companyName
+              }
+            },
+            {
+              classes: "govuk-summary-list__row--no-actions",
+              
+              key: {
+                text: "Company number"
+              },
+              value: {
+                text: company.companyNumber
+              }
+            }
+          ]
         }) }}
+
+        {% if not formerNames %}
+          {% set formerNames = "None" %}
+        {% endif %}
+
+        {% set nationality = officerFiling.nationality1 %}
+        {% if officerFiling.nationality2 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality2 %}
+        {% endif %}
+        {% if officerFiling.nationality3 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
+        {% endif %}
+
+        <h2 class="govuk-heading-m">Director details</h2>
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Name"
+              },
+              value: {
+                text: name
+              },
+              actions: {
+                items: [
+                  {
+                    href: nameLink,
+                    text: "Change",
+                    visuallyHiddenText: "Name",
+                    attributes: {
+                      "data-event-id": "name-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Previous names"
+              },
+              value: {
+                text: formerNames
+              },
+              actions: {
+                items: [
+                  {
+                    href: nameLink,
+                    text: "Change",
+                    visuallyHiddenText: "Previous name",
+                    attributes: {
+                      "data-event-id": "former-names-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Date of birth"
+              },
+              value: {
+                text: dateOfBirth
+              },
+              actions: {
+                items: [
+                  {
+                    href: dateOfBirthLink,
+                    text: "Change",
+                    visuallyHiddenText: "Date of birth",
+                    attributes: {
+                      "data-event-id": "date-of-birth--change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Date appointed"
+              },
+              value: {
+                text: appointedOn
+              },
+              actions: {
+                items: [
+                  {
+                    href: dateAppointedLink,
+                    text: "Change",
+                    visuallyHiddenText: "Appointed on date",
+                    attributes: {
+                      "data-event-id": "appointed-on-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Nationality"
+              },
+              value: {
+                html: nationality
+              },
+              actions: {
+                items: [
+                  {
+                    href: nationalityLink,
+                    text: "Change",
+                    visuallyHiddenText: "Nationality",
+                    attributes: {
+                      "data-event-id": "nationality-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Occupation"
+              },
+              value: {
+                text: occupation
+              },
+              actions: {
+                items: [
+                  {
+                    href: occupationLink,
+                    text: "Change",
+                    visuallyHiddenText: "Occupation",
+                    attributes: {
+                      "data-event-id": "occupation-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Has the director applied to protect their details at Companies House?"
+              },
+              value: {
+                text: protectedDetails
+              },
+              actions: {
+                items: [
+                  {
+                    href: protectedDetailsLink,
+                    text: "Change",
+                    visuallyHiddenText: "Protected details",
+                    attributes: {
+                      "data-event-id": "protected-details-change-link"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }) }} 
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Address details",
+                classes: "govuk-heading-m"
+              },
+              value: {
+              },
+              actions: {
+                items: [
+                  {
+                    href: "#",
+                    text: "Change",
+                    visuallyHiddenText: "Director's address details",
+                    attributes: {
+                      "data-event-id": "address-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Correspondence address"
+              },
+              value: {
+                text: "Correspondence address here"
+              }
+            },
+            {
+              key: {
+                text: "Home address"
+              },
+              value: {
+                text: "Home address here"
+              }
+            }
+          ]
+        }) }}
+
+        {{ govukCheckboxes({
+          name: "director_consent",
+          fieldset: {
+            legend: {
+              text: "Consent to act as a director",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          errorMessage: errors.director_consent if errors,
+          items: [
+            {
+              value: "director_consent",
+              text: "By submitting this information, you are confirming that the person named has consented to act as a director."
+            }
+          ]
+        }) }}
+
+        {% include "includes/confirm-submit-cancel-button-group.html" %}
 
       </form>
     </div>
-  </div>
+
 {% endblock %}

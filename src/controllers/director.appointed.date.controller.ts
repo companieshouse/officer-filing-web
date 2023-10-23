@@ -14,6 +14,7 @@ import { urlUtils } from "../utils/url";
 import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
 import { validateDate } from "../validation/date.validation";
 import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
+import { setBackLink, setRedirectLink } from "../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -66,7 +67,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
   
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req);
-    return res.redirect(nextPageUrl);
+    return res.redirect(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl));
 
   } catch (e) {
     return next(e);
@@ -99,7 +100,7 @@ const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, v
 
   return res.render(Templates.DIRECTOR_APPOINTED_DATE, {
     templateName: Templates.DIRECTOR_APPOINTED_DATE,
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req)),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     errors: formatValidationErrors(validationErrors),
     ...dates,

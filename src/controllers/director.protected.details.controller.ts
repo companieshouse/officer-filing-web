@@ -9,7 +9,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
-import { getField } from "../utils/web";
+import { getField, setBackLink, setRedirectLink } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
 
 import { Session } from "@companieshouse/node-session-handler";
@@ -30,7 +30,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl: returnPageUrl,
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(returnPageUrl, req)),
+      
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
@@ -45,31 +46,29 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    // Patch filing with updated information
+    const officerFiling: OfficerFiling = {
+      directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
+    };
+    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req)),
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),
       });
     }
-
-    // Patch filing with updated information
-    const officerFilingBody: OfficerFiling = {
-      directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
-    };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-
+    
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
-    return res.redirect(nextPageUrl);
+    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     next(e);
-  };
+  }
 }
 
 const calculateProtectedDetailsRadioFromFiling = (directorAppliedToProtectDetails: boolean | undefined): string | undefined => {

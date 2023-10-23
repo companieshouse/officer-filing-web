@@ -7,7 +7,7 @@ import { OCCUPATION_LIST } from "../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../model/director.model";
-import { getField } from "../utils/web";
+import { getField, setBackLink, setRedirectLink } from "../utils/web";
 import { logger } from "../utils/logger";
 import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_OCCUPATION, {
       templateName: Templates.DIRECTOR_OCCUPATION,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: officerFiling.occupation,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
@@ -52,7 +52,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const formattedErrors = formatValidationErrors(validationErrors);
     return res.render(Templates.DIRECTOR_OCCUPATION, {
       templateName: Templates.DIRECTOR_OCCUPATION,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
+      backLinkUrl: setBackLink(req, patchedFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: officerFiling.occupation,
       errors: formattedErrors,
@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 }
 
   const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req);
-  return res.redirect(nextPageUrl);
+  return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPageUrl));
 } catch (e) {
   return next(e);
 }
