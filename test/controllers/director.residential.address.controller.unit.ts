@@ -17,7 +17,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { getBackLinkUrl } from './../../src/controllers/director.residential.address.controller';
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
-import { whereDirectorLiveErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { whereDirectorLiveResidentialErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -303,7 +303,7 @@ describe("Director name controller tests", () => {
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
-      expect(response.text).toContain(whereDirectorLiveErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED);
+      expect(response.text).toContain(whereDirectorLiveResidentialErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
