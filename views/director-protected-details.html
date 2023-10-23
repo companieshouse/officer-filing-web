@@ -18,10 +18,6 @@
       
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Does the director have their personal information protected at Companies House?</h1>
-        <!-- This is the page for director protected details selection -->
-
-        <p class="govuk-hint">This includes if they are waiting for the results of an application to protect their personal information.</p>
 
         {{ govukRadios({
           errorMessage: errors.protected_details if errors,
@@ -29,9 +25,13 @@
           name: "protected_details",
           fieldset: {
             legend: {
+              text: "Does the director have their personal information protected at Companies House?",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
+          },
+          hint: {
+            text: "This includes if they are waiting for the results of an application to protect their personal information."
           },
           items: [
             {
@@ -78,6 +78,7 @@
         }) }}
 
         {{ govukButton({
+          classes: "govuk-button govuk-!-margin-top-5",
           attributes: {
             "data-event-id": "continue-button"
           },
