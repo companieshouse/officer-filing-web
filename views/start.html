@@ -45,8 +45,11 @@
         {% endset %}
 
         {{ govukDetails({
-          summaryHtml: '<div data-event-id="start-now-accordion-expansion"> What is a corporate director?</div>',
-          html: corporateDetails
+          summaryHtml: '<div> What is a corporate director?</div>',
+          html: corporateDetails,
+          attributes: {
+            "data-event-id": "start-now-accordion-expansion"
+          }
         }) }}
 
         {% if AP01_ACTIVE === "true" %}

@@ -161,7 +161,6 @@ describe("Director name controller tests", () => {
       });
 
       it("Should display errors on page if get validation status returns errors", async () => {
-        console.log("THIS IS THE TEST");
         mockGetValidationStatus.mockResolvedValueOnce({
           errors: [createMockValidationStatusError("Enter a property name or number for the director's correspondence address"), createMockValidationStatusError("Enter a city or town for the director's correspondence address")],
           isValid: false

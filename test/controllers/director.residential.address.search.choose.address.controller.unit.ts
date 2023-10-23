@@ -31,7 +31,7 @@ const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-describe("Director name controller tests", () => {
+describe("Director residential address array page controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
