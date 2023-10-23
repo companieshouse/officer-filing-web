@@ -8,11 +8,9 @@ import app from "../../src/app";
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END } from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
-import { get } from "../../src/controllers/director.residential.address.search.controller";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getBackLinkUrl } from './../../src/controllers/director.residential.address.controller';
-import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

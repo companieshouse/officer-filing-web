@@ -4,7 +4,7 @@ import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_A
       } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
-import { whereDirectorLiveErrorMessageKey } from '../utils/api.enumerations.keys';
+import { whereDirectorLiveResidentialErrorMessageKey } from '../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
 import { ValidationError } from "../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
@@ -92,7 +92,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 export const buildValidationErrors = (req: Request): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
   if (req.body[directorChoiceHtmlField] === undefined) {
-    validationErrors.push(createValidationErrorBasic(whereDirectorLiveErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorChoiceHtmlField));
+    validationErrors.push(createValidationErrorBasic(whereDirectorLiveResidentialErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorChoiceHtmlField));
   }
   return validationErrors;
 };
