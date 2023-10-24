@@ -29,7 +29,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Where does the director live?";
-const PUBLIC_REGISTER_INFORMATION = "What information we'll show on the public register";
+const PUBLIC_REGISTER_INFORMATION = "What information we&#39;ll show on the public online register";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
