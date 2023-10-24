@@ -89,13 +89,29 @@ describe("Director protected details controller tests", () => {
         expect(response.text).toContain(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END);
       });
 
-      it(`should navigate back button to residential address confirmation page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
+      it(`should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           protectedDetailsBackLink: "/director-home-address"
         })
         const response = await request(app).get(PAGE_URL);
 
         expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
+      });
+
+      it("should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink is undefined", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          protectedDetailsBackLink: undefined
+        })
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
+      });
+
+      it("Should catch error when officer filing returned error ", async () => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
     });
@@ -132,7 +148,17 @@ describe("Director protected details controller tests", () => {
 
         const response = await request(app).post(PAGE_URL);
 
-        expect(response.text).toContain("Select whether the director has applied to protect their details at Companies House");
+        expect(response.text).toContain(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED);
+      });
+
+      it("should catch error if patch officer filing failed", async () => {
+        const mockPatchOfficerFilingResponse = {
+        };
+        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+        const response = (await request(app).post(PAGE_URL).send({}));
+        expect(response.text).not.toContain(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED);
+        expect(response.text).not.toContain(PAGE_HEADING);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
     });
 

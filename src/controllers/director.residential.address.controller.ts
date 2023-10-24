@@ -73,8 +73,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      directorResidentialAddressChoice: selectedSraAddressChoice
+      directorResidentialAddressChoice: selectedSraAddressChoice,
+      protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
     };
+
     let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);

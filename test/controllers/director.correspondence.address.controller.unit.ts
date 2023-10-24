@@ -28,7 +28,7 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director&#39;s correspondence address?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const PUBLIC_REGISTER_INFORMATION = "What information we'll show on the public online register";
+const PUBLIC_REGISTER_INFORMATION = "What information we'll show on the public register";
 const ACCORDION_INFORMATION = "We will not show your home address on the public register";
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
