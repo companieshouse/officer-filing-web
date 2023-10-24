@@ -21,7 +21,7 @@ export const getField = (req: Request, fieldName: string): string => {
  *  sets the back link to the check your answers page instead.
  */
 export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string): string => {
-  if(checkYourAnswersLink && req.headers.referer?.includes(CHECK_YOUR_ANSWERS_PATH_END)){
+  if(checkYourAnswersLink){
     return checkYourAnswersLink;
   }
   return backLink;
