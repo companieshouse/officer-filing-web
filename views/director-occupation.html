@@ -36,10 +36,10 @@
           </div>
         </div>
 
-        {{ govukInsetText({
-          html: "<h2 class='govuk-heading-m'>What information we'll show on the public online register</h2>
-          <p>We will show the director's occupation on the public Companies House register.</p>"
-        }) }}
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
+            <p>We will show the director's occupation on the public Companies House register.</p>
+        </div>
     
         {{ govukButton({
           attributes: {

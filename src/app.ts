@@ -31,6 +31,7 @@ nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 nunjucksEnv.addGlobal("SERVICE_NAME", process.env.SERVICE_NAME);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
+nunjucksEnv.addGlobal('publicRegisterInformation', "What information we'll show on the public online register");
 
 app.enable("trust proxy");
 app.use(express.json());

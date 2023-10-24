@@ -91,10 +91,11 @@
           value: correspondence_address_postcode
         }) }}
 
-        {{ govukInsetText({
-          html: "<h2 class='govuk-heading-m'>What information we’ll show on the public online register</h2>
-          <p>We will show this address on the public Companies House register.</p>"
-        }) }}
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
+            <p>We will show this address on the public Companies House register.</p>
+        </div>
+
 
         {% set correspondenceAddressSameAsHomeAddress %}
         <p>We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register. </p>
