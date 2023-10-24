@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { urlUtils } from "./url";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, CHECK_YOUR_ANSWERS_PATH_END } from "../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH } from "../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";

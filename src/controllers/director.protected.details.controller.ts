@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
-  DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, } from "../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END, 
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH, } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { formatValidationErrors } from '../validation/validation';
@@ -9,7 +9,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
-import { getField, setBackLink, setRedirectLink } from "../utils/web";
+import { getField, setRedirectLink } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
 
 import { Session } from "@companieshouse/node-session-handler";
@@ -32,8 +32,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   } catch (e) {
     return next(e);
   }
-
-  
 };
 
 const  getBackLinkUrl = (req: Request, officerFiling: OfficerFiling) => {
@@ -72,7 +70,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         director_address: directorAppliedToProtectDetailsValue(req),
       });
     }
-    
+
     const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {

@@ -10,7 +10,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { buildValidationErrors } from "../../src/validation/protected.details.validation";
 import { ValidationError } from "../../src/model/validation.model";
-import { ErrorMessageKey, protectedDetailsErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { protectedDetailsErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 import { directorAppliedToProtectDetailsValue } from "../../src/controllers/director.protected.details.controller";
 import { DirectorField } from "../../src/model/director.model";
@@ -112,7 +112,7 @@ describe("Director protected details controller tests", () => {
         
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
-      })
+      });
 
     });
 
