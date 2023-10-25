@@ -2,7 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -17,6 +20,7 @@ import { ValidationError } from "../model/validation.model";
 import { residentialAddressAddressLineOneErrorMessageKey, residentialAddressAddressLineTwoErrorMessageKey, residentialAddressCountryErrorMessageKey, residentialAddressLocalityErrorMessageKey, residentialAddressPostcodeErrorMessageKey, residentialAddressPremisesErrorMessageKey, residentialAddressRegionErrorMessageKey } from "../utils/api.enumerations.keys";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { COUNTRY_LIST } from "../utils/properties";
+import { DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END } from '../types/page.urls';
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -25,10 +29,13 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+
+    const returnUrl = getReturnUrl(req);
+    console.log(`================================================ manual controller`)
     
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
+      backLinkUrl: returnUrl,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       typeahead_array: COUNTRY_LIST,
       residential_address_premises: officerFiling.residentialAddress?.premises,
@@ -44,11 +51,25 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getReturnUrl = (req: Request): string | undefined  => {
+  const returnUrl = req.headers.referer;
+  console.log(`****************** return url is ${returnUrl}`)
+
+  if (returnUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END)) {
+    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
+  } else if (returnUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {
+    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+  } else if (returnUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
+    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req)
+  }
+}
+
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const returnUrl = getReturnUrl(req);
 
     // Patch filing with updated information
     let officerFiling: OfficerFiling = {
@@ -72,7 +93,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
+        backLinkUrl: returnUrl,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         typeahead_array: COUNTRY_LIST,
         residential_address_premises: officerFiling.residentialAddress?.premises,
