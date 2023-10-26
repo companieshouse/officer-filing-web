@@ -17,9 +17,69 @@
       
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">Appointment submitted</h1>
-        <!-- This is the page for the appointment submitted screen -->
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+            Appointment submitted
+          </h1>
+          <div class="govuk-panel__body">
+            Reference number<br><strong>{{ referenceNumber }}</strong>
+          </div>
+        </div>
 
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Company name"
+              },
+              value: {
+                text: companyName
+              }
+            },
+            {
+              key: {
+                text: "Company number"
+              },
+              value: {
+                text: companyNumber
+              }
+            },
+            {
+              key: {
+                text: "Name of director"
+              },
+              value: {
+                text: directorName
+              }
+            },
+            {
+              key: {
+                text: "Date of appointment"
+              },
+              value: {
+                text: appointedOn
+              }
+            }
+          ]
+        }) }}
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+        <p class="govuk-body">We'll send a confirmation email to you which contains your reference number.</p>
+        <p class="govuk-body">We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.</p>
+        <p class="govuk-body">If it's accepted, we'll add it to the company's filing history on the <a href="https://find-and-update.company-information.service.gov.uk/" data-event-id="companies-house-register-link" > Companies House register</a>. If it's rejected, we'll email you to let you know what to do next.</p>
+
+        <h2 class="govuk-heading-m">What do you want to do next?</h2>
+        <ul class="govuk-list govuk-list--spaced">
+          <li>
+            <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for the same company</a>
+          </li>
+          <li>
+            <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for a different company</a>
+          </li>
+        </ul>
+
+        <h2 class="govuk-heading-m">Feedback</h2>
+        <p class="govuk-body">This is a new service. Help us improve it by completing our <a href="https://www.smartsurvey.co.uk/s/directors-conf/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state">quick survey</a>.</p>
       </form>
     </div>
   </div>
