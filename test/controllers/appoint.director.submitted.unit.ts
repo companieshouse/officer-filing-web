@@ -1,5 +1,4 @@
 jest.mock("../../src/utils/feature.flag")
-jest.mock("../../src/middleware/company.authentication.middleware");
 jest.mock("../../src/services/remove.directors.check.answers.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
@@ -14,12 +13,9 @@ import { APPOINT_DIRECTOR_SUBMITTED_PATH, urlParams } from "../../src/types/page
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
-import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
-const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
-mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 
@@ -49,7 +45,6 @@ const PAGE_URL = APPOINT_DIRECTOR_SUBMITTED_PATH
 describe("Appoint director submitted controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockAuthenticationMiddleware.mockClear();
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
       mockGetCompanyProfile.mockClear();
