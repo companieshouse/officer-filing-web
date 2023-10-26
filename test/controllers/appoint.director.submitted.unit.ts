@@ -25,11 +25,6 @@ mockGetOfficerFiling.mockResolvedValue({
   resignedOn: "2008-08-08"
 });
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-mockGetOfficerFiling.mockResolvedValue({
-  referenceAppointmentId: "app1",
-  referenceEtag: "ETAG",
-  resignedOn: "2008-08-08"
-});
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
