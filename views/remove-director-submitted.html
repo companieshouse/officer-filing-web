@@ -56,17 +56,7 @@
             }
           ]
         }) }}
-
-        <h2 class="govuk-heading-m">What happens next</h2>
-
-        <p class="govuk-body">We'll send a confirmation email to you which contains your reference number.</p>
-
-          <p class="govuk-body">We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.</p>
-
-          <p class="govuk-body">If it's accepted, we'll add it to the company's filing history on the <a href="https://find-and-update.company-information.service.gov.uk/" data-event-id="companies-house-register-link" >Companies House register</a>. If it's rejected, we'll email you to let you know what to do next.</p>
-
-          <h2 class="govuk-heading-m">What do you want to do next?</h2>
-
+          {% include "includes/confirm-page-summary.html" %}
           <ul class="govuk-list govuk-list--spaced">
             <li>
               <a href="{{removeLink}}" data-event-id="remove-director-same-company-link" class="govuk-link govuk-link--no-visited-state">Remove another director from the same company</a>
