@@ -11,9 +11,8 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getCompanyProfile } from "../services/company.profile.service";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { mapCompanyProfileToOfficerFilingAddress } from "./director.correspondence.address.controller";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 

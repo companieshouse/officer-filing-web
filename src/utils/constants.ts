@@ -32,7 +32,7 @@ export const COMPANY_NAME_PLACEHOLDER = "COMPANY_NAME_PLACEHOLDER";
 export const TRANSACTION_ID_PLACEHOLDER = "TRANSACTION_ID_PLACEHOLDER";
 export const APPOINTMENT_ID_PLACEHOLDER = "APPOINTMENT_ID_PLACEHOLDER";
 export const CONSENT_TO_ACT_AS_DIRECTOR = "Select if you confirm that by submitting this information, the person named has consented to act as director";
-
+export const SA_TO_ROA_ERROR = "Select yes if the registered office address changes in the future, and you want this to apply to your correspondence address too";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",

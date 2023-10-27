@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { ValidationError } from '../model/validation.model';
 import { protectedDetailsErrorMessageKey } from '../utils/api.enumerations.keys';
-import { createValidationErrorBasic } from '../validation/validation';
+import { createValidationErrorBasic } from './validation';
 
 const protectedDetailsHtmlField: string = "protected_details";
 

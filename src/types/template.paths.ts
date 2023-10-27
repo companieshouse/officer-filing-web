@@ -29,5 +29,6 @@ export enum Templates {
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL = "director-residential-address-manual",
   DIRECTOR_PROTECTED_DETAILS = "director-protected-details",
   APPOINT_DIRECTOR_CHECK_ANSWERS = "appoint-director-check-answers",
-  APPOINT_DIRECTOR_SUBMITTED = "appoint-director-submitted"
+  APPOINT_DIRECTOR_SUBMITTED = "appoint-director-submitted",
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "director-correspondence-address-link"
 }

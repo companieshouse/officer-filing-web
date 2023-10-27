@@ -33,5 +33,8 @@ export enum DirectorField {
   PROTECTED_DETAILS_RADIO = "protected_details",
   PROTECTED_DETAILS_YES = "protected_details_yes",
   PROTECTED_DETAILS_NO = "protected_details_no",
+  SA_TO_ROA_RADIO = "sa_to_roa",
+  SA_TO_ROA_YES = "sa_to_roa_yes",
+  SA_TO_ROA_NO = "sa_to_roa_no",
   ADDRESS_ARRAY = "address_array"
 }

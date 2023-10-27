@@ -8,6 +8,7 @@ import * as confirmCompanyRoute from "../controllers/confirm.company.controller"
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
 import * as directorAppointedDate from "../controllers/director.appointed.date.controller";
 import * as directorCorrespondenceAddress from "../controllers/director.correspondence.address.controller";
+import * as directorCorrespondenceAddressLink from "../controllers/director.correspondence.address.link.controller";
 import * as directorCorrespondenceAddressSearch from "../controllers/director.correspondence.address.search.controller";
 import * as directorCorrespondenceAddressChooseAddress from "../controllers/director.correspondence.address.search.choose.address.controller";
 import * as directorCorrespondenceAddressManual from "../controllers/director.correspondence.address.manual.controller";
@@ -103,6 +104,9 @@ router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, directorCorrespondenceA
 
 router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmCorrespondenceAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, directorConfirmCorrespondenceAddress.post);
+
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, directorCorrespondenceAddressLink.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, directorCorrespondenceAddressLink.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddress.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, directorResidentialAddress.post);
