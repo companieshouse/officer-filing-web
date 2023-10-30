@@ -7,8 +7,6 @@ import { patchOfficerFiling } from "../services/officer.filing.service";
 
 export const checkYourAnswersMiddleware = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log(`********check your answers middleware is ${req.headers.referer}`);
-    console.log(`========= check you answer correct is ${req.headers.referer?.endsWith(CHECK_YOUR_ANSWERS_PATH_END)}`);
     if (req.headers.referer?.endsWith(CHECK_YOUR_ANSWERS_PATH_END)) {
       const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
       const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);

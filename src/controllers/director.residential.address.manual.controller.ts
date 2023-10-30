@@ -31,8 +31,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     const returnUrl = getReturnUrl(req);
-    console.log(`================================================ manual controller`)
-    
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL,
       backLinkUrl: returnUrl,
@@ -53,8 +51,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const getReturnUrl = (req: Request): string | undefined  => {
   const returnUrl = req.headers.referer;
-  console.log(`****************** return url is ${returnUrl}`)
-
   if (returnUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END)) {
     return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
   } else if (returnUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {

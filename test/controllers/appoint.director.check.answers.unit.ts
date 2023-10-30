@@ -13,6 +13,7 @@ import { getCurrentOrFutureDissolved } from "../../src/services/stop.page.valida
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
+import { mockAddress1 } from '../mocks/remove.director.check.answers.mock';
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -63,6 +64,68 @@ describe("Appoint director check answers controller tests", () => {
         expect(response.text).toContain("1 January 1990");
         expect(response.text).toContain("1 January 2020");
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      });
+
+      it("should display address details section with correspondence address if not linked", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          firstName: "John",
+          lastName: "Doe",
+          formerNames: "James",
+          occupation: "Director",
+          dateOfBirth: "1990-01-01",
+          appointedOn: "2020-01-01",
+          serviceAddress: mockAddress1,
+          addressSameAsRegisteredOfficeAddress: false
+        }});
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain("Diddly Squat Farm Shop"),
+        expect(response.text).toContain(mockAddress1.postalCode),
+        expect(response.text).not.toContain("The correspondence address is the same as the registered office address");
+      });
+
+      it("should display address details section correspondence address with same as address text if linked", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          firstName: "John",
+          lastName: "Doe",
+          formerNames: "James",
+          occupation: "Director",
+          dateOfBirth: "1990-01-01",
+          appointedOn: "2020-01-01",
+          addressSameAsRegisteredOfficeAddress: true
+        }});
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain("The correspondence address is the same as the registered office address");
+      });
+
+      it("should display address details section home address with same as address text if linked", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          firstName: "John",
+          lastName: "Doe",
+          formerNames: "James",
+          occupation: "Director",
+          dateOfBirth: "1990-01-01",
+          appointedOn: "2020-01-01",
+          residentialAddressSameAsCorrespondenceAddress: true
+        }});
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain("The home address is the same as the correspondence address");
+      });
+
+      it("should display address details section home address value if not linked", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          firstName: "John",
+          lastName: "Doe",
+          formerNames: "James",
+          occupation: "Director",
+          dateOfBirth: "1990-01-01",
+          appointedOn: "2020-01-01",
+          residentialAddress: mockAddress1,
+          residentialAddressSameAsCorrespondenceAddress: false
+        }});
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain("Diddly Squat Farm Shop"),
+        expect(response.text).toContain(mockAddress1.postalCode),
+        expect(response.text).not.toContain("The home address is the same as the correspondence address");
       });
 
       it("Should navigate to error page when feature flag is off", async () => {

@@ -22,7 +22,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
       director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
@@ -64,7 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else {
-      officerFiling.addressSameAsRegisteredOfficeAddress = undefined;
+      officerFiling.addressSameAsRegisteredOfficeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }

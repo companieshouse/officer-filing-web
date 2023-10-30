@@ -67,7 +67,6 @@ const renderPage = (req: Request, res: Response, companyProfile: CompanyProfile,
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
-    ...officerFiling,
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     formerNames:  formatTitleCase(officerFiling.formerNames),
     occupation:  formatTitleCase(officerFiling.occupation),
@@ -80,7 +79,7 @@ const renderPage = (req: Request, res: Response, companyProfile: CompanyProfile,
     nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
     occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
     protectedDetailsLink: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
-    correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH+"#director_correspondence_address", req),
+    correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
     errors: errors
   });
 }
