@@ -16,6 +16,7 @@ import * as directorConfirmCorrespondenceAddress from "../controllers/director.c
 import * as directorConfirmResidentialAddress from "../controllers/director.confirm.residential.address.controller";
 import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
+import * as directorResidentialAddressLink from "../controllers/director.residential.address.link.controller";
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
 import * as directorResidentialAddressSearchChooseAddress from "../controllers/director.residential.address.search.choose.address.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
@@ -122,6 +123,9 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddress
 
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
+
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, directorResidentialAddressLink.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, directorResidentialAddressLink.post);
 
 router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorProtectedDetails.get);
 router.post(urls.DIRECTOR_PROTECTED_DETAILS, directorProtectedDetails.post);

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
-        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, 
+        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, 
       } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -85,7 +85,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //broken as agreed with BA
+      if(officerFiling.isMailingAddressSameAsRegisteredOfficeAddress){
+        nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
+      }
+      else{
+        nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req);
+      }
       return res.redirect(nextPageUrl);
     } else {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);

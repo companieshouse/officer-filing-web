@@ -36,5 +36,8 @@ export enum DirectorField {
   SA_TO_ROA_RADIO = "sa_to_roa",
   SA_TO_ROA_YES = "sa_to_roa_yes",
   SA_TO_ROA_NO = "sa_to_roa_no",
+  HA_TO_SA_RADIO = "ha_to_sa",
+  HA_TO_SA_YES = "ha_to_sa_yes",
+  HA_TO_SA_NO = "ha_to_sa_no",
   ADDRESS_ARRAY = "address_array"
 }

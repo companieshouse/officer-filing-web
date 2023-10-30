@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
+import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
@@ -10,7 +10,7 @@ import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
-import { SA_TO_ROA_ERROR } from "../utils/constants";
+import { HA_TO_SA_ERROR } from "../utils/constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,11 +20,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
-    return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {
-      templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+    return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
+      templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
+      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isMailingAddressSameAsRegisteredOfficeAddress),
+      ha_to_sa: calculateHaToSaRadioFromFiling(officerFiling.isMailingAddressSameAsHomeAddress),
     });
   } catch (e) {
     return next(e);
@@ -36,53 +36,52 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const isMailingAddressSameAsRegisteredOfficeAddress = calculateSaToRoaBooleanValue(req);
+    const isMailingAddressSameAsHomeAddress = calculateHaToSaBooleanValue(req);
 
-    if (isMailingAddressSameAsRegisteredOfficeAddress === undefined) {
+    if (isMailingAddressSameAsHomeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const linkError = createValidationErrorBasic(SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
-      return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {
-        templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+      const linkError = createValidationErrorBasic(HA_TO_SA_ERROR, DirectorField.HA_TO_SA_RADIO);
+      return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
+        templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
+        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         errors: formatValidationErrors([linkError])
       });
     }
 
     const officerFilingBody: OfficerFiling = {
-      isMailingAddressSameAsRegisteredOfficeAddress: isMailingAddressSameAsRegisteredOfficeAddress
-
+      isMailingAddressSameAsHomeAddress: isMailingAddressSameAsHomeAddress
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+    return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
   } catch (e) {
     next(e);
   }
 }
 
-const calculateSaToRoaRadioFromFiling = (saToRoa: boolean | undefined): string | undefined => {
-  if (saToRoa === null) {
+const calculateHaToSaRadioFromFiling = (haToSa: boolean | undefined): string | undefined => {
+  if (haToSa === null) {
     return undefined;
   }
-  if (saToRoa === true) {
-    return DirectorField.SA_TO_ROA_YES;
+  if (haToSa === true) {
+    return DirectorField.HA_TO_SA_YES;
   }
-  if (saToRoa === false) {
-    return DirectorField.SA_TO_ROA_NO;
+  if (haToSa === false) {
+    return DirectorField.HA_TO_SA_NO;
   }
 }
 
-export const calculateSaToRoaBooleanValue = (req: Request): boolean|undefined => {
-  let saToRoaRadio = getField(req, DirectorField.SA_TO_ROA_RADIO);
+export const calculateHaToSaBooleanValue = (req: Request): boolean|undefined => {
+  let haToSaRadio = getField(req, DirectorField.HA_TO_SA_RADIO);
 
-  if (!saToRoaRadio) {
+  if (!haToSaRadio) {
     return undefined;
   } 
-  if (saToRoaRadio == DirectorField.SA_TO_ROA_YES) {
+  if (haToSaRadio == DirectorField.HA_TO_SA_YES) {
     return true;
   }
-  if (saToRoaRadio == DirectorField.SA_TO_ROA_NO) {
+  if (haToSaRadio == DirectorField.HA_TO_SA_NO) {
     return false;
   }
   return undefined;
