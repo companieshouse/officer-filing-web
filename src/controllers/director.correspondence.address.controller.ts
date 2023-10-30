@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
+import { APPOINT_DIRECTOR_CHECK_ANSWERS, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
         DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -13,13 +13,13 @@ import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enu
 import { getCompanyProfile } from "../services/company.profile.service";
 import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
+import { setBackLink } from "../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
@@ -48,7 +48,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
         errors: formattedErrors,
         director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
@@ -59,16 +59,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const officerFilingBody: OfficerFiling = {
       directorCorrespondenceAddressChoice: selectedSraAddressChoice
     };
-    let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req); //expected to go to linking page (yet to be done)
-      return res.redirect(nextPageUrl);
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else {
+      officerFiling.addressSameAsRegisteredOfficeAddress = undefined;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
-      return res.redirect(nextPageUrl);
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }
   } catch(e) {
     next(e);

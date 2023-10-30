@@ -11,6 +11,44 @@
   {% include "includes/back-link.html" %}
 {% endblock %}
 
+{% set displayCorrespondenceAddress %}
+  {% if officerFiling.addressSameAsRegisteredOfficeAddress %}
+    "The correspondence address is the same as the registered office address"
+  {% else %}
+    <ul class="govuk-list">
+        {% if officerFiling.serviceAddress.premises%}
+          <li>{{ officerFiling.serviceAddress.premises | title  }},</li>
+        {% endif %}
+        <li>{{ officerFiling.serviceAddress.addressLine1 | title }},</li>
+        <li>{{ officerFiling.serviceAddress.addressLine2 | title }},</li>
+        <li>{{ officerFiling.serviceAddress.locality | title }},</li>
+        <li>{{ officerFiling.serviceAddress.region | title }},</li>
+        <li>{{ officerFiling.serviceAddress.country | title }}</li>
+        <li>{{ officerFiling.serviceAddress.postalCode }}</li>
+    </ul>  
+  {% endif %}
+{% endset %}
+
+{% set displayResidentialAddress %}
+  {% if officerFiling.residentialAddressSameAsCorrespondenceAddress %}
+    "The home address is the same as the correspondence address"
+  {% elif officerFiling.residentialAddress %}
+    <ul class="govuk-list">
+      {% if officerFiling.residentialAddress.premises%}
+        <li>{{ officerFiling.residentialAddress.premises | title  }},</li>
+      {% endif %}
+      <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+      {% if officerFiling.residentialAddress.addressLine2 %}
+        <li>{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
+      {% endif %}
+      <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+      <li>{{ officerFiling.residentialAddress.region | title }},</li>
+      <li>{{ officerFiling.residentialAddress.country | title }}</li>
+      <li>{{ officerFiling.residentialAddress.postalCode }}</li>
+    </ul>  
+  {% endif %}
+{% endset %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -222,7 +260,7 @@
               actions: {
                 items: [
                   {
-                    href: "#",
+                    href: correspondenceAddressChangeLink,
                     text: "Change",
                     visuallyHiddenText: "Director's address details",
                     attributes: {
@@ -237,7 +275,7 @@
                 text: "Correspondence address"
               },
               value: {
-                text: "Correspondence address here"
+                html: displayCorrespondenceAddress
               }
             },
             {
@@ -245,7 +283,7 @@
                 text: "Home address"
               },
               value: {
-                text: "Home address here"
+                html: displayResidentialAddress
               }
             }
           ]
