@@ -32,8 +32,6 @@ export const getOfficerFiling = async (session: Session, transactionId: string, 
   }
 
   logger.debug(`Retrieved Officer Filing ${JSON.stringify(sdkResponse)}`);
-  logger.debug(`DEBUG OLAYODE==============OLAYODE Retrieved Officer Filing ${JSON.stringify(sdkResponse)}`);
-
   return castedSdkResponse.resource;
 };
 
