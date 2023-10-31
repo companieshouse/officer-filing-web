@@ -11,10 +11,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds-from-desktop">
-
-      {% include "includes/list/errors.html" %}
+  {% include "includes/grid-row-div-start.html" %}
       
       <form action="" method="post">
         <div class="govuk-form-group">
@@ -67,6 +64,5 @@
         }) }}
 
       </form>
-    </div>
-  </div>
+      {% include "includes/grid-row-div-end.html" %}
 {% endblock %}
