@@ -1,4 +1,3 @@
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH } from './../types/page.urls';
 import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
