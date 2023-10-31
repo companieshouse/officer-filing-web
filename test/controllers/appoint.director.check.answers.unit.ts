@@ -75,7 +75,7 @@ describe("Appoint director check answers controller tests", () => {
           dateOfBirth: "1990-01-01",
           appointedOn: "2020-01-01",
           serviceAddress: mockAddress1,
-          addressSameAsRegisteredOfficeAddress: false
+          isMailingAddressSameAsRegisteredOfficeAddress: false
         }});
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain("Diddly Squat Farm Shop"),
@@ -91,7 +91,7 @@ describe("Appoint director check answers controller tests", () => {
           occupation: "Director",
           dateOfBirth: "1990-01-01",
           appointedOn: "2020-01-01",
-          addressSameAsRegisteredOfficeAddress: true
+          isMailingAddressSameAsRegisteredOfficeAddress: true
         }});
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain("The correspondence address is the same as the registered office address");
@@ -105,7 +105,7 @@ describe("Appoint director check answers controller tests", () => {
           occupation: "Director",
           dateOfBirth: "1990-01-01",
           appointedOn: "2020-01-01",
-          residentialAddressSameAsCorrespondenceAddress: true
+          isMailingAddressSameAsHomeAddress: true
         }});
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain("The home address is the same as the correspondence address");
@@ -120,7 +120,7 @@ describe("Appoint director check answers controller tests", () => {
           dateOfBirth: "1990-01-01",
           appointedOn: "2020-01-01",
           residentialAddress: mockAddress1,
-          residentialAddressSameAsCorrespondenceAddress: false
+          isMailingAddressSameAsHomeAddress: false
         }});
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain("Diddly Squat Farm Shop"),

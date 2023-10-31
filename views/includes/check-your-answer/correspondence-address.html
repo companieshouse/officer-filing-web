@@ -1,5 +1,5 @@
 {% set displayCorrespondenceAddress %}
-  {% if officerFiling.addressSameAsRegisteredOfficeAddress %}
+  {% if officerFiling.isMailingAddressSameAsRegisteredOfficeAddress %}
     "The correspondence address is the same as the registered office address"
   {% else %}
     <ul class="govuk-list">
@@ -17,7 +17,7 @@
 {% endset %}
 
 {% set displayResidentialAddress %}
-  {% if officerFiling.residentialAddressSameAsCorrespondenceAddress %}
+  {% if officerFiling.isMailingAddressSameAsHomeAddress %}
     "The home address is the same as the correspondence address"
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list">

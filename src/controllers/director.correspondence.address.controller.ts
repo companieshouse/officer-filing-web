@@ -64,7 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else {
-      officerFiling.addressSameAsRegisteredOfficeAddress = false;
+      officerFiling.isMailingAddressSameAsRegisteredOfficeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }
