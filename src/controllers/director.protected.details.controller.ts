@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END, 
-  DIRECTOR_RESIDENTIAL_ADDRESS_PATH, } from "../types/page.urls";
+import {
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { formatValidationErrors } from '../validation/validation';
@@ -36,6 +41,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const  getBackLinkUrl = (req: Request, officerFiling: OfficerFiling) => {
   let returnPageUrl = officerFiling.protectedDetailsBackLink;
+  if(officerFiling.isMailingAddressSameAsHomeAddress === true) {
+    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req);
+  }
   if (returnPageUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {
     return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
   } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_PATH)) {

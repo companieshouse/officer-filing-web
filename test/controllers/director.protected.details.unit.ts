@@ -15,12 +15,15 @@ import { protectedDetailsErrorMessageKey } from "../../src/utils/api.enumeration
 import { directorAppliedToProtectDetailsValue } from "../../src/controllers/director.protected.details.controller";
 import { DirectorField } from "../../src/model/director.model";
 
-import { 
+import {
   DIRECTOR_PROTECTED_DETAILS_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
-  urlParams 
+  urlParams,
+  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 
@@ -78,6 +81,24 @@ describe("Director protected details controller tests", () => {
         const response = await request(app).get(PAGE_URL).set({"referer": "protected-details"});
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
+
+      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} if the flag isMailingAddressSameAsHomeAddress set to true`, async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          isMailingAddressSameAsHomeAddress : true
+        });
+
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END);
+      });
+
+      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page if the flag isMailingAddressSameAsHomeAddress set to false`, async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          isMailingAddressSameAsHomeAddress : false
+        });
+
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
       });
 
       it(`should navigate back button to residential address confirmation page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
