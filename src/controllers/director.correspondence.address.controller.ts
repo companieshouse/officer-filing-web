@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
+import { DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
         DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -10,8 +10,8 @@ import { createValidationErrorBasic, formatValidationErrors } from "../validatio
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ValidationError } from "../model/validation.model";
 import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enumerations.keys";
-import { getCompanyProfile } from "../services/company.profile.service";
-import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
 import { setBackLink } from "../utils/web";
 
@@ -62,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
     } else {
       officerFiling.isMailingAddressSameAsRegisteredOfficeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
@@ -72,23 +72,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     next(e);
   }
 };
-
-export const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
-  if (!registeredOffice) {
-    return; 
-  }
-  return {
-    addressLine1: registeredOffice.addressLineOne,
-    addressLine2: registeredOffice.addressLineTwo,
-    careOf: registeredOffice.careOf,
-    country: registeredOffice.country,
-    locality: registeredOffice.locality,
-    poBox: registeredOffice.poBox,
-    postalCode: registeredOffice.postalCode,
-    premises: registeredOffice.premises,
-    region: registeredOffice.region
-  } 
-}
 
 export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {
   const validationErrors: ValidationError[] = [];

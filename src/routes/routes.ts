@@ -8,6 +8,7 @@ import * as confirmCompanyRoute from "../controllers/confirm.company.controller"
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
 import * as directorAppointedDate from "../controllers/director.appointed.date.controller";
 import * as directorCorrespondenceAddress from "../controllers/director.correspondence.address.controller";
+import * as directorCorrespondenceAddressLink from "../controllers/director.correspondence.address.link.controller";
 import * as directorCorrespondenceAddressSearch from "../controllers/director.correspondence.address.search.controller";
 import * as directorCorrespondenceAddressChooseAddress from "../controllers/director.correspondence.address.search.choose.address.controller";
 import * as directorCorrespondenceAddressManual from "../controllers/director.correspondence.address.manual.controller";
@@ -15,6 +16,7 @@ import * as directorConfirmCorrespondenceAddress from "../controllers/director.c
 import * as directorConfirmResidentialAddress from "../controllers/director.confirm.residential.address.controller";
 import * as directorProtectedDetails from "../controllers/director.protected.details.controller";
 import * as directorResidentialAddress from "../controllers/director.residential.address.controller";
+import * as directorResidentialAddressLink from "../controllers/director.residential.address.link.controller";
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
 import * as directorResidentialAddressSearchChooseAddress from "../controllers/director.residential.address.search.choose.address.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
@@ -104,6 +106,9 @@ router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, directorCorrespondenceA
 router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmCorrespondenceAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, directorConfirmCorrespondenceAddress.post);
 
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, directorCorrespondenceAddressLink.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, directorCorrespondenceAddressLink.post);
+
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorResidentialAddress.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, directorResidentialAddress.post);
 
@@ -118,6 +123,9 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, directorResidentialAddress
 
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, directorConfirmResidentialAddress.post);
+
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, directorResidentialAddressLink.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, directorResidentialAddressLink.post);
 
 router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorProtectedDetails.get);
 router.post(urls.DIRECTOR_PROTECTED_DETAILS, directorProtectedDetails.post);
