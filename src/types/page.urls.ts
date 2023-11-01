@@ -5,7 +5,8 @@ export enum urlParams {
   PARAM_COMPANY_NUMBER = "companyNumber",
   PARAM_TRANSACTION_ID = "transactionId",
   PARAM_SUBMISSION_ID = "submissionId",
-  PARAM_APPOINTMENT_ID = "appointmentId"
+  PARAM_APPOINTMENT_ID = "appointmentId",
+  PARAM_BACK_LINK = "backLink"
 }
 
 export enum URL_QUERY_PARAM {

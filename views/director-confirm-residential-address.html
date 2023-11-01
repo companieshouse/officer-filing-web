@@ -21,11 +21,9 @@
         
         {% include "includes/list/address-details.html" %}
 
-        {% if addressLine1 %}
-          <div class="govuk-body">
-            <a href="{{enterAddressManuallyUrl}}" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
-          </div>
-        {% endif %}
+        <div class="govuk-body">
+          <a href="{{enterAddressManuallyUrl}}?backLink=confirm-residential-address" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
+        </div>
         
         <div class="govuk-inset-text">
           <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>

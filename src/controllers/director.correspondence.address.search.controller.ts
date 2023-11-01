@@ -3,7 +3,6 @@ import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END
@@ -65,6 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
                        "locality": "",
                        "postalCode": correspondencePostalCode,
                        "country" : ""},
+      serviceManualAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
     };
 
@@ -96,6 +96,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
               "locality": ukAddress.postTown,
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)},
+            serviceManualAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
             serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END
           };
           // Patch filing with updated information
