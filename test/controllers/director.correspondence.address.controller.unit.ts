@@ -7,15 +7,14 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { DIRECTOR_CORRESPONDENCE_ADDRESS, 
-         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, 
-         DIRECTOR_PROTECTED_DETAILS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH } 
+         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END,
+          DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+          DIRECTOR_RESIDENTIAL_ADDRESS_PATH} 
          from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
-import { Request, Response } from "express";
-import { Session } from "@companieshouse/node-session-handler";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -39,6 +38,11 @@ const DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_LI
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+  const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -144,9 +148,6 @@ describe("Director correspondence address controller tests", () => {
       });
       
       it("should catch error if patch officer filing failed", async () => {
-        const mockPatchOfficerFilingResponse = {
-        };
-        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         const response = (await request(app).post(PAGE_URL).send({}));
         expect(response.text).not.toContain("Select the director’s correspondence address");
         expect(response.text).not.toContain(PAGE_HEADING);
@@ -155,20 +156,20 @@ describe("Director correspondence address controller tests", () => {
 
       it(`should redirect to ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} if registered office address is selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          ...directorNameMock,
-        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data: {
+          isMailingAddressSameAsHomeAddress: undefined
+        }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"
         }));
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL);
       });
 
-      it(`should redirect to ${DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH} if different address is selected`, async () => {
+      it(`should redirect to ${DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL} if different address is selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          ...directorNameMock,
-        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data: {
+          isMailingAddressSameAsHomeAddress: undefined
+        }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_different_address"
         }));
@@ -177,14 +178,25 @@ describe("Director correspondence address controller tests", () => {
 
       it(`should patch the service address with no registered office address if selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue({});
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          ...directorNameMock,
-        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data: {
+          isMailingAddressSameAsHomeAddress: false
+        }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"
         }));
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL);
+      });
+
+      it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL} if office address is selected and home address flag is already set`, async () => {
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data: {
+          isMailingAddressSameAsHomeAddress: true
+        }});
+        const response = (await request(app).post(PAGE_URL).send({
+          director_correspondence_address: "director_registered_office_address"
+        }));
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
       });
     });
 });
