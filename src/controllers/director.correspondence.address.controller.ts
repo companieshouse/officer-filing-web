@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
-        DIRECTOR_PROTECTED_DETAILS_PATH, 
         DIRECTOR_RESIDENTIAL_ADDRESS_PATH} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -66,18 +65,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
     }
 
-    const officerFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
     let nextPageUrl = "";
-    if (officerFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    if (patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
     }
-    else if (!officerFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue){
+    else if (!patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue){
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req);
     }
     else {
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
     }
-    
+
     return res.redirect(nextPageUrl);
   } catch(e) {
     next(e);
