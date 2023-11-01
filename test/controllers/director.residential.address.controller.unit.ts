@@ -9,7 +9,7 @@ import app from "../../src/app";
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, 
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, 
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END } from '../../src/types/page.urls';
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
@@ -43,6 +43,11 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SE
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const DIRECTOR_RESIDENTIAL_ADDRESS_LINK_URL = DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  
 
 const mockRes = {
   render: jest.fn() as any,
@@ -280,7 +285,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
-    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if residential address is selected`, async () => {
+    it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} page if correspondence address is selected and no previous link established`, async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -289,8 +294,22 @@ describe("Director name controller tests", () => {
         director_address: "director_correspondence_address"
       }));
 
+      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_LINK_URL);
+    });
+
+    it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if correspondence address is selected and previous link established`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock,
+        isMailingAddressSameAsRegisteredOfficeAddress: true
+      });
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_correspondence_address"
+      }));
+
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
+
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director correspondence address on validation error`, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);

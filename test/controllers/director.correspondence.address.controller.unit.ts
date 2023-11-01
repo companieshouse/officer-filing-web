@@ -8,7 +8,7 @@ import app from "../../src/app";
 
 import { DIRECTOR_CORRESPONDENCE_ADDRESS, 
          DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, 
-         DIRECTOR_PROTECTED_DETAILS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END } 
+         DIRECTOR_PROTECTED_DETAILS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH } 
          from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -34,7 +34,7 @@ const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const DIRECTOR_PROTECTED_INFORMATION_PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
+const DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -153,7 +153,7 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
 
-      it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} if registered office address is selected`, async () => {
+      it(`should redirect to ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} if registered office address is selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockGetOfficerFiling.mockResolvedValueOnce({
           ...directorNameMock,
@@ -161,7 +161,7 @@ describe("Director correspondence address controller tests", () => {
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"
         }));
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL);
       });
 
       it(`should redirect to ${DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH} if different address is selected`, async () => {
@@ -184,7 +184,7 @@ describe("Director correspondence address controller tests", () => {
           director_correspondence_address: "director_registered_office_address"
         }));
 
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL);
       });
     });
 });
