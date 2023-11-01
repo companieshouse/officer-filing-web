@@ -39,6 +39,12 @@
         {% set detailsErrorMsg = false %}
     {% endif %}
 
+    {% if AP01_ACTIVE === "true" %}
+        {% set hintText = "Your answers will not be saved. You will need to start again if you want to appoint or remove a company director." %}
+    {% else %}
+        {% set hintText = "Your answers will not be saved. You will need to start again if you want to remove a company director." %}    
+    {% endif %}
+
     <form action="/appoint-update-remove-company-officer/signout" method="POST">
         {{ govukRadios({
             classes: "govuk-radios--inline",
@@ -52,7 +58,7 @@
                 }
             },
             hint: {
-                text: "Your answers will not be saved. You will need to start again if you want to remove a company director."
+                text: hintText
             },
             items: [
                 {
