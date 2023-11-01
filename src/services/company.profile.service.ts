@@ -1,5 +1,5 @@
 import { createApiClient, Resource } from "@companieshouse/api-sdk-node";
-import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { CHS_API_KEY } from "../utils/properties";
 import { logger, createAndLogError } from "../utils/logger";
 
@@ -25,3 +25,20 @@ export const getCompanyProfile = async (companyNumber: string): Promise<CompanyP
 
   return sdkResponse.resource;
 };
+
+export const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: RegisteredOfficeAddress) => {
+  if (!registeredOffice) {
+    return; 
+  }
+  return {
+    addressLine1: registeredOffice.addressLineOne,
+    addressLine2: registeredOffice.addressLineTwo,
+    careOf: registeredOffice.careOf,
+    country: registeredOffice.country,
+    locality: registeredOffice.locality,
+    poBox: registeredOffice.poBox,
+    postalCode: registeredOffice.postalCode,
+    premises: registeredOffice.premises,
+    region: registeredOffice.region
+  } 
+}

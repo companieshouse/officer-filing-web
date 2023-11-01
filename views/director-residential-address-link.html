@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% set title = "If the director's correspondence address changes in the future, do you want this to apply to their home address too?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  {% include "includes/grid-row-div-start.html" %}
+      
+      <form action="" method="post">
+        <div class="govuk-form-group">
+        <span class="govuk-caption-l">{{directorName}}</span>
+
+        {{ govukRadios({
+          errorMessage: errors.ha_to_sa if errors,
+          idPrefix: "ha_to_sa",
+          name: "ha_to_sa",
+          fieldset: {
+            legend: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "ha_to_sa_yes",
+              text: "Yes",
+              hint: {
+                text: "The director's home address will be recorded as the 'same as the correspondence address'. This means future changes will also apply to the director's home address."
+              },
+              checked: ha_to_sa === "ha_to_sa_yes",
+              attributes: {
+                "data-event-id": "ha_to_sa_yes"
+              }
+            },
+            {
+              value: "ha_to_sa_no",
+              text: "No",
+              hint: {
+                text: "You’ll have to update the director's home address manually if it changes."
+              },
+              checked: ha_to_sa === "ha_to_sa_no",
+              attributes: {
+                "data-event-id": "ha_to_sa_no"
+              }
+            }
+          ]
+        }) }}
+      </div>
+
+        {{ govukButton({
+          classes: "govuk-button",
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+      {% include "includes/grid-row-div-end.html" %}
+{% endblock %}
