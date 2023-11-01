@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
@@ -26,9 +28,17 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
+    const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
+    let backLink = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
+    if(correspondenceAddressBackParam && correspondenceAddressBackParam.includes("confirm-correspondence-address")) {
+      backLink = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req)
+    } else if(officerFiling.serviceManualAddressBackLink?.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
+      backLink = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    }
+
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
+      backLinkUrl: backLink,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       typeahead_array: COUNTRY_LIST,
       correspondence_address_premises: officerFiling.serviceAddress?.premises,

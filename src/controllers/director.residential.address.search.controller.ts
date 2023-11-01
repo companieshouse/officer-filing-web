@@ -64,6 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
                            "locality": "",
                            "postalCode": residentialPostalCode,
                            "country" : ""},
+      residentialManualAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       };
 
@@ -95,6 +96,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
               "locality": ukAddress.postTown,
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)},
+            residentialManualAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
             residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END
           };
           // Patch filing with updated information
