@@ -6,10 +6,14 @@
         {% if officerFiling.serviceAddress.premises %}
           <li>{{ officerFiling.serviceAddress.premises | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.addressLine1 | title }},</li>
-        <li>{{ officerFiling.serviceAddress.addressLine2 | title }},</li>
-        <li>{{ officerFiling.serviceAddress.locality | title }},</li>
-        <li>{{ officerFiling.serviceAddress.region | title }},</li>
+        <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+        {% if officerFiling.serviceAddress.addressLine2 %}
+          <li>{{ officerFiling.serviceAddress.addressLine2 | title  }},</li>
+        {% endif %}
+        <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+        {% if officerFiling.serviceAddress.region %}
+          <li>{{ officerFiling.serviceAddress.region | title  }},</li>
+        {% endif %}
         <li>{{ officerFiling.serviceAddress.country | title }}</li>
         <li>{{ officerFiling.serviceAddress.postalCode }}</li>
     </ul>  
@@ -21,7 +25,7 @@
     The home address is the same as the correspondence address
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list">
-      {% if officerFiling.residentialAddress.premises%}
+      {% if officerFiling.residentialAddress.premises %}
         <li>{{ officerFiling.residentialAddress.premises | title  }},</li>
       {% endif %}
       <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
@@ -29,7 +33,9 @@
         <li>{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
       {% endif %}
       <li>{{ officerFiling.residentialAddress.locality | title }},</li>
-      <li>{{ officerFiling.residentialAddress.region | title }},</li>
+      {% if officerFiling.residentialAddress.region %}
+        <li>{{ officerFiling.residentialAddress.region | title }},</li>
+      {% endif %}
       <li>{{ officerFiling.residentialAddress.country | title }}</li>
       <li>{{ officerFiling.residentialAddress.postalCode }}</li>
     </ul>  
