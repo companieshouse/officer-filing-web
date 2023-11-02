@@ -26,6 +26,7 @@ const getCompanyNumberFromRequestParams = (req: Request): string => req.params[u
 const getTransactionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_TRANSACTION_ID];
 const getSubmissionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_SUBMISSION_ID];
 const getAppointmentIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_APPOINTMENT_ID];
+const getBackLinkFromRequestParams = (req: Request): string => req.query[urlParams.PARAM_BACK_LINK] as string;
 
 const setQueryParam = (url: string, paramName: URL_QUERY_PARAM, value: string) =>
   url.replace(`{${paramName}}`, value);
@@ -100,6 +101,7 @@ export const urlUtils = {
   getTransactionIdFromRequestParams,
   getSubmissionIdFromRequestParams,
   getAppointmentIdFromRequestParams,
+  getBackLinkFromRequestParams,
   getUrlToPath,
   getUrlWithCompanyNumber,
   getUrlWithCompanyNumberTransactionIdAndSubmissionId,

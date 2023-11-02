@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
-        DIRECTOR_PROTECTED_DETAILS_PATH } from "../types/page.urls";
+        DIRECTOR_RESIDENTIAL_ADDRESS_PATH} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -16,6 +16,7 @@ import { urlUtilsRequestParams } from "./director.residential.address.controller
 import { setBackLink } from "../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
+const registeredOfficerAddressValue: string = "director_registered_office_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -40,11 +41,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile = await getCompanyProfile(companyNumber);
 
     const validationErrors = buildResidentialAddressValidationErrors(req);
     if (validationErrors.length > 0) {
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
@@ -57,17 +58,26 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      directorCorrespondenceAddressChoice: selectedSraAddressChoice
+      directorCorrespondenceAddressChoice: selectedSraAddressChoice,
+      serviceAddress: undefined
     };
-    if (selectedSraAddressChoice === "director_registered_office_address") {
+    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    }
+
+    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    if (patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+    }
+    else if (!patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
-    } else {
-      officerFiling.isMailingAddressSameAsRegisteredOfficeAddress = false;
+    }
+    else {
+      officerFilingBody.isMailingAddressSameAsRegisteredOfficeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }
+
   } catch(e) {
     next(e);
   }

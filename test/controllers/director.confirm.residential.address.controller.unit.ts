@@ -123,6 +123,15 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
+
+      it("should populate backLink parameter", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "John Smith"
+        })
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).toContain("backLink=confirm-residential-address");
+      });
     });
 
     describe("post tests", () => {

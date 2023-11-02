@@ -6,7 +6,13 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, urlParams } from "../../src/types/page.urls";
+import {
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
+  urlParams
+} from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { createMockValidationStatusError, mockValidValidationStatusResponse, mockValidationStatusError } from "../mocks/validation.status.response.mock";
@@ -91,6 +97,63 @@ describe("Director residential address manual controller tests", () => {
         const response = await request(app).get(PAGE_URL);
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
+
+      it("Should populate the back link with confirm page URL if the request contains a query param and disregard the residentialManualAddressBackLink if provided", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          residentialAddress: {
+            premises: "The Big House",
+            addressLine1: "One Street",
+            addressLine2: "Two",
+            locality: "Three",
+            region: "Four",
+            country: "Five",
+            postalCode: "TE6 3ST"
+          },
+          residentialManualAddressBackLink: "array-page"
+        });
+
+        const response = await request(app).get(`${PAGE_URL}?backLink=confirm-residential-address`);
+
+        expect(response.text).toContain(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END);
+        expect(response.text).not.toContain("array-page");
+      });
+
+      it("Should populate the back link with array page URL if the filing contains residentialManualAddressBackLink as array page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          residentialAddress: {
+            premises: "The Big House",
+            addressLine1: "One Street",
+            addressLine2: "Two",
+            locality: "Three",
+            region: "Four",
+            country: "Five",
+            postalCode: "TE6 3ST"
+          },
+          residentialManualAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
+        });
+
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END);
+      });
+
+      it("Should populate back link with lookup page URL if the filing does not contain residentialManualAddressBackLink", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          residentialAddress: {
+            premises: "The Big House",
+            addressLine1: "One Street",
+            addressLine2: "Two",
+            locality: "Three",
+            region: "Four",
+            country: "Five",
+            postalCode: "TE6 3ST"
+          },
+        });
+
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END);
       });
 
     });

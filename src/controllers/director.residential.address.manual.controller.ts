@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -25,10 +27,18 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+
+    const residentialAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
+    let backLink = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
+    if(residentialAddressBackParam && residentialAddressBackParam.includes("confirm-residential-address")) {
+      backLink = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req)
+    } else if(officerFiling.residentialManualAddressBackLink?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
+      backLink = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    }
     
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
+      backLinkUrl: backLink,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       typeahead_array: COUNTRY_LIST,
       residential_address_premises: officerFiling.residentialAddress?.premises,
