@@ -26,6 +26,7 @@ const setContent = async (req: Request, stopType: string) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
@@ -64,6 +65,7 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber)
                     .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, transactionId)
                     .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId)
+                    .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, submissionId)
             }
         }
         case STOP_TYPE.ETAG: { 
