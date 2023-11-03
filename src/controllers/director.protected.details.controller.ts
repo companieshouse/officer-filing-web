@@ -27,7 +27,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     let returnPageUrl = getBackLinkUrl(req, officerFiling);
-
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
       backLinkUrl: urlUtils.getUrlToPath(returnPageUrl, req),

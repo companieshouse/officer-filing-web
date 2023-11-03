@@ -8,6 +8,7 @@ import {
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -52,14 +53,16 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     // Patch filing with updated information
-    const officerFiling: OfficerFiling = {
+    const officerFilingBody: OfficerFiling = {
       protectedDetailsBackLink: DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
-    return res.redirect(nextPageUrl);
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    if (officerFiling.checkYourAnswersLink) {
+      return res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    }
+    return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
   } catch (e) {
     return next(e);
   }

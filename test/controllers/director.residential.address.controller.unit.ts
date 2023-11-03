@@ -268,8 +268,11 @@ describe("Director name controller tests", () => {
 
     it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH} page if different address is selected`, async () => {
       const mockPatchOfficerFilingResponse = {
-        directorResidentialAddressChoice: "diff"
+        directorResidentialAddressChoice: "different_address"
       };
+      mockGetOfficerFiling.mockReturnValueOnce({
+        
+      });
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);

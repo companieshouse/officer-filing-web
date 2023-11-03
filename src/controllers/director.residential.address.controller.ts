@@ -97,6 +97,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       }
       return res.redirect(nextPageUrl);
     } else {
+      officerFilingBody.isMailingAddressSameAsHomeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
       return res.redirect(nextPageUrl);

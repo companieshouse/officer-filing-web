@@ -13,6 +13,7 @@ import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enu
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
+import { setBackLink } from "../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -20,10 +21,9 @@ const registeredOfficerAddressValue: string = "director_registered_office_addres
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
       director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
@@ -49,7 +49,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
+        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
         errors: formattedErrors,
         director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
@@ -66,18 +66,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    let nextPageUrl = "";
     if (patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
     }
-    else if (!patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue){
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req);
+    else if (!patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
     }
     else {
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
+      officerFilingBody.isMailingAddressSameAsRegisteredOfficeAddress = false;
+      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }
 
-    return res.redirect(nextPageUrl);
   } catch(e) {
     next(e);
   }

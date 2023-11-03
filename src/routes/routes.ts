@@ -91,7 +91,7 @@ router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);
 
-router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddress.get);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorCorrespondenceAddress.get);
 router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, directorCorrespondenceAddress.post);
 
 router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), directorCorrespondenceAddressSearch.get);

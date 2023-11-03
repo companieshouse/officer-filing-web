@@ -6,6 +6,8 @@ import request from "supertest";
 import app from "../../src/app";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 import {
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+  CHECK_YOUR_ANSWERS_PATH_END,
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_PROTECTED_DETAILS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
@@ -28,6 +30,10 @@ const PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const NEXT_PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const APPOINT_DIRECTOR_CHECK_ANSWERS_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -78,7 +84,7 @@ describe("Director confirm residential address controller tests", () => {
       it("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
-          residentialAddressBackLink: "/director-home-address-search"
+          residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -88,7 +94,7 @@ describe("Director confirm residential address controller tests", () => {
       it("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
-          residentialAddressBackLink: "/choose-home-address"
+          residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -98,7 +104,7 @@ describe("Director confirm residential address controller tests", () => {
       it("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
-          residentialAddressBackLink: "/director-home-address-manual"
+          residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -131,9 +137,19 @@ describe("Director confirm residential address controller tests", () => {
     describe("post tests", () => {
   
       it("Should redirect to director protected details page", async () => {
+        mockGetOfficerFiling.mockReturnValueOnce({});
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+      });
+
+      it("Should redirect to appoint director check your answer page if filing has check your answers link", async () => {
+        mockGetOfficerFiling.mockReturnValueOnce({
+          checkYourAnswersLink: CHECK_YOUR_ANSWERS_PATH_END
+        });
+        const response = await request(app).post(PAGE_URL);
+
+        expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CHECK_ANSWERS_URL);
       });
     });
 });

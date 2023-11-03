@@ -11,7 +11,8 @@ import { getOfficerFiling } from "../../src/services/officer.filing.service";
 import { 
   urlParams, 
   DIRECTOR_PROTECTED_DETAILS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
+  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { HA_TO_SA_ERROR } from "../../src/utils/constants";
@@ -31,6 +32,10 @@ const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const NEXT_PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const APPOINT_DIRECTORS_CYA_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -109,12 +114,29 @@ describe("Director residential address link controller tests", () => {
 
     describe("post tests", () => {
       it("should redirect to director protected details page when yes radio selected", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: undefined
+        })
         const response = await request(app).post(PAGE_URL).send({"ha_to_sa": "ha_to_sa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
       });
 
+      it("should redirect to appoint directors check your answers page if CYA link is present", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
+        })
+        const response = await request(app).post(PAGE_URL).send({"ha_to_sa": "ha_to_sa_yes"});
+
+        expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTORS_CYA_URL);
+      });
+
       it("should redirect to director protected details page when no radio selected", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director"
+        })
         const response = await request(app).post(PAGE_URL).send({"ha_to_sa": "ha_to_sa_no"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);

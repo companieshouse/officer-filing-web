@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
@@ -37,9 +37,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const isMailingAddressSameAsHomeAddress = calculateHaToSaBooleanValue(req);
-
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    
     if (isMailingAddressSameAsHomeAddress === undefined) {
-      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(HA_TO_SA_ERROR, DirectorField.HA_TO_SA_RADIO);
       return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
@@ -54,6 +54,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
+    if (officerFiling.checkYourAnswersLink) {
+      return res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    }
     return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
   } catch (e) {
     next(e);

@@ -210,46 +210,8 @@
           ]
         }) }} 
 
-        {{ govukSummaryList({
-          rows: [
-            {
-              key: {
-                text: "Address details",
-                classes: "govuk-heading-m"
-              },
-              value: {
-              },
-              actions: {
-                items: [
-                  {
-                    href: "#",
-                    text: "Change",
-                    visuallyHiddenText: "Director's address details",
-                    attributes: {
-                      "data-event-id": "address-change-link"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              key: {
-                text: "Correspondence address"
-              },
-              value: {
-                text: "Correspondence address here"
-              }
-            },
-            {
-              key: {
-                text: "Home address"
-              },
-              value: {
-                text: "Home address here"
-              }
-            }
-          ]
-        }) }}
+        {% set officerFiling = officerFiling %}
+        {% include "includes/check-your-answer/address-details.html" %}
 
         {{ govukCheckboxes({
           name: "director_consent",
