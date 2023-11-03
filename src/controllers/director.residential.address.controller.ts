@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
-        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END, 
+        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, 
       } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { whereDirectorLiveResidentialErrorMessageKey } from '../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
 import { ValidationError } from "../model/validation.model";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from '../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -80,27 +80,25 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
     };
 
-    let nextPageUrl = "";
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
-      return res.redirect(nextPageUrl);
+      const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+      return patchFiling.data.checkYourAnswersLink
+        ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
+        : res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       if(officerFiling.isMailingAddressSameAsRegisteredOfficeAddress){
-        nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req);
+        return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res,  req);
       }
       else{
-        nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req);
+        return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res,  req);
       }
-      return res.redirect(nextPageUrl);
     } else {
       officerFilingBody.isMailingAddressSameAsHomeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
-      return res.redirect(nextPageUrl);
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
     }
   } catch (e) {
     next(e);
@@ -132,3 +130,9 @@ const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): 
           ${companyProfile.registeredOfficeAddress?.region} 
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
+const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res: Response<any, Record<string, any>>, req: Request) => {
+  return officerFiling.checkYourAnswersLink && officerFiling.isMailingAddressSameAsRegisteredOfficeAddress
+    ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
+    : res.redirect(nextPageUrl);
+}
+
