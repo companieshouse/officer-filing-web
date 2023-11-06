@@ -6,7 +6,7 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { whereDirectorLiveResidentialErrorMessageKey } from '../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
-import { ValidationError } from "../model/validation.model";
+import { FormattedValidationErrors, ValidationError } from "../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
@@ -19,15 +19,7 @@ const directorResidentialChoiceHtmlField: string = "director_address";
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-
-    return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
-      templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-      backLinkUrl: getBackLinkUrl(req),
-      director_address: officerFiling.directorResidentialAddressChoice,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-      manualAddress: formatDirectorResidentialAddress(officerFiling)
-    });
+    return renderPage(req, res, officerFiling, companyProfile);
   } catch (e) {
     next(e);
   }
@@ -63,32 +55,24 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
-        templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-        backLinkUrl: getBackLinkUrl(req),
-        errors: formattedErrors,
-        director_address: officerFiling.directorResidentialAddressChoice,
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-        directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-        manualAddress: formatDirectorResidentialAddress(officerFiling),
-        protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
-      });
+      return renderPage(req, res, officerFiling, companyProfile, formattedErrors);
     }
 
     const officerFilingBody: OfficerFiling = {
       directorResidentialAddressChoice: selectedSraAddressChoice,
       protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
     };
-
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      return patchFiling.data.checkYourAnswersLink
+
+      return patchFiling.data?.checkYourAnswersLink
         ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
         : res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
       if(officerFiling.isMailingAddressSameAsRegisteredOfficeAddress){
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res,  req);
       }
@@ -120,7 +104,7 @@ const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string 
           ${officerFiling.serviceAddress?.locality},
           ${officerFiling.serviceAddress?.country} 
         `) + officerFiling.serviceAddress?.postalCode
-}
+};
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
   return formatTitleCase(`
@@ -134,5 +118,17 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
   return officerFiling.checkYourAnswersLink && officerFiling.isMailingAddressSameAsRegisteredOfficeAddress
     ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
     : res.redirect(nextPageUrl);
-}
+};
 
+const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, formattedErrors?: FormattedValidationErrors) => {
+  return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
+    templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
+    backLinkUrl: getBackLinkUrl(req),
+    errors: formattedErrors,
+    director_address: officerFiling.directorResidentialAddressChoice,
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
+    manualAddress: formatDirectorResidentialAddress(officerFiling),
+    protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
+  });
+};
