@@ -9,7 +9,8 @@ import app from "../../src/app";
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, 
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, 
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END,
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
@@ -47,7 +48,10 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SE
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  
+  const APPOINT_DIRECTOR_CYA_PAGE_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 const mockRes = {
   render: jest.fn() as any,
@@ -87,6 +91,7 @@ describe("Director name controller tests", () => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockReset();
     mockGetCompanyProfile.mockReset();
+    mockPatchOfficerFiling.mockReset();
   });
 
   describe("get tests", () => {
@@ -313,24 +318,74 @@ describe("Director name controller tests", () => {
 
     it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if registered office address is selected`, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      const mockPatchOfficerFilingResponse = {
+        data: {
+          ...directorNameMock,
+        }
+      };
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
       });
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_registered_office_address"
+      }))
+    });
+
+    it(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END} page if registered office address is selected and CYA link exist`, async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        const mockPatchOfficerFilingResponse = {
+          data: {
+            ...directorNameMock,
+            checkYourAnswersLink: "/check-your-answer"
+          }
+        };
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          ...directorNameMock,
+          ...serviceAddressMock
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+        const response = (await request(app).post(PAGE_URL).send({
+          director_address: "director_registered_office_address"
+        }));
+
+      expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
+    });
+
+    it(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END} page if registered office address is selected and check your answers link`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      const mockPatchOfficerFilingResponse = {
+        data: {
+          ...directorNameMock,
+          checkYourAnswersLink: "/check-your-answer"
+        }
+      };
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({
         director_address: "director_registered_office_address"
       }));
 
-      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
+      expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
     });
-
-    it(`should patch the residential address if no registered office address`, async () => {
+    
+    it(`should patch the residential address if no registered office address and redirect to protected information page`, async () => {
       mockGetCompanyProfile.mockResolvedValue({});
+      const mockPatchOfficerFilingResponse = {
+        data: {
+          ...directorNameMock,
+        }
+      };
       mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock,
+        ...directorNameMock
       });
+      mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({
-        director_address: "director_registered_office_address"
+        director_address: "director_registered_office_address",
       }));
 
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
@@ -361,6 +416,33 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
+    it(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH} page if correspondence address is selected and CYA link established`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock,
+        isMailingAddressSameAsRegisteredOfficeAddress: true,
+        checkYourAnswersLink: "/check-your-answer"
+      });
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_correspondence_address"
+      }));
+
+      expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
+    });
+
+    it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} page if correspondence address is selected, no previous link and CYA link established`, async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock,
+        isMailingAddressSameAsRegisteredOfficeAddress: false,
+        checkYourAnswersLink: "/check-your-answer"
+      });
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_correspondence_address"
+      }));
+
+      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_LINK_URL);
+    });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director correspondence address on validation error`, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
