@@ -257,7 +257,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "1",
                 "removal_date-year": "2008" });
 
-                expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/appointment/987654321/cannot-use?stopType=pre-october-2009");
+                expect(response.text).toEqual("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/cannot-use?stopType=pre-october-2009");
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     });
 

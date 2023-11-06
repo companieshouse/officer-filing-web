@@ -177,12 +177,20 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain("Premises");
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.premises);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine2);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.region);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.country);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
     });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address line 2 `, async () => {
       validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
+      validCompanyProfile.registeredOfficeAddress.premises = undefined!;
+      validCompanyProfile.registeredOfficeAddress.region = undefined!;
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
@@ -197,6 +205,31 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+      expect(response.text).not.toContain("Premises");
+      expect(response.text).not.toContain("Region");
+    });
+
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without optional field for director residential address `, async () => {
+      serviceAddressMock.serviceAddress.addressLine2 = undefined!;
+      serviceAddressMock.serviceAddress.premises = undefined!;
+      serviceAddressMock.serviceAddress.region = undefined!;
+      serviceAddressMock.serviceAddress.country = undefined!;
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.locality);
+      expect(response.text).not.toContain("Two");
+      expect(response.text).not.toContain("The Big House");
+      expect(response.text).not.toContain("Five");
+      expect(response.text).not.toContain("Four");
     });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address`, async () => {
