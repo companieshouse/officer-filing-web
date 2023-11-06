@@ -107,7 +107,7 @@ variable "service_name" {
 variable "show_service_offline_page" {
   type        = string
 }
-variable "ap01_web" {
+variable "feature_flag_ap01_web" {
   type        = string
 }
 variable "title_list" {
