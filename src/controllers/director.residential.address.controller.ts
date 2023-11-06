@@ -66,7 +66,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-      return patchFiling.data?.checkYourAnswersLink
+      return patchFiling.data.checkYourAnswersLink
         ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
         : res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
