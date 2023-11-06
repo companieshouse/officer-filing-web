@@ -9,7 +9,8 @@ import app from "../../src/app";
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, 
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, 
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END, APPOINT_DIRECTOR_CHECK_ANSWERS, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END,
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request, Response } from "express";
 import { Session } from "@companieshouse/node-session-handler";
@@ -93,146 +94,146 @@ describe("Director name controller tests", () => {
     mockPatchOfficerFiling.mockReset();
   });
 
-  // describe("get tests", () => {
+  describe("get tests", () => {
 
-  //   it("Should navigate to director address page", async () => {
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock
-  //     });
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
-  //     expect(response.text).toContain("Locality");
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
-  //     expect(response.text).toContain(PAGE_HEADING);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-  //   });
+    it("Should navigate to director address page", async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
+      expect(response.text).toContain("Locality");
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+    });
 
-  //   it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock
-  //     });
-  //     mockReq.params = {
-  //       companyNumber: COMPANY_NUMBER,
-  //       transactionId: TRANSACTION_ID,
-  //       submissionId: SUBMISSION_ID,
-  //     }
-  //     mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)
-  //   });
+    it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      mockReq.params = {
+        companyNumber: COMPANY_NUMBER,
+        transactionId: TRANSACTION_ID,
+        submissionId: SUBMISSION_ID,
+      }
+      mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)
+    });
 
-  //   it("Should navigate to error page when feature flag is off", async () => {
-  //     mockIsActiveFeature.mockReturnValueOnce(false);
-  //     const response = await request(app).get(PAGE_URL);
+    it("Should navigate to error page when feature flag is off", async () => {
+      mockIsActiveFeature.mockReturnValueOnce(false);
+      const response = await request(app).get(PAGE_URL);
 
-  //     expect(response.text).toContain(ERROR_PAGE_HEADING);
-  //   });
+      expect(response.text).toContain(ERROR_PAGE_HEADING);
+    });
 
-  //   it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH} when user visit page from it`, async () =>  {
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock
-  //     });
-  //     mockReq.params = {
-  //       companyNumber: COMPANY_NUMBER,
-  //       transactionId: TRANSACTION_ID,
-  //       submissionId: SUBMISSION_ID,
-  //     }
-  //     mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
-  //     const backLinkUrl = getBackLinkUrl(mockReq);
-  //     expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)
-  //   });
+    it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH} when user visit page from it`, async () =>  {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      mockReq.params = {
+        companyNumber: COMPANY_NUMBER,
+        transactionId: TRANSACTION_ID,
+        submissionId: SUBMISSION_ID,
+      }
+      mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
+      const backLinkUrl = getBackLinkUrl(mockReq);
+      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)
+    });
 
-  //   it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} when user visit page from it`, async () =>  {
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock
-  //     });
-  //     mockReq.params = {
-  //       companyNumber: COMPANY_NUMBER,
-  //       transactionId: TRANSACTION_ID,
-  //       submissionId: SUBMISSION_ID,
-  //     }
-  //     mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
-  //     const backLinkUrl = getBackLinkUrl(mockReq);
-  //     expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END)
-  //   });
+    it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} when user visit page from it`, async () =>  {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      mockReq.params = {
+        companyNumber: COMPANY_NUMBER,
+        transactionId: TRANSACTION_ID,
+        submissionId: SUBMISSION_ID,
+      }
+      mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
+      const backLinkUrl = getBackLinkUrl(mockReq);
+      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END)
+    });
 
-  //   it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director registered office address`, async () => {
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock,
-  //       ...serviceAddressMock
-  //     });
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(PAGE_HEADING);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
-  //     expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
-  //     expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
-  //   });
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director registered office address`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
 
-  //   it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address line 2 `, async () => {
-  //     validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
-  //     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock,
-  //       ...serviceAddressMock
-  //     });
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(PAGE_HEADING);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-  //     expect(response.text).not.toContain("Line2");
-  //     expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
-  //     expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
-  //     expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
-  //   });
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address line 2 `, async () => {
+      validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).not.toContain("Line2");
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
 
-  //   it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address`, async () => {
-  //     mockGetCompanyProfile.mockResolvedValueOnce({});
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock,
-  //       ...serviceAddressMock
-  //     });
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(PAGE_HEADING);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-  //     expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
-  //     expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
-  //     expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
-  //   });
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+    });
 
-  //   it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director correspondence address`, async () => {
-  //     mockGetCompanyProfile.mockResolvedValueOnce({});
-  //     mockGetOfficerFiling.mockResolvedValueOnce({
-  //       ...directorNameMock,
-  //     });
-  //     const response = await request(app).get(PAGE_URL);
-  //     expect(response.text).toContain(PAGE_HEADING);
-  //     expect(response.text).toContain(directorNameMock.firstName);
-  //     expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-  //     expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
-  //     expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
-  //     expect(response.text).not.toContain(serviceAddressMock.serviceAddress.postalCode);
-  //   });
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director correspondence address`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).not.toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
 
-  //   it("should catch error if getofficerfiling error", async () => {
-  //     const response = await request(app).get(PAGE_URL);
-  //     mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
-  //     expect(response.text).toContain(ERROR_PAGE_HEADING);
-  //   });
-  // });
+    it("should catch error if getofficerfiling error", async () => {
+      const response = await request(app).get(PAGE_URL);
+      mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+      expect(response.text).toContain(ERROR_PAGE_HEADING);
+    });
+  });
 
   describe("post tests", () => {
 
