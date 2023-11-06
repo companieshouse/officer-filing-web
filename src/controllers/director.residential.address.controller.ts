@@ -117,7 +117,7 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 
 const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string => {
   return formatTitleCase(`
-          ${officerFiling.serviceAddress?.premises ? officerFiling.serviceAddress.premises+',' : ""}
+          ${officerFiling.serviceAddress?.premises ? officerFiling.serviceAddress.premises : ""}
           ${officerFiling.serviceAddress?.addressLine1},
           ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2+"," : ""}
           ${officerFiling.serviceAddress?.locality},
@@ -128,7 +128,7 @@ const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string 
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
   return formatTitleCase(`
-          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises+',' : ""}
+          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises : ""}
           ${companyProfile.registeredOfficeAddress?.addressLineOne},
           ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
