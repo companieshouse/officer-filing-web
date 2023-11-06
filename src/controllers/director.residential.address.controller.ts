@@ -117,18 +117,22 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
 
 const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string => {
   return formatTitleCase(`
+          ${officerFiling.serviceAddress?.premises ? officerFiling.serviceAddress.premises : ""}
           ${officerFiling.serviceAddress?.addressLine1},
-          ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2 : ""}
+          ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2+"," : ""}
           ${officerFiling.serviceAddress?.locality},
-          ${officerFiling.serviceAddress?.country} 
+          ${officerFiling.serviceAddress?.region ? officerFiling.serviceAddress.region+"," : ""}
+          ${officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country : ""}
         `) + officerFiling.serviceAddress?.postalCode
 }
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
   return formatTitleCase(`
+          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises : ""}
           ${companyProfile.registeredOfficeAddress?.addressLineOne},
-          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress?.addressLineTwo : ""},
+          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
-          ${companyProfile.registeredOfficeAddress?.region} 
+          ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
+          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
