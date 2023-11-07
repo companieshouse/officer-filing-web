@@ -116,7 +116,7 @@ variable "title_list" {
 variable "feature_flag_remove_director_20022023" {
   type        = string
 }
-variable "officer_filing_web_active" {
+variable "feature_flag_tm01_web" {
   type        = string
 }
 variable "ewf_url" {

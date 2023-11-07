@@ -34,7 +34,7 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   
   export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");
 
-  export const OFFICER_FILING_WEB_ACTIVE = getEnvironmentVariable("OFFICER_FILING_WEB_ACTIVE", "false");
+  export const FEATURE_FLAG_TM01_WEB = getEnvironmentVariable("FEATURE_FLAG_TM01_WEB", "false");
 
   export const AP01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_AP01_WEB", "false");
   
