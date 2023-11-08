@@ -34,9 +34,9 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   
   export const INTERNAL_API_URL = getEnvironmentVariable("INTERNAL_API_URL");
 
-  export const FEATURE_FLAG_TM01_WEB = getEnvironmentVariable("FEATURE_FLAG_TM01_WEB", "false");
+  export const OFFICER_FILING_WEB_ACTIVE = getEnvironmentVariable("OFFICER_FILING_WEB_ACTIVE", "false");
 
-  export const AP01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_AP01_WEB", "false");
+  export const AP01_ACTIVE = getEnvironmentVariable("AP01_WEB", "false");
   
   export const FEATURE_FLAG_REMOVE_DIRECTOR_20022023 = "true"; //TODO  add the feature flag and then replace true with this get getEnvironmentVariable("FEATURE_FLAG_REMOVE_DIRECTOR_20022023");
   
