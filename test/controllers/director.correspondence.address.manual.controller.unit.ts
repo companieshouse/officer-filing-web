@@ -314,6 +314,17 @@ describe("Director name controller tests", () => {
         expect(validationErrors.map(error => error.messageKey)).toContain(correspondenceAddressCountryErrorMessageKey.CORRESPONDENCE_ADDRESS_COUNTRY_LENGTH);
       });
 
+      it("should return country validation error when invalid country", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [createMockValidationStatusError("Select a country from the list")],
+          isValid: false
+        }
+
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+
+        expect(validationErrors.map(error => error.messageKey)).toContain(correspondenceAddressCountryErrorMessageKey.CORRESPONDENCE_ADDRESS_COUNTRY_INVALID);
+      });
+
       it("should return postcode validation error", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [createMockValidationStatusError("Enter a postcode or ZIP for the director's correspondence address")],
