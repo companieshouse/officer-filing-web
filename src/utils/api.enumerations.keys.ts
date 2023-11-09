@@ -160,6 +160,7 @@ export enum residentialAddressRegionErrorMessageKey {
 
 export enum residentialAddressCountryErrorMessageKey {
   RESIDENTIAL_ADDRESS_COUNTRY_BLANK = "residential-country-blank",
+  RESIDENTIAL_ADDRESS_COUNTRY_INVALID = "residential-country-invalid",
   RESIDENTIAL_ADDRESS_COUNTRY_CHARACTERS = "residential-country-characters",
   RESIDENTIAL_ADDRESS_COUNTRY_LENGTH = "residential-country-length",
 }
@@ -206,6 +207,7 @@ export enum correspondenceAddressRegionErrorMessageKey {
 
 export enum correspondenceAddressCountryErrorMessageKey {
   CORRESPONDENCE_ADDRESS_COUNTRY_BLANK = "correspondence-country-blank",
+  CORRESPONDENCE_ADDRESS_COUNTRY_INVALID = "correspondence-country-invalid",
   CORRESPONDENCE_ADDRESS_COUNTRY_CHARACTERS = "correspondence-country-characters",
   CORRESPONDENCE_ADDRESS_COUNTRY_LENGTH = "correspondence-country-length",
 }
