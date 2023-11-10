@@ -31,12 +31,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const companyOfficer: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, officerFiling.referenceAppointmentId);
 
+    const firstname = companyOfficer.forename != null ? companyOfficer.forename : "";
+    const surname = companyOfficer.surname != null ? companyOfficer.surname : "";
+    const directorName = firstname + " " + surname;
+
     return res.render(Templates.REMOVE_DIRECTOR_SUBMITTED, {
       templateName: Templates.REMOVE_DIRECTOR_SUBMITTED,
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
-      name: companyOfficer.name,
+      name: directorName,
       resignedOn: toReadableFormat(officerFiling.resignedOn),
       removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req)
     });
