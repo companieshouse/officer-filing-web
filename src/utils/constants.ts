@@ -93,7 +93,8 @@ export enum STOP_TYPE {
   LIMITED_UNLIMITED = "limited-unlimited",
   NO_DIRECTORS = "no directors",
   PRE_OCTOBER_2009 = "pre-october-2009",
-  ETAG = "etag"
+  ETAG = "etag",
+  UNKNOWN_ERROR = "unknown-error"
 }
 
 export const allowedCompanyTypes = new Array(
@@ -152,4 +153,10 @@ export const STOP_PAGE_CONTENT =
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
       `
     },
+    unknownError:{
+      pageHeader: "Something went wrong",
+      pageBody: `
+      <p><a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">Start again</a> or <a href="https://www.gov.uk/contact-companies-house">contact Companies House</a> if you have any questions.</p>
+      `
+    }
 }
