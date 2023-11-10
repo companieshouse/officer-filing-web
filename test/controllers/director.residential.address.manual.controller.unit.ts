@@ -19,7 +19,16 @@ import { createMockValidationStatusError, mockValidValidationStatusResponse, moc
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.residential.address.manual.controller";
-import { residentialAddressAddressLineOneErrorMessageKey, residentialAddressAddressLineTwoErrorMessageKey, residentialAddressCountryErrorMessageKey, residentialAddressLocalityErrorMessageKey, residentialAddressPostcodeErrorMessageKey, residentialAddressPremisesErrorMessageKey, residentialAddressRegionErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import {
+  correspondenceAddressCountryErrorMessageKey,
+  residentialAddressAddressLineOneErrorMessageKey,
+  residentialAddressAddressLineTwoErrorMessageKey,
+  residentialAddressCountryErrorMessageKey,
+  residentialAddressLocalityErrorMessageKey,
+  residentialAddressPostcodeErrorMessageKey,
+  residentialAddressPremisesErrorMessageKey,
+  residentialAddressRegionErrorMessageKey
+} from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -314,6 +323,17 @@ describe("Director residential address manual controller tests", () => {
         const validationErrors = buildValidationErrors(mockValidationStatusResponse);
 
         expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressCountryErrorMessageKey.RESIDENTIAL_ADDRESS_COUNTRY_LENGTH);
+      });
+
+      it("should return country validation error when invalid country", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [createMockValidationStatusError("Select a country from the list for the director's residential address")],
+          isValid: false
+        }
+
+        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+
+        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressCountryErrorMessageKey.RESIDENTIAL_ADDRESS_COUNTRY_INVALID);
       });
 
       it("should return postcode validation error", async () => {
