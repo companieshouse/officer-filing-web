@@ -44,3 +44,7 @@ export const setAppointedOnDate = (officer: CompanyOfficer): string => {
       }
   return appointedOn;
 }
+
+export const buildDateString = (day: string, month: string, year: string): string => {
+  return year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
+}

@@ -6,7 +6,7 @@ import * as appointDirectorSubmitted from "../controllers/appoint.director.submi
 import * as companyNumberRoute from "../controllers/company.number.controller";
 import * as confirmCompanyRoute from "../controllers/confirm.company.controller";
 import * as createTransactionRoute from "../controllers/create.transaction.controller";
-import * as directorAppointedDate from "../controllers/director.appointed.date.controller";
+import * as directorDateDetails from "../controllers/director.date.details.controller";
 import * as directorCorrespondenceAddress from "../controllers/director.correspondence.address.controller";
 import * as directorCorrespondenceAddressLink from "../controllers/director.correspondence.address.link.controller";
 import * as directorCorrespondenceAddressSearch from "../controllers/director.correspondence.address.search.controller";
@@ -20,7 +20,6 @@ import * as directorResidentialAddressLink from "../controllers/director.residen
 import * as directorResidentialAddressSearch from "../controllers/director.residential.address.search.controller";
 import * as directorResidentialAddressSearchChooseAddress from "../controllers/director.residential.address.search.choose.address.controller";
 import * as directorResidentialAddressManual from "../controllers/director.residential.address.manual.controller";
-import * as directorDateOfBirth from "../controllers/director.date.of.birth.controller";
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
@@ -79,11 +78,8 @@ router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
 router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorName.get);
 router.post(urls.DIRECTOR_NAME, directorName.post);
 
-router.get(urls.DIRECTOR_DATE_OF_BIRTH, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorDateOfBirth.get);
-router.post(urls.DIRECTOR_DATE_OF_BIRTH, directorDateOfBirth.post);
-
-router.get(urls.DIRECTOR_APPOINTED_DATE, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorAppointedDate.get);
-router.post(urls.DIRECTOR_APPOINTED_DATE, directorAppointedDate.post);
+router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorDateDetails.get);
+router.post(urls.DIRECTOR_DATE_DETAILS, directorDateDetails.post);
 
 router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get);
 router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);

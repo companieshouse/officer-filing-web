@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_OCCUPATION_PATH } from "../types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_OCCUPATION_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -23,7 +23,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_NATIONALITY, {
       templateName: Templates.DIRECTOR_NATIONALITY,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
+      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
@@ -57,7 +57,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NATIONALITY, {
         templateName: Templates.DIRECTOR_NATIONALITY,
-        backLinkUrl: setBackLink(req, patchedFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
+        backLinkUrl: setBackLink(req, patchedFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
         typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
         typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
         errors: formattedErrors,
