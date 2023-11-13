@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { ValidationError, validationResult } from "express-validator";
 import { FormattedValidationErrors } from "model/validation.model";
 import { getOfficerFiling } from "services/officer.filing.service";
+import { NAVIGATION } from "utils/navigation";
 import { urlUtils } from "utils/url";
 
 export const checkValidations = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,9 +26,11 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
       // extract backlink from it
       // extract currentpage from it
       // const getCallingController = 
-      return res.render('', {
-        backLinkUrl: '',
-        templateName: '',
+
+      
+      return res.render(NAVIGATION[routePath].currentPage, {
+        backLinkUrl: NAVIGATION[routePath].previousPage(officerFiling, req),
+        templateName: NAVIGATION[routePath].currentPage,
         ...req.body,
         ...officerFiling,
         errors
