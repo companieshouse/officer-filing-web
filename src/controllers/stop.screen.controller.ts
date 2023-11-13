@@ -74,6 +74,12 @@ const setContent = async (req: Request, stopType: string) => {
                 pageBody: STOP_PAGE_CONTENT.etag.pageBody
             }
         }
+        case STOP_TYPE.SOMETHING_WENT_WRONG: { 
+            return {
+                pageHeader: STOP_PAGE_CONTENT.somethingWentWrong.pageHeader,
+                pageBody: STOP_PAGE_CONTENT.somethingWentWrong.pageBody
+            }
+        }
         default: { 
            throw Error("Unrecognised stop screen type: " + stopType); 
         } 

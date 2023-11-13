@@ -15,6 +15,7 @@ const SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED = SHOW_STOP_PAGE_PATH_URL + 
 const SHOW_STOP_PAGE_PATH_URL_NO_DIRECTORS = SHOW_STOP_PAGE_PATH_URL + "no directors";
 const SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 = SHOW_STOP_PAGE_PATH_URL + "pre-october-2009";
 const SHOW_STOP_PAGE_PATH_URL_ETAG = SHOW_STOP_PAGE_PATH_URL + "etag";
+const SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG = SHOW_STOP_PAGE_PATH_URL + "something-went-wrong";
 const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being dissolved";
 const NO_DIRECTORS_PAGE_HEADING = "Company has no current directors";
 const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
@@ -25,6 +26,8 @@ const PRE_OCTOBER_2009_PAGE_HEADING = "You cannot use this service";
 const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009."
 const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
 const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details."
+const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
+const SOMETHING_WENT_WRONG_BODY_TEXT= "or <a href=\"https://www.gov.uk/contact-companies-house\">contact Companies House</a> if you have any questions";
 
 describe("Stop screen controller tests", () => {
   beforeEach(() => {
@@ -145,7 +148,7 @@ describe("Stop screen controller tests", () => {
     expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
   });
 
-  it("Should return error page if unknown stop type is provided", async () => {
+  it("Should return error page if an unknown stop type is provided", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL + "undefined");
@@ -171,6 +174,16 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(ETAG_PAGE_HEADING);
     expect(response.text).toContain(ETAG_PAGE_BODY_TEXT);
+  });
+
+  it("Should display something-went-wrong stop-screen heading and content", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG);
+
+    expect(response.text).toContain(SOMETHING_WENT_WRONG_HEADING);
+    expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT);
   });
 
 });
