@@ -91,7 +91,7 @@ router.route(urls.DIRECTOR_NATIONALITY)
 .all(
 
 )
-.get(isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get)
+.get(isFeatureEnabled(AP01_ACTIVE ), checkYourAnswersMiddleware(), directorNationality.get)
 .post(...validator.nationalityValidator, checkValidations, directorNationality.post );
 
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
