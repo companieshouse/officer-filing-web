@@ -58,6 +58,12 @@ describe("Director date details controller tests", () => {
         expect(response.text).toContain(PAGE_HEADING);
       });
 
+      it("should catch error if getofficerfiling error on get", async () => {
+        const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL);
+        expect(response.text).not.toContain(PAGE_HEADING);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
+
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL);
@@ -123,6 +129,12 @@ describe("Director date details controller tests", () => {
           appointedOn: "2021-09-10"
         });
 
+      });
+
+      it("should catch error if getofficerfiling error on post", async () => {
+        const response = await request(app).post(DIRECTOR_DATE_DETAILS_URL);
+        expect(response.text).not.toContain(PAGE_HEADING);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
 
       it("Should display errors on page if get validation status returns dob error", async () => {
