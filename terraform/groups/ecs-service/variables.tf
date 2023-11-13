@@ -107,7 +107,7 @@ variable "service_name" {
 variable "show_service_offline_page" {
   type        = string
 }
-variable "ap01_web" {
+variable "feature_flag_ap01_web" {
   type        = string
 }
 variable "title_list" {
@@ -116,7 +116,7 @@ variable "title_list" {
 variable "feature_flag_remove_director_20022023" {
   type        = string
 }
-variable "officer_filing_web_active" {
+variable "feature_flag_tm01_web" {
   type        = string
 }
 variable "ewf_url" {
@@ -138,9 +138,6 @@ variable "country_list" {
   type        = string
 }
 variable "uk_country_list" {
-  type        = string
-}
-variable "postcode_validation_url" {
   type        = string
 }
 variable "postcode_address_lookup_url" {

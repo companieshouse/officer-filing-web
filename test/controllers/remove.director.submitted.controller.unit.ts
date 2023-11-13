@@ -73,7 +73,7 @@ describe("Remove director submitted controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name of director");
-      expect(response.text).toContain("John Elizabeth Doe");
+      expect(response.text).toContain("John Doe");
       expect(response.text).toContain("Date removed");
       expect(response.text).toContain("8 August 2008");
     });
