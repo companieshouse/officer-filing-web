@@ -10,7 +10,7 @@ import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorDob } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorAppointmentDate, mockValidationStatusErrorDob } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.date.details.controller";
 import { dobDateErrorMessageKey } from "../../src/utils/api.enumerations.keys";
@@ -125,7 +125,7 @@ describe("Director date details controller tests", () => {
 
       });
 
-      it("Should display errors on page if get validation status returns errors", async () => {
+      it("Should display errors on page if get validation status returns dob error", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [mockValidationStatusErrorDob],
           isValid: false
@@ -148,6 +148,40 @@ describe("Director date details controller tests", () => {
                   "appointment_date-year": "2021" });
   
         expect(response.text).toContain("You can only appoint a person as a director if they are at least 16 years old");
+        expect(response.text).toContain("1993");
+        expect(response.text).toContain("08");
+        expect(response.text).toContain("15");
+        expect(response.text).toContain("Jim Mid Smith");
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
+          dateOfBirth: "1993-08-15",
+          appointedOn: "2021-09-10"
+        });
+      });
+
+      it("Should display errors on page if get validation status returns appointment error", async () => {
+        const mockValidationStatusResponse: ValidationStatusResponse = {
+          errors: [mockValidationStatusErrorAppointmentDate],
+          isValid: false
+        }
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID,
+          firstName: "Jim",
+          middleNames: "Mid",
+          lastName: "Smith"
+        });
+  
+        const response = await request(app)
+          .post(DIRECTOR_DATE_DETAILS_URL)
+          .send({ "dob_date-day": "15",
+                  "dob_date-month": "08",
+                  "dob_date-year": "1993",
+                  "appointment_date-day": "10",
+                  "appointment_date-month": "09",
+                  "appointment_date-year": "2021" });
+  
+        expect(response.text).toContain("Date the director was appointed must be on or after the incorporation date");
         expect(response.text).toContain("1993");
         expect(response.text).toContain("08");
         expect(response.text).toContain("15");
