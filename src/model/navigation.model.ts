@@ -1,5 +1,6 @@
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { Request } from "express";
+import { urlUtils } from "../utils/url";
 
 export interface Navigation {
   [x: string]: {
@@ -7,4 +8,8 @@ export interface Navigation {
     previousPage: ((officerFiling?: OfficerFiling, req?: Request) => string);
     nextPage: string[];
   }
+}
+
+export const getPageUrls = (pathToPage: string, req: Request): string => {
+  return urlUtils.getUrlToPath(pathToPage, req);
 }

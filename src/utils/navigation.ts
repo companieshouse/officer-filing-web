@@ -1,11 +1,11 @@
 import { Navigation } from "model/navigation.model";
 import * as urls from "../types/page.urls";
-import { urlUtils } from "./url";
+import { Templates } from "../types/template.paths";
 
-export const NAVIGATION: Navigation = {
+export const NAVIGATION: Navigation =  {
   [urls.DIRECTOR_NATIONALITY]: {
-    currentPage: urls.DIRECTOR_NATIONALITY,
-    previousPage: () => "",
+    currentPage: Templates.DIRECTOR_NATIONALITY,
+    previousPage: () => urls.DIRECTOR_APPOINTED_DATE_PATH,
     nextPage: [urls.DIRECTOR_OCCUPATION]
   }
 }

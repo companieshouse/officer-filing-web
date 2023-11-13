@@ -19,20 +19,22 @@
 {% endif %}
 {% set typeaheadHint = "Start typing a nationality, then choose from the list|Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.|Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries." %}
 {% set typeaheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>What is the director's nationality?</label></h1>|<label class='govuk-label' for='typeahead_input_1'>Second nationality (if relevant)</label>|<label class='govuk-label' for='typeahead_input_2'>Third nationality (if relevant)</label>" | safe %}
+{% set separator = '|' %}
+{% set typeAheadValue = nationality1 + separator + nationality2 + separator + nationality3 %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
-            
+        
         {% set dropdownDefaultText = "Choose nationality" %}
         <span class="govuk-caption-l">{{directorName}}</span>
         <div id="typeahead-form-group-0" class="govuk-form-group">
         <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
         {% set dropdownNumber = "0" %}
         {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeAheadValue.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownOneError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
@@ -45,7 +47,7 @@
         {% set dropdownNumber = "1" %}
         {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
         {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeAheadValue.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownTwoError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
@@ -58,7 +60,7 @@
         {% set dropdownNumber = "2" %}
         {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
         {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeAheadValue.split("|")[dropdownNumber] %}
         {% set errorMessage = dropdownThreeError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
@@ -114,7 +116,7 @@
     //show and hide nationality 
     $(document).ready(function () {
       // If link has already been clicked, set up the page as it was before
-      if ("{{nationality2_hidden}}" === "true") {
+      if ("{{nationality2Link}}" === "true") {
         $('#nationality-2-link').hide();
         radiobtn = document.getElementById("nationality_2_radio_yes");
         radiobtn.checked = true;
@@ -133,7 +135,7 @@
         });
       }
 
-      if ("{{nationality3_hidden}}" === "true") {
+      if ("{{nationality3Link}}" === "true") {
         $('#nationality-3-link').hide();
         radiobtn = document.getElementById("nationality_3_radio_yes");
         radiobtn.checked = true;

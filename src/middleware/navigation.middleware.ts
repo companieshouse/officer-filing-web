@@ -5,6 +5,9 @@ import { FormattedValidationErrors } from "../model/validation.model";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { NAVIGATION } from "../utils/navigation";
 import { urlUtils } from "../utils/url";
+import { getPageUrls } from "../model/navigation.model";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
+import { NATIONALITY_LIST } from "../utils/properties";
 
 export const checkValidations = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -12,7 +15,7 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
     const errorList = validationResult(req);
 
     if (!errorList.isEmpty()) {
-      console.log(`======== Calling ERROR LIST ${errorList} `)
+      console.log(`======== Calling ERROR LIST ${JSON.stringify(errorList)} `)
 
       const errors = formatValidationError(errorList.array());
 
@@ -24,21 +27,16 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
       const session: Session = req.session as Session;
 
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      //see if you can get the controller or url called
-      // extract the template name from it, 
-      // extract backlink from it
-      // extract currentpage from it
-      // const getCallingController = 
-      console.log(`======== NAVIGATION IS LIST ${NAVIGATION[routePath].currentPage} `)
-      console.log(`======== NAVIGATION BACK LINK ${NAVIGATION[routePath].previousPage} `)
 
-      
-      return res.render(NAVIGATION[routePath].currentPage, {
-        backLinkUrl: NAVIGATION[routePath].previousPage(officerFiling, req),
-        templateName: NAVIGATION[routePath].currentPage,
+      const templateName = getPageUrls(NAVIGATION[routePath].currentPage, req);
+      return res.render(templateName, {
+        backLinkUrl: getPageUrls(NAVIGATION[routePath].previousPage(officerFiling, req), req),
+        templateName: templateName,
+        errors,
         ...req.body,
         ...officerFiling,
-        errors
+        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       });
     } 
     return next();

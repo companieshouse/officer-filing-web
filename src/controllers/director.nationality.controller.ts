@@ -25,10 +25,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.DIRECTOR_NATIONALITY,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
-      typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link
+      ...officerFiling
     });
   } catch (e) {
     return next(e);
@@ -59,12 +57,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_NATIONALITY,
         backLinkUrl: setBackLink(req, patchedFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req)),
         typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
-        typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchedFiling.data)),
-        nationality2_hidden: officerFiling.nationality2Link,
-        nationality3_hidden: officerFiling.nationality3Link
+        ...officerFiling
       });
     }
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req);
