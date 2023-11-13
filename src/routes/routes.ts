@@ -34,6 +34,8 @@ import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
+import { validAtor } from "validation";
+import { checkValidations } from "middleware/navigation.middleware";
 
 
 export const router: Router = Router();
@@ -85,8 +87,12 @@ router.post(urls.DIRECTOR_DATE_OF_BIRTH, directorDateOfBirth.post);
 router.get(urls.DIRECTOR_APPOINTED_DATE, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorAppointedDate.get);
 router.post(urls.DIRECTOR_APPOINTED_DATE, directorAppointedDate.post);
 
-router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get);
-router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);
+router.route(urls.DIRECTOR_NATIONALITY)
+.all(
+
+)
+.get(isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get)
+.post(...validAtor.nationalityValidator, checkValidations, directorNationality.post )
 
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);
