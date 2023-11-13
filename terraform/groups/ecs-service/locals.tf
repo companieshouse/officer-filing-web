@@ -84,7 +84,6 @@ locals {
     { "name": "COUNTRY_LIST", "value": "${var.country_list}" },
     { "name": "UK_COUNTRY_LIST", "value": "${var.uk_country_list}" },
     { "name": "NATIONALITY_LIST", "value": "${var.nationality_list}" },
-    { "name": "POSTCODE_VALIDATION_URL", "value": "${var.postcode_validation_url}" },
     { "name": "POSTCODE_ADDRESSES_LOOKUP_URL", "value": "${var.postcode_address_lookup_url}" }
   ]
 }

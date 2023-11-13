@@ -7,8 +7,8 @@ import {createPublicApiKeyClient} from "./api.service";
 export const getUKAddressesFromPostcode = async (postcodeAddressesLookupURL: string, postcode: string): Promise<UKAddress[]> => {
     const apiClient: ApiClient = createPublicApiKeyClient();
     logger.debug(`Retrieving UK addresses for postcode ${postcode}`);
-
-    const castedSdkResponse: Resource<UKAddress[]> = await apiClient.postCodeLookup.getListOfValidPostcodeAddresses(postcodeAddressesLookupURL, postcode);
+    const postcodeLookUpUrl = `${postcodeAddressesLookupURL}/multiple-addresses`
+    const castedSdkResponse: Resource<UKAddress[]> = await apiClient.postCodeLookup.getListOfValidPostcodeAddresses(postcodeLookUpUrl, postcode);
 
     if(!castedSdkResponse.resource) {
         throw createAndLogError(`Failed to get UK addresses for postcode ${postcode}`);
@@ -21,9 +21,8 @@ export const getUKAddressesFromPostcode = async (postcodeAddressesLookupURL: str
 
 export const getIsValidUKPostcode = async (postcodeValidationUrl: string, postcode: string): Promise<boolean> => {
     const apiClient: ApiClient = createPublicApiKeyClient();
-
-    const sdkResponse: boolean = await apiClient.postCodeLookup.isValidUKPostcode(postcodeValidationUrl, postcode);
-
+    const postcodeLookUpUrl = `${postcodeValidationUrl}/postcode`
+    const sdkResponse: boolean = await apiClient.postCodeLookup.isValidUKPostcode(postcodeLookUpUrl, postcode);
     if (!sdkResponse) {
         logger.debug(`Postcode lookup GET request returned no response for postcode ${postcode}`);
         return false;
