@@ -1,20 +1,23 @@
-import { OfficerFilingService } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
 import { ValidationError, validationResult } from "express-validator";
-import { FormattedValidationErrors } from "model/validation.model";
-import { getOfficerFiling } from "services/officer.filing.service";
-import { NAVIGATION } from "utils/navigation";
-import { urlUtils } from "utils/url";
+import { FormattedValidationErrors } from "../model/validation.model";
+import { getOfficerFiling } from "../services/officer.filing.service";
+import { NAVIGATION } from "../utils/navigation";
+import { urlUtils } from "../utils/url";
 
 export const checkValidations = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("======== Calling check validation ")
     const errorList = validationResult(req);
 
     if (!errorList.isEmpty()) {
+      console.log(`======== Calling ERROR LIST ${errorList} `)
+
       const errors = formatValidationError(errorList.array());
 
       const routePath = req.route.path;
+      console.log(`======== ROUTE ERROR LIST ${routePath} `)
 
       const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
       const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -26,6 +29,8 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
       // extract backlink from it
       // extract currentpage from it
       // const getCallingController = 
+      console.log(`======== NAVIGATION IS LIST ${NAVIGATION[routePath].currentPage} `)
+      console.log(`======== NAVIGATION BACK LINK ${NAVIGATION[routePath].previousPage} `)
 
       
       return res.render(NAVIGATION[routePath].currentPage, {

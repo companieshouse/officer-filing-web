@@ -34,8 +34,8 @@ import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
-import { validAtor } from "validation";
-import { checkValidations } from "middleware/navigation.middleware";
+import { validator } from "../validation";
+import { checkValidations } from "../middleware/navigation.middleware";
 
 
 export const router: Router = Router();
@@ -92,7 +92,7 @@ router.route(urls.DIRECTOR_NATIONALITY)
 
 )
 .get(isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get)
-.post(...validAtor.nationalityValidator, checkValidations, directorNationality.post )
+.post(...validator.nationalityValidator, checkValidations, directorNationality.post );
 
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);

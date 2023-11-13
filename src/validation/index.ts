@@ -1,6 +1,6 @@
 import { nationalityValidator } from './nationality.validations';
 
 
-export const validAtor = {
+export const validator = {
   nationalityValidator
 };
