@@ -58,7 +58,7 @@ locals {
     ]
 
   task_environment = [
-    { "name": "AP01_WEB", "value": "${var.ap01_web}" },
+    { "name": "FEATURE_FLAG_AP01_WEB", "value": "${var.feature_flag_ap01_web}" },
     { "name": "API_URL", "value": "${var.api_url}" },
     { "name": "APPLICATIONS_API_URL", "value": "${var.account_local_url}" },
     { "name": "CACHE_POOL_SIZE", "value": "${var.cache_pool_size}" },
@@ -72,7 +72,7 @@ locals {
     { "name": "FEATURE_FLAG_REMOVE_DIRECTOR_20022023", "value": "${var.feature_flag_remove_director_20022023}" },
     { "name": "LOGLEVEL", "value": "${var.log_level}" },
     { "name": "NODE_PORT", "value": "${local.container_port}" },
-    { "name": "OFFICER_FILING_WEB_ACTIVE", "value": "${var.officer_filing_web_active}" },
+    { "name": "FEATURE_FLAG_TM01_WEB", "value": "${var.feature_flag_tm01_web}" },
     { "name": "PIWIK_SITE_ID", "value": "${var.piwik_site_id}" },
     { "name": "PIWIK_START_GOAL_ID", "value": "${var.piwik_start_goal_id}" },
     { "name": "PIWIK_URL", "value": "${var.piwik_url}" },

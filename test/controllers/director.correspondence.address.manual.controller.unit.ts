@@ -316,7 +316,7 @@ describe("Director name controller tests", () => {
 
       it("should return country validation error when invalid country", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Select a country from the list")],
+          errors: [createMockValidationStatusError("Select a country from the list for the director's correspondence address")],
           isValid: false
         }
 
