@@ -11,3 +11,5 @@ export const VALID_OE_NUMBER_FORMAT = /^OE\d{6}$/;
 
 // Valid UK post code
 export const VALID_POSTCODE = /^[A-Z]{1,2}[0-9R][0-9A-Z]?[\s]{0,1}[0-9][ABD-HJLNP-UW-Z]{2}$/i;
+
+export const VALID_NATIONALITY_CHARACTER = /^[a-zA-Z\s]+$/;

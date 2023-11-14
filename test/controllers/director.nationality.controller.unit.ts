@@ -12,7 +12,6 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusErrorNationalityInvalid, mockValidationStatusErrorNationalityLength } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../../src/utils/web";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -66,7 +65,11 @@ describe("Director nationality controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John",
+          lastName: "Smith"
+        })
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL);
       });
@@ -82,8 +85,12 @@ describe("Director nationality controller tests", () => {
         }
         mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John",
+          lastName: "Smith"
+        })
         //mockGetField.mockReturnValue("dj");
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"dj",typeahead_input_1:"dj",typeahead_input_2:"dj"});
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"dj",typeahead_input_1:"pj",typeahead_input_2:"cj"});
   
         expect(response.text).toContain("Select a nationality from the list");
         expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas")).toEqual(false);
@@ -103,8 +110,12 @@ describe("Director nationality controller tests", () => {
         }
         mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John",
+          lastName: "Smith"
+        });
         //mockGetField.mockReturnValue("British").send({nationality1:"british"});
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
   
         expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas");
         expect(mockGetValidationStatus).toHaveBeenCalled();

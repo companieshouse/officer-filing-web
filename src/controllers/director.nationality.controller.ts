@@ -34,6 +34,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(`inside of post controller`)
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -50,7 +51,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus, officerFiling);
-
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NATIONALITY, {

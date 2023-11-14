@@ -28,7 +28,7 @@ const SUBMISSION_ID = "55555555";
 const APPOINTMENT_ID = "987654321";
 const PAGE_HEADING = "When was the director appointed?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const DIRECTOR_APPOINTED_DATE_URL = DIRECTOR_APPOINTED_DATE_PATH
+export const DIRECTOR_APPOINTED_DATE_URL = DIRECTOR_APPOINTED_DATE_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);

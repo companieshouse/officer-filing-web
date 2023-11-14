@@ -1,25 +1,19 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { FormattedValidationErrors, ValidationError } from '../model/validation.model';
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { NAVIGATION } from "../utils/navigation";
 import { urlUtils } from "../utils/url";
 import { getPageUrls } from "../model/navigation.model";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { NATIONALITY_LIST } from "../utils/properties";
-import { validationResult } from 'express-validator';
-import { createValidationErrorBasic } from "../validation/validation";
+import { ValidationError, validationResult } from 'express-validator';
+import { FormattedValidationErrors } from "../model/validation.model";
 
 export const checkValidations = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const errorList = validationResult(req);
     if (!errorList.isEmpty()) {
-      const errorArray = validationResult(req).array().map(i => i);
-      console.log(`===ARRAY IS ${errorArray}`)
-
-      const errorMapResult = errorMap(errorArray);
-
-      const errors = formatValidationError(buildValidationErrors(errorMapResult));
+      const errors = formatValidationError(errorList.array());
 
       const routePath = req.route.path;
       const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -30,7 +24,7 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
 
       const templateName = getPageUrls(NAVIGATION[routePath].currentPage, req);
       return res.render(templateName, {
-        backLinkUrl: getPageUrls(NAVIGATION[routePath].previousPage(officerFiling, req), req),
+        backLinkUrl: getPageUrls(await NAVIGATION[routePath].previousPage(officerFiling, req), req),
         templateName: templateName,
         errors,
         ...req.body,
@@ -45,29 +39,11 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
   }
 }
 
-function formatValidationError(validationErrors: ValidationError[]): FormattedValidationErrors {
+export function formatValidationError(errorList: ValidationError[]): FormattedValidationErrors {
   const errors = { errorList: [] } as any;
-  validationErrors.forEach( e => {
-    errors.errorList.push({ href: `#${e.link}`, text: e.messageKey});
-    errors[e.link] = { text: e.messageKey };
-
-    e.source.forEach(field => {
-      errors[field] = {text: e.messageKey}
-    });    
+  errorList.forEach( e => {
+    errors.errorList.push({ href: `#${e.param}`, text: e.msg });
+    errors[e.param] = { text: e.msg };
   });
   return errors;
-}
-
-const buildValidationErrors = (errorList: ValidationError): ValidationError[] => {
-  const validationErrors: ValidationError[] = [];
-  validationErrors.push(createValidationErrorBasic(errorList.messageKey, errorList.link))
-  return validationErrors;
-}
-
-const errorMap = (errorList): ValidationError => {
-  return {
-    messageKey: errorList.msg,
-    link: errorList.param,
-    source: errorList.link
-  }
 }

@@ -35,7 +35,7 @@ import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 import { validator } from "../validation";
-import { checkValidations } from "../middleware/navigation.middleware";
+import { checkValidations } from "../middleware/validation.middleware";
 
 
 export const router: Router = Router();

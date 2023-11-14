@@ -5,7 +5,7 @@ import { urlUtils } from "../utils/url";
 export interface Navigation {
   [x: string]: {
     currentPage: string;
-    previousPage: ((officerFiling?: OfficerFiling, req?: Request) => string);
+    previousPage: ((officerFiling?: OfficerFiling, req?: Request) => Promise<string>);
     nextPage: string[];
   }
 }
