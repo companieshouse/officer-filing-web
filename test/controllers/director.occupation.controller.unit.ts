@@ -10,10 +10,10 @@ import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, urlPara
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidValidationStatusResponse, mockValidationStatusErrorOccupation } from "../mocks/validation.status.response.mock";
+import { mockValidationStatusErrorOccupation } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.occupation.controller";
-import { occupationErrorMessageKey, titleErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { occupationErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -24,6 +24,7 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
+const APPOINTMENT_ID = "987654321";
 const PAGE_HEADING = "What is the director's occupation?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_OCCUPATION_URL = DIRECTOR_OCCUPATION_PATH
@@ -38,10 +39,13 @@ const DIRECTOR_OCCUPATION_URL = DIRECTOR_OCCUPATION_PATH
 describe("Director occupation controller tests", () => {
 
     beforeEach(() => {
+      mocks.mockAuthenticationMiddleware.mockClear();
       mocks.mockSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
+      mockGetOfficerFiling.mockClear();
+      mockPatchOfficerFiling.mockClear()
     });
-  
+
     describe("get tests", () => {
   
       it("Should navigate to director occupation page", async () => {
@@ -56,7 +60,7 @@ describe("Director occupation controller tests", () => {
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
-  
+
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
@@ -66,7 +70,7 @@ describe("Director occupation controller tests", () => {
         });
 
         const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
-  
+
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("Astronaut");
       });
@@ -99,54 +103,100 @@ describe("Director occupation controller tests", () => {
     });
 
     describe("post tests", () => {
-  
-      it("Should redirect to correspondense page", async () => {
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-        }});
-        
-        const response = await request(app)
-          .post(DIRECTOR_OCCUPATION_URL);
 
+      it("Should redirect to correspondence page with null value for occupation", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        })
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
 
-      it("Should display errors on page if get validation status returns errors", async () => {
+      it("Should redirect to correspondence page with valid value for occupation", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        })
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+      });
+
+      it("Should display character error on page if invalid characters exist in the field", async () => {
+          mockGetOfficerFiling.mockResolvedValueOnce({
+            referenceAppointmentId: APPOINTMENT_ID,
+            firstName: "John",
+            lastName: "Smith"
+          })
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ゃ"});
+  
+        expect(response.text).toContain("Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+        expect(response.text).toContain("John Smith");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display length error on page if invalid characters exist in the field", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        })
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "HBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVIAEFAEFAEFFAAEFAEFAEFAEAEFAEFAEFAFAEFAFAEFAEFAEFAEFAEFAEFAEFAEFEAF"});
+
+        expect(response.text).toContain("Occupation must be 100 characters or less");
+        expect(response.text).toContain("John Smith");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should follow the order of validation errors, where character type takes priority over length.", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        })
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
+
+        expect(response.text).toContain("Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+        expect(response.text).toContain("John Smith");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display errors on page if get back-end validation status returns errors", async () => {
         const mockValidationStatusResponse: ValidationStatusResponse = {
           errors: [mockValidationStatusErrorOccupation],
           isValid: false
         }
-        const mockPatchOfficerFilingResponse = { 
+        const mockPatchOfficerFilingResponse = {
           data:  {firstName: "John",
-                  lastName: "Smith"}
+            lastName: "Smith"}
         }
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
-  
+
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
-  
+
         expect(response.text).toContain("Occupation must be 100 characters or less");
         expect(response.text).toContain("John Smith");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
-      
     });
 
     describe("buildValidationErrors tests", () => {
 
-      it("should return occupation validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorOccupation],
-          isValid: false
-        }
+    it("should return occupation validation error", async () => {
+      const mockValidationStatusResponse: ValidationStatusResponse = {
+        errors: [mockValidationStatusErrorOccupation],
+        isValid: false
+      }
 
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
+      const validationErrors = buildValidationErrors(mockValidationStatusResponse);
 
-        expect(validationErrors.map(error => error.messageKey)).toContain(occupationErrorMessageKey.OCCUPATION_LENGTH);
-      });
-
-      
+      expect(validationErrors.map(error => error.messageKey)).toContain(occupationErrorMessageKey.OCCUPATION_LENGTH);
     });
+
+
+  });
 
 });
