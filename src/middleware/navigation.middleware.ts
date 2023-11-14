@@ -1,27 +1,27 @@
 import { Session } from "@companieshouse/node-session-handler";
 import { NextFunction, Request, Response } from "express";
-import { ValidationError, validationResult } from "express-validator";
-import { FormattedValidationErrors } from "../model/validation.model";
+import { FormattedValidationErrors, ValidationError } from '../model/validation.model';
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { NAVIGATION } from "../utils/navigation";
 import { urlUtils } from "../utils/url";
 import { getPageUrls } from "../model/navigation.model";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { NATIONALITY_LIST } from "../utils/properties";
+import { validationResult } from 'express-validator';
+import { createValidationErrorBasic } from "../validation/validation";
 
 export const checkValidations = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("======== Calling check validation ")
     const errorList = validationResult(req);
-
     if (!errorList.isEmpty()) {
-      console.log(`======== Calling ERROR LIST ${JSON.stringify(errorList)} `)
+      const errorArray = validationResult(req).array().map(i => i);
+      console.log(`===ARRAY IS ${errorArray}`)
 
-      const errors = formatValidationError(errorList.array());
+      const errorMapResult = errorMap(errorArray);
+
+      const errors = formatValidationError(buildValidationErrors(errorMapResult));
 
       const routePath = req.route.path;
-      console.log(`======== ROUTE ERROR LIST ${routePath} `)
-
       const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
       const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
       const session: Session = req.session as Session;
@@ -45,11 +45,29 @@ export const checkValidations = async (req: Request, res: Response, next: NextFu
   }
 }
 
-function formatValidationError(errorList: ValidationError[]): FormattedValidationErrors {
+function formatValidationError(validationErrors: ValidationError[]): FormattedValidationErrors {
   const errors = { errorList: [] } as any;
-  errorList.forEach( e => {
-    errors.errorList.push({ href: `#${e.param}`, text: e.msg });
-    errors[e.param] = { text: e.msg };
+  validationErrors.forEach( e => {
+    errors.errorList.push({ href: `#${e.link}`, text: e.messageKey});
+    errors[e.link] = { text: e.messageKey };
+
+    e.source.forEach(field => {
+      errors[field] = {text: e.messageKey}
+    });    
   });
   return errors;
+}
+
+const buildValidationErrors = (errorList: ValidationError): ValidationError[] => {
+  const validationErrors: ValidationError[] = [];
+  validationErrors.push(createValidationErrorBasic(errorList.messageKey, errorList.link))
+  return validationErrors;
+}
+
+const errorMap = (errorList): ValidationError => {
+  return {
+    messageKey: errorList.msg,
+    link: errorList.param,
+    source: errorList.link
+  }
 }

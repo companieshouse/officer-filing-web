@@ -4,12 +4,12 @@ import { VALID_CHARACTERS } from "./regex/regex.validation";
 const checkMultipleNationality = (nationality: string = "", secondNationality: string = "", thirdNationality: string = "", errors?: string) => {
 
   if ( nationality && nationality === secondNationality ) {
-    throw new Error("nationality cannot be thesame" ?? 'Must be different from first nationality');
+    throw new Error("nationality cannot be thesame" ?? 'Enter a different second nationality');
   } else if (nationality && secondNationality && (thirdNationality === nationality || thirdNationality === secondNationality)) {
-    throw new Error("nationality cannot be thesame" ?? 'Must be different from first and second nationality');
+    throw new Error("nationality cannot be thesame" ?? 'Enter a different third nationality');
   } else if ( nationality && secondNationality && thirdNationality && `${nationality},${secondNationality},${secondNationality}`.length > 50) {
     // throw new Error(errors?.lengthError ?? 'Cannot be greater than 50');
-    throw new Error('' ?? 'Cannot be greater than 50');
+    throw new Error('' ?? 'For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 50 characters');
   }
   return true;
 };
@@ -23,7 +23,7 @@ const second_nationality_validations = (errors?: string) => [
 
 export const nationalityValidator = [
   body("typeahead_input_0")
-  .not().isEmpty({ ignore_whitespace: true }).withMessage('Empty')
+  .not().isEmpty({ ignore_whitespace: true }).withMessage('Enter the director’s nationality')
   .isLength({ max: 256 }).withMessage('Exceeded length')
   .matches(VALID_CHARACTERS).withMessage("Invalid character"),
 
