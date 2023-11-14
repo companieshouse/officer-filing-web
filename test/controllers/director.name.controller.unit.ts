@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { DIRECTOR_DATE_OF_BIRTH_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -31,7 +31,7 @@ const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const DIRECTOR_DATE_OF_BIRTH_URL = DIRECTOR_DATE_OF_BIRTH_PATH
+const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -95,7 +95,7 @@ describe("Director name controller tests", () => {
           .post(DIRECTOR_NAME_URL)
           .send({ "previous_names_radio": "No" });
 
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_OF_BIRTH_URL);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
 
       it("Should display errors on page if get validation status returns errors", async () => {

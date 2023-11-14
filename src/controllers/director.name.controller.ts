@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CURRENT_DIRECTORS_PATH, DIRECTOR_DATE_OF_BIRTH_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -73,7 +73,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_DATE_OF_BIRTH_PATH, req);
+    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req);
     
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
