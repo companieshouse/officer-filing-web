@@ -70,7 +70,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req);
-  return res.redirect(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl));
+  return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     return next(e);
   }

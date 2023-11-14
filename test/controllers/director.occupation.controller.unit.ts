@@ -10,7 +10,10 @@ import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, urlPara
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { mockValidationStatusErrorOccupation } from "../mocks/validation.status.response.mock";
+import {
+  mockValidationStatusErrorOccupation,
+  mockValidValidationStatusResponse
+} from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/director.occupation.controller";
 import { occupationErrorMessageKey } from "../../src/utils/api.enumerations.keys";
@@ -108,7 +111,9 @@ describe("Director occupation controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "John",
           lastName: "Smith"
-        })
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
@@ -118,7 +123,9 @@ describe("Director occupation controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "John",
           lastName: "Smith"
-        })
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
