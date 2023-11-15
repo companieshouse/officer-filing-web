@@ -93,7 +93,7 @@ describe("Director nationality controller tests", () => {
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"dj",typeahead_input_1:"pj",typeahead_input_2:"cj"});
   
         expect(response.text).toContain("Select a nationality from the list");
-        expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas")).toEqual(false);
+        expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters")).toEqual(false);
         expect(response.text).toContain("John Smith");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
@@ -117,7 +117,7 @@ describe("Director nationality controller tests", () => {
         //mockGetField.mockReturnValue("British").send({nationality1:"british"});
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
   
-        expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters including commas");
+        expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters");
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
