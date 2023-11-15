@@ -37,8 +37,27 @@ export const formatTitleCase = (str: string|undefined): string =>  {
     return "";
   }
 
-  return str.replace(
-    /\w\S*/g, (word) => {
-      return word.charAt(0).toUpperCase() + word.substring(1).toLowerCase();
-    });
+  str = str.toLowerCase();
+  let formattedString = '';
+
+  let uppercaseAfter = [" ", "-", "'"];
+  let uppercaseNextCharacter = true;
+
+  // first character is always uppercase
+  for (let i = 0; i < str.length; i++) {
+    if (uppercaseNextCharacter){
+      formattedString += str.charAt(i).toUpperCase();
+      uppercaseNextCharacter = false;
+    } else {
+      formattedString += str.charAt(i);
+    }
+
+    // set value of uppercaseNextCharacter for next character
+    if(uppercaseAfter.includes(str.charAt(i))) {
+      uppercaseNextCharacter = true;
+    } else {
+      uppercaseNextCharacter = false;
+    }
+  }
+  return formattedString;
 };
