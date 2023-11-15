@@ -31,6 +31,13 @@ export const PostcodeValidation: PostcodeValidationType = {
 			source: [PostcodeField.POSTCODE],
 			link: PostcodeField.POSTCODE
 		}
+	},
+	InvalidPostcode: {
+		Postcode: {
+			messageKey: postcodeErrorMessageKey.POSTCODE_FULL_INVALID,
+			source: [PostcodeField.POSTCODE],
+			link: PostcodeField.POSTCODE
+		}
 	}
 }
 
