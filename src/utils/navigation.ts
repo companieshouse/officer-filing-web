@@ -15,7 +15,7 @@ export const getNationalityBackLink = async (req: Request) => {
 
   return officerFiling?.checkYourAnswersLink !== undefined
     ? urls.APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
-    : urls.DIRECTOR_APPOINTED_DATE_PATH;
+    : urls.DIRECTOR_DATE_DETAILS_PATH;
 };
 
 export const NAVIGATION: Navigation =  {

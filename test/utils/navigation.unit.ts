@@ -3,8 +3,9 @@ jest.mock("../../src/services/officer.filing.service");
 
 import { Request } from 'express';
 import { getOfficerFiling } from '../../src/services/officer.filing.service';
-import { APPOINT_DIRECTOR_CHECK_ANSWERS, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_APPOINTED_DATE, 
-        DIRECTOR_APPOINTED_DATE_PATH_END, 
+import { APPOINT_DIRECTOR_CHECK_ANSWERS, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, 
+        DIRECTOR_DATE_DETAILS, 
+        DIRECTOR_DATE_DETAILS_PATH, 
         DIRECTOR_NATIONALITY, 
       } from '../../src/types/page.urls';
 import { getNationalityBackLink } from '../../src/utils/navigation';
@@ -21,7 +22,7 @@ const SUBMISSION_ID = "55555555";
 
 describe("Navigation utils",  () => {
   
-  test(`get nationality back link returns ${DIRECTOR_APPOINTED_DATE} when ${DIRECTOR_NATIONALITY} page loads`, async () => {
+  test(`get nationality back link returns ${DIRECTOR_DATE_DETAILS} when ${DIRECTOR_NATIONALITY} page loads`, async () => {
     mockGetOfficerFiling.mockResolvedValueOnce({
       checkYourAnswersLink: undefined
       });  
@@ -32,7 +33,7 @@ describe("Navigation utils",  () => {
       }
     const getBackLinks = await getNationalityBackLink(req);
       
-    expect(getBackLinks).toContain(DIRECTOR_APPOINTED_DATE_PATH_END);
+    expect(getBackLinks).toContain(DIRECTOR_DATE_DETAILS_PATH);
   });
 
   test(`get nationality back link returns ${APPOINT_DIRECTOR_CHECK_ANSWERS} when ${DIRECTOR_NATIONALITY} page loads with check your answers link`, async () => {
