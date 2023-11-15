@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { POSTCODE_ADDRESSES_LOOKUP_URL, POSTCODE_VALIDATION_URL} from "../utils/properties";
+import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
@@ -78,7 +78,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
-    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
+    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }

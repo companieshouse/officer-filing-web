@@ -18,7 +18,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { formatValidationErrors } from "../validation/validation";
 import { ValidationError } from "../model/validation.model";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
-import { POSTCODE_ADDRESSES_LOOKUP_URL, POSTCODE_VALIDATION_URL } from "../utils/properties";
+import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
 import { logger } from "../utils/logger";
@@ -78,7 +78,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
-    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_VALIDATION_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
+    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
