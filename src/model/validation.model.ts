@@ -59,3 +59,9 @@ export interface PremiseValidationType {
         Premise: ValidationError
     }
 }
+
+export interface NationalityValidationType {
+    [key: string]: {
+        Nationality: ValidationError;
+    }
+}

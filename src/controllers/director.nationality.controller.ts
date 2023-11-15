@@ -109,4 +109,3 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 
   return validationErrors;
 }
- 
