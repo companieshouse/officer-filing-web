@@ -33,6 +33,16 @@ describe("Input validation test", () => {
         }
     });
 
+    test("should return validation error if field contains an invalid postcode", () => {
+        const validationErrors = validatePostcode("ST63LJJ", PostcodeValidation);
+        if (validationErrors) {
+            expect(validationErrors).toHaveLength(1);
+            expect(validationErrors[0].messageKey).toEqual(postcodeErrorMessageKey.POSTCODE_FULL_INVALID);
+        } else {
+            fail("Expected validation not raised");
+        }
+    });
+
     test("should return only one validation error - order and priority test ", () => {
         const validationErrors = validatePostcode("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", PostcodeValidation);
         if (validationErrors) {

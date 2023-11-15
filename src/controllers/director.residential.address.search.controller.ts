@@ -51,7 +51,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const residentialPostalCode : string = (req.body[DirectorField.POSTCODE])?.trim();
+    const residentialPostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
     const residentialPremise : string = (req.body[DirectorField.PREMISES])?.trim();
     let jsValidationErrors = validatePostcode(residentialPostalCode, PostcodeValidation);
     if(residentialPremise) {
@@ -68,10 +68,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
       };
 
-    // Patch the filing with updated information
-    logger.debug(`Patching officer filing with postcode ${residentialPostalCode} and premise ${residentialPremise}`);
-    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
-
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
@@ -82,6 +78,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
     }
+
+    // Patch the filing with updated information
+    logger.debug(`Patching officer filing with postcode ${residentialPostalCode} and premise ${residentialPremise}`);
+    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Look up the addresses, as by now validated postcode is valid and exist
     const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''));

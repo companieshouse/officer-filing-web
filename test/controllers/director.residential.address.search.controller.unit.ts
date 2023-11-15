@@ -13,11 +13,12 @@ import {
   urlParams
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../src/services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -124,6 +125,7 @@ describe('Director residential address search controller test', () => {
       const response = await request(app).post(PAGE_URL)
       .send({"postcode": "%%%%%%", "premises": "ゃ"});
 
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain("%%%%%%");
       expect(response.text).toContain("ゃ");
       expect(response.text).toContain("John Smith");
@@ -136,6 +138,7 @@ describe('Director residential address search controller test', () => {
       .send({"postcode": "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
              "premises": "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
 
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
     });
@@ -143,7 +146,8 @@ describe('Director residential address search controller test', () => {
     it("Should display error when postcode lookup service returns false", async () => {
       mockGetIsValidUKPostcode.mockReturnValue(false);
       const response = await request(app).post(PAGE_URL).send({"postcode": "SW1A1XY"});
-
+      
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain("We cannot find this postcode. Enter a different one, or enter the address manually");
     });
 
