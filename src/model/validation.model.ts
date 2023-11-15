@@ -36,6 +36,35 @@ export interface DateValidationType {
     }
 }
 
+export interface ManualAddressValidationType {
+    MissingValue: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        City: ValidationError,
+        Postcode: ValidationError,
+        Country: ValidationError
+    },
+    InvalidCharacters: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        AddressLine2: ValidationError,
+        City: ValidationError,
+        County: ValidationError,
+        Postcode: ValidationError
+    },
+    InvalidLength: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        AddressLine2: ValidationError,
+        City: ValidationError,
+        County: ValidationError
+        Postcode: ValidationError,
+    },
+    InvalidValue: {
+        Country: ValidationError,
+    }
+}
+
 export interface PostcodeValidationType {
     MissingValue: {
         Postcode: ValidationError

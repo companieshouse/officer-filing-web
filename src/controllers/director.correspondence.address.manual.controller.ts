@@ -12,13 +12,19 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { COUNTRY_LIST } from "../utils/properties";
-import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import {
+  Address,
+  OfficerFiling,
+  ValidationStatusResponse
+} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../model/director.model";
 import { getField } from "../utils/web";
 import { getValidationStatus } from "../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { ValidationError } from "../model/validation.model";
 import { correspondenceAddressAddressLineOneErrorMessageKey, correspondenceAddressAddressLineTwoErrorMessageKey, correspondenceAddressCountryErrorMessageKey, correspondenceAddressLocalityErrorMessageKey, correspondenceAddressPostcodeErrorMessageKey, correspondenceAddressPremisesErrorMessageKey, correspondenceAddressRegionErrorMessageKey } from "../utils/api.enumerations.keys";
+import {CorrespondenceManualAddressValidation} from "../validation/address.validation.config";
+import {validateManualAddress} from "../validation/manual.address.validation";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -59,18 +65,28 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const originalFiling = await getOfficerFiling(session, transactionId, submissionId);
+
+    const serviceAddress : Address =  {
+      premises: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES),
+      addressLine1: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1),
+      addressLine2: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2),
+      locality: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_CITY),
+      region: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTY),
+      country: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTRY),
+      postalCode: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_POSTCODE),
+    }
+
+    // JS validation
+    const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+
+    if(jsValidationErrors.length > 0) {
+      return renderPage(req, res, serviceAddress, originalFiling, jsValidationErrors);
+    }
 
     // Patch filing with updated information
     let officerFiling: OfficerFiling = {
-      serviceAddress: {
-        premises: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES),
-        addressLine1: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1),
-        addressLine2: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2),
-        locality: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_CITY),
-        region: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTY),
-        country: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_COUNTRY),
-        postalCode: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_POSTCODE),
-      },
+      serviceAddress: serviceAddress,
       serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END
     };
     officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
@@ -79,22 +95,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
-      const formattedErrors = formatValidationErrors(validationErrors);
-      return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, {
-        templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL,
-        backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-        typeahead_array: COUNTRY_LIST,
-        correspondence_address_premises: officerFiling.serviceAddress?.premises,
-        correspondence_address_line_1: officerFiling.serviceAddress?.addressLine1,
-        correspondence_address_line_2: officerFiling.serviceAddress?.addressLine2,
-        correspondence_address_city: officerFiling.serviceAddress?.locality,
-        correspondence_address_county: officerFiling.serviceAddress?.region,
-        typeahead_value: officerFiling.serviceAddress?.country,
-        correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
-        typeahead_errors: JSON.stringify(formattedErrors),
-        errors: formattedErrors,
-      });
+      return renderPage(req, res, serviceAddress, officerFiling, validationErrors);
     }
   
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
@@ -157,4 +158,23 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   }
 
   return validationErrors;
+}
+
+export const renderPage = (req: Request, res: Response, serviceAddress: Address, officerFiling: OfficerFiling, validationErrors: ValidationError[]) => {
+  const formattedErrors = formatValidationErrors(validationErrors);
+  return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, {
+    templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL,
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    typeahead_array: COUNTRY_LIST,
+    correspondence_address_premises: serviceAddress.premises,
+    correspondence_address_line_1: serviceAddress.addressLine1,
+    correspondence_address_line_2: serviceAddress.addressLine2,
+    correspondence_address_city: serviceAddress.locality,
+    correspondence_address_county: serviceAddress.region,
+    typeahead_value: serviceAddress.country,
+    correspondence_address_postcode: serviceAddress.postalCode,
+    typeahead_errors: JSON.stringify(formattedErrors),
+    errors: formattedErrors,
+  });
 }
