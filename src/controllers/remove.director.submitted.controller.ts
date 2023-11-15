@@ -8,6 +8,7 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { getOfficerFiling } from "../services/officer.filing.service";
+import { formatTitleCase } from "../services/confirm.company.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
 
@@ -31,8 +32,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const companyOfficer: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, officerFiling.referenceAppointmentId);
 
-    const firstname = companyOfficer.forename != null ? companyOfficer.forename : "";
-    const surname = companyOfficer.surname != null ? companyOfficer.surname : "";
+    const firstname = companyOfficer.forename != null ? formatTitleCase(companyOfficer.forename) : "";
+    const surname = companyOfficer.surname != null ? formatTitleCase(companyOfficer.surname) : "";
     const directorName = firstname + " " + surname;
 
     return res.render(Templates.REMOVE_DIRECTOR_SUBMITTED, {
