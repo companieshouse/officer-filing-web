@@ -33,6 +33,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const firstname = companyOfficer.forename != null ? companyOfficer.forename : "";
     const surname = companyOfficer.surname != null ? companyOfficer.surname : "";
+  
     const directorName = firstname + " " + surname;
 
     return res.render(Templates.REMOVE_DIRECTOR_SUBMITTED, {
