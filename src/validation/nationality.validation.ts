@@ -131,15 +131,6 @@ export const validateMaximumLengthNationality = (nationality: string[], national
   if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
     return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
   }  
-  if ((nationality) && (`${nationality[0]},${nationality[1]}`.length >48) ) {
-    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
-  }
-  if ((nationality) && (`${nationality[0]},${nationality[2]}`.length >48) ) {
-    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
-  }
-  if ((nationality) && (`${nationality[1]},${nationality[2]}`.length >48) ) {
-    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
-  }
 }
 
 const invalidPattern = (input: string, regex: RegExp): boolean => {

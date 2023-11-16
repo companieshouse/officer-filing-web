@@ -109,7 +109,7 @@ describe("Director nationality controller tests", () => {
     });
 
     it ("should return nationality error if multiple nationality2 and nationality3 exceeds length", async() => {
-      const response = validateMaximumLengthNationality(["Irish",LONG_COUNTRY_NAME,"Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"], NationalityValidation)
+      const response = validateMaximumLengthNationality(["Irish",LONG_COUNTRY_NAME], NationalityValidation)
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
     });
 
