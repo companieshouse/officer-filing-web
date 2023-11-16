@@ -1,7 +1,25 @@
 {{ govukBackLink({
   text: "Back",
+  id: "back_link"
   href: backLinkUrl,
   attributes: {
     "data-event-id": "back-link"
   }
 }) }}
+
+<!-- <a href="#" id="back_link" class="govuk-back-link" data-event-id="data-event-id">Back</a> -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const backButton = document.getElementById("back_link");
+
+    if (backButton) {
+      const previousUrl = document.referrer;
+      backButton.href = previousUrl;
+
+      backButton.addEventListener('click', () => {
+        window.history.back();
+      });
+    }
+  })
+</script>
