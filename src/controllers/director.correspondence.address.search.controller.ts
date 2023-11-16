@@ -21,7 +21,6 @@ import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
-import { logger } from "../utils/logger";
 import { getCountryFromKey } from "../utils/web";
 import { validatePostcode } from "../validation/postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
@@ -80,7 +79,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Patch the filing with updated information
-    logger.debug(`Patching officer filing correspondence address with postcode ${correspondencePostalCode} and premise ${correspondencePremise}`);
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Look up the addresses, as by now validated postcode is valid and exist
