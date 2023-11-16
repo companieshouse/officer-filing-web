@@ -3,6 +3,12 @@ import { OccupationValidation } from "../../src/validation/occupation.validation
 import { occupationErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 describe("Input validation test", () => {
+
+    test("should return no validation errors if field has valid value", () => {
+        const jsvalidationError = validateOccupation("Chief Everything Officer", OccupationValidation);
+        expect(jsvalidationError).toEqual(undefined);
+    });
+
     test("should return validation errors if fields have invalid characters", () => {
         const jsvalidationError = validateOccupation("ゃ", OccupationValidation);
         if (jsvalidationError) {
