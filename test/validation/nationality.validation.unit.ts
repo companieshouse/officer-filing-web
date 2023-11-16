@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateMaximumLengthNationality, validateNationality, validationAllowListNationality } from "../../src/validation/nationality.validation";
+import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateMaximumLengthNationality, validateNationality, validateAllowedListNationality } from "../../src/validation/nationality.validation";
 import { NationalityValidation } from "../../src/validation/nationality.validation.config";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
@@ -94,8 +94,10 @@ describe("Director nationality controller tests", () => {
     });
 
     it ("should return nationality error if multiple nationality exceeds length", async() => {
-      const response = validateMaximumLengthNationality(["British","Afghan","Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss", "Kingdom of Sauron East of the North Gate British Land of the elfsoooooooqqqqqqqqaaaaaahhddddddddddyyyTTTTTTTTTTTTTAAAAAAAAHHHHHHHHHHHHHDDDDPPPPPPPPPPP"], NationalityValidation)
+      const response = validateMaximumLengthNationality(["British","Afghan",LONG_COUNTRY_NAME], NationalityValidation)
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+      expect(response?.source).toContain("typeahead_input_2")
+
     });
 
     it ("should return nationality error if multiple nationality1 and nationality3 exceeds length", async() => {
@@ -119,17 +121,17 @@ describe("Director nationality controller tests", () => {
     });
 
     it ("should return nationality select from list error if nationality two not in list", () => {
-      const response = validationAllowListNationality(["Irish","Western"], NationalityValidation);
+      const response = validateAllowedListNationality(["Irish","Western"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityErrorMessageKey.NATIONALITY_INVALID)
     });
 
     it ("should return nationality select from list error if nationality one not in list", () => {
-      const response = validationAllowListNationality(["Southerner"], NationalityValidation);
+      const response = validateAllowedListNationality(["Southerner"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityErrorMessageKey.NATIONALITY_INVALID)
     });
 
     it ("should return nationality select from list error if nationality three not in list", () => {
-      const response = validationAllowListNationality(["Irish", "British", "Easterner"], NationalityValidation);
+      const response = validateAllowedListNationality(["British", "Irish", "Easterner"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityErrorMessageKey.NATIONALITY_INVALID)
     });
 

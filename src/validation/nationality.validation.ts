@@ -54,7 +54,7 @@ export const validateNationality = (nationality: string[], nationalityValidation
       if(invalidNationality1CharacterValidationResult) {
           return invalidNationality1CharacterValidationResult;
       }
-      const allowListNationalityValidationResult = validationAllowListNationality(nationality, nationalityValidationType);
+      const allowListNationalityValidationResult = validateAllowedListNationality(nationality, nationalityValidationType);
       //not in nationality list
       if(allowListNationalityValidationResult) {
           return allowListNationalityValidationResult;
@@ -82,30 +82,29 @@ const validateInvalidCharacterValuesForNationality = (nationality: string[], nat
   if(nationality[0] && (!nationality[0].length || !nationality[0].match(VALID_NATIONALITY_CHARACTER))) {
       return nationalityValidationType.Nationality1InvalidCharacter.Nationality;
   }
-  if(nationality[1] && (!nationality[0].length && !nationality[1].match(VALID_NATIONALITY_CHARACTER))) {
+  if(nationality[1] && (!nationality[1].length && !nationality[1].match(VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality2InvalidCharacter.Nationality;
   }
-  if(nationality[2] && (!nationality[0].length && !nationality[2].match(VALID_NATIONALITY_CHARACTER))) {
+  if(nationality[2] && (!nationality[1].length && !nationality[2].match(VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality3InvalidCharacter.Nationality;
   }
   return undefined;
 }
 
 export const validateInvalidLengthValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => { 
-  if(nationality[0] && nationality[0].length > 50) {
+  if(nationality[0] && (nationality[0].length > 50)) {
       return nationalityValidationType.Nationality1LengthValidator.Nationality
   }
-  if(nationality[1] && nationality[1].length > 50) {
+  if(nationality[1] && (nationality[1].length > 50)) {
     return nationalityValidationType.Nationality2LengthValidator.Nationality
   }
-  if(nationality[2] && nationality[2].length > 50) {
+  if(nationality[2] && (nationality[2].length > 50)) {
     return nationalityValidationType.Nationality3LengthValidator.Nationality
   } 
   return undefined;
 }
 
-export const validationAllowListNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
-  console.log(`allowed list called ${nationality}`)
+export const validateAllowedListNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
   const nationalityList = NATIONALITY_LIST.split(";");
   if(nationality[0] && !nationalityList.includes(nationality[0])) {
     return nationalityValidationType.Nationality1AllowedList.Nationality
