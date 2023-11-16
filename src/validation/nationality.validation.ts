@@ -85,7 +85,7 @@ const validateInvalidCharacterValuesForNationality = (nationality: string[], nat
   if(nationality[1] && (!nationality[1].length && !nationality[1].match(VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality2InvalidCharacter.Nationality;
   }
-  if(nationality[2] && (!nationality[1].length && !nationality[2].match(VALID_NATIONALITY_CHARACTER))) {
+  if(nationality[2] && (!nationality[2].length && !nationality[2].match(VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality3InvalidCharacter.Nationality;
   }
   return undefined;
