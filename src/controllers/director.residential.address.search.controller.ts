@@ -15,7 +15,6 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../model/director.model";
-import { logger } from "../utils/logger";
 import { formatValidationErrors } from "../validation/validation";
 import { ValidationError } from "../model/validation.model";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
@@ -80,7 +79,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Patch the filing with updated information
-    logger.debug(`Patching officer filing with postcode ${residentialPostalCode} and premise ${residentialPremise}`);
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
     // Look up the addresses, as by now validated postcode is valid and exist
