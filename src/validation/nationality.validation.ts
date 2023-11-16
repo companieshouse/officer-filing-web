@@ -64,7 +64,7 @@ export const validateNationality = (nationality: string[], nationalityValidation
       if(duplicateNationalityValidationResult) {
           return duplicateNationalityValidationResult;
       }
-      const invalidNationalityLengthValidationResult = validateInvalidLengthValuesForNatinality(nationality, nationalityValidationType);
+      const invalidNationalityLengthValidationResult = validateInvalidLengthValuesForNationality(nationality, nationalityValidationType);
       //Invalid Length
       if(invalidNationalityLengthValidationResult) {
           return invalidNationalityLengthValidationResult;
@@ -91,7 +91,7 @@ const validateInvalidCharacterValuesForNationality = (nationality: string[], nat
   return undefined;
 }
 
-const validateInvalidLengthValuesForNatinality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => { 
+const validateInvalidLengthValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => { 
   if(nationality[0] && nationality[0].length > 50) {
       return nationalityValidationType.Nationality1LengthValidator.Nationality
   }
@@ -104,7 +104,8 @@ const validateInvalidLengthValuesForNatinality = (nationality: string[], nationa
   return undefined;
 }
 
-const validationAllowListNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
+export const validationAllowListNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
+  console.log(`allowed list called ${nationality}`)
   const nationalityList = NATIONALITY_LIST.split(";");
   if(nationality[0] && !nationalityList.includes(nationality[0])) {
     return nationalityValidationType.Nationality1AllowedList.Nationality
@@ -118,7 +119,7 @@ const validationAllowListNationality = (nationality: string[], nationalityValida
 return undefined;
 } 
 
-const validateDuplicateNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
+export const validateDuplicateNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
   if((nationality[0] && nationality[1]) && (nationality[1] ===  nationality[0])) {
     return nationaliltyValidationType.DuplicatedNationality2Validator.Nationality
   }
@@ -127,10 +128,12 @@ const validateDuplicateNationality = (nationality: string[], nationaliltyValidat
   }
 }
 
-const validateMaximumLengthNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
-  if ((nationality) && `${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48) {
+export const validateMaximumLengthNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
+  console.log(`nationality is ${JSON.stringify(nationality[2].length)}`)
+  if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
     return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
-  } else if ((nationality) && (
+  }  
+  if ((nationality) && (
                               (`${nationality[0]},${nationality[1]}`.length >48) 
                               || 
                               (`${nationality[0]},${nationality[2]}`.length >48)
