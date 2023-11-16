@@ -91,7 +91,7 @@ const validateInvalidCharacterValuesForNationality = (nationality: string[], nat
   return undefined;
 }
 
-const validateInvalidLengthValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => { 
+export const validateInvalidLengthValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => { 
   if(nationality[0] && nationality[0].length > 50) {
       return nationalityValidationType.Nationality1LengthValidator.Nationality
   }
@@ -129,7 +129,6 @@ export const validateDuplicateNationality = (nationality: string[], nationalilty
 }
 
 export const validateMaximumLengthNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
-  console.log(`nationality is ${JSON.stringify(nationality[2].length)}`)
   if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
     return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
   }  

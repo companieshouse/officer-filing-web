@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { validateDuplicateNationality, validateMaximumLengthNationality, validateNationality, validationAllowListNationality } from "../../src/validation/nationality.validation";
+import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateMaximumLengthNationality, validateNationality, validationAllowListNationality } from "../../src/validation/nationality.validation";
 import { NationalityValidation } from "../../src/validation/nationality.validation.config";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
@@ -17,7 +17,8 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-
+const LONG_COUNTRY_NAME = "Kingdom of Sauron East of the North Gate British Land of the elfsoooooooqqqqqqqqaaaaaahhddddddddddyyyTTTTTTTTTTTTTAAAAAAAAHHHHHHHHHHHHHDDDDPPPPPPPPPPP"
+                        + "Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"
 const DIRECTOR_NATIONALITY_URL = DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -92,8 +93,18 @@ describe("Director nationality controller tests", () => {
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
     });
 
-    it ("should return nationality error i multiple nationality exceeds length", async() => {
+    it ("should return nationality error if multiple nationality exceeds length", async() => {
       const response = validateMaximumLengthNationality(["British","Afghan","Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss", "Kingdom of Sauron East of the North Gate British Land of the elfsoooooooqqqqqqqqaaaaaahhddddddddddyyyTTTTTTTTTTTTTAAAAAAAAHHHHHHHHHHHHHDDDDPPPPPPPPPPP"], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+    });
+
+    it ("should return nationality error if multiple nationality1 and nationality3 exceeds length", async() => {
+      const response = validateMaximumLengthNationality([LONG_COUNTRY_NAME,"Irish","Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+    });
+
+    it ("should return nationality error if multiple nationality2 and nationality3 exceeds length", async() => {
+      const response = validateMaximumLengthNationality(["Irish",LONG_COUNTRY_NAME,"Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"], NationalityValidation)
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
     });
 
@@ -120,6 +131,21 @@ describe("Director nationality controller tests", () => {
     it ("should return nationality select from list error if nationality three not in list", () => {
       const response = validationAllowListNationality(["Irish", "British", "Easterner"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityErrorMessageKey.NATIONALITY_INVALID)
+    });
+
+    it ("should return validation length error if nationality1 exceeds 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality([LONG_COUNTRY_NAME], NationalityValidation);
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50)
+    });
+
+    it ("should return validation length error if nationality2 exceeds 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality(["British",LONG_COUNTRY_NAME], NationalityValidation);
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50)
+    });
+
+    it ("should return validation length error if nationality3 exceeds 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality(["British","Irish",LONG_COUNTRY_NAME], NationalityValidation);
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50)
     });
   })
 });
