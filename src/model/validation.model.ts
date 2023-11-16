@@ -57,6 +57,9 @@ export interface PostcodeValidationType {
     },
     InvalidLength: {
         Postcode: ValidationError
+    },
+    InvalidPostcode: {
+        Postcode: ValidationError
     }
 }
 

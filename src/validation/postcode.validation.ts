@@ -1,6 +1,8 @@
 import {PostcodeValidationType, ValidationError} from "model/validation.model";
 
-const REGEX_FOR_POSTCODE = /^[A-Za-z0-9\s]*$/;
+const REGEX_FOR_POSTCODE_CHARACTERS = /^[A-Za-z0-9\s]*$/;
+const REGEX_FOR_VALID_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
+
 export const validatePostcode = (postcode: string,
                                  postcodeValidationType : PostcodeValidationType): ValidationError[] => {
     let validationErrors: ValidationError[] = [];
@@ -27,6 +29,13 @@ export const validatePostcode = (postcode: string,
       return validationErrors;
     }
 
+    //Invalid postcode validation
+    const invalidPostcodeValidationResult = validateValidPostcode(postcode, postcodeValidationType);
+    if (invalidPostcodeValidationResult) {
+        validationErrors.push(invalidPostcodeValidationResult);
+        return validationErrors;
+    }
+
     return validationErrors;
 }
 
@@ -46,7 +55,7 @@ const validateMissingValues = (postcode: string | undefined, postcodeValidationT
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateCharacterForPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
-    if (!postcode.match(REGEX_FOR_POSTCODE)) {
+    if (!postcode.match(REGEX_FOR_POSTCODE_CHARACTERS)) {
         return postcodeValidationType.InvalidCharacters.Postcode;
     }
     return undefined;
@@ -60,6 +69,18 @@ const validateCharacterForPostcode = (postcode: string, postcodeValidationType :
 const validateLengthForPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
     if (postcode.length > 20) {
         return postcodeValidationType.InvalidLength.Postcode;
+    }
+    return undefined;
+}
+
+/**
+ * Validate the postcode field and return a validation error if the field contains an invalid postcode
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+
+const validateValidPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
+    if (!postcode.match(REGEX_FOR_VALID_POSTCODE)) {
+        return postcodeValidationType.InvalidPostcode.Postcode;
     }
     return undefined;
 }
