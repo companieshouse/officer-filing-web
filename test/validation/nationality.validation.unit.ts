@@ -10,6 +10,8 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateMaximumLengthNationality, validateNationality, validateAllowedListNationality, validateInvalidCharacterValuesForNationality } from "../../src/validation/nationality.validation";
 import { NationalityValidation } from "../../src/validation/nationality.validation.config";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { response } from 'express';
+
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 
@@ -91,6 +93,12 @@ describe("Director nationality controller tests", () => {
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
+     it ("should render nationality not allowed list error if nationality is not in the list", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"British",typeahead_input_2:"Republic of winter land",});
+      expect(response.text).toContain("Select a nationality from the list");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
     it ("should return nationality error if nationality exceeds length", async() => {
       const response = validateMaximumLengthNationality(["Kingdom of Sauron East of the North Gate","British","Land of the elfs"], NationalityValidation)
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
@@ -134,8 +142,9 @@ describe("Director nationality controller tests", () => {
     });
 
     it ("should return nationality select from list error if nationality three not in list", () => {
-      const response = validateAllowedListNationality(["British", "Irish", "Easterner"], NationalityValidation);
+      const response = validateAllowedListNationality(["British", "British", "Easterner"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityErrorMessageKey.NATIONALITY_INVALID)
+      expect(response?.source).toContain("typeahead_input_2")
     });
 
     it ("should return validation length error if nationality1 exceeds 50 character", () => {
