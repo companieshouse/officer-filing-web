@@ -81,6 +81,7 @@ describe('Director residential address search controller test', () => {
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
+    mockPatchOfficerFiling.mockClear();
   });
 
   describe("get tests",  () => {
