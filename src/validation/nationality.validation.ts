@@ -12,7 +12,7 @@ import { urlUtils } from "../utils/url";
 import { DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
-const VALID_NATIONALITY_CHARACTER = /^[a-zA-Z\s]+$/;
+const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z\s]+$/;
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -78,14 +78,14 @@ export const validateNationality = (nationality: string[], nationalityValidation
   return undefined;
 }
 
-const validateInvalidCharacterValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
-  if(nationality[0] && (!nationality[0].length || !nationality[0].match(VALID_NATIONALITY_CHARACTER))) {
+export const validateInvalidCharacterValuesForNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError | undefined => {
+  if(nationality[0] && (!nationality[0].trim().length || invalidPattern(nationality[0], VALID_NATIONALITY_CHARACTER))) {
       return nationalityValidationType.Nationality1InvalidCharacter.Nationality;
   }
-  if(nationality[1] && (!nationality[1].length && !nationality[1].match(VALID_NATIONALITY_CHARACTER))) {
+  if(nationality[1] && (!nationality[1].trim().length || invalidPattern(nationality[1], VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality2InvalidCharacter.Nationality;
   }
-  if(nationality[2] && (!nationality[2].length && !nationality[2].match(VALID_NATIONALITY_CHARACTER))) {
+  if(nationality[2] && (!nationality[2].trim().length || invalidPattern(nationality[2], VALID_NATIONALITY_CHARACTER))) {
     return nationalityValidationType.Nationality3InvalidCharacter.Nationality;
   }
   return undefined;
@@ -131,13 +131,21 @@ export const validateMaximumLengthNationality = (nationality: string[], national
   if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
     return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
   }  
-  if ((nationality) && (
-                              (`${nationality[0]},${nationality[1]}`.length >48) 
-                              || 
-                              (`${nationality[0]},${nationality[2]}`.length >48)
-                              ||
-                              (`${nationality[1]},${nationality[2]}`.length >48)
-          )) {
+  if ((nationality) && (`${nationality[0]},${nationality[1]}`.length >48) ) {
     return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
-  } 
+  }
+  if ((nationality) && (`${nationality[0]},${nationality[2]}`.length >48) ) {
+    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
+  }
+  if ((nationality) && (`${nationality[1]},${nationality[2]}`.length >48) ) {
+    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
+  }
+}
+
+const invalidPattern = (input: string, regex: RegExp): boolean => {
+  const matchResult = input.match(regex);
+  if (matchResult == null && matchResult == undefined){
+    return true
+  }
+  return false;
 }
