@@ -191,7 +191,6 @@ export const validatePostcode = (postcode: string, country: string | undefined, 
 export const validateCountry = (country: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!COUNTRY_LIST.includes(country)) {
 		validationErrors.push(manualAddressValidationType.InvalidValue.Country);
-		return validationErrors;
 	}
 
 	return validationErrors;
