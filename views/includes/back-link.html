@@ -1,25 +1,35 @@
 {{ govukBackLink({
   text: "Back",
-  id: "back_link"
+  id: "back_link",
   href: backLinkUrl,
   attributes: {
     "data-event-id": "back-link"
   }
 }) }}
 
-<!-- <a href="#" id="back_link" class="govuk-back-link" data-event-id="data-event-id">Back</a> -->
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const backButton = document.getElementById("back_link");
 
-    if (backButton) {
-      const previousUrl = document.referrer;
-      backButton.href = previousUrl;
+    //maintain history of urls
+    const previousUrls = [];
 
-      backButton.addEventListener('click', () => {
+    const initialPreviousUrl = document.referrer;
+    backButton.href = initialPreviousUrl;
+
+    backButton.addEventListener('click', () => {
+      if (previousUrls.length > 0) {
+        //pop the last url from the array and navigate to it
+        const previousUrl= previousUrls.pop();
+        window.location.href = previousUrl;
+      } else {
+        //if no previous url
         window.history.back();
-      });
-    }
+      }
+    });
+
+    //push the new initial previous url
+    previousUrls.push(initialPreviousUrl);
   })
 </script>
