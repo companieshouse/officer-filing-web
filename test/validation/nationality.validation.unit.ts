@@ -122,6 +122,11 @@ describe("Director nationality controller tests", () => {
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49)
     });
 
+    it ("should return nationality error if dual nationality2 and nationality3 exceeds length", async() => {
+      const response = validateInvalidDualNationalityMaxLength49(["Irish",SHORT_NATIONALITY], NationalityValidation)
+      expect(response).toBeUndefined();
+    });
+
     it ("should return nationality error if multiple  exceeds length", async() => {
       const response = validateInvalidLengthValuesForNationality(["Home of the elves",SHORT_NATIONALITY, "Half Andorrian"], NationalityValidation);
       expect(response?.source).toContain("typeahead_input_0")
@@ -161,6 +166,21 @@ describe("Director nationality controller tests", () => {
     it ("should return validation length error if nationality1 exceeds 50 character", () => {
       const response = validateInvalidLengthValuesForNationality([LONG_COUNTRY_NAME], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50)
+    });
+
+    it ("should not return validation length error if nationality1 does not 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality([SHORT_NATIONALITY], NationalityValidation);
+      expect(response).toBeUndefined();
+    });
+
+    it ("should not return validation length error if nationality1 does not 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality(["Nation1",SHORT_NATIONALITY], NationalityValidation);
+      expect(response).toBeUndefined();
+    });
+
+    it ("should not return validation length error if nationality1 does not 50 character", () => {
+      const response = validateInvalidLengthValuesForNationality(["Nation1","Nation2",SHORT_NATIONALITY], NationalityValidation);
+      expect(response).toBeUndefined();
     });
 
     it ("should return validation length error if nationality2 exceeds 50 character", () => {
