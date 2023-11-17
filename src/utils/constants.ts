@@ -156,7 +156,7 @@ export const STOP_PAGE_CONTENT =
     somethingWentWrong:{
       pageHeader: "Something went wrong",
       pageBody: `
-      <p><a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">Start again</a> or <a href="https://www.gov.uk/contact-companies-house">contact Companies House</a> if you have any questions.</p>
+      <p>You need to <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
       `
     }
 }

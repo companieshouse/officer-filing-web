@@ -27,7 +27,7 @@ const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is be
 const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
 const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details."
 const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
-const SOMETHING_WENT_WRONG_BODY_TEXT= "or <a href=\"https://www.gov.uk/contact-companies-house\">contact Companies House</a> if you have any questions";
+const SOMETHING_WENT_WRONG_BODY_TEXT= "<p>You need to <a href=\"/appoint-update-remove-company-officer\" data-event-id=\"start-the-service-again-link\">start the service again</a>.</p>";
 
 describe("Stop screen controller tests", () => {
   beforeEach(() => {
