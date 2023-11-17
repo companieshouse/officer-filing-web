@@ -36,6 +36,15 @@ export interface DateValidationType {
     }
 }
 
+export interface OccupationValidationType {
+    InvalidCharacters: {
+        Occupation: ValidationError
+    },
+    InvalidLength: {
+        Occupation: ValidationError
+    }
+}
+
 export interface PostcodeValidationType {
     MissingValue: {
         Postcode: ValidationError
@@ -47,6 +56,9 @@ export interface PostcodeValidationType {
         Postcode: ValidationError
     },
     InvalidLength: {
+        Postcode: ValidationError
+    },
+    InvalidPostcode: {
         Postcode: ValidationError
     }
 }

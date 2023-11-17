@@ -13,10 +13,9 @@ export enum Templates {
   REMOVE_DIRECTOR_SUBMITTED = "remove-director-submitted",
   // AP01
   DIRECTOR_NAME = "director-name",
-  DIRECTOR_DATE_OF_BIRTH = "director-date-of-birth",
+  DIRECTOR_DATE_DETAILS = "director-date-details",
   DIRECTOR_NATIONALITY = "director-nationality",
   DIRECTOR_OCCUPATION = "director-occupation",
-  DIRECTOR_APPOINTED_DATE = "director-appointed-date",
   DIRECTOR_CORRESPONDENCE_ADDRESS = "director-correspondence-address",
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH = "director-correspondence-address-search",
   DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS = "director-correspondence-address-choose-address",

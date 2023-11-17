@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_APPOINTED_DATE_PATH, DIRECTOR_NAME_PATH } from "../types/page.urls";
+import { DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { ValidationError } from "../model/validation.model";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
-import { dobDateErrorMessageKey } from "../utils/api.enumerations.keys";
-import { DobDateField } from "../model/date.model";
+import { appointmentDateErrorMessageKey, dobDateErrorMessageKey } from "../utils/api.enumerations.keys";
+import { AppointmentDateField, DobDateField } from "../model/date.model";
 import { validateDate } from "../validation/date.validation";
 import { DobDateValidation } from "../validation/dob.date.validation.config";
 import { getValidationStatus } from "../services/validation.status.service";
@@ -15,6 +15,8 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { setBackLink, setRedirectLink } from "../utils/web";
+import { buildDateString } from "../utils/date";
+import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,9 +25,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    var dateFields = officerFiling.dateOfBirth ? officerFiling.dateOfBirth.split('-').reverse() : [];
+    var dateOfBirthFields = officerFiling.dateOfBirth ? officerFiling.dateOfBirth.split('-').reverse() : [];
+    var dateOfAppointmentFields = officerFiling.appointedOn ? officerFiling.appointedOn.split('-').reverse() : [];
 
-    return renderPage(res, req, officerFiling, [], dateFields);
+    return renderPage(res, req, officerFiling, [], dateOfBirthFields, dateOfAppointmentFields);
 
   } catch (e) {
     return next(e);
@@ -41,20 +44,36 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     // Get date of birth
-    const day = req.body[DobDateField.DAY];
-    const month = req.body[DobDateField.MONTH];
-    const year = req.body[DobDateField.YEAR];
-    const dateOfBirth = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
+    const dobDay = req.body[DobDateField.DAY];
+    const dobMonth = req.body[DobDateField.MONTH];
+    const dobYear = req.body[DobDateField.YEAR];
+    // Get date of appointment
+    const appointementDay = req.body[AppointmentDateField.DAY];
+    const appointementMonth = req.body[AppointmentDateField.MONTH];
+    const appointementYear = req.body[AppointmentDateField.YEAR];
 
     // Validate the date fields (JS)
-    const jsValidationError = validateDate(day, month, year, DobDateValidation);
-    if (jsValidationError) {
-      return renderPage(res, req, officerFiling, [jsValidationError], [day, month, year]);
+    const dobValidationError = validateDate(dobDay, dobMonth, dobYear, DobDateValidation);
+    const appointmentValidationError = validateDate(appointementDay, appointementMonth, appointementYear, AppointmentDateValidation);
+    const dateValidationErrors:ValidationError[] = [];
+    if (dobValidationError || appointmentValidationError) {
+      
+      if(dobValidationError){
+        dateValidationErrors.push(dobValidationError);
+      }
+      if(appointmentValidationError){
+        dateValidationErrors.push(appointmentValidationError);
+      }
+      return renderPage(res, req, officerFiling, dateValidationErrors, [dobDay, dobMonth, dobYear], [appointementDay, appointementMonth, appointementYear]);
     }
+
+    const dateOfBirth = buildDateString(dobDay, dobMonth, dobYear);
+    const dateOfAppointment = buildDateString(appointementDay, appointementMonth, appointementYear);
     
     // Patch filing
     const updateFiling: OfficerFiling = {
-      dateOfBirth: dateOfBirth
+      dateOfBirth: dateOfBirth,
+      appointedOn: dateOfAppointment
     };
     await patchOfficerFiling(session, transactionId, submissionId, updateFiling);
 
@@ -62,10 +81,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
-      return renderPage(res, req, officerFiling, validationErrors, [day, month, year]);
+      return renderPage(res, req, officerFiling, validationErrors, [dobDay, dobMonth, dobYear], [appointementDay, appointementMonth, appointementYear]);
     }
 
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_APPOINTED_DATE_PATH, req);
+    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req);
     return res.redirect(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl));
 
   } catch (e) {
@@ -88,6 +107,10 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   if (dobMissingDayKey) {
     validationErrors.push(createValidationError(dobMissingDayKey, [DobDateField.DAY, DobDateField.MONTH, DobDateField.YEAR], DobDateField.DAY));
   }
+  var appointMissingDayKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, appointmentDateErrorMessageKey);
+  if (appointMissingDayKey) {
+    validationErrors.push(createValidationError(appointMissingDayKey, [AppointmentDateField.DAY, AppointmentDateField.MONTH, AppointmentDateField.YEAR], AppointmentDateField.DAY));
+  }
 
   return validationErrors;
 }
@@ -95,17 +118,22 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 /**
  * Render the page with all expected elements - eg errors, pre-populated data, etc.
  */
-const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], dayMonthYear: string[]) => {
+const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], dateOfBirth: string[], dateOfAppointment: string[]) => {
   const dates = {
     dob_date: {
-      "dob_date-day": dayMonthYear[0],
-      "dob_date-month": dayMonthYear[1],
-      "dob_date-year": dayMonthYear[2]
+      "dob_date-day": dateOfBirth[0],
+      "dob_date-month": dateOfBirth[1],
+      "dob_date-year": dateOfBirth[2],
+    },
+    appointment_date: {
+      "appointment_date-day": dateOfAppointment[0],
+      "appointment_date-month": dateOfAppointment[1],
+      "appointment_date-year": dateOfAppointment[2]
     }
   };
 
-  return res.render(Templates.DIRECTOR_DATE_OF_BIRTH, {
-    templateName: Templates.DIRECTOR_DATE_OF_BIRTH,
+  return res.render(Templates.DIRECTOR_DATE_DETAILS, {
+    templateName: Templates.DIRECTOR_DATE_DETAILS,
     backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     errors: formatValidationErrors(validationErrors),
