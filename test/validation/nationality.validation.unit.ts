@@ -193,6 +193,11 @@ describe("Director nationality controller tests", () => {
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50)
     });
 
+    it ("should return validation length error if nationality1 is emoty", () => {
+      const response = validateInvalidLengthValuesForNationality([""], NationalityValidation);
+      expect(response).toBeUndefined();
+  });
+
     it("should return invalid character error if nationality1 invalid character", () => {
       const response = validateInvalidCharacterValuesForNationality(["Brit&&&sh"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_MISSING)
