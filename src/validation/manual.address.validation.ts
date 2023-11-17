@@ -1,6 +1,7 @@
-import {Address} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import {ManualAddressValidationType, ValidationError} from "../model/validation.model";
-import {COUNTRY_LIST, UK_COUNTRY_LIST} from "../utils/properties";
+import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { ManualAddressValidationType, ValidationError } from "../model/validation.model";
+import { COUNTRY_LIST, UK_COUNTRY_LIST } from "../utils/properties";
+import { REGEX_FOR_VALID_POSTCODE } from "./postcode.validation";
 
 const REGEX_FOR_MANUAL_ADDRESS = "^[-,.:; 0-9A-Z&@$£¥€'\"«»?!/\\\\()\\[\\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$";
 const PREMISE_ALLOWED_LENGTH = 200;
@@ -60,9 +61,7 @@ export const validateManualAddress = (address: Address, manualAddressValidationT
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validatePremise = (premise: string,
-																manualAddressValidationType: ManualAddressValidationType,
-																validationErrors: ValidationError[]): ValidationError[] => {
+export const validatePremise = (premise: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!premise.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.Premise);
 		return validationErrors;
@@ -83,9 +82,7 @@ export const validatePremise = (premise: string,
  * @param validationErrors
  */
 
-export const validateAddressLine1 = (addressLine1: string,
-																		 manualAddressValidationType: ManualAddressValidationType,
-																		 validationErrors: ValidationError[]): ValidationError[] => {
+export const validateAddressLine1 = (addressLine1: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!addressLine1.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.AddressLine1);
 		return validationErrors;
@@ -105,9 +102,7 @@ export const validateAddressLine1 = (addressLine1: string,
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validateAddressLine2 = (addressLine2: string,
-																		 manualAddressValidationType: ManualAddressValidationType,
-																		 validationErrors: ValidationError[]): ValidationError[] => {
+export const validateAddressLine2 = (addressLine2: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!addressLine2.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.AddressLine2);
 		return validationErrors;
@@ -128,9 +123,7 @@ export const validateAddressLine2 = (addressLine2: string,
  * @param validationErrors
  */
 
-export const validateCity = (city: string,
-														 manualAddressValidationType: ManualAddressValidationType,
-														 validationErrors: ValidationError[]): ValidationError[] => {
+export const validateCity = (city: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!city.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.City);
 		return validationErrors;
@@ -150,9 +143,7 @@ export const validateCity = (city: string,
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validateCounty = (county: string,
-														 manualAddressValidationType: ManualAddressValidationType,
-														 validationErrors: ValidationError[]): ValidationError[] => {
+export const validateCounty = (county: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!county.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.County);
 		return validationErrors;
@@ -173,9 +164,7 @@ export const validateCounty = (county: string,
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validatePostcode = (postcode: string, country: string | undefined,
-																 manualAddressValidationType: ManualAddressValidationType,
-																 validationErrors: ValidationError[]): ValidationError[] => {
+export const validatePostcode = (postcode: string, country: string | undefined, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!postcode.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.Postcode);
 		return validationErrors;
@@ -186,7 +175,7 @@ export const validatePostcode = (postcode: string, country: string | undefined,
 		return validationErrors;
 	}
 
-	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/)) {
+	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(REGEX_FOR_VALID_POSTCODE)) {
 		validationErrors.push(manualAddressValidationType.MissingValue.Postcode);
 	}
 
@@ -199,9 +188,7 @@ export const validatePostcode = (postcode: string, country: string | undefined,
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validateCountry = (country: string,
-																manualAddressValidationType: ManualAddressValidationType,
-																validationErrors: ValidationError[]): ValidationError[] => {
+export const validateCountry = (country: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!COUNTRY_LIST.includes(country)) {
 		validationErrors.push(manualAddressValidationType.InvalidValue.Country);
 		return validationErrors;

@@ -95,7 +95,8 @@ export enum postcodeErrorMessageKey {
   POSTCODE_CHARACTERS = "postal-code-characters",
   POSTCODE_LENGTH = "postal-code-length",
   POSTCODE_INVALID = "postal-code-invalid",
-  POSTCODE_BLANK = "postal-code-blank"
+  POSTCODE_BLANK = "postal-code-blank",
+  POSTCODE_FULL_INVALID = "postal-code-full-invalid"
 }
 
 export enum premisesErrorMessageKey {
