@@ -42,12 +42,33 @@ const NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-describe("Director name controller tests", () => {
+const validData = {
+  "correspondence_address_premises": "The Big House",
+  "correspondence_address_line_1": "One Street",
+  "correspondence_address_line_2": "Two",
+  "correspondence_address_city": "Three",
+  "correspondence_address_county": "Four",
+  "typeahead_input_0": "France",
+  "correspondence_address_postcode": "TE6 3ST"
+}
+
+const invalidData = {
+  "correspondence_address_premises": "The Big Houseゃ",
+  "correspondence_address_line_1": "One Street",
+  "correspondence_address_line_2": "Twoゃ",
+  "correspondence_address_city": "Three",
+  "correspondence_address_county": "Fourゃ",
+  "typeahead_input_0": "England",
+  "correspondence_address_postcode": ""
+}
+
+describe("Director correspondence address controller tests", () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
       mocks.mockSessionMiddleware.mockClear();
       mockGetValidationStatus.mockReset();
+      mockPatchOfficerFiling.mockReset();
     });
 
     describe("get tests", () => {
@@ -159,8 +180,52 @@ describe("Director name controller tests", () => {
     });
 
     describe("post tests", () => {
-  
-      it("Should redirect to confirm director correspondence address page", async () => {
+
+      describe("JS validation tests", () => {
+
+        it("Should render validation error with null values passed", async () => {
+          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+          mockGetOfficerFiling.mockResolvedValueOnce({
+            data: {
+              firstName: "John",
+              lastName: "Smith"
+            }
+          });
+
+          const response = await request(app).post(PAGE_URL).send({});
+
+          expect(response.text).toContain("Enter a property name or number");
+          expect(response.text).toContain("Enter an address");
+          expect(response.text).toContain("Enter a city or town");
+          expect(response.text).toContain("Enter a country");
+
+          expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+
+        });
+
+        it("Should render other validation errors", async () => {
+          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+          mockGetOfficerFiling.mockResolvedValueOnce({
+            data: {
+              firstName: "John",
+              lastName: "Smith"
+            }
+          });
+
+          const response = await request(app).post(PAGE_URL).send(invalidData);
+
+          expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("Address line 2 must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("County, state, province or region must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("Enter a UK postcode");
+
+          expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+
+      });
+
+      it("Should patch officer filing with updated information", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
@@ -168,26 +233,8 @@ describe("Director name controller tests", () => {
             lastName: "Smith"
           }
         });
-        
-        const response = await request(app).post(PAGE_URL);
 
-        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
-      });
-
-      it("Should patch officer filing with updated information", async () => {
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-
-        await request(app)
-          .post(PAGE_URL)
-          .send({ 
-            "correspondence_address_premises": "The Big House",
-            "correspondence_address_line_1": "One Street",
-            "correspondence_address_line_2": "Two",
-            "correspondence_address_city": "Three",
-            "correspondence_address_county": "Four",
-            "typeahead_input_0": "Five",
-            "correspondence_address_postcode": "TE6 3ST", 
-          });
+        const response = await request(app).post(PAGE_URL).send(validData);
 
         expect(mockPatchOfficerFiling).toBeCalledWith(
           expect.objectContaining({}),
@@ -200,11 +247,12 @@ describe("Director name controller tests", () => {
               addressLine2: "Two",
               locality: "Three",
               region: "Four",
-              country: "Five",
+              country: "France",
               postalCode: "TE6 3ST"
             }
           })
         );
+        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
       });
 
       it("Should redirect to error page when patch officer filing throws an error", async () => {
@@ -235,11 +283,10 @@ describe("Director name controller tests", () => {
           }
         });
   
-        const response = await request(app).post(PAGE_URL);
+        const response = await request(app).post(PAGE_URL).send(validData);
   
         expect(response.text).toContain("Enter a property name or number");
         expect(response.text).toContain("Enter a city or town");
-        expect(mockGetOfficerFiling).not.toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });

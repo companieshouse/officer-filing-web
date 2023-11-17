@@ -4,54 +4,52 @@ import {COUNTRY_LIST, UK_COUNTRY_LIST} from "../utils/properties";
 
 const REGEX_FOR_MANUAL_ADDRESS = "^[-,.:; 0-9A-Z&@$£¥€'\"«»?!/\\\\()\\[\\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$";
 const PREMISE_ALLOWED_LENGTH = 200;
+const POSTCODE_ALLOWED_LENGTH = 20;
 const ALLOWED_LENGTH = 50;
 
-export const validateManualAddress = (serviceAddress: Address,
-																			correspondenceAddressValidationType: ManualAddressValidationType): ValidationError[] => {
+export const validateManualAddress = (address: Address, manualAddressValidationType: ManualAddressValidationType): ValidationError[] => {
 	let validationErrors: ValidationError[] = [];
 
 	// Premises
-	if(!serviceAddress.premises) {
-		validationErrors.push(correspondenceAddressValidationType.MissingValue.Premise);
+	if(!address.premises) {
+		validationErrors.push(manualAddressValidationType.MissingValue.Premise);
 	} else {
-		validationErrors = validatePremise(serviceAddress.premises, correspondenceAddressValidationType, validationErrors);
+		validationErrors = validatePremise(address.premises, manualAddressValidationType, validationErrors);
 	}
 
 	// Address Line 1
-	if(!serviceAddress.addressLine1) {
-		validationErrors.push(correspondenceAddressValidationType.MissingValue.AddressLine1);
+	if(!address.addressLine1) {
+		validationErrors.push(manualAddressValidationType.MissingValue.AddressLine1);
 	} else {
-		validationErrors = validateAddressLine1(serviceAddress.addressLine1, correspondenceAddressValidationType, validationErrors);
+		validationErrors = validateAddressLine1(address.addressLine1, manualAddressValidationType, validationErrors);
 	}
 
 	// Address Line 2
-	if(serviceAddress.addressLine2) {
-		validationErrors = validateAddressLine2(serviceAddress.addressLine2, correspondenceAddressValidationType, validationErrors);
+	if(address.addressLine2) {
+		validationErrors = validateAddressLine2(address.addressLine2, manualAddressValidationType, validationErrors);
 	}
 
 	// City
-	if(!serviceAddress.locality) {
-		validationErrors.push(correspondenceAddressValidationType.MissingValue.City);
+	if(!address.locality) {
+		validationErrors.push(manualAddressValidationType.MissingValue.City);
 	} else {
-		validationErrors = validateCity(serviceAddress.locality, correspondenceAddressValidationType, validationErrors);
+		validationErrors = validateCity(address.locality, manualAddressValidationType, validationErrors);
 	}
 
 	// County, Town, Province, Region
-	if(serviceAddress.region) {
-		validationErrors = validateCounty(serviceAddress.region, correspondenceAddressValidationType, validationErrors);
+	if(address.region) {
+		validationErrors = validateCounty(address.region, manualAddressValidationType, validationErrors);
 	}
 
 	// Country
-	if(!serviceAddress.country) {
-		validationErrors.push(correspondenceAddressValidationType.MissingValue.Country);
+	if(!address.country) {
+		validationErrors.push(manualAddressValidationType.MissingValue.Country);
 	} else {
-		validationErrors = validateCountry(serviceAddress.country, correspondenceAddressValidationType, validationErrors);
+		validationErrors = validateCountry(address.country, manualAddressValidationType, validationErrors);
 	}
 
 	// Postcode
-	if(serviceAddress.postalCode) {
-		validationErrors = validatePostcode(serviceAddress.postalCode, serviceAddress.country, correspondenceAddressValidationType, validationErrors);
-	}
+	validationErrors = validatePostcode(address.postalCode!, address.country, manualAddressValidationType, validationErrors);
 
 	return validationErrors;
 }
@@ -59,19 +57,19 @@ export const validateManualAddress = (serviceAddress: Address,
 /**
  * Validate premise
  * @param premise
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 export const validatePremise = (premise: string,
-																correspondenceAddressValidationType: ManualAddressValidationType,
+																manualAddressValidationType: ManualAddressValidationType,
 																validationErrors: ValidationError[]): ValidationError[] => {
 	if(!premise.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.Premise);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.Premise);
 		return validationErrors;
 	}
 
 	if(premise.length > PREMISE_ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.Premise);
+		validationErrors.push(manualAddressValidationType.InvalidLength.Premise);
 		return validationErrors;
 	}
 
@@ -81,20 +79,20 @@ export const validatePremise = (premise: string,
 /**
  * Validate address line 1
  * @param addressLine1
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 
 export const validateAddressLine1 = (addressLine1: string,
-																		 correspondenceAddressValidationType: ManualAddressValidationType,
+																		 manualAddressValidationType: ManualAddressValidationType,
 																		 validationErrors: ValidationError[]): ValidationError[] => {
 	if(!addressLine1.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.AddressLine1);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.AddressLine1);
 		return validationErrors;
 	}
 
 	if(addressLine1.length > ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.AddressLine1);
+		validationErrors.push(manualAddressValidationType.InvalidLength.AddressLine1);
 		return validationErrors;
 	}
 
@@ -104,19 +102,19 @@ export const validateAddressLine1 = (addressLine1: string,
 /**
  * Validate address line 2
  * @param addressLine2
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 export const validateAddressLine2 = (addressLine2: string,
-																		 correspondenceAddressValidationType: ManualAddressValidationType,
+																		 manualAddressValidationType: ManualAddressValidationType,
 																		 validationErrors: ValidationError[]): ValidationError[] => {
 	if(!addressLine2.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.AddressLine2);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.AddressLine2);
 		return validationErrors;
 	}
 
 	if(addressLine2.length > ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.AddressLine2);
+		validationErrors.push(manualAddressValidationType.InvalidLength.AddressLine2);
 		return validationErrors;
 	}
 
@@ -126,20 +124,20 @@ export const validateAddressLine2 = (addressLine2: string,
 /**
  * Validate city
  * @param city
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 
 export const validateCity = (city: string,
-														 correspondenceAddressValidationType: ManualAddressValidationType,
+														 manualAddressValidationType: ManualAddressValidationType,
 														 validationErrors: ValidationError[]): ValidationError[] => {
 	if(!city.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.City);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.City);
 		return validationErrors;
 	}
 
 	if(city.length > ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.City);
+		validationErrors.push(manualAddressValidationType.InvalidLength.City);
 		return validationErrors;
 	}
 
@@ -149,19 +147,19 @@ export const validateCity = (city: string,
 /**
  * Validate county, town, province, region
  * @param county
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 export const validateCounty = (county: string,
-														 correspondenceAddressValidationType: ManualAddressValidationType,
+														 manualAddressValidationType: ManualAddressValidationType,
 														 validationErrors: ValidationError[]): ValidationError[] => {
 	if(!county.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.County);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.County);
 		return validationErrors;
 	}
 
 	if(county.length > ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.County);
+		validationErrors.push(manualAddressValidationType.InvalidLength.County);
 		return validationErrors;
 	}
 
@@ -172,24 +170,24 @@ export const validateCounty = (county: string,
  * Validate postcode, mandatory if UK country provided.
  * @param postcode
  * @param country
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 export const validatePostcode = (postcode: string, country: string | undefined,
-																 correspondenceAddressValidationType: ManualAddressValidationType,
+																 manualAddressValidationType: ManualAddressValidationType,
 																 validationErrors: ValidationError[]): ValidationError[] => {
 	if(!postcode.match(REGEX_FOR_MANUAL_ADDRESS)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidCharacters.Postcode);
+		validationErrors.push(manualAddressValidationType.InvalidCharacters.Postcode);
 		return validationErrors;
 	}
 
-	if(postcode.length > ALLOWED_LENGTH) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidLength.Postcode);
+	if(postcode.length > POSTCODE_ALLOWED_LENGTH) {
+		validationErrors.push(manualAddressValidationType.InvalidLength.Postcode);
 		return validationErrors;
 	}
 
 	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(/^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$/)) {
-		validationErrors.push(correspondenceAddressValidationType.MissingValue.Postcode);
+		validationErrors.push(manualAddressValidationType.MissingValue.Postcode);
 	}
 
 	return validationErrors;
@@ -198,14 +196,14 @@ export const validatePostcode = (postcode: string, country: string | undefined,
 /**
  * Validate country
  * @param country
- * @param correspondenceAddressValidationType
+ * @param manualAddressValidationType
  * @param validationErrors
  */
 export const validateCountry = (country: string,
-																correspondenceAddressValidationType: ManualAddressValidationType,
+																manualAddressValidationType: ManualAddressValidationType,
 																validationErrors: ValidationError[]): ValidationError[] => {
 	if(!COUNTRY_LIST.includes(country)) {
-		validationErrors.push(correspondenceAddressValidationType.InvalidValue.Country);
+		validationErrors.push(manualAddressValidationType.InvalidValue.Country);
 		return validationErrors;
 	}
 
