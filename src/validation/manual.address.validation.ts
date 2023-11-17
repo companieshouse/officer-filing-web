@@ -1,9 +1,9 @@
 import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ManualAddressValidationType, ValidationError } from "../model/validation.model";
 import { COUNTRY_LIST, UK_COUNTRY_LIST } from "../utils/properties";
-import { REGEX_FOR_VALID_POSTCODE } from "./postcode.validation";
 
 const REGEX_FOR_MANUAL_ADDRESS = "^[-,.:; 0-9A-Z&@$£¥€'\"«»?!/\\\\()\\[\\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$";
+const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
 const PREMISE_ALLOWED_LENGTH = 200;
 const POSTCODE_ALLOWED_LENGTH = 20;
 const ALLOWED_LENGTH = 50;
@@ -50,7 +50,7 @@ export const validateManualAddress = (address: Address, manualAddressValidationT
 	}
 
 	// Postcode
-	validationErrors = validatePostcode(address.postalCode!, address.country, manualAddressValidationType, validationErrors);
+	validationErrors = validatePostcode(address.postalCode?.replace(/\s/g, "").trim().toUpperCase()!, address.country, manualAddressValidationType, validationErrors);
 
 	return validationErrors;
 }
@@ -175,7 +175,7 @@ export const validatePostcode = (postcode: string, country: string | undefined, 
 		return validationErrors;
 	}
 
-	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(REGEX_FOR_VALID_POSTCODE)) {
+	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(REGEX_FOR_VALID_UK_POSTCODE)) {
 		validationErrors.push(manualAddressValidationType.MissingValue.Postcode);
 	}
 

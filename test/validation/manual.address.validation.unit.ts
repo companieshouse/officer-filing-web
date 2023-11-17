@@ -111,6 +111,36 @@ describe("Input validation tests", () => {
 	});
 
 	//Special cases
+	test("Should NOT populate array with validation is postcode is provided with spaces and different cases - case / space insensitivity test", () => {
+		const serviceAddress : Address =  {
+			premises: "86",
+			addressLine1: "East Cowley Lane",
+			addressLine2: "Some address line 2",
+			locality: "Locality A",
+			region: "Region B",
+			country: "England",
+			postalCode: "st6 3lj",
+		}
+		const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+		expect(jsValidationErrors).toHaveLength(0);
+	});
+
+	test("Should populate array with validation is postcode is provided in in valid format for UK country", () => {
+		const serviceAddress : Address =  {
+			premises: "86",
+			addressLine1: "East Cowley Lane",
+			addressLine2: "Some address line 2",
+			locality: "Locality A",
+			region: "Region B",
+			country: "England",
+			postalCode: "st6 3ljj",
+		}
+		const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+		expect(jsValidationErrors).not.toBeNull();
+		expect(jsValidationErrors).toHaveLength(1);
+		expect(jsValidationErrors[0].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.Postcode.messageKey);
+	});
+
 	test("Should populate array with validation if UK country but postcode is null", () => {
 		const serviceAddress : Address =  {
 			premises: "86",
