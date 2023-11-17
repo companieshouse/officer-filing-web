@@ -60,7 +60,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_NAME, {
         templateName: Templates.DIRECTOR_NAME,
-        backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
+        backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
         typeahead_array: TITLE_LIST,

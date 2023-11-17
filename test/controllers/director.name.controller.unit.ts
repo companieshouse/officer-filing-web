@@ -85,15 +85,18 @@ describe("Director name controller tests", () => {
 
     describe("post tests", () => {
   
-      it("Should redirect to date of birth page", async () => {
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-        }});
-  
+      it("Should redirect to date of birth page", async () => {  
         
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
-          .send({ "previous_names_radio": "No" });
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "No", 
+            "previous_names": "" 
+          });
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
