@@ -74,9 +74,16 @@ export const NationalityValidation: NationalityValidationType = {
       link: DirectorField.NATIONALITY_1
     }
   },
-  MultipleNationalitymaxLengthValidator: {
+  MultipleNationalitymaxLength48Validator: {
     Nationality: {
       messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48,
+      source: [DirectorField.NATIONALITY_1, DirectorField.NATIONALITY_2, DirectorField.NATIONALITY_3],
+      link: DirectorField.NATIONALITY_1
+    }
+  },
+  MultipleNationalitymaxLength50Validator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50,
       source: [DirectorField.NATIONALITY_1, DirectorField.NATIONALITY_2, DirectorField.NATIONALITY_3],
       link: DirectorField.NATIONALITY_1
     }

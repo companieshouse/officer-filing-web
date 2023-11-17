@@ -12,7 +12,7 @@ import { urlUtils } from "../utils/url";
 import { DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
-const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z\s]+$/;
+const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z]+(?:\s*\(\s*[a-zA-Z]+\s*\))?(?:\s+[a-zA-Z]+(?:\s*\(\s*[a-zA-Z]+\s*\))?)*$/
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -69,11 +69,6 @@ export const validateNationality = (nationality: string[], nationalityValidation
       if(invalidNationalityLengthValidationResult) {
           return invalidNationalityLengthValidationResult;
       }
-      const maxLengthNationalityValidationResult = validateMaximumLengthNationality(nationality, nationalityValidationType);
-      //validate maximum length multiple Nationality
-      if(maxLengthNationalityValidationResult) {
-          return maxLengthNationalityValidationResult;
-      }
   }
   return undefined;
 }
@@ -101,6 +96,11 @@ export const validateInvalidLengthValuesForNationality = (nationality: string[],
   if(nationality[2] && (nationality[2].length > 50)) {
     return nationalityValidationType.Nationality3LengthValidator.Nationality
   } 
+  validateInvalidDualNationalityMaxLength49(nationality, nationalityValidationType);
+  validateInvalidMaxMultipleNationalityLength48(nationality, nationalityValidationType);
+  if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
+    return nationalityValidationType.MultipleNationalitymaxLength50Validator.Nationality
+  } 
   return undefined;
 }
 
@@ -127,15 +127,27 @@ export const validateDuplicateNationality = (nationality: string[], nationalilty
   }
 }
 
-export const validateMaximumLengthNationality = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
+export const validateInvalidMaxMultipleNationalityLength48 = (nationality: string[], nationalityValidationType: NationalityValidationType) => {
   if ((nationality) && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
-    return nationaliltyValidationType.MultipleNationalitymaxLengthValidator.Nationality
+    return nationalityValidationType.MultipleNationalitymaxLength48Validator.Nationality
+  } 
+};
+
+export const validateInvalidDualNationalityMaxLength49 = (nationality: string[], nationaliltyValidationType: NationalityValidationType) => {
+  if ((nationality) && (`${nationality[0]},${nationality[1]}`.length > 49)) {
+    return nationaliltyValidationType.DualNationalityLengthValidator.Nationality
   }  
+  if ((nationality) && (`${nationality[0]},${nationality[2]}`.length > 49)) {
+    return nationaliltyValidationType.DualNationalityLengthValidator.Nationality
+  } 
+  if ((nationality) && (`${nationality[1]},${nationality[2]}`.length > 49)) {
+    return nationaliltyValidationType.DualNationalityLengthValidator.Nationality
+  } 
 }
 
 const invalidPattern = (input: string, regex: RegExp): boolean => {
   const matchResult = input.match(regex);
-  if (matchResult == null && matchResult == undefined){
+  if (matchResult == null || matchResult == undefined){
     return true
   }
   return false;

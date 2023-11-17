@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateMaximumLengthNationality, validateNationality, validateAllowedListNationality, validateInvalidCharacterValuesForNationality } from "../../src/validation/nationality.validation";
+import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateInvalidDualNationalityMaxLength49, validateNationality, validateAllowedListNationality, validateInvalidCharacterValuesForNationality, validateInvalidMaxMultipleNationalityLength48 } from "../../src/validation/nationality.validation";
 import { NationalityValidation } from "../../src/validation/nationality.validation.config";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 import { response } from 'express';
@@ -19,8 +19,9 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const LONG_COUNTRY_NAME = "Kingdom of Sauron East of the North Gate British Land of the elfsoooooooqqqqqqqqaaaaaahhddddddddddyyyTTTTTTTTTTTTTAAAAAAAAHHHHHHHHHHHHHDDDDPPPPPPPPPPP"
-                        + "Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss";
+const LONG_COUNTRY_NAME = "Kingdom of Sauron East of the North Gate Shires";
+const SHORT_NATIONALITY = "East of the North Gate Shires";
+
 const ENTER_DIRECTOR_NATIONALITY_ERROR = "Enter the director’s nationality";
 const SELECT_NATIONALITY_FROM_LIST_ERROR = "Select a nationality from the list";
 
@@ -95,29 +96,39 @@ describe("Director nationality controller tests", () => {
 
      it ("should render nationality not allowed list error if nationality is not in the list", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"British",typeahead_input_2:"Republic of winter land",});
-      expect(response.text).toContain("Select a nationality from the list");
+      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
-    it ("should return nationality error if nationality exceeds length", async() => {
-      const response = validateMaximumLengthNationality(["Kingdom of Sauron East of the North Gate","British","Land of the elfs"], NationalityValidation)
-      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+    it ("should return nationality error if dual exceeds length", async() => {
+      const response = validateInvalidDualNationalityMaxLength49(["Kingdom of Sauron East of the North Gate","British","Land of the elfs"], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49)
     });
 
-    it ("should return nationality error if multiple nationality exceeds length", async() => {
-      const response = validateMaximumLengthNationality(["British","Afghan",LONG_COUNTRY_NAME], NationalityValidation)
-      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+    it ("should return nationality error if dual nationality exceeds length", async() => {
+      const response = validateInvalidDualNationalityMaxLength49(["British","Afghan",LONG_COUNTRY_NAME], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49)
       expect(response?.source).toContain("typeahead_input_2")
 
     });
 
-    it ("should return nationality error if multiple nationality1 and nationality3 exceeds length", async() => {
-      const response = validateMaximumLengthNationality([LONG_COUNTRY_NAME,"Irish","Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"], NationalityValidation)
-      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
+    it ("should return nationality error if dual nationality1 and nationality3 exceeds length", async() => {
+      const response = validateInvalidDualNationalityMaxLength49([LONG_COUNTRY_NAME,"Irish","Landoftheelfshhheeeeuuuuuuurrrooooooooooeeeeeessssssss"], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49)
     });
 
-    it ("should return nationality error if multiple nationality2 and nationality3 exceeds length", async() => {
-      const response = validateMaximumLengthNationality(["Irish",LONG_COUNTRY_NAME], NationalityValidation)
+    it ("should return nationality error if dual nationality2 and nationality3 exceeds length", async() => {
+      const response = validateInvalidDualNationalityMaxLength49(["Irish",LONG_COUNTRY_NAME], NationalityValidation)
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49)
+    });
+
+    it ("should return nationality error if multiple  exceeds length", async() => {
+      const response = validateInvalidLengthValuesForNationality(["Home of the elves",SHORT_NATIONALITY, "Half Andorrian"], NationalityValidation);
+      expect(response?.source).toContain("typeahead_input_0")
+    });
+
+    it ("should return nationality error if multiple  exceeds length 48", async() => {
+      const response = validateInvalidMaxMultipleNationalityLength48(["Home of the elves",SHORT_NATIONALITY, "Half Andorrian"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48)
     });
 
@@ -164,6 +175,11 @@ describe("Director nationality controller tests", () => {
 
     it("should return invalid character error if nationality1 invalid character", () => {
       const response = validateInvalidCharacterValuesForNationality(["Brit&&&sh"], NationalityValidation);
+      expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_MISSING)
+    });
+
+    it("should return invalid character error if nationality 3 constain invalid format", () => {
+      const response = validateInvalidCharacterValuesForNationality(["British","Country (country)","Atlantis (An£)"], NationalityValidation);
       expect(response?.messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_MISSING)
     });
 
