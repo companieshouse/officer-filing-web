@@ -59,7 +59,7 @@ const invalidData = {
   "correspondence_address_city": "Three",
   "correspondence_address_county": "Fourゃ",
   "typeahead_input_0": "England",
-  "correspondence_address_postcode": ""
+  "correspondence_address_postcode": "ゃ"
 }
 
 describe("Director correspondence address controller tests", () => {
@@ -217,7 +217,7 @@ describe("Director correspondence address controller tests", () => {
           expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
           expect(response.text).toContain("Address line 2 must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
           expect(response.text).toContain("County, state, province or region must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
-          expect(response.text).toContain("Enter a UK postcode");
+          expect(response.text).toContain("Postcode or ZIP must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
 
           expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
         });

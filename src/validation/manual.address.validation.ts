@@ -42,15 +42,8 @@ export const validateManualAddress = (address: Address, manualAddressValidationT
 		validationErrors = validateCounty(address.region, manualAddressValidationType, validationErrors);
 	}
 
-	// Country
-	if(!address.country) {
-		validationErrors.push(manualAddressValidationType.MissingValue.Country);
-	} else {
-		validationErrors = validateCountry(address.country, manualAddressValidationType, validationErrors);
-	}
-
-	// Postcode
-	validationErrors = validatePostcode(address.postalCode?.replace(/\s/g, "").trim().toUpperCase()!, address.country, manualAddressValidationType, validationErrors);
+	// Country && postcode
+	validationErrors = validateCountryAndPostcode(address.country, address.postalCode?.replace(/\s/g, "").trim().toUpperCase()!, manualAddressValidationType, validationErrors);
 
 	return validationErrors;
 }
@@ -164,7 +157,7 @@ export const validateCounty = (county: string, manualAddressValidationType: Manu
  * @param manualAddressValidationType
  * @param validationErrors
  */
-export const validatePostcode = (postcode: string, country: string | undefined, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
+export const validatePostcode = (postcode: string, country: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	if(!postcode.match(REGEX_FOR_MANUAL_ADDRESS)) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.Postcode);
 		return validationErrors;
@@ -176,7 +169,7 @@ export const validatePostcode = (postcode: string, country: string | undefined, 
 	}
 
 	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(REGEX_FOR_VALID_UK_POSTCODE)) {
-		validationErrors.push(manualAddressValidationType.MissingValue.Postcode);
+		validationErrors.push(manualAddressValidationType.InvalidValue.Postcode);
 	}
 
 	return validationErrors;
@@ -195,4 +188,33 @@ export const validateCountry = (country: string, manualAddressValidationType: Ma
 
 	return validationErrors;
 
+}
+
+
+export const validateCountryAndPostcode = (country: string, postcode: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
+
+	let isPostcodeMandatory = false;
+
+	// Country
+	if (!country) {
+			validationErrors.push(manualAddressValidationType.MissingValue.Country);
+			isPostcodeMandatory = true;
+	} else if (UK_COUNTRY_LIST.includes(country)) {
+			isPostcodeMandatory = true;
+	}
+
+	// Validate country after checking if it's in the UK_COUNTRY_LIST
+	if (country) {
+			validationErrors = validateCountry(country, manualAddressValidationType, validationErrors);
+	}
+
+	// Postcode
+	if(!postcode && isPostcodeMandatory) {
+		validationErrors.push(manualAddressValidationType.MissingValue.Postcode);
+		return validationErrors;
+	} else {
+		validationErrors = validatePostcode(postcode, country, manualAddressValidationType, validationErrors);
+	}
+
+	return validationErrors;
 }

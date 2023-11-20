@@ -114,7 +114,13 @@ export const CorrespondenceManualAddressValidation: ManualAddressValidationType 
 			messageKey: addressCountryErrorMessageKey.COUNTRY_INVALID,
 			source: [CorrespondenceAddressField.COUNTRY],
 			link: CorrespondenceAddressField.COUNTRY
+		},
+		Postcode: {
+			messageKey: addressPostcodeErrorMessageKey.POSTAL_CODE_UK_INVALID,
+			source: [CorrespondenceAddressField.POSTCODE],
+			link: CorrespondenceAddressField.POSTCODE
 		}
+		
 	}
 }
 
@@ -215,6 +221,11 @@ export const ResidentialManualAddressValidation: ManualAddressValidationType = {
 			messageKey: addressCountryErrorMessageKey.COUNTRY_INVALID,
 			source: [ResidentialAddressField.COUNTRY],
 			link: ResidentialAddressField.COUNTRY
+		},
+		Postcode: {
+			messageKey: addressPostcodeErrorMessageKey.POSTAL_CODE_UK_INVALID,
+			source: [ResidentialAddressField.POSTCODE],
+			link: ResidentialAddressField.POSTCODE
 		}
 	}
 }

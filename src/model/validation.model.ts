@@ -71,6 +71,7 @@ export interface ManualAddressValidationType {
     },
     InvalidValue: {
         Country: ValidationError,
+        Postcode: ValidationError
     }
 }
 

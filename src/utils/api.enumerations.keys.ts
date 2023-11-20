@@ -267,7 +267,8 @@ export enum addressCountryErrorMessageKey {
 }
 
 export enum addressPostcodeErrorMessageKey {
-  POSTAL_CODE_BLANK = "postal-code-blank",
-  POSTAL_CODE_CHARACTERS = "postal-code-characters",
-  POSTAL_CODE_LENGTH = "postal-code-length"
+  POSTAL_CODE_BLANK = "generic-postal-code-blank",
+  POSTAL_CODE_CHARACTERS = "generic-postal-code-characters",
+  POSTAL_CODE_LENGTH = "generic-postal-code-length",
+  POSTAL_CODE_UK_INVALID = "postal-code-blank"
 }

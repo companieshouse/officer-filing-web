@@ -34,11 +34,12 @@ describe("Input validation tests", () => {
 		const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
 
 		expect(jsValidationErrors).not.toBeNull();
-		expect(jsValidationErrors).toHaveLength(4);
+		expect(jsValidationErrors).toHaveLength(5);
 		expect(jsValidationErrors[0].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.Premise.messageKey);
 		expect(jsValidationErrors[1].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.AddressLine1.messageKey);
 		expect(jsValidationErrors[2].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.City.messageKey);
 		expect(jsValidationErrors[3].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.Country.messageKey);
+		expect(jsValidationErrors[4].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.Postcode.messageKey);
 	});
 
 	test("Should populate array with validation errors when fields contain invalid characters", () => {
@@ -138,7 +139,7 @@ describe("Input validation tests", () => {
 		const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
 		expect(jsValidationErrors).not.toBeNull();
 		expect(jsValidationErrors).toHaveLength(1);
-		expect(jsValidationErrors[0].messageKey).toEqual(CorrespondenceManualAddressValidation.MissingValue.Postcode.messageKey);
+		expect(jsValidationErrors[0].messageKey).toEqual(CorrespondenceManualAddressValidation.InvalidValue.Postcode.messageKey);
 	});
 
 	test("Should populate array with validation if UK country but postcode is null", () => {
