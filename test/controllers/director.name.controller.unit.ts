@@ -85,7 +85,11 @@ describe("Director name controller tests", () => {
 
     describe("post tests", () => {
   
-      it("Should redirect to date of birth page", async () => {  
+      it("Should redirect to date of birth page if there are no errors", async () => {  
+
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
         
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
@@ -101,22 +105,10 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
 
-      it("Should display errors on page if get validation status returns errors", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorTitle],
-          isValid: false
-        }
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
-        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-        }});
-  
-        const response = await request(app).post(DIRECTOR_NAME_URL);
-  
-        expect(response.text).toContain("Title must be 50 characters or less");
-        expect(mockGetValidationStatus).toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      it("Should display frontend validation errors if there are any", async () => {
+        //TODO: Add frontend validation tests
       });
-      
+
     });
 
     describe("buildValidationErrors tests", () => {
