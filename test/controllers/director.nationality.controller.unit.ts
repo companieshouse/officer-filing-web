@@ -96,7 +96,7 @@ describe("Director nationality controller tests", () => {
         expect(response.text).toContain("Select a nationality from the list");
         expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters")).toEqual(false);
         expect(response.text).toContain("John Smith");
-        // expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
