@@ -105,10 +105,6 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
 
-      it("Should display frontend validation errors if there are any", async () => {
-        //TODO: Add frontend validation tests
-      });
-
     });
 
     describe("buildValidationErrors tests", () => {
