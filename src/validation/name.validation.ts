@@ -33,14 +33,13 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         console.log("ANONA: Running validateName");
         const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, NameValidation);
 
-        if(frontendValidationErrors) {
+        if(frontendValidationErrors.length > 0) {
             console.log("ANONA: Found validation errors");
-            const formattedErrors = formatValidationErrors([frontendValidationErrors]);
+            const formattedErrors = formatValidationErrors(frontendValidationErrors);
 
             (formattedErrors.errorList).forEach((error) => {
-                console.log("ANONA: Error: " + error.text);
+                console.log("ANONA: Formatted validation errors: " + error.text);
             })
-            console.log("ANONA: Formatted validation errors: " + formattedErrors.errorList[0].text);
             return res.render(Templates.DIRECTOR_NAME, {
                 templateName: Templates.DIRECTOR_NAME,
                 backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
@@ -62,54 +61,76 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const validateName = (title: string, firstName: string, middleNames: string, lastName: string, formerNames: string, nameValidationType: NameValidationType): ValidationError | undefined => {
+export const validateName = (title: string, 
+                             firstName: string, 
+                             middleNames: string, 
+                             lastName: string, 
+                             formerNames: string, 
+                             nameValidationType: NameValidationType): ValidationError[] => {
+
+    let validationErrors: ValidationError[] = [];
+
+    // Title validation
     if(title != null && title != "") {
         if (!title.match(REGEX_FOR_NAMES)){
-            return nameValidationType.TitleInvalidCharacter.Name;
-        }
-        if (title.length > NAME_FIELD_LENGTH_50){
-            return nameValidationType.TitleLength.Name;
+            // invalid characters
+            validationErrors.push(nameValidationType.TitleInvalidCharacter.Name);
+        } else if (title.length > NAME_FIELD_LENGTH_50){
+            // character count limit
+            validationErrors.push(nameValidationType.TitleLength.Name);
         }
     }
 
+    // First name validation
     if(firstName != null && firstName != "") {
         if (!firstName.match(REGEX_FOR_NAMES)){
-            return nameValidationType.FirstNameInvalidCharacter.Name;
-        }
-        if (firstName.length > NAME_FIELD_LENGTH_50){
-            return nameValidationType.FirstNameLength.Name;
+            // invalid characters
+            validationErrors.push(nameValidationType.FirstNameInvalidCharacter.Name);
+        } else if (firstName.length > NAME_FIELD_LENGTH_50){
+            // character count limit
+            validationErrors.push(nameValidationType.FirstNameLength.Name);
         }
     } else {
-        return nameValidationType.FirstNameBlank.Name;
+        // blank field
+        validationErrors.push(nameValidationType.FirstNameBlank.Name);
     }
 
+    // Middle names validation
     if(middleNames != null && middleNames != "") {
         if (!middleNames.match(REGEX_FOR_NAMES)){
-            return nameValidationType.MiddleNamesInvalidCharacter.Name;
+            // invalid characters
+            validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.Name);
         }
         if (middleNames.length > NAME_FIELD_LENGTH_50){
-            return nameValidationType.MiddleNamesLength.Name;
+            // character count limit
+            validationErrors.push(nameValidationType.MiddleNamesLength.Name);
         }
     }
 
+    // Last name validation
     if(lastName != null && lastName != "") {
         if (!lastName.match(REGEX_FOR_NAMES)){
-            return nameValidationType.LastNameInvalidCharacter.Name;
+            // invalid characters
+            validationErrors.push(nameValidationType.LastNameInvalidCharacter.Name);
         }
         if (lastName.length > NAME_FIELD_LENGTH_160){
-            return nameValidationType.LastNameLength.Name;
+            // character count limit
+            validationErrors.push(nameValidationType.LastNameLength.Name);
         }
     } else {
-        return nameValidationType.LastNameBlank.Name;
+        validationErrors.push(nameValidationType.LastNameBlank.Name);
     }
 
+    // Former names validation
     if(formerNames != null && formerNames != "") {
         if (!formerNames.match(REGEX_FOR_NAMES)){
-            return nameValidationType.FormerNamesInvalidCharacter.Name;
+            // invalid characters
+            validationErrors.push(nameValidationType.FormerNamesInvalidCharacter.Name);
         }
         if (formerNames.length > NAME_FIELD_LENGTH_160){
-            return nameValidationType.FormerNamesLength.Name;
+            // character count limit
+            validationErrors.push(nameValidationType.FormerNamesLength.Name);
         }
     }
-    // return list
+    return validationErrors;
 };
