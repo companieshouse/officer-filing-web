@@ -4,12 +4,14 @@ import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
 import { NameValidation } from "./name.validation.config";
-import { formatValidationErrors } from "./validation";
+import { createValidationError, createValidationErrorBasic, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { CURRENT_DIRECTORS_PATH } from "../types/page.urls";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { getOfficerFiling } from "../services/officer.filing.service";
+import { lookupWebValidationMessage } from "../utils/api.enumerations";
+import { formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
 
 const REGEX_FOR_NAMES = /^[-,.:; 0-9A-Z&@$£¥€'"«»''""?!/\\()[\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$/;
 const NAME_FIELD_LENGTH_50 = 50;
@@ -31,7 +33,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
 
         console.log("ANONA: Running validateName");
-        const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, NameValidation);
+        const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, previousNamesRadio, NameValidation);
 
         if(frontendValidationErrors.length > 0) {
             console.log("ANONA: Found validation errors");
@@ -65,7 +67,8 @@ export const validateName = (title: string,
                              firstName: string, 
                              middleNames: string, 
                              lastName: string, 
-                             formerNames: string, 
+                             formerNames: string,
+                             previousNamesRadio: string, 
                              nameValidationType: NameValidationType): ValidationError[] => {
 
     let validationErrors: ValidationError[] = [];
@@ -122,15 +125,25 @@ export const validateName = (title: string,
     }
 
     // Former names validation
-    if(formerNames != null && formerNames != "") {
-        if (!formerNames.match(REGEX_FOR_NAMES)){
-            // invalid characters
-            validationErrors.push(nameValidationType.FormerNamesInvalidCharacter.Name);
+    if (!previousNamesRadio) {
+        const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
+        validationErrors.push(createValidationError(errorMessage, [DirectorField.PREVIOUS_NAMES_RADIO], DirectorField.YES));
+    }
+    else if (previousNamesRadio == DirectorField.YES) {
+        if(formerNames != null && formerNames != "") {
+            if (!formerNames.match(REGEX_FOR_NAMES)){
+                // invalid characters
+                validationErrors.push(nameValidationType.FormerNamesInvalidCharacter.Name);
+            }
+            if (formerNames.length > NAME_FIELD_LENGTH_160){
+                // character count limit
+                validationErrors.push(nameValidationType.FormerNamesLength.Name);
+            }
         }
-        if (formerNames.length > NAME_FIELD_LENGTH_160){
-            // character count limit
-            validationErrors.push(nameValidationType.FormerNamesLength.Name);
-        }
+        else {
+            const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
+            validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
+          }
     }
     return validationErrors;
 };
