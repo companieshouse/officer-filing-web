@@ -18,7 +18,6 @@ const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
 
 export const nameValidator = async (req: Request, res: Response, next: NextFunction) => {
-    console.log("ANONA: Entering frontend validation");
     try {
         const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
         const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -32,16 +31,11 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
 
-        console.log("ANONA: Running validateName");
         const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, previousNamesRadio, NameValidation);
 
         if(frontendValidationErrors.length > 0) {
-            console.log("ANONA: Found validation errors");
             const formattedErrors = formatValidationErrors(frontendValidationErrors);
 
-            (formattedErrors.errorList).forEach((error) => {
-                console.log("ANONA: Formatted validation errors: " + error.text);
-            })
             return res.render(Templates.DIRECTOR_NAME, {
                 templateName: Templates.DIRECTOR_NAME,
                 backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
@@ -103,8 +97,7 @@ export const validateName = (title: string,
         if (!middleNames.match(REGEX_FOR_NAMES)){
             // invalid characters
             validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.Name);
-        }
-        if (middleNames.length > NAME_FIELD_LENGTH_50){
+        } else if (middleNames.length > NAME_FIELD_LENGTH_50){
             // character count limit
             validationErrors.push(nameValidationType.MiddleNamesLength.Name);
         }
@@ -115,8 +108,7 @@ export const validateName = (title: string,
         if (!lastName.match(REGEX_FOR_NAMES)){
             // invalid characters
             validationErrors.push(nameValidationType.LastNameInvalidCharacter.Name);
-        }
-        if (lastName.length > NAME_FIELD_LENGTH_160){
+        } else if (lastName.length > NAME_FIELD_LENGTH_160){
             // character count limit
             validationErrors.push(nameValidationType.LastNameLength.Name);
         }
@@ -133,17 +125,15 @@ export const validateName = (title: string,
         if(formerNames != null && formerNames != "") {
             if (!formerNames.match(REGEX_FOR_NAMES)){
                 // invalid characters
-                validationErrors.push(nameValidationType.FormerNamesInvalidCharacter.Name);
-            }
-            if (formerNames.length > NAME_FIELD_LENGTH_160){
+                validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.Name);
+            } else if (formerNames.length > NAME_FIELD_LENGTH_160){
                 // character count limit
-                validationErrors.push(nameValidationType.FormerNamesLength.Name);
+                validationErrors.push(nameValidationType.PreviousNamesLength.Name);
             }
-        }
-        else {
+        } else {
             const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
             validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
-          }
+        }
     }
     return validationErrors;
 };
