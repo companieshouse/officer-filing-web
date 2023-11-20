@@ -67,7 +67,16 @@ export const validateName = (title: string,
 
     let validationErrors: ValidationError[] = [];
 
-    // Title validation
+    validateTitle(title, nameValidationType, validationErrors);
+    validateFirstName(firstName, nameValidationType, validationErrors);
+    validateMiddleNames(middleNames, nameValidationType, validationErrors);
+    validateLastName(lastName, nameValidationType, validationErrors);
+    validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
+
+    return validationErrors;
+};
+
+const validateTitle = (title: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
         if (!title.match(REGEX_FOR_NAMES)){
             // invalid characters
@@ -77,8 +86,9 @@ export const validateName = (title: string,
             validationErrors.push(nameValidationType.TitleLength.Name);
         }
     }
+}
 
-    // First name validation
+const validateFirstName = (firstName: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if(firstName != null && firstName != "") {
         if (!firstName.match(REGEX_FOR_NAMES)){
             // invalid characters
@@ -91,8 +101,9 @@ export const validateName = (title: string,
         // blank field
         validationErrors.push(nameValidationType.FirstNameBlank.Name);
     }
+}
 
-    // Middle names validation
+const validateMiddleNames = (middleNames: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if(middleNames != null && middleNames != "") {
         if (!middleNames.match(REGEX_FOR_NAMES)){
             // invalid characters
@@ -102,8 +113,9 @@ export const validateName = (title: string,
             validationErrors.push(nameValidationType.MiddleNamesLength.Name);
         }
     }
+}
 
-    // Last name validation
+const validateLastName = (lastName: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if(lastName != null && lastName != "") {
         if (!lastName.match(REGEX_FOR_NAMES)){
             // invalid characters
@@ -115,8 +127,9 @@ export const validateName = (title: string,
     } else {
         validationErrors.push(nameValidationType.LastNameBlank.Name);
     }
+}
 
-    // Former names validation
+const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if (!previousNamesRadio) {
         const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
         validationErrors.push(createValidationError(errorMessage, [DirectorField.PREVIOUS_NAMES_RADIO], DirectorField.YES));
@@ -135,5 +148,4 @@ export const validateName = (title: string,
             validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
         }
     }
-    return validationErrors;
-};
+}
