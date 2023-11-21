@@ -6,10 +6,9 @@ import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { firstNameErrorMessageKey, formerNamesErrorMessageKey, lastNameErrorMessageKey, middleNameErrorMessageKey, titleErrorMessageKey } from "../utils/api.enumerations.keys";
-import { getValidationStatus } from "../services/validation.status.service";
 import { ValidationError } from "../model/validation.model";
 import { DirectorField } from "../model/director.model";
-import { createValidationError, createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
+import { createValidationError, createValidationErrorBasic, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
 import { TITLE_LIST } from "../utils/properties";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
 import { getField, setBackLink, setRedirectLink } from "../utils/web";
@@ -52,26 +51,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       formerNames: getPreviousNamesForFiling(req),
     };
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-
-    // Validate the filing
-    const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-    const validationErrors = buildValidationErrors(validationStatus, req.body[DirectorField.PREVIOUS_NAMES_RADIO], req.body[DirectorField.PREVIOUS_NAMES]);
-    if (validationErrors.length > 0) {
-      const formattedErrors = formatValidationErrors(validationErrors);
-      return res.render(Templates.DIRECTOR_NAME, {
-        templateName: Templates.DIRECTOR_NAME,
-        backLinkUrl: setBackLink(req, patchFiling.data.checkYourAnswersLink,urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
-        errors: formattedErrors,
-        typeahead_errors: JSON.stringify(formattedErrors),
-        typeahead_array: TITLE_LIST,
-        typeahead_value: officerFiling.title,
-        first_name: officerFiling.firstName,
-        middle_names: officerFiling.middleNames,
-        last_name: officerFiling.lastName,
-        previous_names: officerFiling.formerNames,
-        previous_names_radio: getField(req, DirectorField.PREVIOUS_NAMES_RADIO),
-      });
-    }
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req);
     

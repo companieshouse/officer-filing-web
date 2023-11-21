@@ -57,6 +57,9 @@ export interface PostcodeValidationType {
     },
     InvalidLength: {
         Postcode: ValidationError
+    },
+    InvalidPostcode: {
+        Postcode: ValidationError
     }
 }
 
@@ -66,6 +69,12 @@ export interface PremiseValidationType {
     },
     InvalidLength: {
         Premise: ValidationError
+    }
+}
+
+export interface NameValidationType {
+    [key: string]: {
+        Name: ValidationError;
     }
 }
 

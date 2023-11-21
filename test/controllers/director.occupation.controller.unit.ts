@@ -132,6 +132,58 @@ describe("Director occupation controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
 
+      it("Should redirect to correspondence page with valid value for occupation - special characters set 1", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "-,.:; 0-9A-Z&@$£¥€'\"«»''\"\"?!/\\\\()[\\]{}<>*=#%+"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+      });
+
+      it("Should redirect to correspondence page with valid value for occupation - special characters set 2", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+      });
+
+      it("Should redirect to correspondence page with valid value for occupation - special characters set 3", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "a-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķ"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+      });
+
+      it("Should redirect to correspondence page with valid value for occupation - special characters set 4", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith"
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+      });
+
       it("Should display character error on page if invalid characters exist in the field", async () => {
           mockGetOfficerFiling.mockResolvedValueOnce({
             referenceAppointmentId: APPOINTMENT_ID,
