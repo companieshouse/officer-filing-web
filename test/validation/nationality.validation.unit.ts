@@ -10,8 +10,6 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateInvalidDualNationalityMaxLength49, validateNationality, validateAllowedListNationality, validateInvalidCharacterValuesForNationality, validateInvalidMaxMultipleNationalityLength48 } from "../../src/validation/nationality.validation";
 import { NationalityValidation } from "../../src/validation/nationality.validation.config";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
-import { response } from 'express';
-import { equalsIgnoreCase } from '../../src/utils/format';
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
@@ -235,5 +233,10 @@ describe("Director nationality controller tests", () => {
       const response = validateInvalidCharacterValuesForNationality(["British", "Home Island", "Klin&on W^orld"], NationalityValidation);
       expect(response![0].messageKey).toContain(nationalityOneErrorMessageKey.NATIONALITY_MISSING)
     });
-  })
+
+    it("should return not return invalid character error if nationality3 pattern has hyphen character", () => {
+      const response = validateInvalidCharacterValuesForNationality(["British", "Home Island", "Citizen of new-country"], NationalityValidation);
+      expect(response?.length).toBeLessThanOrEqual(0);
+    });
+  });
 });

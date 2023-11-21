@@ -12,7 +12,7 @@ import { urlUtils } from "../utils/url";
 import { DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
-const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z]+(?:\s*\(\s*[a-zA-Z]+\s*\))?(?:\s+[a-zA-Z]+(?:\s*\(\s*[a-zA-Z]+\s*\))?)*$/
+const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z]+(?: [a-zA-Z]+|-?[a-zA-Z]+(?:-[a-zA-Z]+)?(?: [a-zA-Z]+)?)*$/;
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
