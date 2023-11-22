@@ -46,7 +46,6 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
 
 export const validateNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError[] | undefined => {
   const validationError: ValidationError[] = []
-  const filteredValidationError: ValidationError[] = []
   if(nationality) {
     validateNationality1(nationality, nationalityValidationType, validationError);
   } 
@@ -140,7 +139,6 @@ export const validateNationality3 = (nationality: string[], nationalityValidatio
             validationError.push(nationalityValidationType.Nationality3InvalidCharacter.Nationality);
       } else if ((nationality[2].length > 50)) {
             validationError.push(nationalityValidationType.Nationality3LengthValidator.Nationality);  
-        
       } 
       else if (!nationalityList.includes(nationality[2])) {
         validationError.push(nationalityValidationType.Nationality3AllowedList.Nationality);

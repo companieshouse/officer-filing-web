@@ -39,7 +39,6 @@ describe("Director nationality controller tests", () => {
     });
     mockPatchOfficerFiling.mockResolvedValueOnce({data:{
     }});
-    
   });
 
   describe("Nationality front end Validation", () => {
