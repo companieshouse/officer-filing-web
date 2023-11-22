@@ -61,44 +61,7 @@ export const validateNationality = (nationality: string[], nationalityValidation
 export const validateNationality1 = (nationality: string[], nationalityValidationType: NationalityValidationType, validationError: ValidationError[]) => {
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[0]) {
-    if (!nationality[0].trim().length || invalidPattern(nationality[0], VALID_NATIONALITY_CHARACTER)) {
-          //character
-      validationError.push(nationalityValidationType.Nationality1InvalidCharacter.Nationality);
-    } else if ((nationality[0].length > 50)) {
-          //length
-      validationError.push(nationalityValidationType.Nationality1LengthValidator.Nationality);
-    } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
-          //all max length 48
-      validationError.push(
-                          nationalityValidationType.MultipleNationality1maxLength48Validator.Nationality,
-                          nationalityValidationType.MultipleNationality2maxLength48Validator.Nationality,
-                          nationalityValidationType.MultipleNationality3maxLength48Validator.Nationality);
-    } else if (nationality[0] && nationality[1] && (`${nationality[0]},${nationality[1]}`.length > 49)) {
-          //dual max length 49
-      validationError.push(
-                          nationalityValidationType.DualNationality1LengthValidator.Nationality,
-                          nationalityValidationType.DualNationality2LengthValidator.Nationality);
-    } else if (nationality[0] && nationality[2] && (`${nationality[0]},${nationality[2]}`.length > 49)) {
-          //dual max length 49
-      validationError.push(
-                          nationalityValidationType.DualNationality1LengthValidator.Nationality,
-                          nationalityValidationType.DualNationality3LengthValidator.Nationality);
-    } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
-        //all max length 48
-      validationError.push(
-                          nationalityValidationType.MultipleNationality1maxLength50Validator.Nationality,
-                          nationalityValidationType.MultipleNationality2maxLength50Validator.Nationality,
-                          nationalityValidationType.MultipleNationality3maxLength50Validator.Nationality,);
-    } else if (nationality[0] == nationality[1]) {
-      //duplicated
-      validationError.push(nationalityValidationType.DuplicatedNationality2Validator.Nationality)
-    } else if (nationality[0] == nationality[2]) {
-      //duplicated
-      validationError.push(nationalityValidationType.DuplicatedNationality3Validator.Nationality)
-    } else if (!nationalityList.includes(nationality[0])) {
-      //list validation
-      validationError.push(nationalityValidationType.Nationality1AllowedList.Nationality);
-    }  
+    validateCommonNationality(nationality, validationError, nationalityValidationType, nationalityList);  
   } else {
     //blank field
     validationError.push(nationalityValidationType.Nationality1InvalidCharacter.Nationality)
@@ -154,3 +117,48 @@ const invalidPattern = (input: string, regex: RegExp): boolean => {
   }
   return false;
 }
+const validateCommonNationality = (
+      nationality: string[], 
+      validationError: ValidationError[], 
+      nationalityValidationType: NationalityValidationType, 
+      nationalityList: string[]) => {
+  if (!nationality[0].trim().length || invalidPattern(nationality[0], VALID_NATIONALITY_CHARACTER)) {
+    //character
+    validationError.push(nationalityValidationType.Nationality1InvalidCharacter.Nationality);
+  } else if ((nationality[0].length > 50)) {
+    //length
+    validationError.push(nationalityValidationType.Nationality1LengthValidator.Nationality);
+  } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
+    //all max length 48
+    validationError.push(
+      nationalityValidationType.MultipleNationality1maxLength48Validator.Nationality,
+      nationalityValidationType.MultipleNationality2maxLength48Validator.Nationality,
+      nationalityValidationType.MultipleNationality3maxLength48Validator.Nationality);
+  } else if (nationality[0] && nationality[1] && (`${nationality[0]},${nationality[1]}`.length > 49)) {
+    //dual max length 49
+    validationError.push(
+      nationalityValidationType.DualNationality1LengthValidator.Nationality,
+      nationalityValidationType.DualNationality2LengthValidator.Nationality);
+  } else if (nationality[0] && nationality[2] && (`${nationality[0]},${nationality[2]}`.length > 49)) {
+    //dual max length 49
+    validationError.push(
+      nationalityValidationType.DualNationality1LengthValidator.Nationality,
+      nationalityValidationType.DualNationality3LengthValidator.Nationality);
+  } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
+    //all max length 48
+    validationError.push(
+      nationalityValidationType.MultipleNationality1maxLength50Validator.Nationality,
+      nationalityValidationType.MultipleNationality2maxLength50Validator.Nationality,
+      nationalityValidationType.MultipleNationality3maxLength50Validator.Nationality);
+  } else if (nationality[0] == nationality[1]) {
+    //duplicated
+    validationError.push(nationalityValidationType.DuplicatedNationality2Validator.Nationality);
+  } else if (nationality[0] == nationality[2]) {
+    //duplicated
+    validationError.push(nationalityValidationType.DuplicatedNationality3Validator.Nationality);
+  } else if (!nationalityList.includes(nationality[0])) {
+    //list validation
+    validationError.push(nationalityValidationType.Nationality1AllowedList.Nationality);
+  }
+}
+
