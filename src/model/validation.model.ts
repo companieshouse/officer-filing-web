@@ -101,3 +101,9 @@ export interface PremiseValidationType {
         Premise: ValidationError
     }
 }
+
+export interface NameValidationType {
+    [key: string]: {
+        Name: ValidationError;
+    }
+}
