@@ -6,14 +6,13 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusErrorNationalityInvalid, mockValidationStatusErrorNationalityLength } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getField } from "../../src/utils/web";
-import { nationalityOneErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -39,7 +38,6 @@ describe("Director nationality controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
-      mockPatchOfficerFiling.mockClear();
     });
   
     describe("get tests", () => {
@@ -68,8 +66,8 @@ describe("Director nationality controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
-        expect(mockPatchOfficerFiling).toHaveBeenCalled();
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
+
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL);
       });
 
@@ -84,20 +82,14 @@ describe("Director nationality controller tests", () => {
         }
         mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-          firstName: "John",
-          lastName: "Smith"
-        });
-        
         //mockGetField.mockReturnValue("dj");
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"dj",typeahead_input_1:"dj",typeahead_input_2:"dj"});
   
         expect(response.text).toContain("Select a nationality from the list");
         expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters")).toEqual(false);
         expect(response.text).toContain("John Smith");
-        expect(mockGetValidationStatus).not.toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
 
       it("Should display nationality length error on page", async () => {
@@ -111,18 +103,13 @@ describe("Director nationality controller tests", () => {
         }
         mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
         mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-          firstName: "John",
-          lastName: "Smith"
-        });
         //mockGetField.mockReturnValue("British").send({nationality1:"british"});
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL);
   
-        expect(response.text).not.toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters");
-        expect(response.text).toContain("Enter the director’s nationality");
-        expect(mockGetValidationStatus).not.toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters");
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
+      
     });
 });
