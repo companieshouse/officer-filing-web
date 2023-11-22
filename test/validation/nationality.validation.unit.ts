@@ -99,7 +99,8 @@ describe("Director nationality controller tests", () => {
 
     it ("should render nationality error if nationality 2 and 3 are duplicate", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"Country",typeahead_input_2:"Country"});
-      expect(response.text).toContain("Select a nationality from the list");
+      expect(response.text).toContain("Enter a different second nationality");
+      expect(response.text).toContain("Enter a different third nationality");
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
@@ -129,7 +130,8 @@ describe("Director nationality controller tests", () => {
 
     it ("should render nationality length error if nationality 1,2 and 3 exceeds maximum length 49", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:SHORT_NATIONALITY,typeahead_input_2:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+      expect(response.text).not.toContain(LENGTH_FIFTY_ERROR);
+      expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
   });

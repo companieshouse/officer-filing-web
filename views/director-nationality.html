@@ -151,13 +151,15 @@
 
       var nationality2Error = document.querySelector('a[href="#typeahead_input_1"]')
       if (nationality2Error) {
-        $('#nationality-2-link').hide();
         $('#typeahead-form-group-1').show();
+        $('#nationality-2-link').hide();
       } 
       var nationality3Error = document.querySelector('a[href="#typeahead_input_2"]')
       var nationality2Link = document.getElementById("nationality-2-link");
       if (nationality3Error) {
+        $('#typeahead-form-group-1').show();
         $('#typeahead-form-group-2').show();
+        $('#nationality-2-link').hide();
         $('#nationality-3-link').hide();
       } 
       if (!nationality3Error && nationality2Link.style.display === "none") {
