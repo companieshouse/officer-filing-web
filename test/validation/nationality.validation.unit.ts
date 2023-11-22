@@ -7,9 +7,6 @@ import request from "supertest";
 import app from "../../src/app";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { validateDuplicateNationality, validateInvalidLengthValuesForNationality, validateInvalidDualNationalityMaxLength49, validateNationality, validateAllowedListNationality, validateInvalidCharacterValuesForNationality, validateInvalidMaxMultipleNationalityLength48 } from "../../src/validation/nationality.validation";
-import { NationalityValidation } from "../../src/validation/nationality.validation.config";
-import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
@@ -20,6 +17,7 @@ const SUBMISSION_ID = "55555555";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const LONG_COUNTRY_NAME = "Kingdom of Sauron East of the North Gate Shires";
 const SHORT_NATIONALITY = "East of the North Gate Shires";
+const LENGTH_FIFTY_ERROR = "Nationality must be 50 characters or less";
 
 const ENTER_DIRECTOR_NATIONALITY_ERROR = "Enter the director’s nationality";
 const SELECT_NATIONALITY_FROM_LIST_ERROR = "Select a nationality from the list";
@@ -101,8 +99,37 @@ describe("Director nationality controller tests", () => {
 
     it ("should render nationality error if nationality 2 and 3 are duplicate", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"Country",typeahead_input_2:"Country"});
-      expect(response.text).toContain("Enter a different second nationality");
-      expect(response.text).toContain("Enter a different third nationality");
+      expect(response.text).toContain("Select a nationality from the list");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it ("should render nationality length error if nationality 1 and 3 exceed maximum length", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"British",typeahead_input_2:LONG_COUNTRY_NAME});
+      expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it ("should render nationality length error if nationality 1 maximum length 50", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:LONG_COUNTRY_NAME+SHORT_NATIONALITY});
+      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it ("should render nationality length error if nationality 1 AND 2 exceeds maximum length 49", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:LONG_COUNTRY_NAME,typeahead_input_1:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it ("should render nationality length error if nationality 1 AND 3 exceeds maximum length 49", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:LONG_COUNTRY_NAME,typeahead_input_2:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it ("should render nationality length error if nationality 1,2 and 3 exceeds maximum length 49", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:SHORT_NATIONALITY,typeahead_input_2:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
   });
