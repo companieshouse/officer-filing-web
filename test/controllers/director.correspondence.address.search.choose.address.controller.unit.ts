@@ -35,6 +35,7 @@ describe("Director correspondence address array page controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
+      mockPatchOfficerFiling.mockClear();
     });
   
     describe("get tests", () => {

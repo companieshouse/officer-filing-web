@@ -2,6 +2,8 @@ jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/stop.page.validation.service");
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/services/company.profile.service");
+jest.mock("../../src/services/validation.status.service");
+jest.mock("../../src/services/transaction.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -14,6 +16,9 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { mockAddress1 } from '../mocks/remove.director.check.answers.mock';
+import { getValidationStatus } from "../../src/services/validation.status.service";
+import { closeTransaction } from "../../src/services/transaction.service";
+import { mockValidValidationStatusResponse, mockValidationStatusResponse } from "../mocks/validation.status.response.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -22,6 +27,8 @@ const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+const mockGetValidationStatus = getValidationStatus as jest.Mock;
+const mockCloseTransaction = closeTransaction as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -140,7 +147,8 @@ describe("Appoint director check answers controller tests", () => {
     describe("post tests", () => {
   
       it("Should redirect to appoint director submitted page", async () => {
-        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+        mockGetCurrentOrFutureDissolved.mockResolvedValueOnce(false);
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse)
         const response = (await request(app).post(PAGE_URL).send({"director_consent": "director_consent"}));
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
@@ -165,6 +173,33 @@ describe("Appoint director check answers controller tests", () => {
         const response = (await request(app).post(PAGE_URL));
 
         expect(response.text).toContain("Select if you confirm that by submitting this information, the person named has consented to act as director");
+      });
+
+      it("Should redirect to error 500 screen if close transaction returns errors", async () => {
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockCloseTransaction.mockRejectedValue(new Error("can't connect"));
+
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({"director_consent": "director_consent"});
+
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(mockCloseTransaction).toHaveBeenCalled();
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
+
+      it("Should redirect to something-went-wrong stop screen if there are any validation errors", async () => {
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        mockCloseTransaction.mockRejectedValue(new Error("can't connect"));
+
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({"director_consent": "director_consent"});
+
+        expect(mockGetValidationStatus).toHaveBeenCalled();
+        expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=something-went-wrong");
       });
       
     });

@@ -33,6 +33,7 @@ import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
+import { nameValidator } from "../validation/name.validation";
 
 
 export const router: Router = Router();
@@ -76,7 +77,7 @@ router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
 router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
 // AP01
 router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorName.get);
-router.post(urls.DIRECTOR_NAME, directorName.post);
+router.post(urls.DIRECTOR_NAME, nameValidator, directorName.post);
 
 router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorDateDetails.get);
 router.post(urls.DIRECTOR_DATE_DETAILS, directorDateDetails.post);
