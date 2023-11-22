@@ -67,25 +67,67 @@ export const NationalityValidation: NationalityValidationType = {
       link: DirectorField.NATIONALITY_3
     }
   },
-  DualNationalityLengthValidator: {
+  DualNationality1LengthValidator: {
     Nationality: {
       messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49,
-      source: [DirectorField.NATIONALITY_1, DirectorField.NATIONALITY_2, DirectorField.NATIONALITY_3],
+      source: [DirectorField.NATIONALITY_1],
       link: DirectorField.NATIONALITY_1
     }
   },
-  MultipleNationalitymaxLength48Validator: {
+  DualNationality2LengthValidator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49,
+      source: [DirectorField.NATIONALITY_2],
+      link: DirectorField.NATIONALITY_2
+    }
+  },
+  DualNationality3LengthValidator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_49,
+      source: [DirectorField.NATIONALITY_3],
+      link: DirectorField.NATIONALITY_3
+    }
+  },
+  MultipleNationality1maxLength48Validator: {
     Nationality: {
       messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48,
-      source: [DirectorField.NATIONALITY_1, DirectorField.NATIONALITY_2, DirectorField.NATIONALITY_3],
+      source: [DirectorField.NATIONALITY_1],
       link: DirectorField.NATIONALITY_1
     }
   },
-  MultipleNationalitymaxLength50Validator: {
+  MultipleNationality2maxLength48Validator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48,
+      source: [DirectorField.NATIONALITY_2],
+      link: DirectorField.NATIONALITY_2
+    }
+  },
+  MultipleNationality3maxLength48Validator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_48,
+      source: [DirectorField.NATIONALITY_3],
+      link: DirectorField.NATIONALITY_3
+    }
+  },
+  MultipleNationality1maxLength50Validator: {
     Nationality: {
       messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50,
-      source: [DirectorField.NATIONALITY_1, DirectorField.NATIONALITY_2, DirectorField.NATIONALITY_3],
+      source: [DirectorField.NATIONALITY_1],
       link: DirectorField.NATIONALITY_1
+    }
+  },
+  MultipleNationality2maxLength50Validator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50,
+      source: [DirectorField.NATIONALITY_2],
+      link: DirectorField.NATIONALITY_2
+    }
+  },
+  MultipleNationality3maxLength50Validator: {
+    Nationality: {
+      messageKey: nationalityOneErrorMessageKey.NATIONALITY_LENGTH_50,
+      source: [DirectorField.NATIONALITY_3],
+      link: DirectorField.NATIONALITY_3
     }
   },
   DuplicatedNationality2Validator: {
