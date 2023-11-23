@@ -8,6 +8,8 @@ COPY ./package.json ./package-lock.json ./
 RUN npm install
 
 COPY api-enumerations ./api-enumerations
+COPY locales ./locales
+RUN ls -R locales
 COPY dist ./package.json ./package-lock.json docker_start.sh routes.yaml ./
 
 CMD ["./docker_start.sh"]

@@ -10,6 +10,8 @@ import { buildAddress, formatForDisplay } from "../services/confirm.company.serv
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
+import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils"
+import { logger } from "../utils/logger";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/appoint-update-remove-company-officer")
@@ -23,13 +25,30 @@ export const redirectToUrl = (url: string, res: Response) => {
   }
 };
 
+const selectLang = (lang) => {
+  switch(lang) {
+    case "cy": return "cy";
+    default: return "en";
+  }
+}
+
+const getLocalesService = () => LocalesService.getInstance("locales", true);
+
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
+    logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
+    logger.debug("folder:" + locales.localesFolder);
+    //logger.debug("Translations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
+    
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    const pageOptions = await buildPageOptions(session, companyProfile);
+    const pageOptions = await buildPageOptions(session, companyProfile, locales, lang);
     return res.render(Templates.CONFIRM_COMPANY, pageOptions);
     
   } catch (e) {
@@ -37,7 +56,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const buildPageOptions = async (session: Session, companyProfile: CompanyProfile): Promise<Object> => {
+const buildPageOptions = async (session: Session, companyProfile: CompanyProfile, locales: LocalesService, lang: string): Promise<Object> => {
   companyProfile = formatForDisplay(companyProfile);
   var addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
     companyProfile.registeredOfficeAddress.premises, companyProfile.registeredOfficeAddress.addressLineOne,
@@ -46,8 +65,11 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     companyProfile.registeredOfficeAddress.postalCode]
   const address = buildAddress(addressArray);
   return {
-    company: companyProfile,
+    languageEnabled: locales.enabled,
+    languages: LanguageNames.sourceLocales(locales.localesFolder),
     address: address,
+    currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
+    i18n: locales.i18nCh.resolveNamespacesKeys(lang),
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };

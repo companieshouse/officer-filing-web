@@ -17,7 +17,7 @@
 {% from "govuk/components/panel/macro.njk"               import govukPanel %}
 {% from "govuk/components/pagination/macro.njk"          import govukPagination %}
 {% from "govuk/components/select/macro.njk"              import govukSelect %}
-
+{% import "add-lang-to-url.njk" as lang2url %}
 
 {% block head %}
 
@@ -28,7 +28,7 @@
   <link href="{{assetPath}}/stylesheets/govuk-frontend/v4.6.0/govuk-frontend-4.6.0.min.css" rel="stylesheet" />
   <!--<![endif]-->
   <link rel="stylesheet" href="{{assetPath}}/stylesheets/accessible-autocomplete/autocomplete.min.css" />
-
+  <link href="{{assetPath}}/stylesheets/extensions/languages-nav.css" rel="stylesheet"/>
 
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
   {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
@@ -72,10 +72,12 @@
     },
     html: 'This is a new service - Help us improve it by providing <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-banner-link" target="_blank" rel="noopener noreferrer">feedback <span class="govuk-visually-hidden">(This link opens in a new window)</span></a>'
   }) }}
-
+ 
   {% block signoutBar %}
     {% include "includes/signout-bar.html" %}
   {% endblock %}
+
+  {% include "locales-banner.njk" %}
 
   {% block backLink %}
   {% endblock %}
