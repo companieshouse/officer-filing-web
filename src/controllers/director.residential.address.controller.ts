@@ -63,6 +63,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
     };
     if (selectedSraAddressChoice === "director_registered_office_address") {
+      officerFilingBody.isMailingAddressSameAsHomeAddress = false;
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 

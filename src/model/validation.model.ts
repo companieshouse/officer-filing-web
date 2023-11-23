@@ -45,6 +45,36 @@ export interface OccupationValidationType {
     }
 }
 
+export interface ManualAddressValidationType {
+    MissingValue: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        City: ValidationError,
+        Postcode: ValidationError,
+        Country: ValidationError
+    },
+    InvalidCharacters: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        AddressLine2: ValidationError,
+        City: ValidationError,
+        County: ValidationError,
+        Postcode: ValidationError
+    },
+    InvalidLength: {
+        Premise: ValidationError,
+        AddressLine1: ValidationError,
+        AddressLine2: ValidationError,
+        City: ValidationError,
+        County: ValidationError
+        Postcode: ValidationError,
+    },
+    InvalidValue: {
+        Country: ValidationError,
+        Postcode: ValidationError
+    }
+}
+
 export interface PostcodeValidationType {
     MissingValue: {
         Postcode: ValidationError
@@ -69,6 +99,12 @@ export interface PremiseValidationType {
     },
     InvalidLength: {
         Premise: ValidationError
+    }
+}
+
+export interface NationalityValidationType {
+    [key: string]: {
+        Nationality: ValidationError;
     }
 }
 

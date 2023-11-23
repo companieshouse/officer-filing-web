@@ -416,6 +416,29 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
+    it(`should patch the isMailingAddressSameAsHomeAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        isMailingAddressSameAsHomeAddress: true,
+        checkYourAnswersLink: "/check-your-answer"
+      });
+
+      const response = (await request(app).post(PAGE_URL).send({
+        director_address: "director_registered_office_address",
+      }));
+
+      expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
+        "directorResidentialAddressChoice": "director_registered_office_address",
+        "protectedDetailsBackLink": "/director-home-address",
+        "isMailingAddressSameAsHomeAddress": false
+      })
+
+      //expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
+      console.log(response.text);
+    });
+
     it(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH} page if correspondence address is selected and CYA link established`, async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
