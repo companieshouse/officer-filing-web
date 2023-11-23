@@ -12,6 +12,7 @@ import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
 import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils"
 import { logger } from "../utils/logger";
+import { selectLang, getLocalesService } from "../utils/localise";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/appoint-update-remove-company-officer")
@@ -24,16 +25,6 @@ export const redirectToUrl = (url: string, res: Response) => {
     throw Error("URL to redirect to (" + url + ") was not valid");
   }
 };
-
-const selectLang = (lang) => {
-  switch(lang) {
-    case "cy": return "cy";
-    default: return "en";
-  }
-}
-
-const getLocalesService = () => LocalesService.getInstance("locales", true);
-
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
