@@ -12,7 +12,7 @@ import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
 import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils"
 import { logger } from "../utils/logger";
-import { selectLang, getLocalesService } from "../utils/localise";
+import { selectLang, getLocalesService, addLangToUrl } from "../utils/localise";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/appoint-update-remove-company-officer")
@@ -30,10 +30,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-
     logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
-    logger.debug("folder:" + locales.localesFolder);
-    //logger.debug("Translations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
+    logger.debug("localisations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
     
     const session: Session = req.session as Session;
     const companyNumber = req.query.companyNumber as string;
@@ -61,6 +59,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     address: address,
     currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
     i18n: locales.i18nCh.resolveNamespacesKeys(lang),
+    lang,
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };
@@ -69,10 +68,12 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
+    const lang = selectLang(req.body.lang);
+   
     const companyNumber = req.query.companyNumber as string;
     req.params[urlParams.PARAM_COMPANY_NUMBER] = companyNumber;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-
+    
     var nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
@@ -87,9 +88,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     else{
       await createNewOfficerFiling(session);
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
-      //Sonarqube will flag a vulnerability if the URL produced by the line above is not validated on the next line.
-      return redirectToUrl(nextPageUrl, res);
     }
+
+    nextPageUrl = addLangToUrl(nextPageUrl, lang);
+    logger.debug("POST confirm company " + lang + " nextPageUrl: " + nextPageUrl);
     redirectToUrl(nextPageUrl, res);
   } catch (e) {
     return next(e);

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = i18n.title %}
+{% set title = i18n.confirm_company_title %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -12,7 +12,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">{{ i18n.title }} </h1>
+      <h1 class="govuk-heading-l">{{ i18n.confirm_company_title }} </h1>
       <form action="" method="post">
 
         {% set notDueWarningHTML %}
@@ -85,6 +85,8 @@
           }) }}
         {% endif %}
 
+        <input type="hidden" name="lang" value="{{lang}}">
+        
         {{ govukButton({
           attributes: {
             id: "submit",
@@ -93,10 +95,9 @@
           text: "Confirm and continue"
         }) }}
       </form>
-        <p class="govuk-body">
-          <a href="/appoint-update-remove-company-officer/company-number" data-event-id="choose-a-different-company-link">Choose a different company</a>
-        </p>
-      </form>
+      <p class="govuk-body">
+        <a href="/appoint-update-remove-company-officer/company-number?lang={{lang}}" data-event-id="choose-a-different-company-link">Choose a different company</a>
+      </p>
     </div>
   </div>
 {% endblock %}

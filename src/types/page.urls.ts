@@ -15,7 +15,8 @@ export enum URL_QUERY_PARAM {
   PARAM_SUBMISSION_ID = "submissionId",
   PARAM_APPOINTMENT_ID = "appointmentId",
   PARAM_STOP_TYPE = "stopType",
-  IS_PSC = "isPsc"
+  IS_PSC = "isPsc",
+  LANG = "lang"
 }
 
 const SEPARATOR = "/";
