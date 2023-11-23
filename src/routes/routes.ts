@@ -34,6 +34,7 @@ import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 import { nameValidator } from "../validation/name.validation";
+import { nationalityValidator } from "../validation/nationality.validation";
 
 
 export const router: Router = Router();
@@ -83,7 +84,7 @@ router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), checkYourA
 router.post(urls.DIRECTOR_DATE_DETAILS, directorDateDetails.post);
 
 router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorNationality.get);
-router.post(urls.DIRECTOR_NATIONALITY, directorNationality.post);
+router.post(urls.DIRECTOR_NATIONALITY, nationalityValidator, directorNationality.post);
 
 router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), checkYourAnswersMiddleware(), directorOccupation.get);
 router.post(urls.DIRECTOR_OCCUPATION, directorOccupation.post);

@@ -72,6 +72,12 @@ export interface PremiseValidationType {
     }
 }
 
+export interface NationalityValidationType {
+    [key: string]: {
+        Nationality: ValidationError;
+    }
+}
+
 export interface NameValidationType {
     [key: string]: {
         Name: ValidationError;
