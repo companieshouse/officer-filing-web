@@ -25,7 +25,8 @@ export default () => {
   process.env.TITLE_LIST = 'DR';
   process.env.OCCUPATION_LIST = 'Astronaut';
   process.env.NATIONALITY_LIST = 'British';
-  process.env.COUNTRY_LIST = 'England';
+  process.env.COUNTRY_LIST = 'England;France';
+  process.env.UK_COUNTRY_LIST="England;Scotland;Wales;Northern Ireland;United Kingdom"
   process.env.POSTCODE_VALIDATION_URL = 'http://example-postcode-lookup/postcode';
   process.env.POSTCODE_ADDRESSES_LOOKUP_URL = 'http://example-postcode-lookup/multiple-addresses';
 };
