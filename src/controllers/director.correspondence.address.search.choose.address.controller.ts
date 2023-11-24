@@ -88,7 +88,7 @@ const renderPage = async (req: Request, res: Response, officerFiling: OfficerFil
   return res.render(Templates.DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS, {
     templateName: Templates.DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS,
     confirmAddressUrl: urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
+    // backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     addresses: addressOptions,

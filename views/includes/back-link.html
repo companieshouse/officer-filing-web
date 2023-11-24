@@ -8,28 +8,49 @@
 }) }}
 
 
+<!-- <script>
+  const navigationStack = [];
+
+  const setPreviousUrl = () => {
+    navigationStack.push(window.location.href);
+    // const previousUrl = sessionStorage.setItem('previousUrl', window.location.href);
+  }
+
+  const customBack = () => {
+    // const previousUrl = sessionStorage.getItem('previousUrl');
+    const previousUrl = navigationStack.pop();
+
+    if (previousUrl) {
+      window.location.href = previousUrl;
+    }
+  }
+    
+  setPreviousUrl();
+
+  document.getElementById('back-link').addEventListener('click', customBack)
+</script> -->
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const backButton = document.getElementById("back_link");
+  const getNavStack = () => {
+    const storeStack = localStorage.getItem('navStack') || '[]';
+    return JSON.parse(storeStack);
+  }
+  
+  const setPreviousUrlStack = (navigationStack) => {
+    localStorage.setItem('navStack', JSON.stringify(navigationStack));
+  }
 
-    //maintain history of urls
-    const previousUrls = [];
 
-    const initialPreviousUrl = document.referrer;
-    backButton.href = initialPreviousUrl;
+  const simulateCustomBack = () => {
+    const navigationStack = getNavStack();
+    const previousUrl = navigationStack.pop();
+    setPreviousUrlStack(navigationStack);
 
-    backButton.addEventListener('click', () => {
-      if (previousUrls.length > 0) {
-        //pop the last url from the array and navigate to it
-        const previousUrl= previousUrls.pop();
-        window.location.href = previousUrl;
-      } else {
-        //if no previous url
-        window.history.back();
-      }
-    });
+    if (previousUrl) {
+      window.location.href = previousUrl;
+    }
+  }
 
-    //push the new initial previous url
-    previousUrls.push(initialPreviousUrl);
-  })
+  document.getElementById('back-link').addEventListener('click', simulateCustomBack)
+
 </script>

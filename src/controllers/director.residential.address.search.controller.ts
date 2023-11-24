@@ -34,7 +34,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      // backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises

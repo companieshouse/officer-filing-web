@@ -22,7 +22,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      // backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       ha_to_sa: calculateHaToSaRadioFromFiling(officerFiling.isMailingAddressSameAsHomeAddress),
     });

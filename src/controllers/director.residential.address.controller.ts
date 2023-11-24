@@ -127,7 +127,7 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
 const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, formattedErrors?: FormattedValidationErrors) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-    backLinkUrl: getBackLinkUrl(req),
+    // backLinkUrl: getBackLinkUrl(req),
     errors: formattedErrors,
     director_address: officerFiling.directorResidentialAddressChoice,
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),

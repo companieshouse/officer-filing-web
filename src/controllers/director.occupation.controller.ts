@@ -80,7 +80,7 @@ export const renderPage = (res: Response, req: Request, officerFiling: OfficerFi
   const formattedErrors = formatValidationErrors(validationErrors);
   return res.render(Templates.DIRECTOR_OCCUPATION, {
     templateName: Templates.DIRECTOR_OCCUPATION,
-    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
+    // backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
     typeahead_array: OCCUPATION_LIST,
     typeahead_value: occupation,
     errors: formattedErrors,
