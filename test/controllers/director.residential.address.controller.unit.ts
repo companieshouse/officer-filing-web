@@ -407,7 +407,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
-        isMailingAddressSameAsRegisteredOfficeAddress: true
+        isServiceAddressSameAsRegisteredOfficeAddress: true
       });
       const response = (await request(app).post(PAGE_URL).send({
         director_address: "director_correspondence_address"
@@ -416,11 +416,11 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
-    it(`should patch the isMailingAddressSameAsHomeAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async () => {
+    it(`should patch the isServiceAddressSameAsHomeAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
-        isMailingAddressSameAsHomeAddress: true,
+        isServiceAddressSameAsHomeAddress: true,
         checkYourAnswersLink: "/check-your-answer"
       });
 
@@ -432,7 +432,7 @@ describe("Director name controller tests", () => {
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
         "directorResidentialAddressChoice": "director_registered_office_address",
         "protectedDetailsBackLink": "/director-home-address",
-        "isMailingAddressSameAsHomeAddress": false
+        "isServiceAddressSameAsHomeAddress": false
       })
 
       //expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
@@ -443,7 +443,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
-        isMailingAddressSameAsRegisteredOfficeAddress: true,
+        isServiceAddressSameAsRegisteredOfficeAddress: true,
         checkYourAnswersLink: "/check-your-answer"
       });
       const response = (await request(app).post(PAGE_URL).send({
@@ -457,7 +457,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
-        isMailingAddressSameAsRegisteredOfficeAddress: false,
+        isServiceAddressSameAsRegisteredOfficeAddress: false,
         checkYourAnswersLink: "/check-your-answer"
       });
       const response = (await request(app).post(PAGE_URL).send({
