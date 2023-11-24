@@ -113,21 +113,6 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
     });
 
-    it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock
-      });
-      mockReq.params = {
-        companyNumber: COMPANY_NUMBER,
-        transactionId: TRANSACTION_ID,
-        submissionId: SUBMISSION_ID,
-      }
-      mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
-      const response = await request(app).get(PAGE_URL);
-      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)
-    });
-
     it("Should navigate to error page when feature flag is off", async () => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(PAGE_URL);

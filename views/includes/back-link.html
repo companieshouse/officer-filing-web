@@ -1,5 +1,5 @@
-{% if backToCyaUrl %}
-  <a href="{{ backToCyaUrl }}" class="govuk-back-link" data-event-id="data-event-id">Back</a>
+{% if optionalBackLinkUrl %}
+  <a href="{{ optionalBackLinkUrl }}" class="govuk-back-link" data-event-id="data-event-id">Back</a>
 {% else %}
   <a onclick="goBack()" id="back-link" class="govuk-back-link" data-event-id="back-link">Back</a>
 {% endif %}

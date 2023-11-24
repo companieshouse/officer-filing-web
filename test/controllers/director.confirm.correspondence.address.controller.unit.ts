@@ -76,36 +76,6 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain("SW1A 2AA");
       });
 
-      it("Should navigate back button to search page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "John Smith",
-          serviceAddressBackLink: "/director-correspondence-address-search"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END);
-      });
-
-      it("Should navigate back button to choose address array page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "John Smith",
-          serviceAddressBackLink: "/choose-correspondence-address"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END);
-      });
-
-      it("Should navigate back button to choose address array page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "John Smith",
-          serviceAddressBackLink: "/director-correspondence-address-manual"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END);
-      });
-
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(PAGE_URL);

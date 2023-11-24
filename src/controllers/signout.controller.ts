@@ -7,9 +7,9 @@ import { logger } from "../utils/logger";
 
 export const get: Handler = async (req, res) => {
     const returnPage = saveReturnPageInSession(req)
-
     res.render(Templates.SIGNOUT, {
         backLinkUrl: returnPage,
+        optionalBackLinkUrl: returnPage,
         templateName: Templates.SIGNOUT
     });
 }

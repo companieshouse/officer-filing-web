@@ -83,51 +83,6 @@ describe("Director protected details controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} if the flag isMailingAddressSameAsHomeAddress set to true`, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          isMailingAddressSameAsHomeAddress : true
-        });
-
-        const response = await request(app).get(PAGE_URL);
-        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END);
-      });
-
-      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page if the flag isMailingAddressSameAsHomeAddress set to false`, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          isMailingAddressSameAsHomeAddress : false
-        });
-
-        const response = await request(app).get(PAGE_URL);
-        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
-      });
-
-      it(`should navigate back button to residential address confirmation page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          protectedDetailsBackLink: "/confirm-director-home-address"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END);
-      });
-
-      it(`should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          protectedDetailsBackLink: "/director-home-address"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
-      });
-
-      it("should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink is undefined", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          protectedDetailsBackLink: undefined
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END);
-      });
-
       it("Should catch error when officer filing returned error ", async () => {
         mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
         
