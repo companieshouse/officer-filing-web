@@ -46,7 +46,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile, locales: LocalesService, lang: string): Promise<Object> => {
-  companyProfile = formatForDisplay(companyProfile, lang);
+  companyProfile = formatForDisplay(companyProfile, locales, lang);
   var addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
     companyProfile.registeredOfficeAddress.premises, companyProfile.registeredOfficeAddress.addressLineOne,
     companyProfile.registeredOfficeAddress.addressLineTwo, companyProfile.registeredOfficeAddress.locality,

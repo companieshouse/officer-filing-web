@@ -1,0 +1,14 @@
+{
+  "company-status-active" : "Gweithredol",
+  "company-status-dissolved" : "Diddymu",
+  "company-status-liquidation" : "Diddymiad",
+  "company-status-receivership" : "Gweithredu Derbynnydd",
+  "company-status-converted-closed" : "Troswyd / Ar gau",
+  "company-status-voluntary-arrangement" : "Trefnwyr Gwirfoddol",
+  "company-status-insolvency-proceedings" : "Ansolfedd Ymlaen",
+  "company-status-administration" : "Mewn Gweinyddiaeth",
+  "company-status-open" : "Agor",
+  "company-status-closed" : "Cau",
+  "company-status-registered" : "Cofrestredig",
+  "company-status-removed" : "Dileu"
+}
