@@ -1,7 +1,21 @@
-{{ govukBackLink({
-  text: "Back",
-  href: backLinkUrl,
-  attributes: {
-    "data-event-id": "back-link"
+{% if optionalBackLinkUrl %}
+  <a href="{{ optionalBackLinkUrl }}" class="govuk-back-link" data-event-id="data-event-id">Back</a>
+{% else %}
+  <a onclick="goBack()" id="back-link" class="govuk-back-link" data-event-id="back-link">Back</a>
+{% endif %}
+
+<script>
+  function goBack() {
+    window.history.back()
   }
-}) }}
+</script>
+
+<noscript>
+  {{ govukBackLink({
+    text: "Back",
+    href: backLinkUrl,
+    attributes: {
+      "data-event-id": "back-link"
+    }
+  }) }}
+</noscript>
