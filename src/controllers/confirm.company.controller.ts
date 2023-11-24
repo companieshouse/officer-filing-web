@@ -56,10 +56,12 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
   return {
     languageEnabled: locales.enabled,
     languages: LanguageNames.sourceLocales(locales.localesFolder),
-    address: address,
-    currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
     i18n: locales.i18nCh.resolveNamespacesKeys(lang),
     lang,
+    currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
+
+    company: companyProfile,
+    address: address,
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
   };
@@ -67,6 +69,8 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    logger.debug("POST confirm company lang in query params: " + req.query.lang + ", and body: " + req.body.lang);
+
     const session: Session = req.session as Session;
     const lang = selectLang(req.body.lang);
    

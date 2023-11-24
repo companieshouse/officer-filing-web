@@ -16,4 +16,6 @@ export const addLangToUrl = (url: string, lang: string): string => {
   }
 }
 
-export const getLocalesService = () => LocalesService.getInstance(LOCALES_PATH, LOCALES_ENABLED === "true");
+const localesSevice = LocalesService.getInstance(LOCALES_PATH, LOCALES_ENABLED === "true");
+
+export const getLocalesService = () => localesSevice;
