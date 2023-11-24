@@ -10,9 +10,9 @@ import { buildAddress, formatForDisplay } from "../services/confirm.company.serv
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
 import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
-import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils"
+import { LocalesService } from "@companieshouse/ch-node-utils"
 import { logger } from "../utils/logger";
-import { selectLang, getLocalesService, addLangToUrl } from "../utils/localise";
+import { selectLang, getLocalesService, addLangToUrl, getLocaleInfo } from "../utils/localise";
 
 export const isValidUrl = (url: string) => { 
   return url.startsWith("/appoint-update-remove-company-officer")
@@ -46,18 +46,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile, locales: LocalesService, lang: string): Promise<Object> => {
-  companyProfile = formatForDisplay(companyProfile);
+  companyProfile = formatForDisplay(companyProfile, lang);
   var addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
     companyProfile.registeredOfficeAddress.premises, companyProfile.registeredOfficeAddress.addressLineOne,
     companyProfile.registeredOfficeAddress.addressLineTwo, companyProfile.registeredOfficeAddress.locality,
     companyProfile.registeredOfficeAddress.region, companyProfile.registeredOfficeAddress.country,
     companyProfile.registeredOfficeAddress.postalCode]
   const address = buildAddress(addressArray);
+ 
   return {
-    languageEnabled: locales.enabled,
-    languages: LanguageNames.sourceLocales(locales.localesFolder),
-    i18n: locales.i18nCh.resolveNamespacesKeys(lang),
-    lang,
+    ...getLocaleInfo(locales, lang),
     currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
 
     company: companyProfile,

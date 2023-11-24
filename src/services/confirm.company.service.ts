@@ -13,10 +13,10 @@ export const buildAddress = (addressArray: Array<string>): string => {
   return address;
 }
 
-export const formatForDisplay = (companyProfile: CompanyProfile): CompanyProfile => {
+export const formatForDisplay = (companyProfile: CompanyProfile, lang: string = "en"): CompanyProfile => {
   companyProfile.type = lookupCompanyType(companyProfile.type);
   companyProfile.companyStatus = lookupCompanyStatus(companyProfile.companyStatus);
-  companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation);
+  companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation, lang);
   companyProfile.registeredOfficeAddress.premises = formatTitleCase(companyProfile.registeredOfficeAddress.premises);
   companyProfile.registeredOfficeAddress.addressLineOne = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineOne);
   companyProfile.registeredOfficeAddress.addressLineTwo = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineTwo);
