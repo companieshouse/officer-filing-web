@@ -1,21 +1,36 @@
-{% if optionalBackLinkUrl %}
-  <a href="{{ optionalBackLinkUrl }}" class="govuk-back-link" data-event-id="data-event-id">Back</a>
-{% else %}
-  <a onclick="goBack()" id="back-link" class="govuk-back-link" data-event-id="back-link">Back</a>
-{% endif %}
 
-<script>
-  function goBack() {
-    window.history.back()
-  }
-</script>
+<span id="back-link-span"></span>
+  <script>
+    var optionalBackLinkUrl = "{{ optionalBackLinkUrl }}"
+  </script>
 
-<noscript>
-  {{ govukBackLink({
-    text: "Back",
-    href: backLinkUrl,
-    attributes: {
-      "data-event-id": "back-link"
-    }
-  }) }}
-</noscript>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      var backLinkSpan = document.getElementById("back-link-span");
+      if (backLinkSpan) {
+        var backButton = document.createElement('a');
+        backButton.href = typeof optionalBackLinkUrl ? optionalBackLinkUrl : "#";
+        backButton.textContent = "Back";
+        backButton.className = "govuk-back-link";
+        backButton.setAttribute('data-event-id', 'back-link');
+
+        backButton.addEventListener('click', () => {
+          window.location.href = optionalBackLinkUrl ? optionalBackLinkUrl : window.history.back();
+        });
+
+        backLinkSpan.appendChild(backButton);
+      }
+    });
+  </script>
+
+  <noscript>
+    {{ govukBackLink({
+      text: "Back",
+      href: backLinkUrl,
+      attributes: {
+        "data-event-id": "back-link"
+      }
+    }) }}
+  </noscript>
+
+
