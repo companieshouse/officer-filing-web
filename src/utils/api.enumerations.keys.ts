@@ -231,3 +231,44 @@ export enum protectedDetailsErrorMessageKey {
 export enum whereDirectorLiveCorrespondenceErrorMessageKey {
   NO_ADDRESS_RADIO_BUTTON_SELECTED = "Select the director’s correspondence address"
 }
+
+export enum addressPremisesErrorMessageKey {
+  PREMISES_BLANK = "premises-blank",
+  PREMISES_CHARACTERS = "premises-characters",
+  PREMISES_LENGTH = "premises-length",
+}
+
+export enum addressAddressLineOneErrorMessageKey {
+  ADDRESS_LINE_1_BLANK = "address-line-one-blank",
+  ADDRESS_LINE_1_CHARACTERS = "address-line-one-characters",
+  ADDRESS_LINE_1_LENGTH = "address-line-one-length",
+}
+
+export enum addressAddressLineTwoErrorMessageKey {
+  ADDRESS_LINE_2_CHARACTERS = "address-line-two-characters",
+  ADDRESS_LINE_2_LENGTH = "address-line-two-length",
+}
+
+export enum addressLocalityErrorMessageKey {
+  LOCALITY_BLANK = "locality-blank",
+  LOCALITY_CHARACTERS = "locality-characters",
+  LOCALITY_LENGTH = "locality-length",
+}
+
+export enum addressRegionErrorMessageKey {
+  REGION_BLANK = "region-blank",
+  REGION_CHARACTERS = "region-characters",
+  REGION_LENGTH = "region-length",
+}
+
+export enum addressCountryErrorMessageKey {
+  COUNTRY_BLANK = "country-blank",
+  COUNTRY_INVALID = "country-invalid",
+}
+
+export enum addressPostcodeErrorMessageKey {
+  POSTAL_CODE_BLANK = "generic-postal-code-blank",
+  POSTAL_CODE_CHARACTERS = "generic-postal-code-characters",
+  POSTAL_CODE_LENGTH = "generic-postal-code-length",
+  POSTAL_CODE_UK_INVALID = "postal-code-blank"
+}

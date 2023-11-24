@@ -58,4 +58,6 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
 
   export const COUNTRY_LIST = getEnvironmentVariable("COUNTRY_LIST");
 
+  export const UK_COUNTRY_LIST = getEnvironmentVariable("UK_COUNTRY_LIST");
+
   export const POSTCODE_ADDRESSES_LOOKUP_URL = getEnvironmentVariable("POSTCODE_ADDRESSES_LOOKUP_URL");
