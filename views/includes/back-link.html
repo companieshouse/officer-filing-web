@@ -9,13 +9,16 @@
       var backLinkSpan = document.getElementById("back-link-span");
       if (backLinkSpan) {
         var backButton = document.createElement('a');
-        backButton.href = typeof optionalBackLinkUrl ? optionalBackLinkUrl : "#";
         backButton.textContent = "Back";
         backButton.className = "govuk-back-link";
         backButton.setAttribute('data-event-id', 'back-link');
 
         backButton.addEventListener('click', () => {
-          window.location.href = optionalBackLinkUrl ? optionalBackLinkUrl : window.history.back();
+          if (optionalBackLinkUrl) {
+            backButton.href = optionalBackLinkUrl
+          } else {
+            window.history.back();
+          }
         });
 
         backLinkSpan.appendChild(backButton);
