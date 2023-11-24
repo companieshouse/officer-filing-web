@@ -148,22 +148,6 @@
           return false;
         });
       }
-
-      var nationality2Error = document.querySelector('a[href="#typeahead_input_1"]')
-      var nationality3Error = document.querySelector('a[href="#typeahead_input_2"]')
-
-      if (nationality2Error || document.getElementById("typeahead_input_1").value) {
-        $('#typeahead-form-group-1').show();
-        $('#nationality-2-link').hide();
-        $('#nationality-3-link').show();
-      } 
-
-      if (nationality3Error || document.getElementById("typeahead_input_2").value ) {
-        $('#typeahead-form-group-1').show();
-        $('#typeahead-form-group-2').show();
-        $('#nationality-2-link').hide();
-        $('#nationality-3-link').hide();
-      }
     })
   </script>
 {% endblock %}
