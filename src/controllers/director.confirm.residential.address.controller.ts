@@ -36,7 +36,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.render(Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
       templateName: Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
-      // backLinkUrl: returnPageUrl,
+      backLinkUrl: returnPageUrl,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
       ...officerFiling.residentialAddress

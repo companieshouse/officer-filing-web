@@ -38,7 +38,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL,
-      // backLinkUrl: backLink,
+      backLinkUrl: backLink,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       typeahead_array: COUNTRY_LIST,
       correspondence_address_premises: officerFiling.serviceAddress?.premises,

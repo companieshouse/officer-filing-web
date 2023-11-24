@@ -134,7 +134,8 @@ const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, v
 
   return res.render(Templates.DIRECTOR_DATE_DETAILS, {
     templateName: Templates.DIRECTOR_DATE_DETAILS,
-    // backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
+    backToCyaUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     errors: formatValidationErrors(validationErrors),
     ...dates,

@@ -29,7 +29,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     let returnPageUrl = getBackLinkUrl(req, officerFiling);
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      // backLinkUrl: urlUtils.getUrlToPath(returnPageUrl, req),
+      backLinkUrl: urlUtils.getUrlToPath(returnPageUrl, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
