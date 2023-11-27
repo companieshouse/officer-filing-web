@@ -14,6 +14,7 @@ export const toReadableFormat = (dateToConvert: string | undefined, lang = "en")
     case "cy":
       convertedDate = dateTime.setLocale("cy").toFormat("d MMMM yyyy");
       break;
+    case "en":
     default:
       convertedDate = dateTime.setLocale("en").toFormat("d MMMM yyyy");
       break;
