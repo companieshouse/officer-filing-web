@@ -1,6 +1,6 @@
 import { OccupationValidationType, ValidationError } from "../model/validation.model";
+import { REGEX_FOR_VALID_CHARACTERS } from "./validation";
 
-const REGEX_FOR_OCCUPATION = "^[-,.:; 0-9A-Z&@$£¥€'\"«»?!/\\\\()\\[\\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$";
 const OCCUPATION_LENGTH = 100;
 
 export const validateOccupation = (occupation: string, occupationValidationType: OccupationValidationType): ValidationError | undefined => {
@@ -27,7 +27,7 @@ export const validateOccupation = (occupation: string, occupationValidationType:
  * @returns the validation error if the occupation field is invalid, otherwise undefined
  */
 const validateInvalidCharacterValuesForOccupation = (occupation: string, occupationValidationType: OccupationValidationType): ValidationError | undefined => {
-    if(!occupation.match(REGEX_FOR_OCCUPATION)) {
+    if(!occupation.match(REGEX_FOR_VALID_CHARACTERS)) {
         return occupationValidationType.InvalidCharacters.Occupation;
     }
     return undefined;

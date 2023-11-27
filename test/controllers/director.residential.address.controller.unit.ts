@@ -192,7 +192,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
-        directorCorrespondenceAddressChoice: "director_registered_office_address"
+        directorServiceAddressChoice: "director_registered_office_address"
       });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
