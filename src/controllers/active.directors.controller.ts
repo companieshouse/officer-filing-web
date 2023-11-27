@@ -18,7 +18,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
-import {AP01_ACTIVE, CH01_ACTIVE} from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -59,9 +59,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       appointDisabled = "display:none"
     }
 
-    let updateEnabled = "true";
-    if(!isActiveFeature(CH01_ACTIVE)) {
-      updateEnabled = "false";
+    // Enable the update button if feature is enabled
+    let updateEnabled = '""';
+    if(isActiveFeature(CH01_ACTIVE)) {
+      updateEnabled = "true";
     }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {

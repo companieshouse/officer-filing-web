@@ -32,6 +32,8 @@ const APPOINTMENT_ID = "987654321";
 const SUBMISSION_ID = "55555555";
 const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
+const mockIsActiveFeature = isActiveFeature as jest.Mock;
+mockIsActiveFeature.mockReturnValue(true);
 const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
 const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 const CURRENT_DIRECTORS_URL = CURRENT_DIRECTORS_PATH
@@ -46,7 +48,7 @@ describe("Active directors controller tests", () => {
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
     mockPostOfficerFiling.mockClear();
-    //mockIsFeatureFlag.mockClear();
+    mockIsFeatureFlag.mockClear();
   });
 
   describe("get tests", () => {
@@ -132,7 +134,6 @@ describe("Active directors controller tests", () => {
       });
 
     it("Should display View and update Director button when CH01 is enabled", async () => {
-      // mockIsFeatureFlag.mockReturnValueOnce(true);
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
@@ -140,7 +141,7 @@ describe("Active directors controller tests", () => {
     });
 
     it("Should not display View and update Director button when CH01 is disabled", async () => {
-    //  mockIsFeatureFlag.mockReturnValueOnce("false");
+      mockIsFeatureFlag.mockReturnValue(false);
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
