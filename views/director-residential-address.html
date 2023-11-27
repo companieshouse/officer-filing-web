@@ -27,8 +27,26 @@
               checked: director_address === "director_correspondence_address",
               attributes: {
                 "data-event-id": "director_correspondence_address"
+              },
+              hint: {
+                text: "This is the director's correspondence address"              
               }
           }
+        %}
+      {% endif %}
+      
+      {% if directorCorrespondenceAddressChoice !== 'director_registered_office_address' %}
+        {% set registeredOfficeAddressDisplay = {
+          value: "director_registered_office_address",
+          text: directorRegisteredAddressValue,
+          checked: director_address === "director_registered_office_address",
+          attributes: {
+            "data-event-id": "director_registered_office_address"
+          },
+          hint: {
+            text: "This is the company's registered office address"              
+          }
+        }
         %}
       {% endif %}
       
@@ -49,14 +67,7 @@
               text: "Tell us the director's home address. Only give a business address if they also live there."
           },
           items: [
-            {
-              value: "director_registered_office_address",
-              text: directorRegisteredAddressValue,
-              checked: director_address === "director_registered_office_address",
-              attributes: {
-                "data-event-id": "director_registered_office_address"
-              }
-            },
+            registeredOfficeAddressDisplay,
             manualAddressDisplay,
             {
               value: "director_different_address",

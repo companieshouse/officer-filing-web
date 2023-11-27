@@ -135,5 +135,6 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
     protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
+    directorCorrespondenceAddressChoice: officerFiling.directorCorrespondenceAddressChoice
   });
 };
