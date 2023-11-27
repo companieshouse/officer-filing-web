@@ -24,7 +24,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
-      director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
+      optionalBackLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
+      director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
     });
@@ -51,14 +52,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
         backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
         errors: formattedErrors,
-        director_correspondence_address: officerFiling.directorCorrespondenceAddressChoice,
+        director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       });
     }
 
     const officerFilingBody: OfficerFiling = {
-      directorCorrespondenceAddressChoice: selectedSraAddressChoice,
+      directorServiceAddressChoice: selectedSraAddressChoice,
       serviceAddress: undefined
     };
     if (selectedSraAddressChoice === registeredOfficerAddressValue) {
@@ -66,14 +67,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    if (patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    if (patchFiling.data.isServiceAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
     }
-    else if (!patchFiling.data.isMailingAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    else if (!patchFiling.data.isServiceAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
     }
     else {
-      officerFilingBody.isMailingAddressSameAsRegisteredOfficeAddress = false;
+      officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }

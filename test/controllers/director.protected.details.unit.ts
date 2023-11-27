@@ -83,18 +83,18 @@ describe("Director protected details controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} if the flag isMailingAddressSameAsHomeAddress set to true`, async () => {
+      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} if the flag isServiceAddressSameAsHomeAddress set to true`, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          isMailingAddressSameAsHomeAddress : true
+          isServiceAddressSameAsHomeAddress : true
         });
 
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END);
       });
 
-      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page if the flag isMailingAddressSameAsHomeAddress set to false`, async () => {
+      it(`Should populate back link to ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page if the flag isServiceAddressSameAsHomeAddress set to false`, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          isMailingAddressSameAsHomeAddress : false
+          isServiceAddressSameAsHomeAddress : false
         });
 
         const response = await request(app).get(PAGE_URL);

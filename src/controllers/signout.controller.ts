@@ -10,6 +10,7 @@ export const get: Handler = async (req, res) => {
 
     res.render(Templates.SIGNOUT, {
         backLinkUrl: returnPage,
+        optionalBackLinkUrl: returnPage,
         templateName: Templates.SIGNOUT
     });
 }

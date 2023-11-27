@@ -2,6 +2,7 @@ environment = "staging"
 aws_profile = "staging-eu-west-2"
 
 account_local_url = "https://staging.company-information.service.gov.uk"
+feature_flag_wle = "false"
 feature_flag_ap01_web = "true"
 feature_flag_ch01_web = "true"
 api_url = "https://api-staging.company-information.service.gov.uk"
