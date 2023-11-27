@@ -59,11 +59,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       appointDisabled = "display:none"
     }
 
-    let updateDisabled = '""'
-    // Hide the appoint button if feature is disabled
-    if(!isActiveFeature(CH01_ACTIVE))
-    {
-      updateDisabled = "display:none"
+    let updateEnabled = "true";
+    if(!isActiveFeature(CH01_ACTIVE)) {
+      updateEnabled = "false";
     }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
@@ -72,7 +70,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorsList: paginatedDirectorsList,
       company: companyProfile,
       pagination: paginationElement,
-      appointDisabled: appointDisabled
+      appointDisabled: appointDisabled,
+      updateEnabled: updateEnabled
     });
   } catch (e) {
     return next(e);

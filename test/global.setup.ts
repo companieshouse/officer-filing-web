@@ -22,6 +22,7 @@ export default () => {
   process.env.URL_PARAM_MAX_LENGTH = "50";
   process.env.SERVICE_NAME = 'Appoint and remove a company director';
   process.env.AP01_ACTIVE = 'true';
+  process.env.FEATURE_FLAG_CH01_WEB = 'true';
   process.env.TITLE_LIST = 'DR';
   process.env.OCCUPATION_LIST = 'Astronaut';
   process.env.NATIONALITY_LIST = 'British';

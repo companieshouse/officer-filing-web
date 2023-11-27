@@ -3,6 +3,7 @@ jest.mock("../../src/services/active.directors.details.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/utils/api.enumerations");
+jest.mock("../../src/utils/feature.flag");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -15,6 +16,7 @@ import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { postOfficerFiling } from "../../src/services/officer.filing.service";
+import { isActiveFeature } from "../../src/utils/feature.flag";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -23,6 +25,7 @@ const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficersExtended);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
+const mockIsFeatureFlag = isActiveFeature as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const APPOINTMENT_ID = "987654321";
@@ -43,6 +46,7 @@ describe("Active directors controller tests", () => {
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
     mockPostOfficerFiling.mockClear();
+    //mockIsFeatureFlag.mockClear();
   });
 
   describe("get tests", () => {
@@ -125,7 +129,23 @@ describe("Active directors controller tests", () => {
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
         expect(response.text).toContain("Date appointed");
         expect(response.text).toContain("Before 1992");
-      }); 
+      });
+
+    it("Should display View and update Director button when CH01 is enabled", async () => {
+      // mockIsFeatureFlag.mockReturnValueOnce(true);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("View and update details");
+    });
+
+    it("Should not display View and update Director button when CH01 is disabled", async () => {
+    //  mockIsFeatureFlag.mockReturnValueOnce("false");
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).not.toContain("View and update details");
+    });
   });
 
   describe("post tests", () => {
