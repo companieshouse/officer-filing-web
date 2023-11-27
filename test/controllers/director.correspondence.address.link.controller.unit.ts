@@ -68,7 +68,7 @@ describe("Director correspondence address link controller tests", () => {
           middleNames: "testMiddle",
           lastName: "testLast",
           formerNames: "testFormer",
-          isMailingAddressSameAsRegisteredOfficeAddress: true
+          isServiceAddressSameAsRegisteredOfficeAddress: true
         })
         
         const response = await request(app).get(PAGE_URL);
@@ -83,7 +83,7 @@ describe("Director correspondence address link controller tests", () => {
           middleNames: "testMiddle",
           lastName: "testLast",
           formerNames: "testFormer",
-          isMailingAddressSameAsRegisteredOfficeAddress: false
+          isServiceAddressSameAsRegisteredOfficeAddress: false
         })
         
         const response = await request(app).get(PAGE_URL);

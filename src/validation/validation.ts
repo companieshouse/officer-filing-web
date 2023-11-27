@@ -2,6 +2,15 @@ import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/serv
 import { FormattedValidationErrors, ValidationError } from "../model/validation.model";
 import { convertAPIMessageToKey, lookupAPIValidationMessage, lookupWebValidationMessage } from "../utils/api.enumerations";
 
+/**
+ * Regex for valid characters
+ */
+export const REGEX_FOR_VALID_CHARACTERS = /^[-,.:; 0-9A-Z&@$£¥€'"«»''""?!/\\()[\]{}<>*=#%+ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž]*$/;
+
+/**
+ * Regex for valid UK postcode
+ */
+export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
 
 /**
  * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.

@@ -36,6 +36,8 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
         errors: formattedErrors,
         typeahead_errors: JSON.stringify(formattedErrors),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        nationality2_hidden: getField(req, DirectorField.NATIONALITY_2_RADIO),
+        nationality3_hidden: getField(req, DirectorField.NATIONALITY_3_RADIO)
       });
     }
     return next();
