@@ -49,6 +49,25 @@ const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const validData = {
+  "residential_address_premises": "The Big House",
+  "residential_address_line_1": "One Street",
+  "residential_address_line_2": "Two",
+  "residential_address_city": "Three",
+  "residential_address_county": "Four",
+  "typeahead_input_0": "France",
+  "residential_address_postcode": "TE6 3ST"
+}
+
+const invalidData = {
+  "residential_address_premises": "The Big Houseゃ",
+  "residential_address_line_1": "One Street",
+  "residential_address_line_2": "Twoゃ",
+  "residential_address_city": "Three",
+  "residential_address_county": "Fourゃ",
+  "typeahead_input_0": "England",
+  "residential_address_postcode": "ゃ"
+}
 
 describe("Director residential address manual controller tests", () => {
 
@@ -168,8 +187,52 @@ describe("Director residential address manual controller tests", () => {
     });
 
     describe("post tests", () => {
-    
-      it("Should redirect to confirm director residential address page", async () => {
+
+      describe("JS validation tests for residential addresses", () => {
+
+        it("Should render validation error with null values passed as residential address", async () => {
+          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+          mockGetOfficerFiling.mockResolvedValueOnce({
+            data: {
+              firstName: "John",
+              lastName: "Smith"
+            }
+          });
+
+          const response = await request(app).post(PAGE_URL).send({});
+
+          expect(response.text).toContain("Enter a property name or number");
+          expect(response.text).toContain("Enter an address");
+          expect(response.text).toContain("Enter a city or town");
+          expect(response.text).toContain("Enter a country");
+
+          expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+
+        });
+
+        it("Should render other validation errors when passing in invalid data as residential address", async () => {
+          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+          mockGetOfficerFiling.mockResolvedValueOnce({
+            data: {
+              firstName: "John",
+              lastName: "Smith"
+            }
+          });
+
+          const response = await request(app).post(PAGE_URL).send(invalidData);
+
+          expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("Address line 2 must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("County, state, province or region must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+          expect(response.text).toContain("Postcode or ZIP must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+
+          expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+
+      });
+
+      it("Should patch officer filing with updated information", async () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
@@ -177,26 +240,7 @@ describe("Director residential address manual controller tests", () => {
             lastName: "Smith"
           }
         });
-        
-        const response = await request(app).post(PAGE_URL);
-
-        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
-      });
-
-      it("Should patch officer filing with updated information", async () => {
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-
-        await request(app)
-          .post(PAGE_URL)
-          .send({ 
-            "residential_address_premises": "The Big House",
-            "residential_address_line_1": "One Street",
-            "residential_address_line_2": "Two",
-            "residential_address_city": "Three",
-            "residential_address_county": "Four",
-            "typeahead_input_0": "Five",
-            "residential_address_postcode": "TE6 3ST", 
-          });
+        const response = await request(app).post(PAGE_URL).send(validData);
 
         expect(mockPatchOfficerFiling).toBeCalledWith(
           expect.objectContaining({}),
@@ -209,7 +253,7 @@ describe("Director residential address manual controller tests", () => {
               addressLine2: "Two",
               locality: "Three",
               region: "Four",
-              country: "Five",
+              country: "France",
               postalCode: "TE6 3ST"
             }
           })
@@ -220,7 +264,7 @@ describe("Director residential address manual controller tests", () => {
         mockIsActiveFeature.mockReturnValueOnce(true);
         mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error patching officer filing"));
 
-        const response = await request(app).post(PAGE_URL);
+        const response = await request(app).post(PAGE_URL).send(validData);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
@@ -235,20 +279,19 @@ describe("Director residential address manual controller tests", () => {
       });
 
       it("Should display errors on page if get validation status returns errors", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
+        mockGetValidationStatus.mockResolvedValueOnce({
           errors: [createMockValidationStatusError("Enter a property name or number for the director's home address"), createMockValidationStatusError("Enter a city or town for the director's home address")],
           isValid: false
-        }
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
+        });
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
             firstName: "John",
             lastName: "Smith"
           }
         });
-  
-        const response = await request(app).post(PAGE_URL);
-  
+
+        const response = await request(app).post(PAGE_URL).send(validData);
+
         expect(response.text).toContain("Enter a property name or number");
         expect(response.text).toContain("Enter a city or town");
         expect(mockGetValidationStatus).toHaveBeenCalled();
