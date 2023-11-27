@@ -3,7 +3,7 @@ import {
   lookupCompanyStatus,
   lookupCompanyType
 } from "../../src/utils/api.enumerations";
-import { getLocalesService } from "../../src/utils/localise";
+import { getLocalesService, selectLang } from "../../src/utils/localise";
 
 describe("localise tests", () => {
   it("should localise company status to be same as api constants for en", () => {
@@ -22,5 +22,9 @@ describe("localise tests", () => {
       const localisedCompanyType =  locales.i18nCh.resolveSingleKey("company-type-" + key, "en")
       expect(localisedCompanyType).toEqual(companyType);
     }
+  });
+
+  it("should defaul to en", () => {
+    expect(selectLang("")).toEqual("en");
   });
 });

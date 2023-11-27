@@ -136,5 +136,19 @@ describe("Confirm company controller tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=cy");
   });
+
+  it("Should redirect allowing lang to be specified as welsh in body", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockGetCompanyMetrics.mockResolvedValueOnce(companyMetrics);
+    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+    
+    const response = await request(app)
+      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber)
+      .send({ lang: "cy" });
+
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=cy");
+  });
+
 });
 
