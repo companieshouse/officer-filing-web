@@ -60,6 +60,17 @@ describe("Confirm company controller tests", () => {
     expect(response.text).toContain(validCompanyProfile.companyName);
   });
 
+  it("Should render the page in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
+    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+
+    const response = await request(app)
+      .get(CONFIRM_COMPANY_PATH + "?lang=cy");
+
+    expect(response.text).toContain("Cadarnhau mai hwn yw&#39;r cwmni cywir");
+  });
+
   it("Should return error page if error is thrown when getting Company Profile", async () => {
     const message = "Can't connect";
     mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
@@ -112,6 +123,18 @@ describe("Confirm company controller tests", () => {
 
     expect(response.text).toEqual(NO_DIRECTORS_PAGE_REDIRECT_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
+
+  it("Should redirect allowing lang to be specified as welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockGetCompanyMetrics.mockResolvedValueOnce(companyMetrics);
+    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+
+    const response = await request(app)
+      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber + "&lang=cy");
+
+    expect(response.status).toEqual(302);
+    expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=cy");
   });
 });
 

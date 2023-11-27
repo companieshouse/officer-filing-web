@@ -70,7 +70,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     logger.debug("POST confirm company lang in query params: " + req.query.lang + ", and body: " + req.body.lang);
 
     const session: Session = req.session as Session;
-    const lang = selectLang(req.body.lang);
+    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
    
     const companyNumber = req.query.companyNumber as string;
     req.params[urlParams.PARAM_COMPANY_NUMBER] = companyNumber;
