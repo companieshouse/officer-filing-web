@@ -1,7 +1,7 @@
 import {PostcodeValidationType, ValidationError} from "model/validation.model";
+import { REGEX_FOR_VALID_UK_POSTCODE } from "./validation";
 
 const REGEX_FOR_POSTCODE_CHARACTERS = /^[A-Za-z0-9\s]*$/;
-const REGEX_FOR_VALID_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
 
 export const validatePostcode = (postcode: string,
                                  postcodeValidationType : PostcodeValidationType): ValidationError[] => {
@@ -79,7 +79,7 @@ const validateLengthForPostcode = (postcode: string, postcodeValidationType : Po
  */
 
 const validateValidPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
-    if (!postcode.match(REGEX_FOR_VALID_POSTCODE)) {
+    if (!postcode.match(REGEX_FOR_VALID_UK_POSTCODE)) {
         return postcodeValidationType.InvalidPostcode.Postcode;
     }
     return undefined;

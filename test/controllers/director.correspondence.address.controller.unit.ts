@@ -157,7 +157,7 @@ describe("Director correspondence address controller tests", () => {
       it(`should redirect to ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} if registered office address is selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
-          isMailingAddressSameAsHomeAddress: undefined
+          isServiceAddressSameAsHomeAddress: undefined
         }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"
@@ -168,7 +168,7 @@ describe("Director correspondence address controller tests", () => {
       it(`should redirect to ${DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL} if different address is selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
-          isMailingAddressSameAsHomeAddress: undefined
+          isServiceAddressSameAsHomeAddress: undefined
         }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_different_address"
@@ -179,7 +179,7 @@ describe("Director correspondence address controller tests", () => {
       it(`should patch the service address with no registered office address if selected`, async () => {
         mockGetCompanyProfile.mockResolvedValue({});
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
-          isMailingAddressSameAsHomeAddress: false
+          isServiceAddressSameAsHomeAddress: false
         }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"
@@ -191,7 +191,7 @@ describe("Director correspondence address controller tests", () => {
       it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL} if office address is selected and home address flag is already set`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
-          isMailingAddressSameAsHomeAddress: true
+          isServiceAddressSameAsHomeAddress: true
         }});
         const response = (await request(app).post(PAGE_URL).send({
           director_correspondence_address: "director_registered_office_address"

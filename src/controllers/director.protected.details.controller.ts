@@ -40,7 +40,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const  getBackLinkUrl = (req: Request, officerFiling: OfficerFiling) => {
   let returnPageUrl = officerFiling.protectedDetailsBackLink;
-  if(officerFiling.isMailingAddressSameAsHomeAddress === true) {
+  if(officerFiling.isServiceAddressSameAsHomeAddress === true) {
     return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req);
   }
   if (returnPageUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {

@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isMailingAddressSameAsRegisteredOfficeAddress),
+      sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
     });
   } catch (e) {
     return next(e);
@@ -36,9 +36,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const isMailingAddressSameAsRegisteredOfficeAddress = calculateSaToRoaBooleanValue(req);
+    const isServiceAddressSameAsRegisteredOfficeAddress = calculateSaToRoaBooleanValue(req);
 
-    if (isMailingAddressSameAsRegisteredOfficeAddress === undefined) {
+    if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {
@@ -50,7 +50,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      isMailingAddressSameAsRegisteredOfficeAddress: isMailingAddressSameAsRegisteredOfficeAddress
+      isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress
 
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
