@@ -93,7 +93,9 @@
           <li>This service is not yet active</li>
         </ul>
       {% endif %}
-
+      {% if CH01_ACTIVE === "true" %}
+      <h1> CH01 Active </h1>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

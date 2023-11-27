@@ -1,3 +1,4 @@
+{% block content %}
 <div class="govuk-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">{{officerCard.officer.name}}</h2>
@@ -20,11 +21,24 @@
           {{officerCard.officer.appointedOn}}
         </dd>
       </div>
-      <div class="govuk-!-padding-top-6">
-        <button id="directorButton" name="appointmentId" class="govuk-button govuk-button--secondary" data-module="govuk-button" value="{{officerCard.appointmentId}}">
-          Remove director
-        </button>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+        </dt>
+        <dd class="govuk-summary-list__value">
+        </dd>
       </div>
     </dl>
+    <div class="govuk-!-padding-top-2">
+    {% if CH01_ACTIVE === "true" %}
+    <h1> CH01 Active </h1>
+    {% endif %}
+      <button id="directorUpdateButton" name="appointmentId" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="{{officerCard.appointmentId}}">
+        View and update details
+      </button>
+      <button id="directorButton" name="appointmentId" class="govuk-button govuk-button--secondary" data-module="govuk-button" value="{{officerCard.appointmentId}}">
+        Remove director
+      </button>
+    </div>
   </div>
 </div>
+{% endblock %}

@@ -59,6 +59,7 @@ locals {
 
   task_environment = [
     { "name": "FEATURE_FLAG_AP01_WEB", "value": "${var.feature_flag_ap01_web}" },
+    { "name": "FEATURE_FLAG_CH01_WEB", "value": "${var.feature_flag_ch01_web}" },
     { "name": "API_URL", "value": "${var.api_url}" },
     { "name": "APPLICATIONS_API_URL", "value": "${var.account_local_url}" },
     { "name": "CACHE_POOL_SIZE", "value": "${var.cache_pool_size}" },
