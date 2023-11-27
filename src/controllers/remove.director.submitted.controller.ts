@@ -11,6 +11,7 @@ import { getOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
+import { retrieveDirectorNameFromAppointment } from "../utils/format";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -32,16 +33,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const companyOfficer: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, officerFiling.referenceAppointmentId);
 
-    const firstname = companyOfficer.forename != null ? formatTitleCase(companyOfficer.forename) : "";
-    const surname = companyOfficer.surname != null ? formatTitleCase(companyOfficer.surname) : "";
-    const directorName = firstname + " " + surname;
-
     return res.render(Templates.REMOVE_DIRECTOR_SUBMITTED, {
       templateName: Templates.REMOVE_DIRECTOR_SUBMITTED,
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
-      name: directorName,
+      name: formatTitleCase(retrieveDirectorNameFromAppointment(companyOfficer)),
       resignedOn: toReadableFormat(officerFiling.resignedOn),
       removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req)
     });
