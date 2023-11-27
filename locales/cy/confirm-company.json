@@ -1,3 +1,12 @@
 {
-  "confirm_company_title" : "Cadarnhau mai hwn yw'r cwmni cywir"
+  "confirmCompanyTitle" : "Cadarnhau mai hwn yw'r cwmni cywir",
+  "confirmCompanyName" : "Enw'r cwmni",
+  "confirmCompanyNumber": "Rhif y cwmni",
+  "confirmCompanyStatus" : "Statws",
+  "confirmCompanyDateOfCreation": "Dyddiad corffori",
+  "confirmCompanyType": "Math o Gwmni",
+  "confirmRegisteredOfficeAddress": "Cyfeiriad swyddfa gofrestredig",
+  "confirmNotDueToFile": "Ni fyddwch yn gorfod ffeilio swyddog sy'n ffeilio. Os ydych chi'n ffeilio datganiad heddiw, bydd yn dangos y dyddiad fel",
+  "confirmReviewPeriodChange": "bydd hyn yn newid eich cyfnodau adolygu yn y dyfodol.",
+  "confirmChooseADifferentCompany": "Dewis cwmni gwahanol"
 }

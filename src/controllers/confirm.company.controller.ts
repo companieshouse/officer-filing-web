@@ -59,6 +59,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
 
     company: companyProfile,
+    notDueWarning: undefined,
     address: address,
     templateName: Templates.CONFIRM_COMPANY,
     backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")

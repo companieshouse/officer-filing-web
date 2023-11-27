@@ -24,7 +24,9 @@ describe("localise tests", () => {
     }
   });
 
-  it("should defaul to en", () => {
+  it("should default to en", () => {
     expect(selectLang("")).toEqual("en");
+    expect(selectLang(undefined)).toEqual("en");
+    expect(selectLang("en")).toEqual("en");
   });
 });
