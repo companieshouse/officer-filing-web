@@ -15,7 +15,7 @@ export const buildAddress = (addressArray: Array<string>): string => {
 }
 
 export const formatForDisplay = (companyProfile: CompanyProfile, locales: LocalesService, lang: string): CompanyProfile => {
-  companyProfile.type = lookupCompanyType(companyProfile.type);
+  companyProfile.type = locales.i18nCh.resolveSingleKey("company-type-" + companyProfile.type, lang);
   companyProfile.companyStatus = locales.i18nCh.resolveSingleKey("company-status-" + companyProfile.companyStatus, lang);
   companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation, lang);
   companyProfile.registeredOfficeAddress.premises = formatTitleCase(companyProfile.registeredOfficeAddress.premises);

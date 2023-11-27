@@ -15,9 +15,13 @@ export const lookupCompanyType = (companyTypeKey: string): string => {
   return apiConstants.company_type[companyTypeKey] || companyTypeKey;
 };
 
+export const getCompanyTypeKeys = (): string[] => apiConstants.company_type.keys();
+
 export const lookupCompanyStatus = (companyStatusKey: string): string => {
   return apiConstants.company_status[companyStatusKey] || companyStatusKey;
 };
+
+export const getCompanyStatusKeys = (): string[] => apiConstants.company_status.keys();
 
 export const lookupAPIValidationMessage = (validationMessageKey: string): string => {
   return officerFilingMessages.validation[validationMessageKey] || validationMessageKey;

@@ -46,11 +46,10 @@ const localeServices = getLocalesService();
     });
 
     it("Should convert company type into readable format", () => {
-      const formattedCompanyType = "Limited Liability Partnership";
-      mockLookupCompanyType.mockReturnValueOnce(formattedCompanyType);
+      const formattedCompanyType = "Private limited company";
+      
       const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
 
-      expect(mockLookupCompanyType).toBeCalledWith(validCompanyProfile.type);
       expect(formattedCompanyProfile.type).toEqual(formattedCompanyType);
     });
 
@@ -59,7 +58,6 @@ const localeServices = getLocalesService();
       mockLookupCompanyStatus.mockReturnValueOnce(formattedCompanyStatus);
       const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
 
-      // expect(mockLookupCompanyStatus).toBeCalledWith(validCompanyProfile.companyStatus);
       expect(formattedCompanyProfile.companyStatus).toEqual(formattedCompanyStatus);
     });
 
