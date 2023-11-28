@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CONFIRM_COMPANY, CREATE_TRANSACTION_PATH, OFFICER_FILING, URL_QUERY_PARAM, urlParams} from "../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { getCompanyMetrics } from "../services/company.metrics.service";
