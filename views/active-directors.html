@@ -36,15 +36,26 @@
       </span>
       <h1 class="govuk-heading-l">Current directors</h1>
 
-        {{ govukButton({
+      <button id="submit" class="govuk-button" onclick="_paq.push(['trackGoal', '{{PIWIK_APPOINT_DIRECTOR_START_GOAL_ID}}'])" data-event-id="remove-director-button" data-module="govuk-button" style="display: var(appointDisabled)">
+        Appoint new director
+      </button>
+
+      <!-- <button id="submit" class="govuk-button" onclick="_paq.push(['trackGoal', '{{PIWIK_APPOINT_DIRECTOR_START_GOAL_ID}}'])" data-event-id="remove-director-button" data-module="govuk-button" style="display: none">
+        Appoint new director
+      </button> -->
+
+      <!-- <button id="submit" class="govuk-button" onclick="_paq.push(['trackGoal', '{{PIWIK_APPOINT_DIRECTOR_START_GOAL_ID}}'])" data-event-id="remove-director-button" data-module="govuk-button" style="var(appointDisabled)">
+        Appoint new director
+      </button> -->
+
+        <!-- {{ govukButton({
           attributes: {
             id: "submit",
             style: appointDisabled,
-            onclick="_paq.push(['trackGoal', '{{PIWIK_APPOINT_DIRECTOR_START_GOAL_ID}}'])",
             "data-event-id": "appoint-new-director-button"
           },
           text: "Appoint new director"
-        }) }}
+        }) }} -->
 
       {% if directorsList|length %}
         {% for officerCard in directorsList %}

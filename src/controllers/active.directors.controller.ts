@@ -52,12 +52,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
     const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
 
-    let appointDisabled = '""'
+    let appointDisabled = "block;"
     // Hide the appoint button if feature is disabled
     if(!isActiveFeature(AP01_ACTIVE))
     {
-      appointDisabled = "display:none"
+      appointDisabled = "none;"
     }
+
+    // let appointDisabled = "block"
+    // // Hide the appoint button if feature is disabled
+    // if(!isActiveFeature(AP01_ACTIVE))
+    // {
+    //   appointDisabled = "none"
+    // }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
       PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
