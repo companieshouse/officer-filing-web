@@ -68,7 +68,7 @@ describe("Confirm company controller tests", () => {
     const response = await request(app)
       .get(CONFIRM_COMPANY_PATH + "?lang=cy");
 
-    expect(response.text).toContain("Cadarnhau mai hwn yw&#39;r cwmni cywir");
+    expect(response.text).toContain("Cadarnhau mai hwn yw’r cwmni cywir");
   });
 
   it("Should return error page if error is thrown when getting Company Profile", async () => {
@@ -149,6 +149,5 @@ describe("Confirm company controller tests", () => {
     expect(response.status).toEqual(302);
     expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=cy");
   });
-
 });
 

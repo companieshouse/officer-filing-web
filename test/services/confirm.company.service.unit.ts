@@ -8,7 +8,6 @@ import { createApiClient } from "@companieshouse/api-sdk-node";
 import { createAndLogError } from "../../src/utils/logger";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { toReadableFormat } from "../../src/utils/date";
-import { lookupCompanyStatus, lookupCompanyType } from "../../src/utils/api.enumerations";
 import { buildAddress, formatForDisplay } from "../../src/services/confirm.company.service";
 import { add } from "winston";
 import { getLocalesService } from "../../src/utils/localise";
@@ -17,8 +16,6 @@ import { get } from "http";
 const mockCreateApiClient = createApiClient as jest.Mock;
 const mockGetCompanyProfile = jest.fn();
 const mockToReadableFormat = toReadableFormat as jest.Mock;
-const mockLookupCompanyStatus = lookupCompanyStatus as jest.Mock;
-const mockLookupCompanyType = lookupCompanyType as jest.Mock;
 const mockCreateAndLogError = createAndLogError as jest.Mock;
 
 mockCreateApiClient.mockReturnValue({
@@ -55,7 +52,7 @@ const localeServices = getLocalesService();
 
     it("Should convert company status into readable format", () => {
       const formattedCompanyStatus = "Active";
-      mockLookupCompanyStatus.mockReturnValueOnce(formattedCompanyStatus);
+
       const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
 
       expect(formattedCompanyProfile.companyStatus).toEqual(formattedCompanyStatus);

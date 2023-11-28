@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
-import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, URL_QUERY_PARAM, urlParams} from "../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CONFIRM_COMPANY, CREATE_TRANSACTION_PATH, OFFICER_FILING, URL_QUERY_PARAM, urlParams} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { getCompanyMetrics } from "../services/company.metrics.service";
@@ -28,13 +28,14 @@ export const redirectToUrl = (url: string, res: Response) => {
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const session: Session = req.session as Session;
+    const companyNumber = req.query.companyNumber as string;
+
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
     logger.debug("localisations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
     
-    const session: Session = req.session as Session;
-    const companyNumber = req.query.companyNumber as string;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
     const pageOptions = await buildPageOptions(session, companyProfile, locales, lang);
@@ -68,7 +69,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    logger.debug("POST confirm company lang in query params: " + req.query.lang + ", and body: " + req.body.lang);
+    logger.debug("POST confirm company " + req.url + " lang in query params: " + req.query.lang + ", and body: " + req.body.lang);
 
     const session: Session = req.session as Session;
     const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
@@ -94,7 +95,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     nextPageUrl = addLangToUrl(nextPageUrl, lang);
-    logger.debug("POST confirm company " + lang + " nextPageUrl: " + nextPageUrl);
     redirectToUrl(nextPageUrl, res);
   } catch (e) {
     return next(e);
