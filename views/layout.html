@@ -52,7 +52,11 @@
 
 {% block header %}
 {% if AP01_ACTIVE === "true" %}
-  {% set serviceName = SERVICE_NAME %}
+  {% if i18n.appTitle %}
+    {% set serviceName = i18n.appTitle %}
+  {% else %}
+    {% set serviceName = SERVICE_NAME %}
+  {% endif %}
 {% else %}
   {% set serviceName = "Remove a company director" %}
 {% endif %}
