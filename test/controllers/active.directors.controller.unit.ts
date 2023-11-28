@@ -3,6 +3,7 @@ jest.mock("../../src/services/active.directors.details.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/utils/api.enumerations");
+jest.mock("../../src/utils/feature.flag");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -15,6 +16,7 @@ import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { postOfficerFiling } from "../../src/services/officer.filing.service";
+import { isActiveFeature } from "../../src/utils/feature.flag";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -23,12 +25,15 @@ const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficersExtended);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
+const mockIsFeatureFlag = isActiveFeature as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const APPOINTMENT_ID = "987654321";
 const SUBMISSION_ID = "55555555";
 const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
+const mockIsActiveFeature = isActiveFeature as jest.Mock;
+mockIsActiveFeature.mockReturnValue(true);
 const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
 const NO_DIRECTORS_REDIRECT = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
 const CURRENT_DIRECTORS_URL = CURRENT_DIRECTORS_PATH
@@ -43,6 +48,7 @@ describe("Active directors controller tests", () => {
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
     mockPostOfficerFiling.mockClear();
+    mockIsFeatureFlag.mockClear();
   });
 
   describe("get tests", () => {
@@ -125,7 +131,22 @@ describe("Active directors controller tests", () => {
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
         expect(response.text).toContain("Date appointed");
         expect(response.text).toContain("Before 1992");
-      }); 
+      });
+
+    it("Should display View and update Director button when CH01 is enabled", async () => {
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("View and update details");
+    });
+
+    it("Should not display View and update Director button when CH01 is disabled", async () => {
+      mockIsFeatureFlag.mockReturnValue(false);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).not.toContain("View and update details");
+    });
   });
 
   describe("post tests", () => {
