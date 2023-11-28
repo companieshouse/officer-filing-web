@@ -20,11 +20,11 @@ export const getField = (req: Request, fieldName: string): string => {
  * Checks whether the user came from the check your answers page and if so,
  *  sets the back link to the check your answers page instead.
  */
-export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink?: string): string => {
+export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string): string => {
   if(checkYourAnswersLink){
     return checkYourAnswersLink;
   }
-  return backLink!;
+  return backLink;
 };
 
 /**
