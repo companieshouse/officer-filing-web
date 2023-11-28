@@ -52,11 +52,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
     const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
 
-    let appointDisabled = "block;"
+    let appointDisabled = '""'
     // Hide the appoint button if feature is disabled
     if(!isActiveFeature(AP01_ACTIVE))
     {
-      appointDisabled = "none;"
+      appointDisabled = "display: none;"
     }
 
     // let appointDisabled = "block"
