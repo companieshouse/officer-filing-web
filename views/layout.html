@@ -90,13 +90,15 @@
 
 {% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing govuk-body") %}
 
+{% set policies = i18n.policies | default("Policies") %}
+
 {% block footer %}
   {{ govukFooter({
     meta: {
       items: [
         {
           href: "http://resources.companieshouse.gov.uk/legal/termsAndConditions.shtml",
-          text: "Policies"
+          text: policies
         },
         {
           href: "/help/cookies",
