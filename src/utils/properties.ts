@@ -44,6 +44,10 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   
   export const PIWIK_START_GOAL_ID = getEnvironmentVariable("PIWIK_START_GOAL_ID");
 
+  export const PIWIK_REMOVE_DIRECTOR_START_GOAL_ID = getEnvironmentVariable("PIWIK_REMOVE_DIRECTOR_START_GOAL_ID");
+
+  export const PIWIK_APPOINT_DIRECTOR_START_GOAL_ID = getEnvironmentVariable("PIWIK_APPOINT_DIRECTOR_START_GOAL_ID");
+
   export const URL_LOG_MAX_LENGTH: number = parseInt(getEnvironmentVariable("URL_LOG_MAX_LENGTH", "400"), 10);
   
   export const URL_PARAM_MAX_LENGTH: number = parseInt(getEnvironmentVariable("URL_PARAM_MAX_LENGTH", "50"), 10);
