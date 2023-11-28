@@ -1,5 +1,6 @@
+{% set backLinkText = i18n.back | default("Back") %}
 {{ govukBackLink({
-  text: "Back",
+  text: backLinkText,
   href: backLinkUrl,
   attributes: {
     "data-event-id": "back-link"
