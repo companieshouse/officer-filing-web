@@ -12,7 +12,7 @@
 
 {% block content %}
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-three-quarters">
+  <div class="govuk-grid-column-two-thirds">
     <form action="" method="post">
       {% if officerErrorMsg %}
         {{ govukErrorSummary({
@@ -53,6 +53,16 @@
             {% include "includes/corporate-directors.html" %}
           {% endif %}
         {% endfor %}
+        {% else %}
+          {% if publicCompany %}
+            {% set warningText = "This company has no directors, or not enough directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least 2 directors, and at least one must be a person. The company must tell Companies House who they've appointed within 14 days, or risk prosecution." %}
+          {% else %}
+            {% set warningText = "This company has no directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least one director who is a person and tell Companies House within 14 days, or risk prosecution." %}
+          {% endif %}
+          {{ govukWarningText({
+            text: warningText,
+            iconFallbackText: "Warning"
+          }) }}
       {% endif %}
 
       {% if pagination and pagination.items|length %}

@@ -4,7 +4,8 @@ import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PAT
 import { urlUtils } from "../utils/url";
 import {
   OFFICER_ROLE, 
-  STOP_TYPE} from "../utils/constants";
+  STOP_TYPE,
+  allowedPublicCompanyTypes} from "../utils/constants";
   import {
     equalsIgnoreCase,
     formatTitleCase,
@@ -20,6 +21,7 @@ import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
+import { PaginationData } from "../types";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -27,30 +29,31 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
-
-    // Redirect to stop screen if there are no directors
-    if(directorDtoList.length === 0){
-      var stopPageRedirectUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
-      stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
-      return res.redirect(stopPageRedirectUrl);
-    }
-
     const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
 
-    // Get current page number
-    let page = req.query["page"];
-    const pageNumber = isNaN(Number(page))? 1: Number(page);
+    let paginatedDirectorsList: OfficerCard[] = [];
+    let paginationElement: PaginationData | undefined = undefined;
 
-    // Get list of directors to show on current page
-    const objectsPerPage = 5;
-    const startIndex = (pageNumber - 1) * objectsPerPage;
-    const endIndex = startIndex + objectsPerPage;
-    const paginatedDirectorsList = directorList.slice(startIndex, endIndex);
+    if (directorList.length !== 0) {
+      // Get current page number
+      let page = req.query["page"];
+      const pageNumber = isNaN(Number(page)) ? 1 : Number(page);
 
-    // Create pagination element to navigate pages
-    const numOfPages = Math.ceil(directorList.length / objectsPerPage);
-    const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
+      // Get list of directors to show on current page
+      const objectsPerPage = 5;
+      const startIndex = (pageNumber - 1) * objectsPerPage;
+      const endIndex = startIndex + objectsPerPage;
+      paginatedDirectorsList = directorList.slice(startIndex, endIndex);
+
+      // Create pagination element to navigate pages
+      const numOfPages = Math.ceil(directorList.length / objectsPerPage);
+      paginationElement = buildPaginationElement(
+        pageNumber,
+        numOfPages,
+        urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+      );
+    }
 
     let appointDisabled = '""'
     // Hide the appoint button if feature is disabled
@@ -72,7 +75,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       company: companyProfile,
       pagination: paginationElement,
       appointDisabled: appointDisabled,
-      updateEnabled: updateEnabled
+      updateEnabled: updateEnabled,
+      publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type)
     });
   } catch (e) {
     return next(e);

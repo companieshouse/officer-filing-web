@@ -91,20 +91,16 @@ export enum OFFICER_ROLE {
 export enum STOP_TYPE {
   DISSOLVED = "dissolved",
   LIMITED_UNLIMITED = "limited-unlimited",
-  NO_DIRECTORS = "no directors",
   PRE_OCTOBER_2009 = "pre-october-2009",
   ETAG = "etag",
   SOMETHING_WENT_WRONG = "something-went-wrong"
 }
 
-export const allowedCompanyTypes = new Array(
-  "private-unlimited", 
-  "ltd", 
-  "plc", 
-  "private-limited-guarant-nsc-limited-exemption", 
-  "private-limited-guarant-nsc", 
-  "private-unlimited-nsc",
-  "private-limited-shares-section-30-exemption");
+export const allowedPublicCompanyTypes = new Array("plc");
+
+export const allowedPrivateCompanyTypes = new Array("ltd", "private-limited-guarant-nsc-limited-exemption", "private-limited-guarant-nsc", "private-unlimited", "private-unlimited-nsc", "private-limited-shares-section-30-exemption");
+
+export const allowedCompanyTypes = allowedPublicCompanyTypes.concat(allowedPrivateCompanyTypes);
 
 export const STOP_PAGE_CONTENT = 
 {
@@ -130,13 +126,6 @@ export const STOP_PAGE_CONTENT =
         <p>If this is the wrong company, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">go back and enter a different company number</a>.</p>
         <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
         `
-    },
-    noDirectors:{
-      pageHeader: "Company has no current directors",
-      pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has no current directors.</p>
-      <p>If you want to appoint a director, you can use <a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="webfiling-link">WebFiling</a> or a <a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="paper-form-link">paper form</a>.</p>
-      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
-      `
     },
     pre_october_2009:{
       pageHeader: "You cannot use this service",
