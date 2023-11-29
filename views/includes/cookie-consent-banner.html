@@ -3,35 +3,35 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-cookie-banner__heading govuk-heading-m">
-        {{ i18n.cookiesHeader | default('Cookies on Companies House services') }}
+        {{ i18n.cookiesHeader | default("Cookies on Companies House services") }}
       </h2>
       <div class="govuk-cookie-banner__content">
-        <p>We use some essential cookies to make our services work.</p>
-        <p>We'd also like to use analytics cookies so we can understand how you use our services and to make improvements.</p>
+        <p>{{ i18n.cookiesBanner1 | default("We use some essential cookies to make our services work.") }}</p>
+        <p>{{ i18n.cookiesBanner2 | default("We'd also like to use analytics cookies so we can understand how you use our services and to make improvements.") }}</p>
       </div>
     </div>
   </div>
   <div class="govuk-button-group">
     <button id="accept-cookies-button" type="button" class="govuk-button" data-module="govuk-button">
-      Accept analytics cookies
+      {{ i18n.acceptAnalyticCookies | default("Accept analytics cookies") }}
     </button>
     <button id="reject-cookies-button" type="button" class="govuk-button" data-module="govuk-button">
-      Reject analytics cookies
+      {{ i18n.rejectAnalyticCookies | default("Reject analytics cookies") }}
     </button>
-    <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">View cookies</a>
+    <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">{{ i18n.viewCookies | default("View cookies") }}</a>
   </div>
 </div>
 <div id="accepted-cookies-message" class="govuk-cookie-banner__message govuk-width-container" role="alert" hidden>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-cookie-banner__content">
-        <p>You've accepted analytics cookies. You can <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">change your cookie settings</a> at any time.</p>
+        <p>{{ i18n.acceptedAnalyticsCookies | default("You've accepted analytics cookies.") }} {{ i18n.changeCookies1 | default("You can") }} <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">{{ i18n.changeCookie2 | default("change your cookie settings") }}</a> {{ i18n.changeCookie3 | default("at any time.") }}</p>
       </div>
     </div>
   </div>
   <div class="govuk-button-group">
     <button id="hide-accepted-message-button" class="govuk-button" data-module="govuk-button">
-      Hide this message
+      {{ i18n.cookieHide | default("Hide this message") }}
     </button>
   </div>
 </div>
@@ -39,13 +39,13 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-cookie-banner__content">
-        <p>You've rejected analytics cookies. You can <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">change your cookie settings</a> at any time.</p>
+        <p>{{ i18n.rejectedAnalyticsCookies | default("You've rejected analytics cookies.") }} {{ i18n.changeCookies1 | default("You can") }} <a class="govuk-link" href="{{ CHS_URL }}/help/cookies">{{ i18n.changeCookie2 | default("change your cookie settings") }}</a> {{ i18n.changeCookie3 | default("at any time.") }}</p>
       </div>
     </div>
   </div>
   <div class="govuk-button-group">
     <button id="hide-rejected-message-button" class="govuk-button" data-module="govuk-button">
-      Hide this message
+      {{ i18n.cookieHide | default("Hide this message") }}
     </button>
   </div>
 </div>
@@ -55,9 +55,9 @@
     <div class="govuk-cookie-banner__message govuk-width-container">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Companies House services</h2>
+          <h2 class="govuk-cookie-banner__heading govuk-heading-m">{{ i18n.cookiesHeader | default("Cookies on Companies House services") }}</h2>
           <div class="govuk-cookie-banner__content">
-            <p class="govuk-body">We use cookies to make our services work and collect analytics information. To accept or reject analytics cookies, turn on JavaScript in your browser settings and reload this page.</p>
+            <p class="govuk-body">{{ i18n.cookieNoJS | default("We use cookies to make our services work and collect analytics information. To accept or reject analytics cookies, turn on JavaScript in your browser settings and reload this page.") }}</p>
           </div>
         </div>
       </div>
