@@ -3,8 +3,7 @@ import { Templates } from "../types/template.paths";
 import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams, DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
-  OFFICER_ROLE, 
-  STOP_TYPE,
+  OFFICER_ROLE,
   allowedPublicCompanyTypes} from "../utils/constants";
   import {
     equalsIgnoreCase,
