@@ -1,5 +1,8 @@
 {% if userEmail %}
     {% set signoutURL = signoutURL | default("/appoint-update-remove-company-officer/signout") %}
+    {% if lang %}
+        {% set signoutURL = signoutURL ~ "?lang=" ~ lang %}
+    {% endif %}
     {% set email = userEmail | default("Not signed in") %}
     <ul class="js-signout" id="navigation">
         <li class="content-email" id="signed-in-user">{{email}}</li>
