@@ -55,6 +55,10 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     companyProfile.registeredOfficeAddress.postalCode]
   const address = buildAddress(addressArray);
  
+  let backLinkUrl = COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D");
+  if (lang != undefined) {
+    backLinkUrl += "%26lang%3D" + selectLang(lang);
+  }
   return {
     ...getLocaleInfo(locales, lang),
     currentUrl: Templates.CONFIRM_COMPANY + "?companyNumber=" + companyProfile.companyNumber,
@@ -63,7 +67,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     notDueWarning: undefined,
     address: address,
     templateName: Templates.CONFIRM_COMPANY,
-    backLinkUrl: COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D")
+    backLinkUrl
   };
 };
 
