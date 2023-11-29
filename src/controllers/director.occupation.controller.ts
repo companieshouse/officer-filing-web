@@ -31,7 +31,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_OCCUPATION, {
       templateName: Templates.DIRECTOR_OCCUPATION,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
-      optionalBackLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
+      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: officerFiling.occupation,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
