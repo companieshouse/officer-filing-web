@@ -18,7 +18,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
-import { AP01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -52,6 +52,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const numOfPages = Math.ceil(directorList.length / objectsPerPage);
     const paginationElement = buildPaginationElement(pageNumber, numOfPages, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
 
+    // Enable the update button if feature is enabled
+    let updateEnabled = '""';
+    if(isActiveFeature(CH01_ACTIVE)) {
+      updateEnabled = "true";
+    }
+
     return res.render(Templates.ACTIVE_DIRECTORS, {
       ap01Active: isActiveFeature(AP01_ACTIVE),
       PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
@@ -60,7 +66,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,
       company: companyProfile,
-      pagination: paginationElement
+      pagination: paginationElement,
+      updateEnabled: updateEnabled
     });
   } catch (e) {
     return next(e);

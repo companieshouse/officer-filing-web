@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
-      optionalBackLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
+      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
@@ -94,9 +94,11 @@ export const buildResidentialAddressValidationErrors = (req: Request): Validatio
 
 const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
   return formatTitleCase(`
-          ${companyProfile.registeredOfficeAddress?.addressLineOne}, 
-          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo : ""}
+          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises+',' : ""}
+          ${companyProfile.registeredOfficeAddress?.addressLineOne},
+          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
-          ${companyProfile.registeredOfficeAddress?.region} 
+          ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
+          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
