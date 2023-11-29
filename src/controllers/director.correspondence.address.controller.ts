@@ -94,9 +94,11 @@ export const buildResidentialAddressValidationErrors = (req: Request): Validatio
 
 const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
   return formatTitleCase(`
-          ${companyProfile.registeredOfficeAddress?.addressLineOne}, 
-          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo : ""}
+          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises+',' : ""}
+          ${companyProfile.registeredOfficeAddress?.addressLineOne},
+          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
-          ${companyProfile.registeredOfficeAddress?.region} 
+          ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
+          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
