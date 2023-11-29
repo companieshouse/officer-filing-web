@@ -91,7 +91,10 @@
 {% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing govuk-body") %}
 
 {% set policies = i18n.policies | default("Policies") %}
-
+{% set cookies = i18n.cookies | default("Cookies") %}
+{% set contactUs = i18n.contactUs | default("Contact Us") %}
+{% set developers = i18n.developers | default("Developers") %}
+{% set accessibilityStatement = i18n.accessibilityStatement | default("Accessibility statement") %}
 {% block footer %}
   {{ govukFooter({
     meta: {
@@ -102,19 +105,19 @@
         },
         {
           href: "/help/cookies",
-          text: "Cookies"
+          text: cookies
         },
         {
           href: "/help/contact-us",
-          text: "Contact us"
+          text: contactUs
         },
         {
           href: "https://developer.companieshouse.gov.uk/",
-          text: "Developers"
+          text: developers
         },
         {
           href: "/appoint-update-remove-company-officer/accessibility-statement",
-          text: "Accessibility statement"
+          text: accessibilityStatement
         }
       ]
     }
