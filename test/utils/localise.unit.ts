@@ -3,7 +3,7 @@ import {
   lookupCompanyStatus,
   lookupCompanyType
 } from "../../src/utils/api.enumerations";
-import { getLocalesService, selectLang } from "../../src/utils/localise";
+import { getLocalesService, selectLang, addLangToUrl } from "../../src/utils/localise";
 
 describe("localise tests", () => {
   it("should localise company status to be same as api constants for en", () => {
@@ -28,5 +28,16 @@ describe("localise tests", () => {
     expect(selectLang("")).toEqual("en");
     expect(selectLang(undefined)).toEqual("en");
     expect(selectLang("en")).toEqual("en");
+  });
+
+  it.each([
+    ["/test?lang=cy", "/test", "cy"],
+    ["/test/test2?lang=en", "/test/test2", "en"],
+    ["/test", "/test", undefined],
+    ["/test", "/test", ""],
+    ["/test?page=1&lang=cy", "/test?page=1", "cy"],
+    ["/test?page=1", "/test?page=1", ""]
+  ])("should conditionally add lang to url", (expected, url, lang) => {
+    expect(addLangToUrl(url, lang)).toEqual(expected);
   });
 });

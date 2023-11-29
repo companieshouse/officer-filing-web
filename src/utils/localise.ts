@@ -9,7 +9,10 @@ export const selectLang = (lang): string => {
   }
 }
 
-export const addLangToUrl = (url: string, lang: string): string => {
+export const addLangToUrl = (url: string, lang: string | undefined): string => {
+  if (lang == undefined || lang == "") {
+    return url;
+  }
   if (url.includes("?")) {
     return url + "&lang=" + lang;
   } else {
