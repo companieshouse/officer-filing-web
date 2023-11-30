@@ -4,23 +4,30 @@ import { NationalityValidationType } from "../model/validation.model";
 
 // Configuration required for nationality validation error messages
 export const NationalityValidation: NationalityValidationType = {
-  Nationality1InvalidCharacter: {
+  Nationality1Blank: {
     Nationality: {
       messageKey: nationalityOneErrorMessageKey.NATIONALITY_MISSING,
       source: [DirectorField.NATIONALITY_1],
       link: DirectorField.NATIONALITY_1
     }
   },
+  Nationality1InvalidCharacter: {
+    Nationality: {
+      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
+      source: [DirectorField.NATIONALITY_1],
+      link: DirectorField.NATIONALITY_1
+    }
+  },
   Nationality2InvalidCharacter: {
     Nationality: {
-      messageKey: nationalityOneErrorMessageKey.NATIONALITY_MISSING,
+      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
       source: [DirectorField.NATIONALITY_2],
       link: DirectorField.NATIONALITY_2
     }
   },
   Nationality3InvalidCharacter: {
     Nationality: {
-      messageKey: nationalityOneErrorMessageKey.NATIONALITY_MISSING,
+      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
       source: [DirectorField.NATIONALITY_3],
       link: DirectorField.NATIONALITY_3
     }
