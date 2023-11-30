@@ -14,6 +14,9 @@ import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/serv
 import { buildValidationErrors } from "../../src/controllers/director.name.controller";
 import { formerNamesErrorMessageKey, lastNameErrorMessageKey, titleErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { validateName } from "../../src/validation/name.validation";
+import { formatValidationErrors } from "../../src/validation/validation";
+import { NameValidation } from "../../src/validation/name.validation.config";
 
 const req = {} as Request;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -176,6 +179,19 @@ describe("Director name controller tests", () => {
 
         expect(validationErrors).toHaveLength(0);
       });
-      
+    });
+
+    describe("buildValidationErrors localisation tests", () => {
+      it("should format validation blank first name error in English", async () => {
+        const frontendValidationErrors = validateName("Mr", "", "", "Smith", "", "", NameValidation);
+        const formattedErrors = formatValidationErrors(frontendValidationErrors, "en");
+        expect("Enter the director’s full first name").toBe(formattedErrors.errorList[0].text);
+      });
+
+      it("should format validation blank first name error in Welsh", async () => {
+        const frontendValidationErrors = validateName("Mr", "", "", "Jones", "", "", NameValidation);
+        const formattedErrors = formatValidationErrors(frontendValidationErrors, "cy");
+        expect("Rhowch enw cyntaf llawn y cyfarwyddwr").toBe(formattedErrors.errorList[0].text);
+      });
     });
 });
