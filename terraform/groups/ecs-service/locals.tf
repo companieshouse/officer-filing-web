@@ -77,6 +77,8 @@ locals {
     { "name": "FEATURE_FLAG_TM01_WEB", "value": "${var.feature_flag_tm01_web}" },
     { "name": "PIWIK_SITE_ID", "value": "${var.piwik_site_id}" },
     { "name": "PIWIK_START_GOAL_ID", "value": "${var.piwik_start_goal_id}" },
+    { "name": "PIWIK_REMOVE_DIRECTOR_START_GOAL_ID", "value": "${var.piwik_remove_director_start_goal_id}" },
+    { "name": "PIWIK_APPOINT_DIRECTOR_START_GOAL_ID", "value": "${var.piwik_appoint_director_start_goal_id}" },
     { "name": "PIWIK_URL", "value": "${var.piwik_url}" },
     { "name": "REDIRECT_URI", "value": "${var.redirect_uri}" },
     { "name": "SERVICE_NAME", "value": "${var.service_name}" },
