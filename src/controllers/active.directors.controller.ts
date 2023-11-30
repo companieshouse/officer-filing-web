@@ -18,7 +18,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
-import { AP01_ACTIVE } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { selectLang, addLangToUrl } from "../utils/localise";
 
@@ -61,6 +61,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       appointDisabled = "display:none"
     }
 
+    // Enable the update button if feature is enabled
+    let updateEnabled = '""';
+    if(isActiveFeature(CH01_ACTIVE)) {
+      updateEnabled = "true";
+    }
+
     return res.render(Templates.ACTIVE_DIRECTORS, {
       lang,
       templateName: Templates.ACTIVE_DIRECTORS,
@@ -68,7 +74,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorsList: paginatedDirectorsList,
       company: companyProfile,
       pagination: paginationElement,
-      appointDisabled: appointDisabled
+      appointDisabled: appointDisabled,
+      updateEnabled: updateEnabled
     });
   } catch (e) {
     return next(e);
