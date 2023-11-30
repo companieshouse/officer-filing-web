@@ -135,7 +135,7 @@ const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, v
   return res.render(Templates.DIRECTOR_DATE_DETAILS, {
     templateName: Templates.DIRECTOR_DATE_DETAILS,
     backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
-    optionalBackLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),    
+    optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     errors: formatValidationErrors(validationErrors),
     ...dates,

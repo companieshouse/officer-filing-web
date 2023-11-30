@@ -18,7 +18,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
-import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { PaginationData } from "../types";
 
@@ -54,13 +54,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       );
     }
 
-    let appointDisabled = '""'
-    // Hide the appoint button if feature is disabled
-    if(!isActiveFeature(AP01_ACTIVE))
-    {
-      appointDisabled = "display:none"
-    }
-
     // Enable the update button if feature is enabled
     let updateEnabled = '""';
     if(isActiveFeature(CH01_ACTIVE)) {
@@ -68,6 +61,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
+      ap01Active: isActiveFeature(AP01_ACTIVE),
+      PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
+      PIWIK_APPOINT_DIRECTOR_START_GOAL_ID,
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,
