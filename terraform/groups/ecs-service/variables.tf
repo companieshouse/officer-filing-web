@@ -134,6 +134,12 @@ variable "api_url" {
 variable "piwik_start_goal_id" {
   type        = string
 }
+variable "piwik_remove_director_start_goal_id" {
+  type        = string
+}
+variable "piwik_appoint_director_start_goal_id" {
+  type        = string
+}
 variable "occupation_list" {
   type        = string
 }

@@ -40,7 +40,7 @@
           View and update details
         </button>
         {% endif %}
-        <button id="directorButton" name="appointmentId" class="govuk-button govuk-button--secondary" data-module="govuk-button" value="{{officerCard.appointmentId}}">
+        <button id="directorButton" onclick="_paq.push(['trackGoal', '{{PIWIK_REMOVE_DIRECTOR_START_GOAL_ID}}'])" data-event-id="remove-director-button" name="appointmentId" class="govuk-button govuk-button--secondary" data-module="govuk-button" value="{{officerCard.appointmentId}}">
           Remove director
         </button>
       </div>
