@@ -78,10 +78,12 @@
           ]
         }) }}
 
+        {% set warningText = i18n.warning | default("Warning") %}
+        {% set notDueWarning = notDueWarning | default(false) %}
         {% if notDueWarning %}
           {{ govukWarningText({
             html: notDueWarningHTML,
-            iconFallbackText: "Warning"
+            iconFallbackText: warningText
           }) }}
         {% endif %}
 

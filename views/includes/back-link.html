@@ -1,5 +1,6 @@
 {% set backLinkText = i18n.back | default("Back") %}
 <span id="back-link-span"></span>
+{% if browserBack %}
   <script>
     var optionalBackLinkUrl = "{{ optionalBackLinkUrl }}"
   </script>
@@ -35,4 +36,12 @@
       }
     }) }}
   </noscript>
-
+{% else %}
+  {{ govukBackLink({
+    text: backLinkText,
+    href: backLinkUrl,
+    attributes: {
+      "data-event-id": "back-link"
+    }
+  }) }}
+{% endif %}
