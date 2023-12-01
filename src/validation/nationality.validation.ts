@@ -66,7 +66,7 @@ export const validateNationality1 = (nationality: string[], nationalityValidatio
     validateCommonNationality(nationality, validationError, nationalityValidationType, nationalityList);  
   } else {
     //blank field
-    validationError.push(nationalityValidationType.Nationality1InvalidCharacter.Nationality)
+    validationError.push(nationalityValidationType.Nationality1Blank.Nationality)
   }
 }
 
