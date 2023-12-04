@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% set title = "Update the director's details" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <h1 class="govuk-heading-l">{{directorName}}</h1>
+      <h2 class="govuk-heading-m">Update the director's details</h2>
+
+      <p>If you need to tell us about more than one update, and they happened on diffferent dates, you must submit them separately</p>
+      <p>Any updates made to a director's details are pending until submitted and accepted</p>
+
+      {{ govukSummaryList({
+        attributes: {
+          "style": "width:auto"
+        },
+        rows: [
+        {
+          key: {
+            text: "Name"
+          },
+          value: {
+            text: #
+          },
+          actions: {
+            items: [
+              {
+                href: #,
+                text: "Update",
+                visuallyHiddenText: "#",
+                attributes: {
+                  "data-event-id": "#"
+                }
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Nationality"
+          },
+          value: {
+            text: #
+          },
+          actions: {
+            items: [
+              {
+                href: #,
+                text: "Update",
+                visuallyHiddenText: "#",
+                attributes: {
+                  "data-event-id": "#"
+                }
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Occupation"
+          },
+          value: {
+            text: #
+          },
+          actions: {
+            items: [
+              {
+                href: #,
+                text: "Update",
+                visuallyHiddenText: "#",
+                attributes: {
+                  "data-event-id": "#"
+                }
+              }
+            ]
+          }
+        },
+        ]
+        }) 
+      }}
+    </div>
+  </div>
+
+    {% endblock %}

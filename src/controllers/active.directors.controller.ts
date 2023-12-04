@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams, DIRECTOR_NAME_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   OFFICER_ROLE, 
@@ -81,9 +81,20 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   
   if (appointmentId) {
     return beginTerminationJourney(req, res, session, transactionId, appointmentId);
+  } else if (req.body.update_director_details) {
+    return beginUpdateJourney(req, res, session, transactionId, appointmentId);
   }
   return beginAppointmentJourney(req, res, session, transactionId);
 };
+
+const beginUpdateJourney = async (req: Request, res: Response, session: Session, transactionId: string, appointmentId: any) => {
+  const officerFiling: OfficerFiling = {};
+  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
+  
+  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+  return res.redirect(nextPageUrl);
+}
 
 /**
  * Post an officer filing and redirect to the first page in the TM01 journey.
