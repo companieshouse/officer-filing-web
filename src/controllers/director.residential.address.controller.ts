@@ -13,7 +13,7 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { validateRegisteredAddressComplete } from "./director.correspondence.address.controller";
+import { validateRegisteredAddressComplete } from "../validation/address.validation";
 import { logger } from "../utils/logger";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
@@ -29,7 +29,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
     }
 
-    return renderPage(req, res, officerFiling, companyProfile);
+    return renderPage(req, res, officerFiling, companyProfile, isRegisteredAddressComplete);
   } catch (e) {
     next(e);
   }
@@ -72,7 +72,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, formattedErrors);
+      return renderPage(req, res, officerFiling, companyProfile, isRegisteredAddressComplete, formattedErrors);
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -142,7 +142,7 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, formattedErrors?: FormattedValidationErrors) => {
+const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, isRegisteredAddressComplete: boolean, formattedErrors?: FormattedValidationErrors) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
     backLinkUrl: getBackLinkUrl(req),
@@ -152,6 +152,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
     protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
-    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice
+    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
+    isRegisteredAddressComplete
   });
 };

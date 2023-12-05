@@ -19,7 +19,10 @@
         {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
       {% if not isRegisteredAddressComplete  %}
-        {% set directorRegisteredOfficeAddressValue = ["Do you want to link the correspondence address to: ", directorRegisteredOfficeAddress] | join %}
+        {% set directorRegisteredOfficeAddressValue = "Do you want to link the correspondence address to the registered office address?"%}
+        {% set directorRegisteredOfficeAddressHint = directorRegisteredOfficeAddress %}
+      {% else %}
+        {% set directorRegisteredOfficeAddressHint = "This is the company's registered office address" %}
       {% endif %}
       
       <form action="" method="post">
@@ -47,7 +50,7 @@
                 "data-event-id": "director_registered_office_address"
               },
               hint: {
-                text: "This is the company's registered office address"              
+                text: directorRegisteredOfficeAddressHint              
               },
               id: "director_registered_address"
             },

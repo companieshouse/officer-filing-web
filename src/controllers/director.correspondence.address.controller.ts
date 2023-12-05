@@ -11,10 +11,10 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { ValidationError } from "../model/validation.model";
 import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../utils/api.enumerations.keys";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
-import { CompanyProfile, RegisteredOfficeAddress } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
 import { setBackLink } from "../utils/web";
-import { logger } from "../utils/logger";
+import { validateRegisteredAddressComplete } from "../validation/address.validation";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -120,15 +120,4 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
           ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
           ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
- }
-
- export const validateRegisteredAddressComplete = (registeredOfficeAddress: RegisteredOfficeAddress | undefined): Boolean => {
-  if (registeredOfficeAddress === undefined) {
-    return false;
-  }
-  return registeredOfficeAddress.premises !== undefined && registeredOfficeAddress.premises !== "" &&
-    registeredOfficeAddress.addressLineOne !== undefined && registeredOfficeAddress.addressLineOne !== "" &&
-    registeredOfficeAddress.locality !== undefined && registeredOfficeAddress.locality !== "" &&
-    registeredOfficeAddress.postalCode !== undefined && registeredOfficeAddress.postalCode !== "" &&
-    registeredOfficeAddress.country !== undefined && registeredOfficeAddress.country !== "";
  }

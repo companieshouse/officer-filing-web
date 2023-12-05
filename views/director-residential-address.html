@@ -35,7 +35,7 @@
         %}
       {% endif %}
       
-      {% if directorServiceAddressChoice !== 'director_registered_office_address' %}
+      {% if isRegisteredAddressComplete and directorServiceAddressChoice !== 'director_registered_office_address' %}
         {% set registeredOfficeAddressDisplay = {
           value: "director_registered_office_address",
           text: directorRegisteredAddressValue,

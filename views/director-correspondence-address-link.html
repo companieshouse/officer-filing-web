@@ -17,7 +17,7 @@
       <form action="" method="post">
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
-
+        {% if isRegisteredAddressComplete }
         {{ govukRadios({
           errorMessage: errors.sa_to_roa if errors,
           idPrefix: "sa_to_roa",
@@ -54,6 +54,33 @@
             }
           ]
         }) }}
+        {% else %}
+        {{ govukRadios({
+          errorMessage: errors.sa_to_roa if errors,
+          idPrefix: "sa_to_roa",
+          name: "sa_to_roa",
+          fieldset: {
+            legend: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "sa_to_roa_yes",
+              text: "Yes",
+              hint: {
+                text: "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address."
+              },
+              checked: sa_to_roa === "sa_to_roa_yes",
+              attributes: {
+                "data-event-id": "service_address_to_registered_office_address_yes"
+              }
+            }
+          ]
+        }) }}
+        {% endif %}
       </div>
 
         {{ govukButton({
