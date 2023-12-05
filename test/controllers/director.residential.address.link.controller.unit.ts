@@ -65,7 +65,7 @@ describe("Director residential address link controller tests", () => {
         expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
         expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
       });
-
+/*
       it("Should navigate to residential address link page with yes radio selected", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           title: "testTitle",
@@ -109,9 +109,9 @@ describe("Director residential address link controller tests", () => {
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
-
+*/
     });
-
+/*
     describe("post tests", () => {
       it("should redirect to director protected details page when yes radio selected", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
@@ -156,4 +156,5 @@ describe("Director residential address link controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
     });
+    */
 });

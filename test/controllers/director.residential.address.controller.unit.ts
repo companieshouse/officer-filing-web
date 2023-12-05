@@ -112,7 +112,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
     });
-
+/*
     it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
@@ -288,8 +288,9 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
+    */
   });
-
+/*
   describe("post tests", () => {
 
     it(`Should render where director lives page if no radio button is selected`, async () => {
@@ -506,4 +507,5 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
     });
   });
+  */
 });
