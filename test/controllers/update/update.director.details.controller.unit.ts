@@ -51,7 +51,7 @@ describe("Director details tests", () => {
   });
 
   describe("POST tests", () => {
-    it("Should redirec on submission", async () => {
+    it("Should redirect on submission", async () => {
       const response = await request(app).post(PAGE_URL).send({});
       expect(response.text).toContain("Redirecting to");
     })

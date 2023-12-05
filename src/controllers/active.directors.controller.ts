@@ -79,7 +79,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const appointmentId = req.body.appointmentId;
   const session: Session = req.session as Session;
-  console.log(`req bidy is ${JSON.stringify(req.body["update_director_details"])}`)
   if (appointmentId) {
     return beginTerminationJourney(req, res, session, transactionId, appointmentId);
   } else if (req.body.update_director_details) {
