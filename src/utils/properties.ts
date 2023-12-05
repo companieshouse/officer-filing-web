@@ -36,14 +36,16 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
 
   export const FEATURE_FLAG_TM01_WEB = getEnvironmentVariable("FEATURE_FLAG_TM01_WEB", "false");
 
-  export const FEATURE_FLAG_WLE = getEnvironmentVariable("FEATURE_FLAG_WLE", "false");
-
   export const AP01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_AP01_WEB", "false");
   export const CH01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_CH01_WEB", "false");
 
   export const FEATURE_FLAG_REMOVE_DIRECTOR_20022023 = "true"; //TODO  add the feature flag and then replace true with this get getEnvironmentVariable("FEATURE_FLAG_REMOVE_DIRECTOR_20022023");
   
   export const PIWIK_START_GOAL_ID = getEnvironmentVariable("PIWIK_START_GOAL_ID");
+
+  export const PIWIK_REMOVE_DIRECTOR_START_GOAL_ID = getEnvironmentVariable("PIWIK_REMOVE_DIRECTOR_START_GOAL_ID");
+
+  export const PIWIK_APPOINT_DIRECTOR_START_GOAL_ID = getEnvironmentVariable("PIWIK_APPOINT_DIRECTOR_START_GOAL_ID");
 
   export const URL_LOG_MAX_LENGTH: number = parseInt(getEnvironmentVariable("URL_LOG_MAX_LENGTH", "400"), 10);
   
