@@ -22,10 +22,11 @@ const PAGE_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const FEEDBACK = "This is a new service. Help us improve it by completing our";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_HEADING = "Address details";
+
 describe("Director details tests", () => {
+
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
@@ -55,4 +56,5 @@ describe("Director details tests", () => {
       expect(response.text).toContain("Redirecting to");
     })
   });
+
 })

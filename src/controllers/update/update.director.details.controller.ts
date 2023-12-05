@@ -5,7 +5,7 @@ import { urlUtils } from "../../utils/url";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
-import { ACTIVE_DIRECTORS_DETAILS_PATH, CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_NAME_PATH, 
+import { ACTIVE_DIRECTORS_DETAILS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_NAME_PATH, 
         DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
@@ -27,7 +27,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
     })
-  }catch(e) {
+  } catch(e) {
     return next(e);
   }
 };
