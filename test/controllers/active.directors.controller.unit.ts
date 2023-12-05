@@ -174,5 +174,15 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
         expect(mockPostOfficerFiling).toHaveBeenCalled();
     });
+
+    it ("should redirect to update directors page if update journey", async () => {
+      mockPostOfficerFiling.mockResolvedValueOnce({
+        id: SUBMISSION_ID,
+      });
+      const response = await request(app)
+        .post(CURRENT_DIRECTORS_URL).send({update_director_details: "update_director_details"});
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
+      expect(mockPostOfficerFiling).toHaveBeenCalled();
+    })
   });
 });

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, 
+        urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   OFFICER_ROLE, 
@@ -78,7 +79,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const appointmentId = req.body.appointmentId;
   const session: Session = req.session as Session;
-  
+  console.log(`req bidy is ${JSON.stringify(req.body["update_director_details"])}`)
   if (appointmentId) {
     return beginTerminationJourney(req, res, session, transactionId, appointmentId);
   } else if (req.body.update_director_details) {
