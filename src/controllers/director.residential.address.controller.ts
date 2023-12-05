@@ -13,17 +13,28 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { validateRegisteredAddressComplete } from "./director.correspondence.address.controller";
+import { logger } from "../utils/logger";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
+const registeredOfficerAddressValue: string = "director_registered_office_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
+    const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
+    logger.info("For home address, isResidentialAddressComplete: " + isRegisteredAddressComplete + " officerFiling.isServiceAddressSameAsRegisteredOfficeAddress: " + officerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+    if (!isRegisteredAddressComplete && officerFiling.isServiceAddressSameAsRegisteredOfficeAddress) {
+      logger.info("Can't use registered office address as residential address because correspondence address is linked");
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
+    }
+
     return renderPage(req, res, officerFiling, companyProfile);
   } catch (e) {
     next(e);
   }
 };
+
 
 export const urlUtilsRequestParams = async (req: Request) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -52,6 +63,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
+    
+    const isRegisteredAddressComplete = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
+    if (!isRegisteredAddressComplete  && officerFiling.directorResidentialAddressChoice === registeredOfficerAddressValue) {
+      throw new Error("Can't use registered office address as residential address & correspondence address is linked");
+    }
+
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);

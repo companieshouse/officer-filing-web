@@ -18,7 +18,9 @@
       {% if 'undefined' not in directorRegisteredOfficeAddress %}
         {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
-
+      {% if not isRegisteredAddressComplete  %}
+        {% set directorRegisteredOfficeAddressValue = ["Do you want to link the correspondence address to: ", directorRegisteredOfficeAddress] | join %}
+      {% endif %}
       
       <form action="" method="post">
         <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
