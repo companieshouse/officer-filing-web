@@ -135,6 +135,6 @@ router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.pos
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);
 
 // CH01
-router.route(urls.UPDATE_DIRECTOR_DETAILS).all(
-  
-).get(updateDirectorDetail.get).post(updateDirectorDetail.post);
+router.route(urls.UPDATE_DIRECTOR_DETAILS).all()
+.get(updateDirectorDetail.get)
+.post(updateDirectorDetail.post);

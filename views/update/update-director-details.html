@@ -13,80 +13,94 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-      <h1 class="govuk-heading-l">{{directorName}}</h1>
-      <h2 class="govuk-heading-m">Update the director's details</h2>
+      <form action="" method=""> 
+          <span class="govuk-caption-l gem-c-title__context">
+            {{companyName}}
+          </span>      
+          <h2 class="govuk-heading-m">Update the director's details</h2>
 
-      <p>If you need to tell us about more than one update, and they happened on diffferent dates, you must submit them separately</p>
-      <p>Any updates made to a director's details are pending until submitted and accepted</p>
-
-      {{ govukSummaryList({
-        attributes: {
-          "style": "width:auto"
-        },
-        rows: [
-        {
-          key: {
-            text: "Name"
-          },
-          value: {
-            text: #
-          },
-          actions: {
-            items: [
+          <p class="govuk-hint">If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.</p>
+          {{ govukInsetText({
+            text: "Any updates made to a director's details are pending until submitted and accepted."
+          }) }}
+          <p class="govuk-summary-list__key govuk-heading-m">Director details</p>
+          {{ govukSummaryList({
+            rows: [
               {
-                href: #,
-                text: "Update",
-                visuallyHiddenText: "#",
-                attributes: {
-                  "data-event-id": "#"
+                key: {
+                  text: "Name"
+                },
+                value: {
+                  text: "name"
+                },
+                actions: {
+                  items: [
+                    {
+                      href: nameLink,
+                      text: "Update",
+                      visuallyHiddenText: "Name",
+                      attributes: {
+                        "data-event-id": "update-name-change-link"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                key: {
+                  text: "Nationality"
+                },
+                value: {
+                  text: "nationality"
+                },
+                actions: {
+                  items: [
+                    {
+                      href: nationalityLink,
+                      text: "Update",
+                      visuallyHiddenText: "nationality",
+                      attributes: {
+                        "data-event-id": "update-nationality-change-link"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                key: {
+                  text: "Occupation"
+                },
+                value: {
+                  text: "occupation"
+                },
+                actions: {
+                  items: [
+                    {
+                      href: occupationLink,
+                      text: "Update",
+                      visuallyHiddenText: "occupation",
+                      attributes: {
+                        "data-event-id": "update-occupation-change-link"
+                      }
+                    }
+                  ]
                 }
               }
             ]
-          }
-        },
-        {
-          key: {
-            text: "Nationality"
-          },
-          value: {
-            text: #
-          },
-          actions: {
-            items: [
-              {
-                href: #,
-                text: "Update",
-                visuallyHiddenText: "#",
-                attributes: {
-                  "data-event-id": "#"
-                }
-              }
-            ]
-          }
-        },
-        {
-          key: {
-            text: "Occupation"
-          },
-          value: {
-            text: #
-          },
-          actions: {
-            items: [
-              {
-                href: #,
-                text: "Update",
-                visuallyHiddenText: "#",
-                attributes: {
-                  "data-event-id": "#"
-                }
-              }
-            ]
-          }
-        },
-        ]
-        }) 
-      }}
+          }) }} 
+          {% set officerFiling = officerFiling %}
+          {% include "includes/check-your-answer/address-details.html" %}
+          <div class="govuk-button-group">
+            {{ govukButton({
+              attributes: {
+                id: "submit",
+                "data-event-id": "update-continue-button"
+              },
+              text: "Continue"
+            }) }}
+            <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">Cancel</a>
+        </div>
+      </form>
     </div>
   </div>
 
