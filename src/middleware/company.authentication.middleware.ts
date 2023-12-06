@@ -3,9 +3,19 @@ import { authMiddleware, AuthOptions } from "@companieshouse/web-security-node";
 import { CHS_URL } from "../utils/properties";
 import { urlParams } from "../types/page.urls";
 
-export const companyAuthenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const companyAuthenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 
-  if (req.originalUrl.includes("/cannot-use")) {
+  console.log("####### in companyAuthenticationMiddleware €€€€€")
+
+  console.log(`Request path ${req.path}`);
+  console.log(`Request originalUrl ${req.originalUrl}`);
+  console.log(`Request baseUrl ${req.baseUrl}`);
+
+  /**
+   * checking path instead of original Url.
+   */
+  if (req.path.match("/cannot-use")) {
+    console.log("####### in companyAuthenticationMiddleware. if block €€€€€")
     return next();
   }
 
