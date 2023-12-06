@@ -14,6 +14,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { validateRegisteredAddressComplete } from "../validation/address.validation";
+import { ADDRESS_START } from "./director.residential.address.search.controller"; 
 import { logger } from "../utils/logger";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
@@ -25,8 +26,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
     logger.info("For home address, isResidentialAddressComplete: " + isRegisteredAddressComplete + " officerFiling.isServiceAddressSameAsRegisteredOfficeAddress: " + officerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
     if (!isRegisteredAddressComplete && officerFiling.isServiceAddressSameAsRegisteredOfficeAddress) {
-      logger.info("Can't use registered office address as residential address because correspondence address is linked");
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
+      logger.info("Can't use registered office address as residential address because correspondence address is linked so search for address");
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH + "?backLink=" + ADDRESS_START, req));
     }
 
     return renderPage(req, res, officerFiling, companyProfile, isRegisteredAddressComplete);
@@ -34,7 +35,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     next(e);
   }
 };
-
 
 export const urlUtilsRequestParams = async (req: Request) => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -93,8 +93,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
       if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress){
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res,  req);
-      }
-      else{
+      } else {
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res,  req);
       }
     } else {
