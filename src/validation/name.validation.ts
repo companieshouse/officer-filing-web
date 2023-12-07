@@ -29,7 +29,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const lastName = getField(req, DirectorField.LAST_NAME);
         const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
-        const isUpdate = true ? req.path.includes("update-director-name") : false;
+        const isUpdate = req.path.includes("update-director-name");
         const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
 
         if(frontendValidationErrors.length > 0) {
