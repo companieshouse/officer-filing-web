@@ -77,12 +77,11 @@ const calculatePreviousNamesRadioFromFiling = (formerNames: string | undefined):
 const getPreviousNamesForFiling = (req: Request): string|undefined => {
   let previousNames = getField(req, DirectorField.PREVIOUS_NAMES);
   let previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
-  
+
   if (previousNamesRadio == DirectorField.YES) {
     return previousNames;
   }
   if (previousNamesRadio == DirectorField.NO) {
     return "";
   }
-  return undefined;
 }
