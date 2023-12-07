@@ -6,7 +6,7 @@ import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
 import { ACTIVE_DIRECTORS_DETAILS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_NAME_PATH, 
-        DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
+        DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -22,7 +22,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       cancelLink:  urlUtils.getUrlToPath(ACTIVE_DIRECTORS_DETAILS_PATH, req),
       ...officerFiling,
       ...companyProfile,
-      nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
+      nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),

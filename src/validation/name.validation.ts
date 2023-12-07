@@ -29,8 +29,8 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const lastName = getField(req, DirectorField.LAST_NAME);
         const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
-
-        const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, previousNamesRadio, NameValidation);
+        const isUpdate = true ? req.path.includes("update-director-name") : false;
+        const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, previousNamesRadio, NameValidation, isUpdate);
 
         if(frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors);
@@ -47,6 +47,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
                 last_name: lastName,
                 previous_names: formerNames,
                 previous_names_radio: previousNamesRadio,
+                isUpdate
             });
           }
         return next();
@@ -62,7 +63,7 @@ export const validateName = (title: string,
                              lastName: string, 
                              formerNames: string,
                              previousNamesRadio: string, 
-                             nameValidationType: NameValidationType): ValidationError[] => {
+                             nameValidationType: NameValidationType, isUpdate: boolean): ValidationError[] => {
 
     let validationErrors: ValidationError[] = [];
 
@@ -70,7 +71,9 @@ export const validateName = (title: string,
     validateFirstName(firstName, nameValidationType, validationErrors);
     validateMiddleNames(middleNames, nameValidationType, validationErrors);
     validateLastName(lastName, nameValidationType, validationErrors);
-    validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
+    if(!isUpdate) {
+        validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
+    }
 
     return validationErrors;
 };

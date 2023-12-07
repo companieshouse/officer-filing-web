@@ -1,20 +1,17 @@
-jest.mock("../../src/utils/feature.flag")
-jest.mock("../../src/services/validation.status.service");
-jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../../src/utils/feature.flag")
+jest.mock("../../../src/services/validation.status.service");
+jest.mock("../../../src/services/officer.filing.service");
 
-import mocks from "../mocks/all.middleware.mock";
+import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
-import app from "../../src/app";
+import app from "../../../src/app";
 
-import { getValidationStatus } from "../../src/services/validation.status.service";
-import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
-import { isActiveFeature } from "../../src/utils/feature.flag";
-import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../../src/types/page.urls";
+import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
-const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 
@@ -23,7 +20,7 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director's name?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
+const DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -32,24 +29,14 @@ const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-describe("Director name controller tests", () => {
+describe("Update Director name controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
-      mockGetValidationStatus.mockClear();
     });
   
     describe("get tests", () => {
-      it("Should navigate to director name page", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          referenceAppointmentId: "app1",
-          referenceEtag: "ETAG"
-        });
-        const response = await request(app).get(DIRECTOR_NAME_URL).set({"referer": "director-name"});
   
-        expect(response.text).toContain(PAGE_HEADING);
-      });
-
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(DIRECTOR_NAME_URL);
@@ -58,6 +45,23 @@ describe("Director name controller tests", () => {
       });
 
       it("Should populate filing data on the page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+        });
+
+        const response = await request(app).get(DIRECTOR_NAME_URL);
+  
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("testTitle");
+        expect(response.text).toContain("testFirst");
+        expect(response.text).toContain("testMiddle");
+        expect(response.text).toContain("testLast");
+      });
+
+      it("Should populate filing data on the page without former name field", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           title: "testTitle",
           firstName: "testFirst",
@@ -73,15 +77,14 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("testFirst");
         expect(response.text).toContain("testMiddle");
         expect(response.text).toContain("testLast");
-        expect(response.text).toContain("testFormer");
+        expect(response.text).not.toContain("testFormer");
       });
 
     });
 
     describe("post tests", () => {
+  
       it("Should redirect to date of birth page if there are no errors", async () => {  
-
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
         

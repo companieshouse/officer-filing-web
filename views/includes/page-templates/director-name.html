@@ -1,0 +1,87 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds-from-desktop">
+
+    {% include "includes/list/errors.html" %}
+
+    <form action="" method="post">
+
+      <h1 class="govuk-heading-l">What is the director's name?</h1>
+
+      {% include "includes/inputs/fields/title-input.html" %}
+      {% include "includes/inputs/fields/first-name-input.html" %}
+      {% include "includes/inputs/fields/middle-names-input.html" %}
+      {% include "includes/inputs/fields/last-name-input.html" %}
+
+
+      {% set enterPreviousNamesHtml %}
+      {{ govukInput({
+        errorMessage: errors.previous_names if errors,
+        id: "previous_names",
+        name: "previous_names",
+        value: previous_names,
+        spellcheck: false,
+        classes: "govuk-!-width-two-thirds",
+        hint: {
+          text: "If the director has more than one previous name, separate each name with a comma."
+        },
+        label: {
+          text: "Previous names"
+        }
+      }) }}
+      {% endset -%}
+
+      {% if not isUpdate %}
+        {{ govukRadios({
+          errorMessage: errors.previous_names_radio if errors,
+          id: "previous_names_radio",
+          name: "previous_names_radio",
+          value: previous_names_radio,
+          fieldset: {
+            legend: {
+              text: "Has the director used a different name for business purposes in the last 20 years?"
+            }
+          },
+          items: [
+            {
+              id: "Yes",
+              value: "Yes",
+              text: "Yes",
+              conditional: {
+                html: enterPreviousNamesHtml
+              },
+              attributes: {
+                "data-event-id": "yes-previous-names"
+              }
+            },
+            {
+              id: "No",
+              value: "No",
+              text: "No",
+              attributes: {
+                "data-event-id": "no-previous-names"
+              }
+            }
+          ]
+        }) }}
+      {% endif %}
+
+      {% if isUpdate %}
+        {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title, if relevant." %}
+      {% else %}
+        {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant." %}
+      {% endif %}
+      <div class="govuk-inset-text">
+        <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
+          <p>{{ insetText }}</p>
+      </div>
+
+      {{ govukButton({
+        attributes: {
+          "data-event-id": "continue-button"
+        },
+        text: "Continue"
+      }) }}
+
+    </form>
+  </div>
+</div>

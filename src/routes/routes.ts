@@ -30,6 +30,7 @@ import * as signoutRoute from "../controllers/signout.controller";
 import * as startRoute from "../controllers/start.controller";
 import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
+import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
@@ -138,3 +139,7 @@ router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appoi
 router.route(urls.UPDATE_DIRECTOR_DETAILS).all()
 .get(updateDirectorDetail.get)
 .post(updateDirectorDetail.post);
+
+router.route(urls.UPDATE_DIRECTOR_NAME).all()
+.get(updateDirectorName.get)
+.post(nameValidator, updateDirectorName.post)
