@@ -6,11 +6,15 @@
         {% if officerFiling.serviceAddress.premises %}
           <li>{{ officerFiling.serviceAddress.premises | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+        {% if officerFiling.serviceAddress.addressLine1 %}
+          <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+        {% endif %}
         {% if officerFiling.serviceAddress.addressLine2 %}
           <li>{{ officerFiling.serviceAddress.addressLine2 | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+        {% if officerFiling.serviceAddress.locality %}
+          <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+        {% endif %}
         {% if officerFiling.serviceAddress.region %}
           <li>{{ officerFiling.serviceAddress.region | title  }},</li>
         {% endif %}
@@ -28,11 +32,15 @@
       {% if officerFiling.residentialAddress.premises %}
         <li>{{ officerFiling.residentialAddress.premises | title  }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+      {% if officerFiling.residentialAddress.addressLine1 %}
+        <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+      {% endif %}
       {% if officerFiling.residentialAddress.addressLine2 %}
         <li>{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+      {% if officerFiling.residentialAddress.locality %}
+        <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+      {% endif %}
       {% if officerFiling.residentialAddress.region %}
         <li>{{ officerFiling.residentialAddress.region | title }},</li>
       {% endif %}
