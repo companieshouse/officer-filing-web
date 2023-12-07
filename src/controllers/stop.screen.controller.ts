@@ -21,7 +21,7 @@ const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: 
     return res.render(Templates.STOP_PAGE, content);
 };
 
-const setContent = async (req: Request, stopType: string) => {
+export const setContent = async (req: Request, stopType: string) => {
     // Some of these query parameters are not guaranteed - multiple url paths are possible
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);

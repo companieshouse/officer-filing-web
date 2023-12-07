@@ -4,7 +4,12 @@ import {CompanyProfile} from "@companieshouse/api-sdk-node/dist/services/company
 import {getCompanyProfile} from "../services/company.profile.service";
 import {Session} from "@companieshouse/node-session-handler";
 import {getCurrentOrFutureDissolved} from "../services/stop.page.validation.service";
-import {allowedCompanyTypes} from "../utils/constants";
+import {STOP_TYPE, allowedCompanyTypes} from "../utils/constants";
+import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getListActiveDirectorDetails } from "services/active.directors.details.service";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "types/page.urls";
+import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
+import { getCompanyMetrics } from "services/company.metrics.service";
 
 /**
  * Changes for option #1 -
@@ -16,14 +21,36 @@ import {allowedCompanyTypes} from "../utils/constants";
 export const hasValidCompanyForStopPage = async (req: Request, res: Response, next: NextFunction) => {
 	const session: Session = req.session as Session;
 	const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+	const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
 	const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+	const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
+
+
+	if (directorDtoList.length === 0) {
+		var stopPageRedirectUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+		stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
+		return res.redirect(stopPageRedirectUrl);
+	}
 
 	if (await getCurrentOrFutureDissolved(session, companyNumber)){
-		return true;
+		var stopPageRedirectUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+		stopPageRedirectUrl = urlUtils.setQueryParam(stopPageRedirectUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
+		return res.redirect(stopPageRedirectUrl);
 	}
-	if(allowedCompanyTypes.includes(companyProfile.type)) {
-		return true;
+
+	var nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+	if (await getCurrentOrFutureDissolved(session, companyNumber)){
+		nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
 	}
+	else if(!allowedCompanyTypes.includes(companyProfile.type)){
+		nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
+	}
+	// get number of active directors - if none go straight to stop screen and do not create transaction
+	else if(await companyHasNoDirectors(companyNumber)){
+		nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
+	}
+	
+
 	// skipping no directors as that is going to be changed under https://companieshouse.atlassian.net/browse/DACT-569
 	/**
 	 * needs further work to implement following cases.
@@ -32,4 +59,9 @@ export const hasValidCompanyForStopPage = async (req: Request, res: Response, ne
 	 *   SOMETHING_WENT_WRONG = "something-went-wrong"
 	 */
 	return false;
+}
+
+const companyHasNoDirectors = async (companyNumber: string) => {
+  const companyMetrics: MetricsApi = await getCompanyMetrics(companyNumber);
+  return companyMetrics?.counts?.appointments?.activeDirectorsCount == 0;
 }
