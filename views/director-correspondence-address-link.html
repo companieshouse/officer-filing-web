@@ -17,7 +17,7 @@
       <form action="" method="post">
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
-        {% if isRegisteredAddressComplete }
+        {% if isRegisteredAddressComplete %}
         {{ govukRadios({
           errorMessage: errors.sa_to_roa if errors,
           idPrefix: "sa_to_roa",
@@ -58,7 +58,7 @@
         {{ govukRadios({
           errorMessage: errors.sa_to_roa if errors,
           idPrefix: "sa_to_roa",
-          name: "sa_to_roa",
+          name: "sa_to_roa_2",
           fieldset: {
             legend: {
               text: title,
@@ -75,7 +75,7 @@
               },
               checked: sa_to_roa === "sa_to_roa_yes",
               attributes: {
-                "data-event-id": "service_address_to_registered_office_address_yes"
+                "data-event-id": "service_address_to_registered_office_address_yes_2"
               }
             }
           ]

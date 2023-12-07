@@ -72,12 +72,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     if (!isRegisteredAddressComplete) {
       if (selectedSraAddressChoice === registeredOfficerAddressValue) {
         officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = true;
-        officerFilingBody.isServiceAddressSameAsHomeAddress = false;
+        officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
         await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
         return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
       } else {
         officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = false;
-        officerFilingBody.isServiceAddressSameAsHomeAddress = false;
+        officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
         await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
         return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
       }
