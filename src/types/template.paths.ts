@@ -34,5 +34,4 @@ export enum Templates {
   // CH01
   UPDATE_DIRECTOR_DETAILS = "update/update-director-details",
   UPDATE_DIRECTOR_NAME = "update/update-director-name"
-
 }
