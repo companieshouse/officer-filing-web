@@ -69,7 +69,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorsList: paginatedDirectorsList,
       company: companyProfile,
       pagination: paginationElement,
-      appointDisabled: appointDisabled,
       updateEnabled: updateEnabled,
       publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type)
     });
