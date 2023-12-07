@@ -76,6 +76,31 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("testFormer");
       });
 
+      it("Should return 'No' if officer filing name is empty string", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetOfficerFiling.mockReturnValueOnce({
+          formerNames: ""
+        })
+        const response = await request(app)
+          .get(DIRECTOR_NAME_URL);
+
+        expect(response.text).toContain("value=\"No\" checked")
+      });
+
+      it("Should not check former name radio buttons if officer filing name is null", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetOfficerFiling.mockReturnValueOnce({
+          formerNames: null
+        })
+        const response = await request(app)
+          .get(DIRECTOR_NAME_URL);
+
+        expect(response.text).not.toContain("value=\"No\" checked")
+        expect(response.text).not.toContain("value=\"Yes\" checked")
+      });
+
     });
 
     describe("post tests", () => {
@@ -112,6 +137,22 @@ describe("Director name controller tests", () => {
           });
         expect(response.text).toContain(ERROR_PAGE_HEADING);
         expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
+      });
+
+      it("Should redirect to date of birth page if there are no errors and former name is yes", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "Yes", 
+            "previous_names": "Sparrow" 
+          });
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
     });
 });

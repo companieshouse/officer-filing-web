@@ -6,7 +6,6 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { boolean } from "yargs";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -78,10 +77,7 @@ const calculatePreviousNamesRadioFromFiling = (formerNames: string | undefined):
 const getPreviousNamesForFiling = (req: Request): string|undefined => {
   let previousNames = getField(req, DirectorField.PREVIOUS_NAMES);
   let previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
-
-  if (!previousNamesRadio) {
-    return undefined;
-  } 
+  
   if (previousNamesRadio == DirectorField.YES) {
     return previousNames;
   }

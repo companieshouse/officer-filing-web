@@ -102,7 +102,7 @@ describe("Update Director name controller tests", () => {
       });
 
       it("should catch errors on submission if errors", async () => {
-        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
