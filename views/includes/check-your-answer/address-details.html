@@ -18,7 +18,7 @@
         {% if officerFiling.serviceAddress.region %}
           <li>{{ officerFiling.serviceAddress.region | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.country | title }}</li>
+        <li>{{ officerFiling.serviceAddress.country }}</li>
         <li>{{ officerFiling.serviceAddress.postalCode }}</li>
     </ul>  
   {% endif %}
@@ -44,7 +44,7 @@
       {% if officerFiling.residentialAddress.region %}
         <li>{{ officerFiling.residentialAddress.region | title }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.country | title }}</li>
+      <li>{{ officerFiling.residentialAddress.country }}</li>
       <li>{{ officerFiling.residentialAddress.postalCode }}</li>
     </ul>  
   {% endif %}
