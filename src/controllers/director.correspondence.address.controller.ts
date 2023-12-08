@@ -83,7 +83,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
-    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+    if (isRegisteredAddressComplete && selectedSraAddressChoice === registeredOfficerAddressValue) {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
     }
 
