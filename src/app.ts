@@ -51,7 +51,7 @@ app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 // ------------- Enable login redirect -----------------
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
 app.use(userAuthRegex, authenticationMiddleware);
-app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
+// app.use(`${urls.OFFICER_FILING}${urls.COMPANY_AUTH_PROTECTED_BASE}`, companyAuthenticationMiddleware);
 
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing

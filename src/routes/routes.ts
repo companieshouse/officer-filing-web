@@ -36,6 +36,8 @@ import { AP01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 import { nameValidator } from "../validation/name.validation";
 import { nationalityValidator } from "../validation/nationality.validation";
+import { hasValidCompanyForStopPage } from "middleware/company.type.middleware";
+import { companyAuthenticationMiddleware } from "middleware/company.authentication.middleware";
 
 
 export const router: Router = Router();
@@ -64,8 +66,8 @@ router.post(urls.CURRENT_DIRECTORS, activeDirectors.post);
 router.get(urls.SIGNOUT_PATH, signoutRoute.get);
 router.post(urls.SIGNOUT_PATH, signoutRoute.post);
 
-router.get(urls.BASIC_STOP_PAGE, stopPathRoute.get);
-router.get(urls.APPID_STOP_PAGE, stopPathRoute.get);
+router.get(urls.BASIC_STOP_PAGE, stopPathRoute.getStop);
+router.get(urls.APPID_STOP_PAGE, stopPathRoute.getStop);
 
 // TM01
 router.get(urls.DATE_DIRECTOR_REMOVED, removeDirector.get);
@@ -132,7 +134,13 @@ router.post(urls.DIRECTOR_PROTECTED_DETAILS, directorProtectedDetails.post);
 router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), appointDirectorCheckAnswers.get);
 router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.post);
 
-router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);
+router.route(urls.APPOINT_DIRECTOR_SUBMITTED)
+.all(
+  isFeatureEnabled(AP01_ACTIVE),
+  hasValidCompanyForStopPage, 
+  companyAuthenticationMiddleware
+)
+.get(appointDirectorSubmitted.get)
 
 // CH01
 router.route(urls.UPDATE_DIRECTOR_DETAILS).all()
