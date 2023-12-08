@@ -26,6 +26,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+      isUpdate: true
     })
   } catch(e) {
     return next(e);

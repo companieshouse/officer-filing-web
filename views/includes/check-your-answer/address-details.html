@@ -71,7 +71,7 @@
         items: [
           {
             href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Change",
+            text: "Update" if isUpdate else "Change",
             visuallyHiddenText: "Director's address details",
             attributes: {
               "data-event-id": "address-change-link"
