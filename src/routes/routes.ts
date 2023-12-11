@@ -53,17 +53,13 @@ router.get("/", startRoute.get);
 
 router.get(urls.COMPANY_NUMBER, companyNumberRoute.get);
 
-router.route(urls.CONFIRM_COMPANY)
-.all(companyAuthenticationMiddleware)
-.get(confirmCompanyRoute.get)
-.post(confirmCompanyRoute.post);
+router.get(urls.CONFIRM_COMPANY, confirmCompanyRoute.get);
+router.post(urls.CONFIRM_COMPANY, confirmCompanyRoute.post);
 
 router.get(urls.CREATE_TRANSACTION, companyAuthenticationMiddleware, createTransactionRoute.get);
 
-router.route(urls.CURRENT_DIRECTORS)
-.all(companyAuthenticationMiddleware)
-.get(activeDirectors.get)
-.post(activeDirectors.post);
+router.get(urls.CURRENT_DIRECTORS, companyAuthenticationMiddleware, activeDirectors.get);
+router.post(urls.CURRENT_DIRECTORS, companyAuthenticationMiddleware, activeDirectors.post);
 
 router.get(urls.SIGNOUT_PATH, signoutRoute.get);
 router.post(urls.SIGNOUT_PATH, signoutRoute.post);
@@ -72,109 +68,71 @@ router.get(urls.BASIC_STOP_PAGE, stopPathRoute.get);
 router.get(urls.APPID_STOP_PAGE, stopPathRoute.get);
 
 // TM01
-router.get(urls.DATE_DIRECTOR_REMOVED, removeDirector.get);
-router.post(urls.DATE_DIRECTOR_REMOVED, removeDirector.post);
+router.get(urls.DATE_DIRECTOR_REMOVED, companyAuthenticationMiddleware, removeDirector.get);
+router.post(urls.DATE_DIRECTOR_REMOVED, companyAuthenticationMiddleware, removeDirector.post);
 
-router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.get);
-router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, removeDirectorCheckAnswers.post);
+router.get(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, removeDirectorCheckAnswers.get);
+router.post(urls.REMOVE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, removeDirectorCheckAnswers.post);
 
-router.get(urls.REMOVE_DIRECTOR_SUBMITTED, removeDirectorSubmitted.get);
+router.get(urls.REMOVE_DIRECTOR_SUBMITTED, companyAuthenticationMiddleware, removeDirectorSubmitted.get);
 
 router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
 // AP01
-router.route(urls.DIRECTOR_NAME)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorName.get)
-.post(nameValidator, directorName.post);
+router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorName.get);
+router.post(urls.DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, directorName.post);
 
-router.route(urls.DIRECTOR_DATE_DETAILS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorDateDetails.get)
-.post(directorDateDetails.post);
+router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateDetails.get);
+router.post(urls.DIRECTOR_DATE_DETAILS, companyAuthenticationMiddleware, directorDateDetails.post);
 
-router.route(urls.DIRECTOR_NATIONALITY)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorNationality.get)
-.post(nationalityValidator, directorNationality.post);
+router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorNationality.get);
+router.post(urls.DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, directorNationality.post);
 
-router.route(urls.DIRECTOR_OCCUPATION)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorOccupation.get)
-.post(directorOccupation.post);
+router.get(urls.DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorOccupation.get);
+router.post(urls.DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorOccupation.post);
 
-router.route(urls.DIRECTOR_CORRESPONDENCE_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorCorrespondenceAddress.get)
-.post(directorCorrespondenceAddress.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorCorrespondenceAddress.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, directorCorrespondenceAddress.post);
 
-router.route(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorCorrespondenceAddressSearch.get)
-.post(directorCorrespondenceAddressSearch.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressSearch.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, companyAuthenticationMiddleware, directorCorrespondenceAddressSearch.post);
 
-router.route(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorCorrespondenceAddressChooseAddress.get)
-.post(directorCorrespondenceAddressChooseAddress.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressChooseAddress.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, directorCorrespondenceAddressChooseAddress.post);
 
-router.route(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorCorrespondenceAddressManual.get)
-.post(directorCorrespondenceAddressManual.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressManual.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, companyAuthenticationMiddleware, directorCorrespondenceAddressManual.post);
 
-router.route(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorConfirmCorrespondenceAddress.get)
-.post(directorConfirmCorrespondenceAddress.post);
+router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorConfirmCorrespondenceAddress.get);
+router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, directorConfirmCorrespondenceAddress.post);
 
-router.route(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorCorrespondenceAddressLink.get)
-.post(directorCorrespondenceAddressLink.post);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.post);
 
-router.route(urls.DIRECTOR_RESIDENTIAL_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorResidentialAddress.get)
-.post(directorResidentialAddress.post);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddress.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, directorResidentialAddress.post);
 
-router.route(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorResidentialAddressSearch.get)
-.post(directorResidentialAddressSearch.post);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddressSearch.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, companyAuthenticationMiddleware, directorResidentialAddressSearch.post);
 
-router.route(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorResidentialAddressSearchChooseAddress.get)
-.post(directorResidentialAddressSearchChooseAddress.post);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddressSearchChooseAddress.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, directorResidentialAddressSearchChooseAddress.post);
 
-router.route(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorResidentialAddressManual.get)
-.post(directorResidentialAddressManual.post);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddressManual.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, companyAuthenticationMiddleware, directorResidentialAddressManual.post);
 
-router.route(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorConfirmResidentialAddress.get)
-.post(directorConfirmResidentialAddress.post);
+router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorConfirmResidentialAddress.get);
+router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, directorConfirmResidentialAddress.post);
 
-router.route(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(directorResidentialAddressLink.get)
-.post(directorResidentialAddressLink.post);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, directorResidentialAddressLink.get);
+router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, directorResidentialAddressLink.post);
 
-router.route(urls.DIRECTOR_PROTECTED_DETAILS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware())
-.get(directorProtectedDetails.get)
-.post(directorProtectedDetails.post);
+router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorProtectedDetails.get);
+router.post(urls.DIRECTOR_PROTECTED_DETAILS, companyAuthenticationMiddleware, directorProtectedDetails.post);
 
-router.route(urls.APPOINT_DIRECTOR_CHECK_ANSWERS)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(appointDirectorCheckAnswers.get)
-.post(appointDirectorCheckAnswers.post);
+router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, appointDirectorCheckAnswers.get);
+router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, appointDirectorCheckAnswers.post);
 
-router.route(urls.APPOINT_DIRECTOR_SUBMITTED)
-.all(isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware)
-.get(appointDirectorSubmitted.get);
+router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, appointDirectorSubmitted.get);
 
 // CH01
 router.route(urls.UPDATE_DIRECTOR_DETAILS).all(companyAuthenticationMiddleware)

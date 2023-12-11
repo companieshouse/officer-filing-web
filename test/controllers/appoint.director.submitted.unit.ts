@@ -49,7 +49,7 @@ describe("Appoint director submitted controller tests", () => {
   
       it("Should navigate to appoint director submitted page", async () => {
         const response = await request(app).get(PAGE_URL);
-  
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain(PAGE_HEADING);
       });
 

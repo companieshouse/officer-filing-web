@@ -9,10 +9,8 @@ import { authenticationMiddleware } from "./middleware/authentication.middleware
 import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
-import { companyAuthenticationMiddleware } from "./middleware/company.authentication.middleware";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { AP01_ACTIVE } from "./utils/properties";
-import { hasValidCompanyForStopPage } from "middleware/company.type.middleware";
 
 const app = express();
 app.disable("x-powered-by");

@@ -56,6 +56,7 @@ describe("Director date details controller tests", () => {
         const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("should catch error if getofficerfiling error on get", async () => {
@@ -128,7 +129,7 @@ describe("Director date details controller tests", () => {
           dateOfBirth: "1993-08-15",
           appointedOn: "2021-09-10"
         });
-
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("should catch error if getofficerfiling error on post", async () => {

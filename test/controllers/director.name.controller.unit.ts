@@ -53,6 +53,7 @@ describe("Director name controller tests", () => {
         const response = await request(app).get(DIRECTOR_NAME_URL).set({"referer": "director-name"});
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -103,6 +104,7 @@ describe("Director name controller tests", () => {
           });
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
     });

@@ -17,5 +17,6 @@ describe("accessibility statement controller tests", () => {
 
     expect(response.text).toContain(PAGE_HEADING);
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+    expect(middlewareMocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
 });
