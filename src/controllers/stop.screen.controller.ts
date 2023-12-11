@@ -31,7 +31,7 @@ const setContent = async (req: Request, stopType: string) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
     if (companyName === "") {
-        if(stopType === STOP_TYPE.DISSOLVED || stopType === STOP_TYPE.NO_DIRECTORS){
+        if(stopType === STOP_TYPE.DISSOLVED){
             // Company name is at the start of the paragraph.
             companyName = "This company";
         } else {
@@ -44,12 +44,6 @@ const setContent = async (req: Request, stopType: string) => {
             return {
                 pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
                 pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
-            }
-        }
-        case STOP_TYPE.NO_DIRECTORS: { 
-            return {
-                pageHeader: STOP_PAGE_CONTENT.noDirectors.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.noDirectors.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.LIMITED_UNLIMITED: { 
