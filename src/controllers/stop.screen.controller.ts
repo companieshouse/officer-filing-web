@@ -7,7 +7,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { COMPANY_NAME_PLACEHOLDER, STOP_TYPE, STOP_PAGE_CONTENT } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 
-export const getStop = async (req: Request, res: Response, next: NextFunction) => {
+export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const stopType = req.query.stopType as string;
         const content = setContent(req, stopType);
@@ -21,7 +21,7 @@ const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: 
     return res.render(Templates.STOP_PAGE, content);
 };
 
-export const setContent = async (req: Request, stopType: string) => {
+const setContent = async (req: Request, stopType: string) => {
     // Some of these query parameters are not guaranteed - multiple url paths are possible
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);

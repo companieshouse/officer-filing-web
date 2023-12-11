@@ -5,7 +5,6 @@ import { urlParams } from "../types/page.urls";
 
 export const companyAuthenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const companyNumber: string = req.params[urlParams.PARAM_COMPANY_NUMBER];
-
   const authMiddlewareConfig: AuthOptions = {
     chsWebUrl: CHS_URL,
     returnUrl: req.originalUrl,
