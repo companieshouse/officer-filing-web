@@ -33,6 +33,12 @@ export interface DateValidationType {
         DayYear: ValidationError,
         MonthYear: ValidationError,
         DayMonthYear: ValidationError,
+    },
+    RuleBased?: {
+        Underage: ValidationError,
+        Overage?: ValidationError,
+        FutureDate?: ValidationError,
+        IncorporationDate?: ValidationError
     }
 }
 

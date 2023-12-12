@@ -77,5 +77,22 @@ export const AppointmentDateValidation: DateValidationType = {
             source: [AppointmentDateField.DAY, AppointmentDateField.MONTH, AppointmentDateField.YEAR],
             link: AppointmentDateField.DAY
         },
+    },
+    RuleBased: {
+        Underage: {
+            messageKey: appointmentDateErrorMessageKey.APPOINTMENT_DATE_UNDERAGE,
+            source: [AppointmentDateField.DAY, AppointmentDateField.MONTH, AppointmentDateField.YEAR],
+            link: AppointmentDateField.DAY
+        },
+        FutureDate: {
+            messageKey: appointmentDateErrorMessageKey.IN_PAST,
+            source: [AppointmentDateField.DAY, AppointmentDateField.MONTH, AppointmentDateField.YEAR],
+            link: AppointmentDateField.DAY
+        },
+        IncorporationDate: {
+            messageKey: appointmentDateErrorMessageKey.AFTER_INCORPORATION_DATE,
+            source: [AppointmentDateField.DAY, AppointmentDateField.MONTH, AppointmentDateField.YEAR],
+            link: AppointmentDateField.DAY
+        }
     }
 }
