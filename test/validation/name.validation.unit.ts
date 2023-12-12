@@ -5,7 +5,7 @@ jest.mock("../../src/services/officer.filing.service")
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
@@ -33,6 +33,11 @@ const FORMER_NAMES_LENGTH = "Previous names must be 160 characters or less"
 const FORMER_NAMES_MISSING = "Enter the director’s previous name or names"
 
 const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const UPDATE_DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -195,6 +200,40 @@ describe("Director name validation tests", () => {
         expect(response.text).not.toContain(MIDDLE_NAME_LENGTH);
         expect(response.text).not.toContain(LAST_NAME_LENGTH);
         expect(response.text).not.toContain(LAST_NAME_BLANK);
+        expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
+    });
+
+    it ("should one error per field if all fields have errors on update", async() => {
+        const response = await request(app).post(UPDATE_DIRECTOR_NAME_URL).send({
+            typeahead_input_0:"§"+FIFTY_ONE_CHARACTERS,
+            first_name:"",
+            middle_names:"§"+FIFTY_ONE_CHARACTERS,
+            last_name:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS,
+            previous_names_radio:"Yes", 
+            previous_names:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS
+        });
+        expect(response.text).toContain(TITLE_CHARACTERS);
+        expect(response.text).toContain(FIRST_NAME_BLANK);
+        expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
+        expect(response.text).toContain(LAST_NAME_CHARACTERS);
+        expect(response.text).not.toContain(FORMER_NAMES_CHARACTERS);
+        expect(response.text).not.toContain(TITLE_LENGTH);
+        expect(response.text).not.toContain(FIRST_NAME_LENGTH);
+        expect(response.text).not.toContain(FIRST_NAME_CHARACTERS);
+        expect(response.text).not.toContain(MIDDLE_NAME_LENGTH);
+        expect(response.text).not.toContain(LAST_NAME_LENGTH);
+        expect(response.text).not.toContain(LAST_NAME_BLANK);
+        expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
+    });
+
+    it ("should not validate previous names error if name update", async() => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+            checkYourAnswersLink: undefined
+          });
+        const response = await request(app).post(UPDATE_DIRECTOR_NAME_URL).send({
+            previous_names_radio:"Yes", 
+            previous_names:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS});
+        expect(response.text).not.toContain(FORMER_NAMES_CHARACTERS);
         expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
     });
   })
