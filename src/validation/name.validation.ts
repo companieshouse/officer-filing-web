@@ -12,12 +12,14 @@ import { CURRENT_DIRECTORS_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
 import { formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
+import { selectLang } from "../utils/localise";
 
 const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
 
 export const nameValidator = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const lang = selectLang(req.query.lang);
         const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
         const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
         const session: Session = req.session as Session;
@@ -33,7 +35,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
 
         if(frontendValidationErrors.length > 0) {
-            const formattedErrors = formatValidationErrors(frontendValidationErrors);
+            const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
 
             return res.render(Templates.DIRECTOR_NAME, {
                 templateName: Templates.DIRECTOR_NAME,

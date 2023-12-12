@@ -15,7 +15,8 @@ export enum URL_QUERY_PARAM {
   PARAM_SUBMISSION_ID = "submissionId",
   PARAM_APPOINTMENT_ID = "appointmentId",
   PARAM_STOP_TYPE = "stopType",
-  IS_PSC = "isPsc"
+  IS_PSC = "isPsc",
+  LANG = "lang"
 }
 
 const SEPARATOR = "/";
@@ -37,6 +38,7 @@ export const OFFICER_FILING = "/appoint-update-remove-company-officer";
 export const COMPANY_NUMBER = "/company-number";
 export const DIRECTOR_ID = "/director-id";
 export const COMPANY_LOOKUP = "/company-lookup/search?forward="+OFFICER_FILING+"/confirm-company?companyNumber={companyNumber}";
+export const COMPANY_LOOKUP_WITH_LANG = "/company-lookup/search?forward=%2Fappoint-update-remove-company-officer%2Fconfirm-company%3FcompanyNumber%3D%7BcompanyNumber%7D%26lang%3D";
 export const ACCESSIBILITY_STATEMENT_PATH = OFFICER_FILING + ACCESSIBILITY_STATEMENT;
 export const CONFIRM_COMPANY_PATH = OFFICER_FILING + CONFIRM_COMPANY;
 export const SIGNOUT_PATH = "/signout";

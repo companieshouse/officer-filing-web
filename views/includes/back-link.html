@@ -1,5 +1,6 @@
-
+{% set backLinkText = i18n.back | default("Back") %}
 <span id="back-link-span"></span>
+{% if browserBack %}
   <script>
     var optionalBackLinkUrl = "{{ optionalBackLinkUrl }}"
   </script>
@@ -9,7 +10,7 @@
       var backLinkSpan = document.getElementById("back-link-span");
       if (backLinkSpan) {
         var backButton = document.createElement('a');
-        backButton.textContent = "Back";
+        backButton.textContent = "{{ backLinkText }}";
         backButton.className = "govuk-back-link";
         backButton.setAttribute('data-event-id', 'back-link');
 
@@ -28,12 +29,19 @@
 
   <noscript>
     {{ govukBackLink({
-      text: "Back",
+      text: backLinkText,
       href: backLinkUrl,
       attributes: {
         "data-event-id": "back-link"
       }
     }) }}
   </noscript>
-
-
+{% else %}
+  {{ govukBackLink({
+    text: backLinkText,
+    href: backLinkUrl,
+    attributes: {
+      "data-event-id": "back-link"
+    }
+  }) }}
+{% endif %}

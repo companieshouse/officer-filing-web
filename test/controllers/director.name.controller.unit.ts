@@ -11,6 +11,9 @@ import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../..
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { validateName } from "../../src/validation/name.validation";
+import { formatValidationErrors } from "../../src/validation/validation";
+import { NameValidation } from "../../src/validation/name.validation.config";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

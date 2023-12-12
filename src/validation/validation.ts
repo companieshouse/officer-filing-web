@@ -1,6 +1,7 @@
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { FormattedValidationErrors, ValidationError } from "../model/validation.model";
 import { convertAPIMessageToKey, lookupAPIValidationMessage, lookupWebValidationMessage } from "../utils/api.enumerations";
+import { getLocalesService } from "../utils/localise";
 
 /**
  * Regex for valid characters
@@ -17,11 +18,20 @@ export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z
  * @param validationErrors Contains the error message, the fields to highlight, and the field to link when the error message is clicked
  * @returns A validation errors object to display on the page
  */
-export function formatValidationErrors(validationErrors: ValidationError[]): FormattedValidationErrors {
+export function formatValidationErrors(validationErrors: ValidationError[], lang?: string): FormattedValidationErrors {
   const errors = { errorList: [] } as any;
-
+  const localesService = getLocalesService();
   validationErrors.forEach(validationResult => {
-    let errorMessage = lookupWebValidationMessage(validationResult.messageKey);
+    let errorMessage = validationResult.messageKey;
+    if (lang != undefined) {
+      const error = localesService.i18nCh.resolveSingleKey("error-" + validationResult.messageKey, lang);
+      if (!error.startsWith("error-")) {
+        errorMessage = error;
+      }
+    }
+    if (errorMessage == validationResult.messageKey) {
+      errorMessage = lookupWebValidationMessage(validationResult.messageKey);
+    }
     if (errorMessage == validationResult.messageKey) {
       errorMessage = lookupAPIValidationMessage(validationResult.messageKey)
     }
