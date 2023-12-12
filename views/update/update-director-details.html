@@ -17,7 +17,7 @@
           <span class="govuk-caption-l gem-c-title__context">
             {{companyName}}
           </span>      
-          <h2 class="govuk-heading-m">Update the director's details</h2>
+          <h2 class="govuk-heading-l">Update the director's details</h2>
 
           <p class="govuk-hint">If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.</p>
           {{ govukInsetText({
@@ -89,6 +89,7 @@
             ]
           }) }} 
           {% set officerFiling = officerFiling %}
+          {% set isUpdate = isUpdate %}
           {% include "includes/check-your-answer/address-details.html" %}
           <div class="govuk-button-group">
             {{ govukButton({

@@ -115,7 +115,7 @@ const validateInvalidValues = (dayStr: string, monthStr: string, yearStr: string
 }
 
 const checkIsNumber = (numStr: string) => {
-  return numStr.match("^[0-9]+$");
+  return numStr.match("^(?!00$)[0-9]{1,2}$");
 }
 
 const checkIsValidYear = (numStr: string) => {
