@@ -50,6 +50,12 @@
     {% endif %}
 {% endset %}
 
+{% if updateJourney %}
+  {% set changeButton = "Update" %}
+{% else %}
+  {% set changeButton = "Change" %}
+{% endif %}
+
 {{ govukSummaryList({
   rows: [
     {
@@ -63,7 +69,7 @@
         items: [
           {
             href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Change",
+            text: changeButton,
             visuallyHiddenText: "Director's address details",
             attributes: {
               "data-event-id": "address-change-link"

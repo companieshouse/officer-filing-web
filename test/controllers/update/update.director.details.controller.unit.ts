@@ -9,11 +9,13 @@ import { getCompanyProfile } from "../../../src/services/company.profile.service
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { UPDATE_DIRECTOR_DETAILS_PATH, urlParams } from "../../../src/types/page.urls";
+import { validCompanyProfile } from "../../mocks/company.profile.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
@@ -23,27 +25,44 @@ const PAGE_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const PAGE_HEADING = "Address details";
+const PAGE_HEADING = "View and update the director's details";
 
 describe("Director details tests", () => {
 
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
-    mockGetOfficerFiling.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
   describe("GET tests", () => {
-    it("Should display to update director details page", async () => {
+    it("Should display the update director details page", async () => {
       const response = await request(app).get(PAGE_URL);
-
-      expect(response.text).toContain("Update the director's details");
+      expect(response.text).toContain("View and update the director's details");
       expect(response.text).toContain("Director details");
       expect(response.text).toContain("Address details");
     });
 
-    it("should catch error if error occurred", async () => {
+    it("Should display the details for the active director", async () => {
+      mockGetOfficerFiling.mockResolvedValue({
+        name: "John Tester",
+        nationality1: "Irish",
+        nationality2: "American",
+        nationality3: "Welsh",
+        occupation: "Accountant",
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John Tester");
+      expect(response.text).toContain("Irish");
+      expect(response.text).toContain("American");
+      expect(response.text).toContain("Welsh");
+      expect(response.text).toContain("Accountant");
+      expect(mockGetOfficerFiling).toHaveBeenCalled();
+    });
+
+    it("Should catch error if error occurred", async () => {
       mockGetOfficerFiling.mockRejectedValue("Error getting officer filing");
+      mockGetCompanyProfile.mockRejectedValue("Error getting company profile");
       const response = await request(app).get(PAGE_URL);
       expect(response.text).not.toContain(PAGE_HEADING);
       expect(response.text).toContain(ERROR_PAGE_HEADING)
@@ -55,6 +74,14 @@ describe("Director details tests", () => {
       const response = await request(app).post(PAGE_URL).send({});
       expect(response.text).toContain("Redirecting to");
     })
-  });
 
-})
+    it("Should redirect to current directors page when no changes have been made", async () => {
+      const response = await request(app)
+          .post(PAGE_URL)
+          .send({back_to_active_directors: "companyNumber"});
+
+      expect(response.status).toEqual(302);
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/transaction/${TRANSACTION_ID}/current-directors`);
+    });
+  });
+});
