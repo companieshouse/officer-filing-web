@@ -252,12 +252,12 @@ describe("Director date details controller tests", () => {
 
       it("Should display error before patching if dob would be under the age of 16", async () => {
         jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("You can only appoint a person as a director if they are at least 16 years old");
-        mockGetOfficerFiling.mockReturnValueOnce({
+        mockGetOfficerFiling.mockReturnValue({
           referenceAppointmentId: APPOINTMENT_ID
         });
         const year = new Date().getFullYear();
   
-        const response = await request(app)
+        let response = await request(app)
           .post(DIRECTOR_DATE_DETAILS_URL)
           .send({ "dob_date-day": "15",
                   "dob_date-month": "08",
@@ -268,7 +268,21 @@ describe("Director date details controller tests", () => {
   
         expect(response.text).toContain("You can only appoint a person as a director if they are at least 16 years old");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+
+        // Handle scenario where a future date is given
+        response = await request(app)
+          .post(DIRECTOR_DATE_DETAILS_URL)
+          .send({ "dob_date-day": "15",
+                  "dob_date-month": "08",
+                  "dob_date-year": String(year + 1),
+                  "appointment_date-day": "10",
+                  "appointment_date-month": "09",
+                  "appointment_date-year": "2000" });
+  
+        expect(response.text).toContain("You can only appoint a person as a director if they are at least 16 years old");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
+      
 
       it("Should display error before patching if dob would be over the age of 110", async () => {
         jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("You can only appoint a person as a director if they are under 110 years old");
