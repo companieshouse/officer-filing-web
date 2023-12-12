@@ -12,7 +12,7 @@ import app from "../../src/app";
 import { CURRENT_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
-import { validCompanyProfile } from "../mocks/company.profile.mock";
+import { validCompanyProfile, validPublicCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { postOfficerFiling } from "../../src/services/officer.filing.service";
@@ -32,6 +32,8 @@ const APPOINTMENT_ID = "987654321";
 const SUBMISSION_ID = "55555555";
 const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
+const NO_DIRECTORS_PRIVATE_WARNING = "This company has no directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least one director who is a person and tell Companies House within 14 days, or risk prosecution."
+const NO_DIRECTORS_PUBLIC_WARNING = "This company has no directors, or not enough directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least 2 directors, and at least one must be a person. The company must tell Companies House who they&#39;ve appointed within 14 days, or risk prosecution."
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
@@ -120,12 +122,6 @@ describe("Active directors controller tests", () => {
         expect(response.text.match(/Remove director/g) || []).toHaveLength(5);
       });  
 
-      it("Should redirect to no directors page if no officers are returned", async () => {
-        mockGetCompanyOfficers.mockResolvedValue([]);
-        const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
-        expect(response.text).toContain(NO_DIRECTORS_REDIRECT);
-      }); 
-
       it("Should show appointed before 1992 if appointed on date is missing", async () => {
         mockGetCompanyOfficers.mockResolvedValue([mockCompanyOfficerMissingAppointedOn]);
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
@@ -146,6 +142,22 @@ describe("Active directors controller tests", () => {
 
       expect(mockGetCompanyOfficers).toHaveBeenCalled();
       expect(response.text).not.toContain("View and update details");
+    });
+
+    it("Should show warning for insufficient number of directors for a private company", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING);
+    });
+
+    it("Should show warning for insufficient number of directors for a private company", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+
+      expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING);
     });
   });
 
@@ -174,5 +186,15 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
         expect(mockPostOfficerFiling).toHaveBeenCalled();
     });
+
+    it ("should redirect to update directors page if update journey", async () => {
+      mockPostOfficerFiling.mockResolvedValueOnce({
+        id: SUBMISSION_ID,
+      });
+      const response = await request(app)
+        .post(CURRENT_DIRECTORS_URL).send({update_director_details: "update_director_details"});
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
+      expect(mockPostOfficerFiling).toHaveBeenCalled();
+    })
   });
 });

@@ -5,11 +5,9 @@ import { Session } from "@companieshouse/node-session-handler";
 import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { getCompanyMetrics } from "../services/company.metrics.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { STOP_TYPE, allowedCompanyTypes } from "../utils/constants";
-import { MetricsApi } from "@companieshouse/api-sdk-node/dist/services/company-metrics/types";
 import { LocalesService } from "@companieshouse/ch-node-utils"
 import { logger } from "../utils/logger";
 import { selectLang, getLocalesService, addLangToUrl, getLocaleInfo } from "../utils/localise";
@@ -89,10 +87,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     else if(!allowedCompanyTypes.includes(companyProfile.type)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED);
     }
-    // get number of active directors - if none go straight to stop screen and do not create transaction
-    else if(await companyHasNoDirectors(companyNumber)){
-      nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.NO_DIRECTORS);
-    }
     else{
       await createNewOfficerFiling(session);
       nextPageUrl = urlUtils.getUrlWithCompanyNumber(CREATE_TRANSACTION_PATH, companyNumber);
@@ -104,11 +98,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     return next(e);
   }
 };
-
-const companyHasNoDirectors = async (companyNumber: string) => {
-  const companyMetrics: MetricsApi = await getCompanyMetrics(companyNumber);
-  return companyMetrics?.counts?.appointments?.activeDirectorsCount == 0;
-}
 
 const createNewOfficerFiling = async (session: Session) => {
     const transactionId: string = "";

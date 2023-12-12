@@ -29,6 +29,7 @@ import * as removeDirectorSubmitted from "../controllers/remove.director.submitt
 import * as signoutRoute from "../controllers/signout.controller";
 import * as startRoute from "../controllers/start.controller";
 import * as stopPathRoute from "../controllers/stop.screen.controller";
+import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE } from "../utils/properties";
@@ -132,3 +133,8 @@ router.get(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(AP01_ACTIVE), a
 router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, appointDirectorCheckAnswers.post);
 
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), appointDirectorSubmitted.get);
+
+// CH01
+router.route(urls.UPDATE_DIRECTOR_DETAILS).all()
+.get(updateDirectorDetail.get)
+.post(updateDirectorDetail.post);
