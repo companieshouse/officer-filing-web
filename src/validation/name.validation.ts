@@ -29,15 +29,15 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const lastName = getField(req, DirectorField.LAST_NAME);
         const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
-
-        const frontendValidationErrors = validateName(title, firstName, middleNames, lastName, formerNames, previousNamesRadio, NameValidation);
+        const isUpdate = req.path.includes("update-director-name");
+        const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
 
         if(frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors);
 
             return res.render(Templates.DIRECTOR_NAME, {
                 templateName: Templates.DIRECTOR_NAME,
-                backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
+                backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
                 typeahead_array: TITLE_LIST,
                 errors: formattedErrors,
                 typeahead_errors: JSON.stringify(formattedErrors),
@@ -47,6 +47,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
                 last_name: lastName,
                 previous_names: formerNames,
                 previous_names_radio: previousNamesRadio,
+                isUpdate
             });
           }
         return next();
@@ -56,21 +57,22 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const validateName = (title: string, 
-                             firstName: string, 
-                             middleNames: string, 
-                             lastName: string, 
-                             formerNames: string,
-                             previousNamesRadio: string, 
-                             nameValidationType: NameValidationType): ValidationError[] => {
-
+export const validateName = (req: Request, nameValidationType: NameValidationType, isUpdate: boolean): ValidationError[] => {
+    const title = getField(req, DirectorField.TITLE);
+    const firstName = getField(req, DirectorField.FIRST_NAME);
+    const middleNames = getField(req, DirectorField.MIDDLE_NAMES);
+    const lastName = getField(req, DirectorField.LAST_NAME);
+    const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
+    const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
     let validationErrors: ValidationError[] = [];
 
     validateTitle(title, nameValidationType, validationErrors);
     validateFirstName(firstName, nameValidationType, validationErrors);
     validateMiddleNames(middleNames, nameValidationType, validationErrors);
     validateLastName(lastName, nameValidationType, validationErrors);
-    validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
+    if(!isUpdate) {
+        validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
+    }
 
     return validationErrors;
 };
