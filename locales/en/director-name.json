@@ -1,0 +1,13 @@
+{
+  "directorNameTitle": "What is the director's name?",
+  "directorNameTitleField": "Professional or honorary title (if relevant)",
+  "directorNameTitleFieldHint": "Start typing a title, such as Dr or Professor, then choose from the list.",
+  "directorFirstName": "First name",
+  "directorFirstNameHint": "Enter the director's full first name.",
+  "directorMiddleName": "Middle names",
+  "directorMiddleNameHint": "Enter the director's full middle name or names.",
+  "directorLastName": "Last name",
+  "directorPreviousName": "Has the director used a different name for business purposes in the last 20 years?",
+  "directorNameInsetTextTitle": "What information we'll show on the public online register",
+  "directorNameInsetText": "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant."
+}
