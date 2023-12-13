@@ -145,5 +145,5 @@ router.route(urls.UPDATE_DIRECTOR_NAME).all()
 .get(updateDirectorName.get)
 .post(nameValidator, updateDirectorName.post);
 
-router.get(urls.DIRECTOR_DATE_OF_CHANGE,  checkYourAnswersMiddleware(), directorDateOfChange.get);
+router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), checkYourAnswersMiddleware(), directorDateOfChange.get);
 router.post(urls.DIRECTOR_DATE_OF_CHANGE, directorDateOfChange.post);
