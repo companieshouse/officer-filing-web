@@ -10,7 +10,7 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { CURRENT_DIRECTORS_PATH, urlParams } from "../../src/types/page.urls";
-import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
+import { companyAuthenticationMiddleware } from '../../src/middleware/company.authentication.middleware';
 import { mockCompanyOfficerMissingAppointedOn, mockCompanyOfficersExtended } from "../mocks/active.director.details.mock";
 import { validCompanyProfile, validPublicCompanyProfile } from "../mocks/company.profile.mock";
 import { getListActiveDirectorDetails } from "../../src/services/active.directors.details.service";
@@ -59,6 +59,7 @@ describe("Active directors controller tests", () => {
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should navigate to current directors paginated pages", async () => {
@@ -171,7 +172,7 @@ describe("Active directors controller tests", () => {
       const response = await request(app)
         .post(ACTIVE_DIRECTOR_DETAILS_URL)
         .send({ "appointmentId": APPOINTMENT_ID });
-
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/date-director-removed");
     });
 
@@ -183,6 +184,7 @@ describe("Active directors controller tests", () => {
       const response = await request(app)
         .post(CURRENT_DIRECTORS_URL);
 
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
         expect(mockPostOfficerFiling).toHaveBeenCalled();
     });
@@ -193,6 +195,8 @@ describe("Active directors controller tests", () => {
       });
       const response = await request(app)
         .post(CURRENT_DIRECTORS_URL).send({update_director_details: "update_director_details"});
+      expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
       expect(mockPostOfficerFiling).toHaveBeenCalled();
     })

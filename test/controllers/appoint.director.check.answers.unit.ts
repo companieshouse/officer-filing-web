@@ -63,6 +63,7 @@ describe("Appoint director check answers controller tests", () => {
         }});
         const response = await request(app).get(PAGE_URL);
   
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("John");
         expect(response.text).toContain("Doe");
@@ -148,7 +149,8 @@ describe("Appoint director check answers controller tests", () => {
   
       it("Should redirect to appoint director submitted page", async () => {
         mockGetCurrentOrFutureDissolved.mockResolvedValueOnce(false);
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse)
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         const response = (await request(app).post(PAGE_URL).send({"director_consent": "director_consent"}));
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);

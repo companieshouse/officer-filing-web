@@ -42,6 +42,7 @@ describe("Confirm company controller tests", () => {
 
     expect(response.text).toContain(PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
 
   it("Should populate the template with CompanyProfile data", async () => {
@@ -106,6 +107,7 @@ describe("Confirm company controller tests", () => {
       .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
 
     expect(response.text).toEqual(LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING);
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
   });
   

@@ -10,8 +10,10 @@ import { companyAuthenticationMiddleware } from "../../src/middleware/company.au
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 const mockAuthMiddleware = jest.fn();
+const mockCompanyAuthMiddleware = jest.fn();
 jest.mock("@companieshouse/web-security-node", () => ({
     authMiddleware: jest.fn(() => mockAuthMiddleware),
+    companyAuthMiddleware: jest.fn(() => mockCompanyAuthMiddleware)
 }));
 
 describe("company authentication middleware tests", () => {
@@ -25,34 +27,36 @@ describe("company authentication middleware tests", () => {
     });
     
     it("should return 500 error page", async () => {
-     mockIsActiveFeature.mockReturnValueOnce(false);
-     const response = await request(app).get("/appoint-update-remove-company-officer");
+        mockIsActiveFeature.mockReturnValueOnce(false);
+        const response = await request(app).get("/appoint-update-remove-company-officer");
     
-     expect(response.text).toContain("Sorry, there is a problem with this service");
+        expect(response.text).toContain("Sorry, there is a problem with this service");
     });
     
-    it("should not return 500 error page", async () => {
-     mockIsActiveFeature.mockReturnValueOnce(true);
-     const response = await request(app).get("/appoint-update-remove-company-officer");
+    it("should not return 500 error page if feature flag is active", async () => {
+        mockIsActiveFeature.mockReturnValueOnce(true);
+        const response = await request(app).get("/appoint-update-remove-company-officer");
     
-     expect(response.text).not.toContain("Sorry, there is a problem with this service");
+        expect(response.text).not.toContain("Sorry, there is a problem with this service");
     });
 
     it("should call next if originalUrl includes '/cannot-use'", () => {
-        mockRequest.originalUrl = "http://some-chs-endpoint/company/cannot-use";
+        mockRequest.url = "http://some-chs-endpoint/company/cannot-use";
+        mockRequest.params = { PARAM_COMPANY_NUMBER: "12345678" };
         companyAuthenticationMiddleware(mockRequest, mockResponse, mockNext);
-        expect(mockNext).toHaveBeenCalled();
+        expect(mockAuthMiddleware).toHaveBeenCalled();
+        expect(mockCompanyAuthMiddleware).not.toHaveBeenCalled();
     });
 
     it("should call authMiddleware with correct config if originalUrl does not include '/cannot-use'", () => {
-        mockRequest.originalUrl = "http://some-chs-endpoint/company/some-url";
+        mockRequest.url = "http://some-chs-endpoint/company/some-url";
         mockRequest.params = { PARAM_COMPANY_NUMBER: "12345678" };
 
         companyAuthenticationMiddleware(mockRequest, mockResponse, mockNext);
         expect(mockAuthMiddleware).toHaveBeenCalled();
         expect(mockAuthMiddleware).toHaveBeenCalledWith(
             {
-                originalUrl: "http://some-chs-endpoint/company/some-url",
+                url: "http://some-chs-endpoint/company/some-url",
                 params: {
                     PARAM_COMPANY_NUMBER: "12345678",
                 },
@@ -60,5 +64,6 @@ describe("company authentication middleware tests", () => {
             {},
             mockNext
         );
+        expect(mockCompanyAuthMiddleware).not.toHaveBeenCalled();
     });
 });

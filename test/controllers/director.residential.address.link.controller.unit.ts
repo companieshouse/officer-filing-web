@@ -64,6 +64,7 @@ describe("Director residential address link controller tests", () => {
         expect(response.text).toContain("Testfirst Testmiddle Testlast");
         expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
         expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to residential address link page with yes radio selected", async () => {
@@ -121,6 +122,7 @@ describe("Director residential address link controller tests", () => {
         const response = await request(app).post(PAGE_URL).send({"ha_to_sa": "ha_to_sa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("should redirect to appoint directors check your answers page if CYA link is present", async () => {

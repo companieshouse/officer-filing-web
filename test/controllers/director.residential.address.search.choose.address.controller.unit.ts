@@ -51,6 +51,7 @@ describe("Director residential address array page controller tests", () => {
         const response = await request(app).get(PAGE_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -177,6 +178,7 @@ describe("Director residential address array page controller tests", () => {
           .send({ "address_array": "1" })
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should patch officer filing with selected address", async () => {

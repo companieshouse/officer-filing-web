@@ -77,5 +77,17 @@ export const DobDateValidation: DateValidationType = {
             source: [DobDateField.DAY, DobDateField.MONTH, DobDateField.YEAR],
             link: DobDateField.DAY
         },
+    },
+    RuleBased: {
+        Underage: {
+            messageKey: dobDateErrorMessageKey.DIRECTOR_UNDERAGE,
+            source: [DobDateField.DAY, DobDateField.MONTH, DobDateField.YEAR],
+            link: DobDateField.DAY
+        },
+        Overage: {
+            messageKey: dobDateErrorMessageKey.DIRECTOR_OVERAGE,
+            source: [DobDateField.DAY, DobDateField.MONTH, DobDateField.YEAR],
+            link: DobDateField.DAY
+        }
     }
 }
