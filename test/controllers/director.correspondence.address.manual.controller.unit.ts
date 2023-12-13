@@ -79,6 +79,7 @@ describe("Director correspondence address controller tests", () => {
         const response = await request(app).get(PAGE_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -200,7 +201,7 @@ describe("Director correspondence address controller tests", () => {
           expect(response.text).toContain("Enter a country");
 
           expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-
+          expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         });
 
         it("Should render other validation errors", async () => {

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Confirm this is the correct company" %}
+{% set title = i18n.confirmCompanyTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -12,14 +12,14 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Confirm this is the correct company</h1>
+      <h1 class="govuk-heading-l">{{ i18n.confirmCompanyTitle }} </h1>
       <form action="" method="post">
 
         {% set notDueWarningHTML %}
         <p style="font-weight: 400; display: inline;">
-          You are not due to file a officer filing. If you file a filing statement today, it will show the date as
+          {{ i18n.confirmNotDueToFile }}
           <strong>{{notDueWarning.newNextMadeUptoDate}}</strong>
-          and this will change your future review periods.
+          {{ i18n.confirmReviewPeriodChange }}
         </p>
         {% endset %}
 
@@ -27,7 +27,7 @@
           rows: [
           {
             key: {
-              text: "Company name"
+              text: i18n.confirmCompanyName
             },
             value: {
               text: company.companyName
@@ -36,7 +36,7 @@
             {
               key: {
                 classes: "govuk-!-width-full",
-                text: "Company number"
+                text: i18n.confirmCompanyNumber
               },
               value: {
                 text: company.companyNumber
@@ -44,7 +44,7 @@
             },
             {
               key: {
-                text: "Status"
+                text: i18n.confirmCompanyStatus
               },
               value: {
                 text: company.companyStatus
@@ -52,7 +52,7 @@
             },
             {
               key: {
-                text: "Incorporation date"
+                text: i18n.confirmCompanyDateOfCreation
               },
               value: {
                 text: company.dateOfCreation
@@ -60,7 +60,7 @@
             },
             {
               key: {
-                text: "Company type"
+                text: i18n.confirmCompanyType
               },
               value: {
                 text: company.type
@@ -68,7 +68,7 @@
             },
             {
               key: {
-                text: "Registered office address"
+                text: i18n.confirmRegisteredOfficeAddress
               },
               value: {
                 html: address
@@ -78,25 +78,27 @@
           ]
         }) }}
 
+        {% set warningText = i18n.warning | default("Warning") %}
+        {% set notDueWarning = notDueWarning | default(false) %}
         {% if notDueWarning %}
           {{ govukWarningText({
             html: notDueWarningHTML,
-            iconFallbackText: "Warning"
+            iconFallbackText: warningText
           }) }}
         {% endif %}
 
+        <input type="hidden" name="lang" value="{{lang}}">
         {{ govukButton({
           attributes: {
             id: "submit",
             "data-event-id": "confirm-and-continue-button"
           },
-          text: "Confirm and continue"
+          text: i18n.confirmAndContinue
         }) }}
       </form>
-        <p class="govuk-body">
-          <a href="/appoint-update-remove-company-officer/company-number" data-event-id="choose-a-different-company-link">Choose a different company</a>
-        </p>
-      </form>
+      <p class="govuk-body">
+        <a href="/appoint-update-remove-company-officer/company-number?lang={{lang}}" data-event-id="choose-a-different-company-link">{{ i18n.confirmChooseADifferentCompany }}</a>
+      </p>
     </div>
   </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { DateValidationType, ValidationError } from "../model/validation.model";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 /**
  * Validate date field - checks for missing values, non-numeric characters
@@ -24,6 +25,34 @@ export const validateDate = (dayStr: string, monthStr: string, yearStr: string, 
     return dateValidationType.InvalidValue.DayMonthYear;
   }
   return undefined;
+}
+
+/**
+ * Validate the date of birth field and return a validation error if any of the fields fail validation
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+export const validateDateOfBirth = (dayStr: string, monthStr: string, yearStr: string, dateValidationType: DateValidationType): ValidationError | undefined => {
+  const dateError = validateDate(dayStr, monthStr, yearStr, dateValidationType);
+  if(dateError){
+    return dateError;
+  }
+  const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
+  const dateOfBirth = new Date(year, month - 1, day);
+  return validateDateOfBirthRules(dateOfBirth, dateValidationType);
+}
+
+/**
+ * Validate the date of appointment field and return a validation error if any of the fields fail validation
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+export const validateDateOfAppointment = (dayStr: string, monthStr: string, yearStr: string, dateValidationType: DateValidationType, dateOfBirth: Date, companyProfile: CompanyProfile): ValidationError | undefined => {
+  const dateError = validateDate(dayStr, monthStr, yearStr, dateValidationType);
+  if(dateError){
+    return dateError;
+  }
+  const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
+  const dateOfAppointment = new Date(year, month - 1, day);
+  return validateDateOfAppointmentRules(dateOfBirth, dateOfAppointment, dateValidationType, companyProfile);
 }
 
 /**
@@ -86,9 +115,95 @@ const validateInvalidValues = (dayStr: string, monthStr: string, yearStr: string
 }
 
 const checkIsNumber = (numStr: string) => {
-  return numStr.match("^[0-9]+$");
+  return numStr.match("^(?!00$)[0-9]{1,2}$");
 }
 
 const checkIsValidYear = (numStr: string) => {
   return numStr.match("^[0-9]{4}$");
 }
+
+const getAge = (dateOfBirth: Date) => {
+  const diffMs = Date.now() - dateOfBirth.getTime();
+  return Math.abs(new Date(diffMs).getUTCFullYear() - 1970);
+}
+
+/**
+ * Validate rules relating to date of birth
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateDateOfBirthRules = (dateOfBirth: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
+  const underageValidation = validateUnderageRule(dateOfBirth, dateValidationType);
+  if(underageValidation){
+    return underageValidation;
+  }
+  if(getAge(dateOfBirth) > 110){
+    return dateValidationType.RuleBased?.Overage;
+  }
+  return undefined;
+}
+
+/**
+ * Validate rules relating to date of appointment
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateDateOfAppointmentRules = (dateOfBirth: Date, dateOfAppointment: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile): ValidationError | undefined => {
+  const futureDateValidation = validateFutureDateRule(dateOfAppointment, dateValidationType);
+  if(futureDateValidation){
+    return futureDateValidation;
+  }
+  const incorporationDateValidation = validateAppointmentAfterIncorporationDate(dateOfAppointment, dateValidationType, companyProfile);
+  if(incorporationDateValidation){
+    return incorporationDateValidation;
+  }
+  const underageValidation = validateUnderageAtAppointmentRule(dateOfBirth, dateOfAppointment, dateValidationType);
+  if(underageValidation){
+    return underageValidation;
+  }
+  return undefined;
+}
+
+/**
+ * Validate whether a director is under the age of 16
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
+  if(dateOfBirth > new Date()){
+    return dateValidationType.RuleBased?.Underage;
+  }
+  if(getAge(dateOfBirth) < 16){
+    return dateValidationType.RuleBased?.Underage;
+  }
+  return undefined;
+}
+
+/**
+ * Validate whether a director would be under the age of 16 on the date of appointment
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateUnderageAtAppointmentRule = (dateOfBirth: Date, dateOfAppointment: Date,dateValidationType: DateValidationType): ValidationError | undefined => {
+  if(getAge(dateOfBirth) - getAge(dateOfAppointment) < 16){
+    return dateValidationType.RuleBased?.Underage;
+  }
+  return undefined;
+}
+
+/**
+ * Validate whether a date of appointment is in the future
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateFutureDateRule = (dateOfAppointment: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
+  if(dateOfAppointment > new Date()){
+    return dateValidationType.RuleBased?.FutureDate;
+  }
+}
+
+/**
+ * Validate whether a date of appointment is after the date of incorporation
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateAppointmentAfterIncorporationDate = (dateOfAppointment: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile): ValidationError | undefined => {
+  if(dateOfAppointment < new Date(companyProfile.dateOfCreation)){
+    return dateValidationType.RuleBased?.IncorporationDate;
+  }
+}
+

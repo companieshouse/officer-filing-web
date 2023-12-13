@@ -3,14 +3,22 @@ import { createAndLogError } from "./logger";
 import { CompanyOfficer } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { formatAppointmentDate } from "./format";
 
-export const toReadableFormat = (dateToConvert: string | undefined): string => {
+export const toReadableFormat = (dateToConvert: string | undefined, lang = "en"): string => {
   if (!dateToConvert) {
     return "";
   }
   const jsDate = new Date(dateToConvert);
   const dateTime = DateTime.fromJSDate(jsDate);
-  const convertedDate = dateTime.toFormat("d MMMM yyyy");
-
+  let convertedDate;
+  switch (lang) {
+    case "cy":
+      convertedDate = dateTime.setLocale("cy").toFormat("d MMMM yyyy");
+      break;
+    case "en":
+    default:
+      convertedDate = dateTime.setLocale("en").toFormat("d MMMM yyyy");
+      break;
+  }
   if (convertedDate === "Invalid DateTime") {
     throw createAndLogError(`Unable to convert provided date ${dateToConvert}`);
   }

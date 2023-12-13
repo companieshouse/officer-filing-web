@@ -74,6 +74,7 @@ describe("Director protected details controller tests", () => {
         const response = await request(app).get(PAGE_URL).set({"referer": "protected-details"});
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -149,6 +150,7 @@ describe("Director protected details controller tests", () => {
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("should display an error when no radio button is selected", async () => {

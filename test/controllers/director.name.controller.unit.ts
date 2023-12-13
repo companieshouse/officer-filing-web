@@ -9,13 +9,12 @@ import app from "../../src/app";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { mockValidValidationStatusResponse, mockValidationStatusError, mockValidationStatusErrorFormerNames, mockValidationStatusErrorLastName, mockValidationStatusErrorTitle } from "../mocks/validation.status.response.mock";
-import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors } from "../../src/controllers/director.name.controller";
-import { formerNamesErrorMessageKey, lastNameErrorMessageKey, titleErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { validateName } from "../../src/validation/name.validation";
+import { formatValidationErrors } from "../../src/validation/validation";
+import { NameValidation } from "../../src/validation/name.validation.config";
 
-const req = {} as Request;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
@@ -44,7 +43,6 @@ describe("Director name controller tests", () => {
     });
   
     describe("get tests", () => {
-  
       it("Should navigate to director name page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "app1",
@@ -53,6 +51,7 @@ describe("Director name controller tests", () => {
         const response = await request(app).get(DIRECTOR_NAME_URL).set({"referer": "director-name"});
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -81,10 +80,34 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("testFormer");
       });
 
+      it("Should return 'No' if officer filing name is empty string", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetOfficerFiling.mockReturnValueOnce({
+          formerNames: ""
+        })
+        const response = await request(app)
+          .get(DIRECTOR_NAME_URL);
+
+        expect(response.text).toContain("value=\"No\" checked")
+      });
+
+      it("Should not check former name radio buttons if officer filing name is null", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetOfficerFiling.mockReturnValueOnce({
+          formerNames: null
+        })
+        const response = await request(app)
+          .get(DIRECTOR_NAME_URL);
+
+        expect(response.text).not.toContain("value=\"No\" checked")
+        expect(response.text).not.toContain("value=\"Yes\" checked")
+      });
+
     });
 
     describe("post tests", () => {
-  
       it("Should redirect to date of birth page if there are no errors", async () => {  
 
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
@@ -101,81 +124,40 @@ describe("Director name controller tests", () => {
             "previous_names_radio": "No", 
             "previous_names": "" 
           });
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
 
+      it("should catch errors on submission if errors", async () => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "No", 
+            "previous_names": "" 
+          });
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+        expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
+      });
+
+      it("Should redirect to date of birth page if there are no errors and former name is yes", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "Yes", 
+            "previous_names": "Sparrow" 
+          });
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
-
-    });
-
-    describe("buildValidationErrors tests", () => {
-
-      it("should return title validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorTitle],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'No', '');
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(titleErrorMessageKey.TITLE_LENGTH);
-      });
-
-      it("should return formerNames validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorFormerNames],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', 'abc');
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_CHARACTERS);
-      });
-
-      it("should return formerNames validation error no radio button is selected", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorFormerNames],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, '', 'abc');
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
-      });
-
-      it("should return formerNames validation error if Yes is selected but a value is not entered", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorFormerNames],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', '');
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
-      });
-
-      it("should return multiple validation errors, one for each input field", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorTitle, mockValidationStatusErrorLastName, mockValidationStatusErrorFormerNames],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'Yes', 'abc');
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(titleErrorMessageKey.TITLE_LENGTH);
-        expect(validationErrors.map(error => error.messageKey)).toContain(lastNameErrorMessageKey.LAST_NAME_BLANK);
-        expect(validationErrors.map(error => error.messageKey)).toContain(formerNamesErrorMessageKey.FORMER_NAMES_CHARACTERS);
-      });
-
-      it("should ignore unrelated validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusError],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse, 'No', '');
-
-        expect(validationErrors).toHaveLength(0);
-      });
-      
     });
 });

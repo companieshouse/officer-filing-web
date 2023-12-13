@@ -63,7 +63,7 @@ describe("Director nationality controller tests", () => {
     it ("should render nationality error if nationality is contains invalid character", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"Can£adian&"});
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
+      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
     });
 
     it ("should not render nationality error if nationality2 is blank", async() => {
@@ -80,7 +80,7 @@ describe("Director nationality controller tests", () => {
 
     it ("should render nationality error if nationality2 contains invalid character", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"(Indian)"});
-      expect(response.text).toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
+      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 

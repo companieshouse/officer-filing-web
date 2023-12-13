@@ -21,6 +21,7 @@ describe("Signout controller tests", () => {
 
         expect(response.status).toBe(200);
         expect(response.text).toContain('Are you sure you want to sign out?');
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     });
 
     it('should store the previous page in the session from the referer header', async () => {
@@ -50,7 +51,8 @@ describe("Signout controller tests", () => {
           .post(SIGNOUT_LOCATION)
 
         expect(response.status).toBe(400)
-        expect(response.text).toContain('Select yes if you want to sign out')
+        expect(response.text).toContain('Select yes if you want to sign out');
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     });
 
     it('should show the error page if there is no return page in session', async () => {

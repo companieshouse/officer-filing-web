@@ -59,6 +59,7 @@ describe("Remove director submitted controller tests", () => {
       const response = await request(app).get(SUBMITTED_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should display removal summary for the director", async () => {

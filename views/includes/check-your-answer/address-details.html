@@ -6,15 +6,19 @@
         {% if officerFiling.serviceAddress.premises %}
           <li>{{ officerFiling.serviceAddress.premises | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+        {% if officerFiling.serviceAddress.addressLine1 %}
+          <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+        {% endif %}
         {% if officerFiling.serviceAddress.addressLine2 %}
           <li>{{ officerFiling.serviceAddress.addressLine2 | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+        {% if officerFiling.serviceAddress.locality %}
+          <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+        {% endif %}
         {% if officerFiling.serviceAddress.region %}
           <li>{{ officerFiling.serviceAddress.region | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.country | title }}</li>
+        <li>{{ officerFiling.serviceAddress.country }}</li>
         <li>{{ officerFiling.serviceAddress.postalCode }}</li>
     </ul>  
   {% endif %}
@@ -28,15 +32,19 @@
       {% if officerFiling.residentialAddress.premises %}
         <li>{{ officerFiling.residentialAddress.premises | title  }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+      {% if officerFiling.residentialAddress.addressLine1 %}
+        <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+      {% endif %}
       {% if officerFiling.residentialAddress.addressLine2 %}
         <li>{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+      {% if officerFiling.residentialAddress.locality %}
+        <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+      {% endif %}
       {% if officerFiling.residentialAddress.region %}
         <li>{{ officerFiling.residentialAddress.region | title }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.country | title }}</li>
+      <li>{{ officerFiling.residentialAddress.country }}</li>
       <li>{{ officerFiling.residentialAddress.postalCode }}</li>
     </ul>  
   {% endif %}
@@ -63,7 +71,7 @@
         items: [
           {
             href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Change",
+            text: "Update" if isUpdate else "Change",
             visuallyHiddenText: "Director's address details",
             attributes: {
               "data-event-id": "address-change-link"

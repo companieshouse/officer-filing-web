@@ -78,6 +78,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should display summary for the corporate directors, missing date of birth", async () => {
@@ -155,6 +156,7 @@ describe("Remove director check answers controller tests", () => {
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).toHaveBeenCalled();
       expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should redirect to appropriate stop screen if validation status errors (DISSOLVED)", async () => {

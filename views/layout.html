@@ -17,7 +17,7 @@
 {% from "govuk/components/panel/macro.njk"               import govukPanel %}
 {% from "govuk/components/pagination/macro.njk"          import govukPagination %}
 {% from "govuk/components/select/macro.njk"              import govukSelect %}
-
+{% import "add-lang-to-url.njk" as lang2url %}
 
 {% block head %}
 
@@ -28,7 +28,7 @@
   <link href="{{assetPath}}/stylesheets/govuk-frontend/v4.6.0/govuk-frontend-4.6.0.min.css" rel="stylesheet" />
   <!--<![endif]-->
   <link rel="stylesheet" href="{{assetPath}}/stylesheets/accessible-autocomplete/autocomplete.min.css" />
-
+  <link href="{{assetPath}}/stylesheets/extensions/languages-nav.css" rel="stylesheet"/>
 
   {# For Internet Explorer 8, you need to compile specific stylesheet #}
   {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
@@ -52,7 +52,11 @@
 
 {% block header %}
 {% if AP01_ACTIVE === "true" %}
-  {% set serviceName = SERVICE_NAME %}
+  {% if i18n.appTitle %}
+    {% set serviceName = i18n.appTitle %}
+  {% else %}
+    {% set serviceName = SERVICE_NAME %}
+  {% endif %}
 {% else %}
   {% set serviceName = "Remove a company director" %}
 {% endif %}
@@ -72,6 +76,8 @@
     },
     html: 'This is a new service - Help us improve it by providing <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-banner-link" target="_blank" rel="noopener noreferrer">feedback <span class="govuk-visually-hidden">(This link opens in a new window)</span></a>'
   }) }}
+ 
+  {% include "locales-banner.njk" %}
 
   {% block signoutBar %}
     {% include "includes/signout-bar.html" %}
@@ -79,33 +85,39 @@
 
   {% block backLink %}
   {% endblock %}
+
 {% endblock %}
 
 {% set mainClasses = mainClasses | default("govuk-main-wrapper--auto-spacing govuk-body") %}
 
+{% set policies = i18n.policies | default("Policies") %}
+{% set cookies = i18n.cookies | default("Cookies") %}
+{% set contactUs = i18n.contactUs | default("Contact Us") %}
+{% set developers = i18n.developers | default("Developers") %}
+{% set accessibilityStatement = i18n.accessibilityStatement | default("Accessibility statement") %}
 {% block footer %}
   {{ govukFooter({
     meta: {
       items: [
         {
           href: "http://resources.companieshouse.gov.uk/legal/termsAndConditions.shtml",
-          text: "Policies"
+          text: policies
         },
         {
           href: "/help/cookies",
-          text: "Cookies"
+          text: cookies
         },
         {
           href: "/help/contact-us",
-          text: "Contact us"
+          text: contactUs
         },
         {
           href: "https://developer.companieshouse.gov.uk/",
-          text: "Developers"
+          text: developers
         },
         {
           href: "/appoint-update-remove-company-officer/accessibility-statement",
-          text: "Accessibility statement"
+          text: accessibilityStatement
         }
       ]
     }
