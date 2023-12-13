@@ -7,7 +7,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { COMPANY_NAME_PLACEHOLDER, STOP_TYPE, STOP_PAGE_CONTENT } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 
-export const get = async (req, res, next: NextFunction) => {
+export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const stopType = req.query.stopType as string;
         const content = setContent(req, stopType);

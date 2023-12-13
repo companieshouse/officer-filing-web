@@ -54,6 +54,7 @@ describe("Director confirm residential address controller tests", () => {
         const response = await request(app).get(PAGE_URL);
 
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should populate details on the page", async () => {
@@ -141,6 +142,7 @@ describe("Director confirm residential address controller tests", () => {
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should redirect to appoint director check your answer page if filing has check your answers link", async () => {
@@ -150,6 +152,7 @@ describe("Director confirm residential address controller tests", () => {
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CHECK_ANSWERS_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
     });
 });

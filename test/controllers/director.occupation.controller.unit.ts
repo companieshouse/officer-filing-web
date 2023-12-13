@@ -58,6 +58,7 @@ describe("Director occupation controller tests", () => {
         const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -117,6 +118,7 @@ describe("Director occupation controller tests", () => {
 
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should redirect to correspondence page with valid value for occupation", async () => {
