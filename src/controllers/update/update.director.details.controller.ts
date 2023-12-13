@@ -6,6 +6,7 @@ import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
 import { ACTIVE_DIRECTORS_DETAILS_PATH, CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
+        DIRECTOR_DATE_OF_CHANGE_PATH, 
         DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
@@ -34,5 +35,5 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, resp: Response, next: NextFunction) => {
-  return resp.redirect(urlUtils.getUrlToPath("", req));
+  return resp.redirect(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req));
 }
