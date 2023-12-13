@@ -73,6 +73,7 @@ describe("Remove director date controller tests", () => {
         .get(REMOVE_DIRECTOR_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should display date of removal fields and directors name", async () => {
@@ -143,6 +144,7 @@ describe("Remove director date controller tests", () => {
           referenceEtag: "etag",
           resignedOn: "2010-08-07"
         });
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
     
     it("Should redirect to next page if no errors - day and month are larger than 10", async () => {

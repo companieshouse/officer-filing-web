@@ -76,7 +76,8 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
-        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END)
+        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} page without address line 2`, async () => {
@@ -145,6 +146,7 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain("Locality");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
       
       it("should catch error if patch officer filing failed", async () => {

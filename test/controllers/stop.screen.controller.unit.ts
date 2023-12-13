@@ -39,7 +39,7 @@ describe("Stop screen controller tests", () => {
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should set the content to dissolved company content", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
@@ -50,6 +50,8 @@ describe("Stop screen controller tests", () => {
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
     expect(response.text).toContain(dissolvedCompanyProfile.companyName);
     expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should navigate to non limited-unlimited stop screen", async () => {
@@ -60,7 +62,7 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should set the content to non limited-unlimited company content", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
@@ -71,6 +73,8 @@ describe("Stop screen controller tests", () => {
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
     expect(response.text).toContain(overseaCompanyCompanyProfile.companyName);
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should navigate to pre-october-2009 stop screen", async () => {
@@ -81,7 +85,7 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should set the content to pre-october-2009 company content", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
@@ -91,6 +95,8 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should substitute company name for 'This company' for dissolved company missing company name", async () => {
@@ -99,7 +105,7 @@ describe("Stop screen controller tests", () => {
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
     expect(response.text).toContain("This company " + DISSOLVED_PAGE_BODY_TEXT);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should substitute company name for 'this company' for non limited-unlimited company missing company name", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
@@ -107,7 +113,7 @@ describe("Stop screen controller tests", () => {
     .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("Test Company", "this company"));
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should return error page if error is thrown when getting Company Profile", async () => {
     const message = "Can't connect";
@@ -116,6 +122,8 @@ describe("Stop screen controller tests", () => {
       .get(BASIC_STOP_PAGE_PATH);
 
     expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
 
   it("Should return error page if an unknown stop type is provided", async () => {
@@ -124,6 +132,8 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL + "undefined");
 
     expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should navigate to etag stop screen", async () => {
@@ -134,6 +144,7 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(ETAG_PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should set the content to etag company content", async () => {
@@ -144,6 +155,8 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(ETAG_PAGE_HEADING);
     expect(response.text).toContain(ETAG_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
   it("Should display something-went-wrong stop-screen heading and content", async () => {
@@ -154,6 +167,8 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(SOMETHING_WENT_WRONG_HEADING);
     expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
 });

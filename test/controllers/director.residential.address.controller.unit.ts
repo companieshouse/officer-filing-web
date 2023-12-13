@@ -111,6 +111,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
@@ -314,6 +315,7 @@ describe("Director name controller tests", () => {
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.postalCode);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("should catch error if patch officer filing failed", async () => {

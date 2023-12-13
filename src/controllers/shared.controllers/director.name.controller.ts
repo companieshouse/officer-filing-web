@@ -6,7 +6,7 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getLocalesService, selectLang } from "utils/localise";
+import { getLocalesService, selectLang } from "../../utils/localise";
 import { logger } from "../../utils/logger";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {

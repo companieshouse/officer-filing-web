@@ -59,6 +59,7 @@ describe("Director correspondence address link controller tests", () => {
         expect(response.text).toContain("Testfirst Testmiddle Testlast");
         expect(response.text).toContain('value="sa_to_roa_yes" aria-describedby');
         expect(response.text).toContain('value="sa_to_roa_no" aria-describedby');
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to correspondence address link page with yes radio selected", async () => {
@@ -112,6 +113,7 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("should redirect to director residential address page when no radio selected", async () => {
