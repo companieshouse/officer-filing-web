@@ -19,7 +19,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     return resp.render(Templates.UPDATE_DIRECTOR_DETAILS, {
       templateName: Templates.UPDATE_DIRECTOR_DETAILS,
-      backLinkUrl: urlUtils.getUrlToPath(ACTIVE_DIRECTORS_DETAILS_PATH, req),
+      backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       ...officerFiling,
       ...companyProfile,
