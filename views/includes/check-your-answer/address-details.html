@@ -58,12 +58,6 @@
     {% endif %}
 {% endset %}
 
-{% if updateJourney %}
-  {% set changeButton = "Update" %}
-{% else %}
-  {% set changeButton = "Change" %}
-{% endif %}
-
 {{ govukSummaryList({
   rows: [
     {
