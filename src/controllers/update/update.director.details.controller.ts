@@ -5,7 +5,7 @@ import { urlUtils } from "../../utils/url";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
-import { ACTIVE_DIRECTORS_DETAILS_PATH, CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH, 
+import { ACTIVE_DIRECTORS_DETAILS_PATH, CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_NAME_PATH, 
         DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
@@ -19,10 +19,12 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     let updatedData = false;
 
-    if (officerFiling.nameHasBeenUpdated || officerFiling.nationalityHasBeenUpdated || officerFiling.occupationHasBeenUpdated ||
-      officerFiling.correspondenceAddressHasBeenUpdated || officerFiling.residentialAddressHasBeenUpdated) {
-      updatedData = true;
-    }
+    // This will determine the button that appears at the bottom of the page,
+    // but needs model changes from 1482
+    // if (officerFiling.name_has_been_updated || officerFiling.nationality_has_been_updated || officerFiling.occupation_has_been_updated ||
+    //   officerFiling.correspondence_address_has_been_updated || officerFiling.resedential_address_has_been_updated === true) {
+    //   updatedData = true;
+    // }
 
     return resp.render(Templates.UPDATE_DIRECTOR_DETAILS, {
       templateName: Templates.UPDATE_DIRECTOR_DETAILS,
@@ -35,7 +37,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
-      isUpdate: true,
+      updateJourney: true,
       updatedData: updatedData,
     })
   } catch(e) {
