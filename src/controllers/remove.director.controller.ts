@@ -85,7 +85,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Patch filing with etag and resignation date
     const updateFiling: OfficerFiling = {
-      referenceEtag: appointment.etag,
       resignedOn: resignationDate
     }
     await patchOfficerFiling(session, transactionId, submissionId, updateFiling);

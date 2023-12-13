@@ -23,6 +23,9 @@ import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_R
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { PaginationData } from "../types";
 import { selectLang, addLangToUrl } from "../utils/localise";
+import { logger } from "../utils/logger";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -84,31 +87,30 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   const lang = selectLang(req.query.lang);
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-  const appointmentId = req.body.appointmentId;
+  const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
   const session: Session = req.session as Session;
-  if (appointmentId) {
-    return beginTerminationJourney(req, res, session, transactionId, appointmentId);
-  } else if (req.body.update_director_details) {
-    return beginUpdateJourney(req, res, session, transactionId, appointmentId);
+  
+  const removeAppointmentId = req.body.removeAppointmentId;
+  if (removeAppointmentId) {
+    return beginTerminationJourney(req, res, session, companyNumber, transactionId, removeAppointmentId);
   }
+
+  const updateAppointmentId = req.body.updateAppointmentId;
+  if (updateAppointmentId) {
+    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId);
+  }
+
   return beginAppointmentJourney(req, res, session, transactionId, lang);
 };
-
-const beginUpdateJourney = async (req: Request, res: Response, session: Session, transactionId: string, appointmentId: any) => {
-  const officerFiling: OfficerFiling = {};
-  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
-  req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
-  
-  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
-  return res.redirect(nextPageUrl);
-}
 
 /**
  * Post an officer filing and redirect to the first page in the TM01 journey.
 */
-async function beginTerminationJourney(req: Request, res: Response, session: Session, transactionId: string, appointmentId: any) {
+async function beginTerminationJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+  logger.debug(`Creating a termination filing for appointment ${appointmentId}`);
   const officerFiling: OfficerFiling = {
-    referenceAppointmentId: appointmentId
+    referenceAppointmentId: appointmentId,
+    referenceEtag: await getEtag(session, companyNumber, appointmentId)
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
@@ -118,9 +120,26 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 }
 
 /**
+ * Post an officer filing and redirect to the first page in the CH01 journey.
+*/
+async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+  logger.debug(`Creating an update filing for appointment ${appointmentId}`);
+  const officerFiling: OfficerFiling = {
+    referenceAppointmentId: appointmentId,
+    referenceEtag: await getEtag(session, companyNumber, appointmentId)
+  };
+  const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
+  req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
+  
+  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+  return res.redirect(nextPageUrl);
+}
+
+/**
  * Post an officer filing and redirect to the first page in the AP01 journey.
 */
 async function beginAppointmentJourney(req: Request, res: Response, session: Session, transactionId: string, lang: string | undefined) {
+  logger.debug(`Creating an appointment filing`);
   const officerFiling: OfficerFiling = {};
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
@@ -188,3 +207,8 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   }
   return "";
 };
+
+const getEtag = async (session: Session, companyNumber: string, appointmentId: string): Promise<string> => {
+  const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+  return appointment.etag;
+}
