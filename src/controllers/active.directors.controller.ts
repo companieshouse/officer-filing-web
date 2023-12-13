@@ -22,9 +22,11 @@ import { isActiveFeature } from "../utils/feature.flag";
 import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { PaginationData } from "../types";
+import { selectLang, addLangToUrl } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const lang = selectLang(req.query.lang);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
@@ -62,6 +64,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
+      lang,
       ap01Active: isActiveFeature(AP01_ACTIVE),
       PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
       PIWIK_APPOINT_DIRECTOR_START_GOAL_ID,
@@ -79,6 +82,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
+  const lang = selectLang(req.query.lang);
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const appointmentId = req.body.appointmentId;
   const session: Session = req.session as Session;
@@ -87,7 +91,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   } else if (req.body.update_director_details) {
     return beginUpdateJourney(req, res, session, transactionId, appointmentId);
   }
-  return beginAppointmentJourney(req, res, session, transactionId);
+  return beginAppointmentJourney(req, res, session, transactionId, lang);
 };
 
 const beginUpdateJourney = async (req: Request, res: Response, session: Session, transactionId: string, appointmentId: any) => {
@@ -116,12 +120,12 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 /**
  * Post an officer filing and redirect to the first page in the AP01 journey.
 */
-async function beginAppointmentJourney(req: Request, res: Response, session: Session, transactionId: string) {
+async function beginAppointmentJourney(req: Request, res: Response, session: Session, transactionId: string, lang: string | undefined) {
   const officerFiling: OfficerFiling = {};
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-  const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req);
+  const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req), lang);
   return res.redirect(nextPageUrl);
 }
 

@@ -1,0 +1,12 @@
+{
+  "confirmCompanyTitle" : "Confirm this is the correct company",
+  "confirmCompanyName": "Company name",
+  "confirmCompanyNumber": "Company number",
+  "confirmCompanyStatus" : "Status",
+  "confirmCompanyDateOfCreation": "Incorporation date",
+  "confirmCompanyType": "Company Type",
+  "confirmRegisteredOfficeAddress": "Registered office address",
+  "confirmNotDueToFile": "You are not due to file a officer filing. If you file a filing statement today, it will show the date as",
+  "confirmReviewPeriodChange": "and this will change your future review periods.",
+  "confirmChooseADifferentCompany": "Choose a different company"
+}

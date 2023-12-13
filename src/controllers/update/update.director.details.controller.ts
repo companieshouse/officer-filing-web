@@ -33,7 +33,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       officerFiling: officerFiling,
       ...officerFiling,
       ...companyProfile,
-      nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
+      nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),

@@ -22,9 +22,9 @@ const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {
   const PAGE_HEADING = "Confirm this is the correct company";
-  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved";
-  const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited";
-  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors";
+  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved&lang=en";
+  const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited&lang=en";
+  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors&lang=en";
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -56,6 +56,17 @@ describe("Confirm company controller tests", () => {
     expect(response.text).toContain(validCompanyProfile.companyName);
   });
 
+  it("Should render the page in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
+    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+
+    const response = await request(app)
+      .get(CONFIRM_COMPANY_PATH + "?lang=cy");
+
+    expect(response.text).toContain("Cadarnhau mai hwn yw’r cwmni cywir");
+  });
+
   it("Should return error page if error is thrown when getting Company Profile", async () => {
     const message = "Can't connect";
     mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
@@ -74,7 +85,7 @@ describe("Confirm company controller tests", () => {
       .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
       
     expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction");
+    expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=en");
   });
 
   it("Should redirect to dissolved stop screen when company is dissolved", async () => {

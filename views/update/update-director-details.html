@@ -96,7 +96,9 @@
                 }
               }
             ]
-          }) }}
+          }) }} 
+          {% set officerFiling = officerFiling %}
+          {% set isUpdate = isUpdate %}
           {% include "includes/check-your-answer/address-details.html" %}
           {% if updatedData %}
             <div class="govuk-button-group">
@@ -117,5 +119,4 @@
       </form>
     </div>
   </div>
-
 {% endblock %}

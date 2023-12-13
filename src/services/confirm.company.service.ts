@@ -1,6 +1,7 @@
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { toReadableFormat } from "../utils/date";
+import { LocalesService } from "@companieshouse/ch-node-utils"
 
 export const buildAddress = (addressArray: Array<string>): string => {
   let address = "";
@@ -13,10 +14,10 @@ export const buildAddress = (addressArray: Array<string>): string => {
   return address;
 }
 
-export const formatForDisplay = (companyProfile: CompanyProfile): CompanyProfile => {
-  companyProfile.type = lookupCompanyType(companyProfile.type);
-  companyProfile.companyStatus = lookupCompanyStatus(companyProfile.companyStatus);
-  companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation);
+export const formatForDisplay = (companyProfile: CompanyProfile, locales: LocalesService, lang: string): CompanyProfile => {
+  companyProfile.type = locales.i18nCh.resolveSingleKey("company-type-" + companyProfile.type, lang);
+  companyProfile.companyStatus = locales.i18nCh.resolveSingleKey("company-status-" + companyProfile.companyStatus, lang);
+  companyProfile.dateOfCreation = toReadableFormat(companyProfile.dateOfCreation, lang);
   companyProfile.registeredOfficeAddress.premises = formatTitleCase(companyProfile.registeredOfficeAddress.premises);
   companyProfile.registeredOfficeAddress.addressLineOne = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineOne);
   companyProfile.registeredOfficeAddress.addressLineTwo = formatTitleCase(companyProfile.registeredOfficeAddress.addressLineTwo);
