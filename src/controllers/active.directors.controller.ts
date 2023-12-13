@@ -108,9 +108,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 */
 async function beginTerminationJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
   logger.debug(`Creating a termination filing for appointment ${appointmentId}`);
+
+  const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
-    referenceEtag: await getEtag(session, companyNumber, appointmentId)
+    referenceEtag: appointment.etag
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
@@ -124,9 +126,45 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 */
 async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
+  const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+  const nationalities = appointment.nationality?.split(",");
+
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
-    referenceEtag: await getEtag(session, companyNumber, appointmentId)
+    referenceEtag: appointment.etag,
+    firstName: appointment.forename,
+    middleNames: appointment.otherForenames,
+    lastName: appointment.surname,
+    formerNames: appointment.formerNames?.map(formerName => formerName.forenames + " " + formerName.surname).join(", "),
+    dateOfBirth: appointment.dateOfBirth?.year + "-" + appointment.dateOfBirth?.month?.toString().padStart(2, '0') + "-" + appointment.dateOfBirth?.day?.toString().padStart(2, '0'),
+    appointedOn: appointment.appointedOn? appointment.appointedOn: appointment.appointedBefore,
+    occupation: appointment.occupation,
+    nationality1: nationalities && nationalities?.length > 0? nationalities[0]: "",
+    nationality2: nationalities && nationalities?.length > 1? nationalities[1]: "",
+    nationality3: nationalities && nationalities?.length > 2? nationalities[2]: "",
+    serviceAddress: {
+      premises: appointment.serviceAddress?.premises,
+      addressLine1: appointment.serviceAddress?.addressLine1,
+      addressLine2: appointment.serviceAddress?.addressLine2,
+      locality: appointment.serviceAddress?.locality,
+      region: appointment.serviceAddress?.region,
+      country: appointment.serviceAddress?.country,
+      postalCode: appointment.serviceAddress?.postalCode
+    },
+    residentialAddress: {
+      premises: appointment.usualResidentialAddress?.premises,
+      addressLine1: appointment.usualResidentialAddress?.addressLine1,
+      addressLine2: appointment.usualResidentialAddress?.addressLine2,
+      locality: appointment.usualResidentialAddress?.locality,
+      region: appointment.usualResidentialAddress?.region,
+      country: appointment.usualResidentialAddress?.country,
+      postalCode: appointment.usualResidentialAddress?.postalCode
+    },
+    nameHasBeenUpdated: false,
+    nationalityHasBeenUpdated: false,
+    occupationHasBeenUpdated: false,
+    correspondenceAddressHasBeenUpdated: false,
+    residentialAddressHasBeenUpdated: false,
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
@@ -207,8 +245,3 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   }
   return "";
 };
-
-const getEtag = async (session: Session, companyNumber: string, appointmentId: string): Promise<string> => {
-  const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-  return appointment.etag;
-}
