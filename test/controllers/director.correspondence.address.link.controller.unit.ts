@@ -1,24 +1,24 @@
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../src/controllers/director.residential.address.controller");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { Request } from "express";
-import { Session } from "@companieshouse/node-session-handler";
-import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { urlUtilsRequestParams } from "../../src/controllers/director.residential.address.controller";
 
-import { 
+import {
   urlParams, 
   DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH
 } from "../../src/types/page.urls";
+import { REGISTERED_OFFICE_ADDRESS_MOCK } from "../mocks/company.profile.mock";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { SA_TO_ROA_ERROR } from "../../src/utils/constants";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
-const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockUrlUtilsRequestParams  = urlUtilsRequestParams as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -39,22 +39,20 @@ describe("Director correspondence address link controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
-      mockGetOfficerFiling.mockClear();
+      mockUrlUtilsRequestParams.mockClear();
     });
   
     describe("get tests", () => {
-      it("Should pass test", async () => {
-      });
-
-  /*
       it("Should navigate to correspondence address link page with no radio buttons selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
           title: "testTitle",
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
           formerNames: "testFormer"
-        })
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }});
         
         const response = await request(app).get(PAGE_URL);
   
@@ -66,14 +64,16 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it("Should navigate to correspondence address link page with yes radio selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
           title: "testTitle",
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
           formerNames: "testFormer",
           isServiceAddressSameAsRegisteredOfficeAddress: true
-        })
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }});
         
         const response = await request(app).get(PAGE_URL);
   
@@ -81,14 +81,16 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it("Should navigate to correspondence address link page with no radio selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
           title: "testTitle",
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
           formerNames: "testFormer",
           isServiceAddressSameAsRegisteredOfficeAddress: false
-        })
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }});
         
         const response = await request(app).get(PAGE_URL);
   
@@ -103,16 +105,20 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it("Should catch error when officer filing returned error ", async () => {
-        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        mockUrlUtilsRequestParams.mockRejectedValueOnce(new Error("Error getting officer filing"));
         
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
-*/
     });
-/*
+
     describe("post tests", () => {
       it("should redirect to director residential address page when yes radio selected", async () => {
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }});
+
         const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
@@ -120,15 +126,22 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it("should redirect to director residential address page when no radio selected", async () => {
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }});
+
         const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_no"});
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
       });
 
       it("should display an error when no radio button is selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
           directorName: "Test Director"
-        })
+        }, companyProfile: {
+          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
+        }})
 
         const response = await request(app).post(PAGE_URL);
         expect(response.text).toContain(SA_TO_ROA_ERROR);
@@ -139,5 +152,4 @@ describe("Director correspondence address link controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
     });
-*/
 });

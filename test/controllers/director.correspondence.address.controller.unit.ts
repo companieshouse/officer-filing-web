@@ -62,7 +62,7 @@ describe("Director correspondence address controller tests", () => {
     describe("get tests", () => {
       it(`pass this test`, async () => {
       });
-  /*
+  
       it(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} page`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockGetOfficerFiling.mockResolvedValueOnce({
@@ -189,7 +189,7 @@ describe("Director correspondence address controller tests", () => {
           director_correspondence_address: "director_registered_office_address"
         }));
 
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
       });
 
       it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL} if office address is selected and home address flag is already set`, async () => {
@@ -202,6 +202,5 @@ describe("Director correspondence address controller tests", () => {
         }));
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
       });
-      */
     });
 });

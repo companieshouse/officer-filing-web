@@ -4,7 +4,7 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+import { patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
