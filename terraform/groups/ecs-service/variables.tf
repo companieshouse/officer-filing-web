@@ -107,9 +107,6 @@ variable "service_name" {
 variable "show_service_offline_page" {
   type        = string
 }
-variable "feature_flag_wle" {
-  type        = string
-}
 variable "feature_flag_ap01_web" {
   type        = string
 }
@@ -153,5 +150,14 @@ variable "uk_country_list" {
   type        = string
 }
 variable "postcode_address_lookup_url" {
+  type        = string
+}
+variable "locales_enabled" {
+  type        = string
+}
+variable "locales_path" {
+  type        = string
+}
+variable "ch_node_utils_log_lvl" {
   type        = string
 }
