@@ -51,6 +51,7 @@ describe("Director nationality controller tests", () => {
         const response = await request(app).get(DIRECTOR_NATIONALITY_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
@@ -71,6 +72,7 @@ describe("Director nationality controller tests", () => {
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should just display select a nationality error on page if get validation status returns errors and nationality is not from allow list", async () => {

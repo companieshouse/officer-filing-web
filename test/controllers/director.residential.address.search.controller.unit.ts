@@ -92,6 +92,7 @@ describe('Director residential address search controller test', () => {
       const response = await request(app).get(PAGE_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should navigate to error page when feature flag is off", async () => {
@@ -132,6 +133,7 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain("John Smith");
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it("Should displays errors on page if get validation status returns errors - order and priority test", async () => {

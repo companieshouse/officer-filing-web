@@ -49,6 +49,7 @@ describe("Director confirm correspondence address controller tests", () => {
         const response = await request(app).get(PAGE_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it("Should populate details on the page", async () => {
@@ -135,6 +136,7 @@ describe("Director confirm correspondence address controller tests", () => {
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
       
     });
