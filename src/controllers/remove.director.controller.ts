@@ -83,9 +83,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       return displayErrorMessage(dateValidationResult, appointment, req, res);
     }
 
-    // Patch filing with etag and resignation date
+    // Patch filing with the resignation date
     const updateFiling: OfficerFiling = {
-      referenceEtag: appointment.etag,
       resignedOn: resignationDate
     }
     await patchOfficerFiling(session, transactionId, submissionId, updateFiling);
