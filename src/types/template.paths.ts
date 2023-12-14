@@ -33,5 +33,7 @@ export enum Templates {
   APPOINT_DIRECTOR_SUBMITTED = "appoint-director-submitted",
   // CH01
   UPDATE_DIRECTOR_DETAILS = "update/update-director-details",
-  UPDATE_DIRECTOR_NAME = "update/update-director-name"
+  UPDATE_DIRECTOR_NAME = "update/update-director-name",
+  DIRECTOR_DATE_OF_CHANGE = "director-date-of-change"
+
 }
