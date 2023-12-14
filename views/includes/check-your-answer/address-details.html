@@ -62,7 +62,7 @@
   rows: [
     {
       key: {
-        text: "Address details",
+        text: i18n.addressDetails",
         classes: "govuk-heading-m"
       },
       value: {
@@ -71,7 +71,7 @@
         items: [
           {
             href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Update" if isUpdate else "Change",
+            text: i18n.update if isUpdate else "Change",
             visuallyHiddenText: "Director's address details",
             attributes: {
               "data-event-id": "address-change-link"
@@ -82,7 +82,7 @@
     },
     {
       key: {
-        text: "Correspondence address"
+        text: i18n.correspondenceAddress
       },
       value: {
         html: displayCorrespondenceAddress
@@ -90,7 +90,7 @@
     },
     {
       key: {
-        text: "Home address"
+        text: i18n.homeAddress
       },
       value: {
         html: displayResidentialAddress

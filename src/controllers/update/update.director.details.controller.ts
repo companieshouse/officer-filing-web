@@ -7,9 +7,11 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { getCompanyProfile } from "../../services/company.profile.service";
 import { CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
         DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
+    const lang = selectLang(req.query.lang);
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -22,11 +24,12 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       ...officerFiling,
       ...companyProfile,
-      nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
+      nameLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req), lang),
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
-      isUpdate: true
+      isUpdate: true,
+      ...getLocaleInfo(getLocalesService(), lang),
     })
   } catch(e) {
     return next(e);

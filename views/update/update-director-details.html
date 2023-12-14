@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Update the director's details" %}
+{% set title = i18n.updateDirectorDetailsTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -17,18 +17,18 @@
           <span class="govuk-caption-l gem-c-title__context">
             {{companyName}}
           </span>      
-          <h2 class="govuk-heading-l">Update the director's details</h2>
+          <h2 class="govuk-heading-l">i18n.updateDirectorDetailsTitle</h2>
 
-          <p class="govuk-hint">If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.</p>
+          <p class="govuk-hint">i18n.updateDirectorDetailsHintText</p>
           {{ govukInsetText({
-            text: "Any updates made to a director's details are pending until submitted and accepted."
+            text: i18n.updateDirectorDetailsInsetText
           }) }}
-          <p class="govuk-summary-list__key govuk-heading-m">Director details</p>
+          <p class="govuk-summary-list__key govuk-heading-m">i18n.directorDetails</p>
           {{ govukSummaryList({
             rows: [
               {
                 key: {
-                  text: "Name"
+                  text: i18n.name
                 },
                 value: {
                   text: "name"
@@ -37,7 +37,7 @@
                   items: [
                     {
                       href: nameLink,
-                      text: "Update",
+                      text: i18n.update,
                       visuallyHiddenText: "Name",
                       attributes: {
                         "data-event-id": "update-name-change-link"
@@ -48,7 +48,7 @@
               },
               {
                 key: {
-                  text: "Nationality"
+                  text: i18n.nationality
                 },
                 value: {
                   text: "nationality"
@@ -57,7 +57,7 @@
                   items: [
                     {
                       href: nationalityLink,
-                      text: "Update",
+                      text: i18n.update,
                       visuallyHiddenText: "nationality",
                       attributes: {
                         "data-event-id": "update-nationality-change-link"
@@ -68,7 +68,7 @@
               },
               {
                 key: {
-                  text: "Occupation"
+                  text: i18n.occupation
                 },
                 value: {
                   text: "occupation"
@@ -77,7 +77,7 @@
                   items: [
                     {
                       href: occupationLink,
-                      text: "Update",
+                      text: i18n.update,
                       visuallyHiddenText: "occupation",
                       attributes: {
                         "data-event-id": "update-occupation-change-link"

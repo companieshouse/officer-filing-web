@@ -6,7 +6,7 @@
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Role
+          i18n.currentDirectorRoleLabel
         </dt>
         <dd class="govuk-summary-list__value">
           Director
@@ -14,7 +14,7 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Date of birth
+          i18n.currentDirectorRoleDobLabel
         </dt>
         <dd class="govuk-summary-list__value">
           {{officerCard.officer.dateOfBirth}}
@@ -22,7 +22,7 @@
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          Date appointed
+          i18n.currentDirectorAppointedDateLabel
         </dt>
         <dd class="govuk-summary-list__value">
           {{officerCard.officer.appointedOn}}
@@ -37,11 +37,11 @@
       <div class="govuk-!-padding-top-3">
         {% if updateEnabled === "true" %}
         <button id="directorUpdateButton" name="updateAppointmentId" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="{{officerCard.appointmentId}}">
-          View and update details
+          i18n.CurrentDirectorsViewAndUpdateButton
         </button>
         {% endif %}
         <button id="directorRemoveButton" onclick="_paq.push(['trackGoal', '{{PIWIK_REMOVE_DIRECTOR_START_GOAL_ID}}'])" data-event-id="remove-director-button" name="removeAppointmentId" class="govuk-button govuk-button--secondary" data-module="govuk-button" value="{{officerCard.appointmentId}}">
-          Remove director
+          i18n.CurrentDirectorsRemoveDirectorButton
         </button>
       </div>
   </div>

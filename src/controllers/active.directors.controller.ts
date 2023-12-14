@@ -77,7 +77,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       company: companyProfile,
       pagination: paginationElement,
       updateEnabled: updateEnabled,
-      publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type)
+      publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type),
     });
   } catch (e) {
     return next(e);
@@ -97,7 +97,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
   const updateAppointmentId = req.body.updateAppointmentId;
   if (updateAppointmentId) {
-    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId);
+    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId, lang);
   }
 
   return beginAppointmentJourney(req, res, session, transactionId, lang);
@@ -124,7 +124,7 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 /**
  * Post an officer filing and redirect to the first page in the CH01 journey.
 */
-async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any, lang: string | undefined) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const nationalities = appointment.nationality?.split(",");
@@ -168,8 +168,8 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
-  
-  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+
+  const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang);
   return res.redirect(nextPageUrl);
 }
 
