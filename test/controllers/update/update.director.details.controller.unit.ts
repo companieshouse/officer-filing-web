@@ -29,8 +29,23 @@ const PAGE_HEADING = "View and update the director's details";
 
 describe("Director details tests", () => {
 
+  mockGetOfficerFiling.mockResolvedValue({
+    firstName: "John",
+    lastName: "Tester",
+    nationality1: "Irish",
+    nationality2: "American",
+    nationality3: "Welsh",
+    occupation: "Accountant",
+    nameHasBeenUpdated: false,
+    occupationHasBeenUpdated: false,
+    nationalityHasBeenUpdated: false,
+    correspondenceAddressHasBeenUpdated: false,
+    residentialAddressHasBeenUpdated: false
+  });
+
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
+    mockGetOfficerFiling.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
@@ -43,13 +58,6 @@ describe("Director details tests", () => {
     });
 
     it("Should display the details for the active director", async () => {
-      mockGetOfficerFiling.mockResolvedValue({
-        name: "John Tester",
-        nationality1: "Irish",
-        nationality2: "American",
-        nationality3: "Welsh",
-        occupation: "Accountant",
-      });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain("John Tester");
