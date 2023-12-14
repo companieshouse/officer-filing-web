@@ -152,3 +152,12 @@ variable "uk_country_list" {
 variable "postcode_address_lookup_url" {
   type        = string
 }
+variable "locales_enabled" {
+  type        = string
+}
+variable "locales_path" {
+  type        = string
+}
+variable "ch_node_utils_log_lvl" {
+  type        = string
+}
