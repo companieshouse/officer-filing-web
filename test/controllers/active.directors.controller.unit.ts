@@ -1,6 +1,7 @@
 jest.mock("../../src/middleware/company.authentication.middleware");
 jest.mock("../../src/services/active.directors.details.service");
 jest.mock("../../src/services/company.profile.service");
+jest.mock("../../src/services/company.appointments.service");
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/utils/api.enumerations");
 jest.mock("../../src/utils/feature.flag");
@@ -17,11 +18,14 @@ import { getListActiveDirectorDetails } from "../../src/services/active.director
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { postOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
+import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
+import { validCompanyAppointment, validCompanyAppointmentResource } from "../mocks/company.appointment.mock";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
 const mockGetCompanyOfficers = getListActiveDirectorDetails as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockGetCompanyOfficers.mockResolvedValue(mockCompanyOfficersExtended);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockPostOfficerFiling = postOfficerFiling as jest.Mock;
@@ -51,6 +55,7 @@ describe("Active directors controller tests", () => {
     mockGetCompanyProfile.mockClear();
     mockPostOfficerFiling.mockClear();
     mockIsFeatureFlag.mockClear();
+    mockGetCompanyAppointmentFullRecord.mockClear();
   });
 
   describe("get tests", () => {
@@ -165,15 +170,21 @@ describe("Active directors controller tests", () => {
   describe("post tests", () => {
 
     it("Should post filing and redirect to next page TM01", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
       mockPostOfficerFiling.mockReturnValueOnce({
         id: SUBMISSION_ID
       });
 
       const response = await request(app)
         .post(ACTIVE_DIRECTOR_DETAILS_URL)
-        .send({ "appointmentId": APPOINTMENT_ID });
+        .send({ "removeAppointmentId": APPOINTMENT_ID });
+
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/date-director-removed");
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+        expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+          referenceAppointmentId: APPOINTMENT_ID
+        }));
     });
 
     it("Should post and redirect to next page AP01", async () => {
@@ -186,19 +197,62 @@ describe("Active directors controller tests", () => {
 
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
+        expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
         expect(mockPostOfficerFiling).toHaveBeenCalled();
     });
 
-    it ("should redirect to update directors page if update journey", async () => {
-      mockPostOfficerFiling.mockResolvedValueOnce({
-        id: SUBMISSION_ID,
+    it("Should post filing and redirect to next page CH01", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointment);
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
       });
+
       const response = await request(app)
-        .post(CURRENT_DIRECTORS_URL).send({update_director_details: "update_director_details"});
+        .post(CURRENT_DIRECTORS_URL)
+        .send({"updateAppointmentId": APPOINTMENT_ID});
+
       expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
-      expect(mockPostOfficerFiling).toHaveBeenCalled();
-    })
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+        referenceAppointmentId: APPOINTMENT_ID,
+        referenceEtag: "etag",
+        firstName: "John",
+        middleNames: "Elizabeth",
+        lastName: "Doe",
+        formerNames: "John Smith, Old MacDonald",
+        dateOfBirth: "2001-02-01",
+        appointedOn: "2019-05-11",
+        occupation: "Software Engineer",
+        nationality1: "British",
+        nationality2: "American",
+        nationality3: "Canadian",
+        serviceAddress: {
+          premises: "premises 1",
+          addressLine1: "address line 1",
+          addressLine2: "address line 2",
+          locality: "locality 1",
+          region: "region 1",
+          country: "UK",
+          postalCode: "postal code 1",
+        },
+        residentialAddress: {
+          premises: "premises 01",
+          addressLine1: "address line 01",
+          addressLine2: "address line 02",
+          locality: "locality 2",
+          region: "region 2",
+          country: "England",
+          postalCode: "postal code 2",
+        },
+        nameHasBeenUpdated: false,
+        nationalityHasBeenUpdated: false,
+        occupationHasBeenUpdated: false,
+        correspondenceAddressHasBeenUpdated: false,
+        residentialAddressHasBeenUpdated: false,
+      }));
+    });
+
   });
 });
