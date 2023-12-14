@@ -5,7 +5,7 @@ import { urlUtils } from "../../utils/url";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
-import { ACTIVE_DIRECTORS_DETAILS_PATH, CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH, 
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH, 
         DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
