@@ -12,7 +12,7 @@ import { CURRENT_DIRECTORS_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
 import { formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
-import { selectLang } from "../utils/localise";
+import { selectLang, getLocalesService, getLocaleInfo } from "../utils/localise";
 
 const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
@@ -36,8 +36,10 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
 
         if(frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
-
+            const locales = getLocalesService();
             return res.render(Templates.DIRECTOR_NAME, {
+                ...getLocaleInfo(locales, lang),
+                currentUrl: req.originalUrl,
                 templateName: Templates.DIRECTOR_NAME,
                 backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
                 typeahead_array: TITLE_LIST,
