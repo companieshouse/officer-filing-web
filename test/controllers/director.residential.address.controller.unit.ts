@@ -535,7 +535,8 @@ describe("Director name controller tests", () => {
         postalCode: "TE6 3ST"
       } });
       mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock
+        ...directorNameMock,
+        directorResidentialAddressChoice: "director_registered_office_address"
       });
 
       const response = await request(app).post(PAGE_URL).send({
