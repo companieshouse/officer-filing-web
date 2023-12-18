@@ -1,0 +1,17 @@
+{
+  "directorNameTitle": "WLE",
+  "directorNameChooseTitle": "WLE",
+  "directorNameTitleField": "WLE",
+  "directorNameTitleFieldHint": "WLE",
+  "directorFirstName": "WLE",
+  "directorFirstNameHint": "WLE",
+  "directorMiddleName": "WLE",
+  "directorMiddleNameHint": "WLE",
+  "directorLastName": "WLE",
+  "directorPreviousName": "WLE",
+  "directorPreviousNameLabel": "WLE",
+  "directorPreviousNameHint": "WLE",
+  "directorNameInsetTextTitle": "WLE",
+  "directorNameInsetText": "WLE",
+  "directorNameUpdateInsetText": "WLE"
+}

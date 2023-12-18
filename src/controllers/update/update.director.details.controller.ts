@@ -12,6 +12,7 @@ import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../.
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
     const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -29,7 +30,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
       isUpdate: true,
-      ...getLocaleInfo(getLocalesService(), lang),
+      ...getLocaleInfo(locales, lang),
     })
   } catch(e) {
     return next(e);

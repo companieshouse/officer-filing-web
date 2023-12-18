@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's name?" %}
+{% set title = i18n.directorNameTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -18,7 +18,7 @@
 
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">What is the director's name?</h1>
+        <h1 class="govuk-heading-l">{{ i18n.directorNameTitle }} </h1>
 
         {% include "includes/inputs/fields/title-input.html" %}
         {% include "includes/inputs/fields/first-name-input.html" %}
@@ -35,10 +35,10 @@
           spellcheck: false,
           classes: "govuk-!-width-two-thirds",
           hint: {
-            text: "If the director has more than one previous name, separate each name with a comma."
+            text: i18n.directorPreviousNameHint
           },
           label: {
-            text: "Previous names"
+            text: i18n.directorPreviousNameLabel
           }
         }) }}
         {% endset -%}
@@ -58,7 +58,7 @@
               {
                 id: "Yes",
                 value: "Yes",
-                text: "Yes",
+                text: i18n.yes,
                 conditional: {
                   html: enterPreviousNamesHtml
                 },
@@ -69,7 +69,7 @@
               {
                 id: "No",
                 value: "No",
-                text: "No",
+                text: i18n.no,
                 attributes: {
                   "data-event-id": "no-previous-names"
                 }
@@ -79,9 +79,9 @@
         {% endif %}
 
         {% if isUpdate %}
-          {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title, if relevant." %}
+          {% set insetText = i18n.directorNameUpdateInsetText %}
         {% else %}
-          {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant." %}
+          {% set insetText = i18n.directorNameInsetText %}
         {% endif %}
         <div class="govuk-inset-text">
           <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
@@ -92,7 +92,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continueButton
         }) }}
 
       </form>

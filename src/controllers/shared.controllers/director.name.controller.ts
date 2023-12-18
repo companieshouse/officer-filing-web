@@ -6,15 +6,13 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getLocalesService, selectLang } from "../../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { logger } from "../../utils/logger";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-    logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
-    logger.debug("localisations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
@@ -31,8 +29,7 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
       previous_names: officerFiling.formerNames,
       previous_names_radio: calculatePreviousNamesRadioFromFiling(officerFiling.formerNames),
       isUpdate,
-      lang,
-      ...locales
+      ...getLocaleInfo(locales, lang),
     });
   } catch(e) {
     return next(e)

@@ -34,10 +34,10 @@ describe("Director details tests", () => {
   });
 
   describe("GET tests", () => {
-    it("Should display to update director details page", async () => {
+    it("Should display update director details page", async () => {
       const response = await request(app).get(PAGE_URL);
 
-      expect(response.text).toContain("Update the director's details");
+      expect(response.text).toContain("Update the director&#39;s details");
       expect(response.text).toContain("Director details");
       expect(response.text).toContain("Address details");
     });

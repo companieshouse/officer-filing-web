@@ -17,13 +17,13 @@
           <span class="govuk-caption-l gem-c-title__context">
             {{companyName}}
           </span>      
-          <h2 class="govuk-heading-l">i18n.updateDirectorDetailsTitle</h2>
+          <h2 class="govuk-heading-l">{{ i18n.updateDirectorDetailsTitle }}</h2>
 
-          <p class="govuk-hint">i18n.updateDirectorDetailsHintText</p>
+          <p class="govuk-hint">{{ i18n.updateDirectorDetailsHintText }}</p>
           {{ govukInsetText({
             text: i18n.updateDirectorDetailsInsetText
           }) }}
-          <p class="govuk-summary-list__key govuk-heading-m">i18n.directorDetails</p>
+          <p class="govuk-summary-list__key govuk-heading-m">{{ i18n.directorDetails }}</p>
           {{ govukSummaryList({
             rows: [
               {
@@ -97,9 +97,9 @@
                 id: "submit",
                 "data-event-id": "update-continue-button"
               },
-              text: "Continue"
+              text: i18n.continueButton
             }) }}
-            <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">Cancel</a>
+            <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">{{ i18n.cancel }}</a>
         </div>
       </form>
     </div>

@@ -1,0 +1,13 @@
+{
+  "yes": "YES",
+  "no": "NO",
+  "continueButton": "CONTINUE",
+  "cancel": "CANCEL",
+  "name": "NAME",
+  "nationality": "NATIONALITY",
+  "occupation": "OCCUPATION",
+  "addressDetails": "ADDRESS DETAILS",
+  "correspondenceAddress": "CORRESPONDENCE ADDRESS",
+  "homeAddress": "HOME ADDRESS",
+  "update": "UPDATE"
+}
