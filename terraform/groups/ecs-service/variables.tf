@@ -137,6 +137,9 @@ variable "piwik_remove_director_start_goal_id" {
 variable "piwik_appoint_director_start_goal_id" {
   type        = string
 }
+variable "piwik_update_director_start_goal_id" {
+  type        = string
+}
 variable "occupation_list" {
   type        = string
 }
