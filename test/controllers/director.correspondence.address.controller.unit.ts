@@ -9,7 +9,8 @@ import app from "../../src/app";
 import { DIRECTOR_CORRESPONDENCE_ADDRESS, 
          DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END,
           DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
-          DIRECTOR_RESIDENTIAL_ADDRESS_PATH} 
+          DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+          DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH} 
          from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -41,8 +42,11 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-
-  const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -190,6 +194,18 @@ describe("Director correspondence address controller tests", () => {
         }));
 
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
+      });
+
+      it(`should patch the service address with no registered office address if selected and different address`, async () => {
+        mockGetCompanyProfile.mockResolvedValue({});
+        mockPatchOfficerFiling.mockResolvedValueOnce({data: {
+          isServiceAddressSameAsHomeAddress: false
+        }});
+        const response = (await request(app).post(PAGE_URL).send({
+          director_correspondence_address: "director_different_address"
+        }));
+
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PAGE_URL);
       });
 
       it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL} if office address is selected and home address flag is already set`, async () => {

@@ -147,6 +147,18 @@ describe("Director correspondence address link controller tests", () => {
         expect(response.text).toContain(SA_TO_ROA_ERROR);
       });
 
+      it("should display an error when registered office address is incomplete and no radio button is selected", async () => {
+        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
+          directorName: "Test Director"
+        }, companyProfile: {
+          registeredOfficeAddress: { ...REGISTERED_OFFICE_ADDRESS_MOCK, premises: undefined }
+        }})
+
+        const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_no"});
+        expect(response.status).toEqual(500);
+        expect(response.text).toContain("Sorry, there is a problem with this service");
+      });
+
       it("should catch error", async () => {
         const response = await request(app).post(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
