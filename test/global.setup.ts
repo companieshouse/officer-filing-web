@@ -17,6 +17,7 @@ export default () => {
   process.env.PIWIK_START_GOAL_ID = "3";
   process.env.PIWIK_REMOVE_DIRECTOR_START_GOAL_ID = "4";
   process.env.PIWIK_APPOINT_DIRECTOR_START_GOAL_ID = "5";
+  process.env.PIWIK_UPDATE_DIRECTOR_START_GOAL_ID = "6";
   process.env.PIWIK_URL = "https://matomo.platform.aws.chdev.org";
   process.env.RADIO_BUTTON_VALUE_LOG_LENGTH = "50";
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";

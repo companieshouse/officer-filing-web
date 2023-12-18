@@ -19,7 +19,7 @@ import { getCompanyProfile } from "../services/company.profile.service";
 import { buildPaginationElement } from "../utils/pagination";
 import { setAppointedOnDate } from "../utils/date";
 import { isActiveFeature } from "../utils/feature.flag";
-import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID, PIWIK_UPDATE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { PaginationData } from "../types";
 import { selectLang, addLangToUrl } from "../utils/localise";
@@ -71,6 +71,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       ap01Active: isActiveFeature(AP01_ACTIVE),
       PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
       PIWIK_APPOINT_DIRECTOR_START_GOAL_ID,
+      PIWIK_UPDATE_DIRECTOR_START_GOAL_ID,
       templateName: Templates.ACTIVE_DIRECTORS,
       backLinkUrl: getConfirmCompanyUrl(companyNumber),
       directorsList: paginatedDirectorsList,

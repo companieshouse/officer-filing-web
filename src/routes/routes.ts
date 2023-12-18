@@ -137,13 +137,11 @@ router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, appointDirectorSubmitted.get);
 
 // CH01
-router.route(urls.UPDATE_DIRECTOR_DETAILS).all(companyAuthenticationMiddleware)
-.get(updateDirectorDetail.get)
-.post(updateDirectorDetail.post);
+router.get(urls.UPDATE_DIRECTOR_DETAILS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorDetail.get);
+router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updateDirectorDetail.post);
 
-router.route(urls.UPDATE_DIRECTOR_NAME).all()
-.get(updateDirectorName.get)
-.post(nameValidator, updateDirectorName.post);
+router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
+router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
 
-router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), checkYourAnswersMiddleware(), directorDateOfChange.get);
-router.post(urls.DIRECTOR_DATE_OF_CHANGE, directorDateOfChange.post);
+router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
+router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
