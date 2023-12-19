@@ -8,7 +8,7 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -36,7 +36,7 @@ const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-const ETAG_STOP_PAGE_URL = "/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=etag"
+const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=${STOP_TYPE.ETAG}`;
 
 describe("Director name controller tests", () => {
 
