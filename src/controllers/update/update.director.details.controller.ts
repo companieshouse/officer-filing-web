@@ -5,8 +5,9 @@ import { urlUtils } from "../../utils/url";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
-import { CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_DATE_OF_CHANGE_PATH,
-        DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH, 
+        DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -14,19 +15,28 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    let updatedData = false;
+
+    if (officerFiling.nameHasBeenUpdated || officerFiling.occupationHasBeenUpdated || officerFiling.nationalityHasBeenUpdated ||
+      officerFiling.correspondenceAddressHasBeenUpdated || officerFiling.residentialAddressHasBeenUpdated) {
+      updatedData = true;
+    }
+
     return resp.render(Templates.UPDATE_DIRECTOR_DETAILS, {
       templateName: Templates.UPDATE_DIRECTOR_DETAILS,
       backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      officerFiling: officerFiling,
       ...officerFiling,
       ...companyProfile,
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
-      isUpdate: true
+      isUpdate: true,
+      updatedData: updatedData,
     })
   } catch(e) {
     return next(e);
@@ -34,5 +44,8 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, resp: Response, next: NextFunction) => {
-  return resp.redirect(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req));
-}
+  if (req.body.back_to_active_directors) {
+    return resp.redirect(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
+  }
+  return resp.redirect(urlUtils.getUrlToPath("", req));
+};

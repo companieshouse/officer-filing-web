@@ -16,13 +16,22 @@
       <form action="" method="post"> 
           <span class="govuk-caption-l gem-c-title__context">
             {{companyName}}
-          </span>      
-          <h2 class="govuk-heading-l">Update the director's details</h2>
+          </span>
+          <h2 class="govuk-heading-l">View and update the director's details</h2>
 
           <p class="govuk-hint">If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.</p>
           {{ govukInsetText({
             text: "Any updates made to a director's details are pending until submitted and accepted."
           }) }}
+
+          {% set nationality = nationality1 %}
+          {% if nationality2 %}
+            {% set nationality = nationality + "<br>" + nationality2 %}
+          {% endif %}
+          {% if nationality3 %}
+            {% set nationality = nationality + "<br>" + nationality3 %}
+          {% endif %}
+
           <p class="govuk-summary-list__key govuk-heading-m">Director details</p>
           {{ govukSummaryList({
             rows: [
@@ -31,7 +40,7 @@
                   text: "Name"
                 },
                 value: {
-                  text: "name"
+                  text: firstName + " " + lastName
                 },
                 actions: {
                   items: [
@@ -51,7 +60,7 @@
                   text: "Nationality"
                 },
                 value: {
-                  text: "nationality"
+                  html: nationality
                 },
                 actions: {
                   items: [
@@ -71,7 +80,7 @@
                   text: "Occupation"
                 },
                 value: {
-                  text: "occupation"
+                  text: occupation
                 },
                 actions: {
                   items: [
@@ -91,18 +100,23 @@
           {% set officerFiling = officerFiling %}
           {% set isUpdate = isUpdate %}
           {% include "includes/check-your-answer/address-details.html" %}
-          <div class="govuk-button-group">
-            {{ govukButton({
-              attributes: {
-                id: "submit",
-                "data-event-id": "update-continue-button"
-              },
-              text: "Continue"
-            }) }}
-            <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">Cancel</a>
-        </div>
+          {% if updatedData %}
+            <div class="govuk-button-group">
+              {{ govukButton({
+                attributes: {
+                  id: "submit",
+                  "data-event-id": "update-continue-button"
+                },
+                text: "Continue"
+              }) }}
+              <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">Cancel</a>
+            </div>
+          {% else %}
+            <button id="backToActiveDirectorsButton" name="back_to_active_directors" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="no-change">
+              Go back to current directors
+            </button>
+          {% endif %}
       </form>
     </div>
   </div>
-
-    {% endblock %}
+{% endblock %}
