@@ -47,7 +47,7 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
     const appointmentId = currentOfficer.referenceAppointmentId as string;
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     const doEtagsMatch = currentOfficer.referenceEtag === companyAppointment.etag ? true : false;
-
+    
     if (!doEtagsMatch) {
       return res.redirect(
         urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
