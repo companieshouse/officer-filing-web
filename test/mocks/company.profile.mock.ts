@@ -247,3 +247,13 @@ export const validSDKResource: Resource<CompanyProfile> = {
   httpStatusCode: 200,
   resource: validCompanyProfile,
 };
+
+export const REGISTERED_OFFICE_ADDRESS_MOCK = {
+  addressLineOne: "testAddressLineOne",
+  addressLineTwo: "testAddressLineTwo",
+  country: "testCountry",
+  locality: "testLocality",
+  postalCode: "testPostalCode",
+  premises: "testPremises",
+  region: "testRegion"
+};

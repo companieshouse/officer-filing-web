@@ -13,13 +13,24 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { validateRegisteredAddressComplete } from "../validation/address.validation";
+import { ADDRESS_START } from "./director.residential.address.search.controller"; 
+import { logger } from "../utils/logger";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
+const registeredOfficerAddressValue: string = "director_registered_office_address";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-    return renderPage(req, res, officerFiling, companyProfile);
+    const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
+    logger.info("For home address, isResidentialAddressComplete: " + isRegisteredAddressComplete + " officerFiling.isServiceAddressSameAsRegisteredOfficeAddress: " + officerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+    if (!isRegisteredAddressComplete && officerFiling.isServiceAddressSameAsRegisteredOfficeAddress) {
+      logger.info("Can't use registered office address as residential address because correspondence address is linked so search for address");
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH + "?backLink=" + ADDRESS_START, req));
+    }
+
+    return renderPage(req, res, officerFiling, companyProfile, isRegisteredAddressComplete);
   } catch (e) {
     next(e);
   }
@@ -52,10 +63,16 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
+    
+    const isRegisteredAddressComplete = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
+    if (!isRegisteredAddressComplete  && officerFiling.directorResidentialAddressChoice === registeredOfficerAddressValue) {
+      throw new Error("Can't use registered office address as residential address & correspondence address is linked");
+    }
+
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, formattedErrors);
+      return renderPage(req, res, officerFiling, companyProfile, isRegisteredAddressComplete, formattedErrors);
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -76,8 +93,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
       if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress){
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res,  req);
-      }
-      else{
+      } else {
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res,  req);
       }
     } else {
@@ -125,7 +141,7 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, formattedErrors?: FormattedValidationErrors) => {
+const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, isRegisteredAddressComplete: boolean, formattedErrors?: FormattedValidationErrors) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
     backLinkUrl: getBackLinkUrl(req),
@@ -135,6 +151,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
     protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
-    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice
+    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
+    isRegisteredAddressComplete
   });
 };

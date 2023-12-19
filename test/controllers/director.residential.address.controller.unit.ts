@@ -44,11 +44,15 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SE
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const DIRECTOR_RESIDENTIAL_ADDRESS_LINK_URL = DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
+const DIRECTOR_RESIDENTIAL_ADDRESS_LINK_URL = DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const APPOINT_DIRECTOR_CYA_PAGE_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
+const APPOINT_DIRECTOR_CYA_PAGE_URL = APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -212,12 +216,11 @@ describe("Director name controller tests", () => {
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address line 2 `, async () => {
       validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
-      validCompanyProfile.registeredOfficeAddress.premises = undefined!;
       validCompanyProfile.registeredOfficeAddress.region = undefined!;
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
-        ...serviceAddressMock
+        ...serviceAddressMock,
       });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
@@ -228,8 +231,23 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
-      expect(response.text).not.toContain("Premises");
+      expect(response.text).toContain("Premises");
       expect(response.text).not.toContain("Region");
+    });
+
+    it(`should redirect without director registered office address line 1 `, async () => {
+      const companyProfile = { ...validCompanyProfile };
+      companyProfile.registeredOfficeAddress = { ...validCompanyProfile.registeredOfficeAddress };
+      companyProfile.registeredOfficeAddress.addressLineOne = undefined!;
+      mockGetCompanyProfile.mockResolvedValueOnce(companyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock,
+        isServiceAddressSameAsRegisteredOfficeAddress: true
+      });
+      const response = await request(app).get(PAGE_URL);
+      expect(response.status).toEqual(302);
+      expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_URL);
     });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without optional field for director residential address `, async () => {
@@ -292,7 +310,6 @@ describe("Director name controller tests", () => {
   });
 
   describe("post tests", () => {
-
     it(`Should render where director lives page if no radio button is selected`, async () => {
       const mockPatchOfficerFilingResponse = {
         data: {
@@ -333,8 +350,8 @@ describe("Director name controller tests", () => {
         directorResidentialAddressChoice: "different_address"
       };
       mockGetOfficerFiling.mockReturnValueOnce({
-        
       });
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(PAGE_URL).send({ director_address: "director_different_address" }));
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL);
@@ -396,7 +413,7 @@ describe("Director name controller tests", () => {
 
       expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
     });
-    
+  
     it(`should patch the residential address if no registered office address and redirect to protected information page`, async () => {
       mockGetCompanyProfile.mockResolvedValue({});
       const mockPatchOfficerFilingResponse = {
@@ -416,6 +433,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH} page if correspondence address is selected and no previous link established`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -428,6 +446,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if correspondence address is selected and previous link established`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -464,6 +483,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH} page if correspondence address is selected and CYA link established`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -478,6 +498,7 @@ describe("Director name controller tests", () => {
     });
 
     it(`should redirect to ${DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} page if correspondence address is selected, no previous link and CYA link established`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -506,6 +527,24 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
+
+    it("should error if incomplete registered office address and registered office address is selected", async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce({ registeredOfficeAddress: { 
+        addressLineOne: "One Street",
+        postalCode: "TE6 3ST"
+      } });
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        directorResidentialAddressChoice: "director_registered_office_address"
+      });
+
+      const response = await request(app).post(PAGE_URL).send({
+        director_address: "director_registered_office_address"
+      });
+
+      expect(response.status).toEqual(500);
+      expect(response.text).toContain("Sorry, there is a problem with this service");
     });
   });
 });

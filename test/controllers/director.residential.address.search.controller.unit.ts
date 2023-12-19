@@ -95,6 +95,17 @@ describe('Director residential address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it("Should navigate to director residential address search page with backLink", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        directorName: "John Smith"
+      })
+      const response = await request(app).get(PAGE_URL + "?backLink=addressStart");
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("director-correspondence-address");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it("Should navigate to error page when feature flag is off", async () => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(PAGE_URL);

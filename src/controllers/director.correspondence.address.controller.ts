@@ -14,6 +14,7 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../s
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
 import { setBackLink } from "../utils/web";
+import { validateRegisteredAddressComplete } from "../validation/address.validation";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -21,6 +22,7 @@ const registeredOfficerAddressValue: string = "director_registered_office_addres
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
+    const isRegisteredAddressComplete = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
@@ -28,6 +30,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+      isRegisteredAddressComplete 
     });
   } catch (e) {
     return next(e);
@@ -43,11 +46,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
     const companyProfile = await getCompanyProfile(companyNumber);
+    const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
 
     const validationErrors = buildResidentialAddressValidationErrors(req);
     if (validationErrors.length > 0) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const formattedErrors = formatValidationErrors(validationErrors);
+    
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
         backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
@@ -55,6 +60,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+        isRegisteredAddressComplete
       });
     }
 
@@ -62,7 +68,22 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       directorServiceAddressChoice: selectedSraAddressChoice,
       serviceAddress: undefined
     };
-    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+
+    if (!isRegisteredAddressComplete) {
+      if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+        officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = true;
+        officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
+        await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+        return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+      } else {
+        officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = false;
+        officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
+        await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+        return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
+      }
+    }
+
+    if (isRegisteredAddressComplete && selectedSraAddressChoice === registeredOfficerAddressValue) {
       officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
     }
 

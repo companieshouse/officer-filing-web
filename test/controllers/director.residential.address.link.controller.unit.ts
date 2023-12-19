@@ -4,8 +4,6 @@ jest.mock("../../src/services/officer.filing.service");
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { Request } from "express";
-import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 import { 
@@ -110,7 +108,6 @@ describe("Director residential address link controller tests", () => {
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
-
     });
 
     describe("post tests", () => {

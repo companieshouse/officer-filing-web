@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
@@ -25,8 +26,11 @@ import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
 import { getCountryFromKey } from "../utils/web";
 
+export const ADDRESS_START = "addressStart";
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const backLink = req.query.backLink;
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
@@ -34,7 +38,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      backLinkUrl: urlUtils.getUrlToPath(backLink === ADDRESS_START ? DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises
