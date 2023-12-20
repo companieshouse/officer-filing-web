@@ -11,6 +11,7 @@ import { UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } fr
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { STOP_TYPE } from "../../../src/utils/constants";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -31,6 +32,8 @@ const UPDATE_DIRECTOR_DETAILS_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=${STOP_TYPE.ETAG}`;
 
 describe("Update Director name controller tests", () => {
 
@@ -125,6 +128,27 @@ describe("Update Director name controller tests", () => {
           });
         expect(response.text).toContain(ERROR_PAGE_HEADING);
         expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_NAME_URL);
+      });
+
+      it("Should redirect to stop page if the etag fails validation", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag"
+        });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "differentEtag"
+        });
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "Yes", 
+            "previous_names": "Sparrow" 
+          });
+        expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
       });
     });
 });
