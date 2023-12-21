@@ -39,8 +39,10 @@ describe("Update Director name controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
+      mockGetOfficerFiling.mockClear();
     });
-  
+
     describe("get tests", () => {
   
       it("Should navigate to error page when feature flag is off", async () => {
@@ -89,7 +91,7 @@ describe("Update Director name controller tests", () => {
     });
 
     describe("post tests", () => {
-  
+
       it("Should redirect to date of birth page if there are no errors", async () => {
         mockGetOfficerFiling.mockResolvedValue({
           referenceAppointmentId: "app1",
@@ -138,6 +140,7 @@ describe("Update Director name controller tests", () => {
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
           etag: "differentEtag"
         });
+
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
