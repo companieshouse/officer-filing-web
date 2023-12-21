@@ -64,8 +64,6 @@ describe("Director correspondence address controller tests", () => {
     });
   
     describe("get tests", () => {
-      it(`pass this test`, async () => {
-      });
   
       it(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} page`, async () => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
