@@ -33,6 +33,7 @@ describe("Update Director name controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
+      mockGetOfficerFiling.mockClear();
     });
   
     describe("get tests", () => {
@@ -84,7 +85,14 @@ describe("Update Director name controller tests", () => {
 
     describe("post tests", () => {
   
-      it("Should redirect to date of birth page if there are no errors", async () => {  
+      it("Should redirect to date of birth page if there are no errors", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          title: "Mr",
+          firstName: "Test",
+          middleNames: "Tester",
+          lastName: "Testerson",
+          formerNames: "",
+        });  
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
         
