@@ -6,10 +6,6 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
-import { STOP_TYPE } from "../../utils/constants";
-import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
-import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
