@@ -7,15 +7,18 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { DIRECTOR_CORRESPONDENCE_ADDRESS, 
-         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END,
-          DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
-          DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-          DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH} 
-         from '../../src/types/page.urls';
+         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, urlParams, 
+         DIRECTOR_OCCUPATION_PATH_END,
+         DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
+         DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH, 
+         DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+         DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
+import { linkOnlyNeedsConfirmation } from "../../src/controllers/director.correspondence.address.controller";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -47,6 +50,10 @@ const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const DIRECTOR_CORRESPONDENCE_LINK_ONLY_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -191,8 +198,12 @@ describe("Director correspondence address controller tests", () => {
           director_correspondence_address: "director_registered_office_address"
         }));
 
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
-      });
+        if (linkOnlyNeedsConfirmation) {
+          expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_LINK_ONLY_PAGE_URL);
+        } else {
+          expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL);
+        }
+      }); 
 
       it(`should patch the service address with no registered office address if selected and different address`, async () => {
         mockGetCompanyProfile.mockResolvedValue({});

@@ -23,7 +23,7 @@ import { validateRegisteredAddressComplete } from "../validation/address.validat
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
 
-const linkOnlyNeedsConfirmation = true; // Just so we can have either 1 or 2 ROA screens.
+export const linkOnlyNeedsConfirmation = true; // Just so we can have either 1 or 2 ROA screens.
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
