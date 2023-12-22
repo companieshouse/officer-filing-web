@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% set title = "Confirm, if the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/grid-row-div-start.html" %}
+      
+      <form action="" method="post">
+        <div class="govuk-form-group">
+
+        <span class="govuk-caption-l">{{directorName}}</span>
+        {% set hintText =  "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address." %}
+        {% set sa_yes = "sa_to_roa_yes" %}
+        {% set fieldset = {
+            legend: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          }
+        %}
+        {{ govukRadios({
+          errorMessage: errors.sa_to_roa if errors,
+          idPrefix: "sa_to_roa",
+          name: "sa_to_roa",
+          fieldset: fieldset,
+          items: [
+            {
+              value: sa_yes,
+              text: "Yes",
+              hint: {
+                text: hintText
+              },
+              checked: sa_to_roa === sa_yes,
+              attributes: {
+                "data-event-id": "service_address_to_registered_office_address_yes"
+              }
+            },
+            {
+              value: "sa_to_roa_no",
+              text: "No",
+              hint: {
+                text: "You’ll have to manually search for or enter an address which can be a completed copy of the residential address."
+              },
+              checked: sa_to_roa === "sa_to_roa_no",
+              attributes: {
+                "data-event-id": "service_address_to_registered_office_address_no"
+              }
+            }
+          ]
+        }) }}
+      </div>
+
+        {{ govukButton({
+          classes: "govuk-button",
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+      {% include "includes/grid-row-div-end.html" %}
+{% endblock %}

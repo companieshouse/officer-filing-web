@@ -9,6 +9,7 @@ import * as createTransactionRoute from "../controllers/create.transaction.contr
 import * as directorDateDetails from "../controllers/director.date.details.controller";
 import * as directorCorrespondenceAddress from "../controllers/director.correspondence.address.controller";
 import * as directorCorrespondenceAddressLink from "../controllers/director.correspondence.address.link.controller";
+import * as directorCorrespondenceAddressLinkOnly from "../controllers/director.correspondence.address.link.only.controller";
 import * as directorCorrespondenceAddressSearch from "../controllers/director.correspondence.address.search.controller";
 import * as directorCorrespondenceAddressChooseAddress from "../controllers/director.correspondence.address.search.choose.address.controller";
 import * as directorCorrespondenceAddressManual from "../controllers/director.correspondence.address.manual.controller";
@@ -109,6 +110,9 @@ router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, companyAuthenticationM
 
 router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.get);
 router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.post);
+
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY, companyAuthenticationMiddleware, directorCorrespondenceAddressLinkOnly.get);
+router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY, companyAuthenticationMiddleware, directorCorrespondenceAddressLinkOnly.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddress.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, directorResidentialAddress.post);

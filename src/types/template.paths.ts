@@ -21,6 +21,7 @@ export enum Templates {
   DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS = "director-correspondence-address-choose-address",
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL = "director-correspondence-address-manual",
   DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "director-correspondence-address-link",
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY = "director-correspondence-address-link-only",
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS = "director-confirm-correspondence-address",
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS = "director-confirm-residential-address",
   DIRECTOR_RESIDENTIAL_ADDRESS = "director-residential-address",
