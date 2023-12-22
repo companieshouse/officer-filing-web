@@ -51,7 +51,7 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
         currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
           officerFiling.nameHasBeenUpdated = true;
       }
-    };
+    }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
