@@ -84,27 +84,101 @@ describe("Update Director name controller tests", () => {
     });
 
     describe("post tests", () => {
-  
-      it("Should redirect to date of birth page if there are no errors", async () => {
+
+      // Validate all fields change one by one in order to fix the sonar coverage issue (due to OR condition)
+
+      it("Should redirect to View and Update Director title is updated", async () => {
         mockGetOfficerFiling.mockResolvedValue({
           title: "Mr",
-          firstName: "Test",
-          middleNames: "Tester",
-          lastName: "Testerson",
+          firstName: "John",
+          middleNames: "",
+          lastName: "Smith",
           formerNames: "",
-        });  
+        });
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-        }});
-        
+          }});
+
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
-          .send({ 
-            "typeahead_input_0": "Dr", 
-            "first_name": "John", 
-            "middle_names": "", 
-            "last_name": "Smith", 
-            "previous_names_radio": "No", 
-            "previous_names": "" 
+          .send({
+            "typeahead_input_0": "Dr",
+            "first_name": "John",
+            "middle_names": "",
+            "last_name": "Smith",
+            "previous_names_radio": "No",
+            "previous_names": ""
+          });
+        expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      });
+
+      it("Should redirect to View and Update Director firstName is updated", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          title: "Dr",
+          firstName: "James",
+          middleNames: "",
+          lastName: "Smith",
+          formerNames: "",
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          }});
+
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({
+            "typeahead_input_0": "Dr",
+            "first_name": "John",
+            "middle_names": "",
+            "last_name": "Smith",
+            "previous_names_radio": "No",
+            "previous_names": ""
+          });
+        expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      });
+
+      it("Should redirect to View and Update Director middleName is updated", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          title: "Dr",
+          firstName: "John",
+          middleNames: "Jimothy",
+          lastName: "Smith",
+          formerNames: "",
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          }});
+
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({
+            "typeahead_input_0": "Dr",
+            "first_name": "John",
+            "middle_names": "",
+            "last_name": "Smith",
+            "previous_names_radio": "No",
+            "previous_names": ""
+          });
+        expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      });
+
+      it("Should redirect to View and Update Director lastName is updated", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          title: "Dr",
+          firstName: "John",
+          middleNames: "",
+          lastName: "Halpert",
+          formerNames: "",
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          }});
+
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({
+            "typeahead_input_0": "Dr",
+            "first_name": "John",
+            "middle_names": "",
+            "last_name": "Smith",
+            "previous_names_radio": "No",
+            "previous_names": ""
           });
         expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       });
