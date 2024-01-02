@@ -8,7 +8,7 @@ import app from "../../../src/app";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { UPDATE_DIRECTOR_DETAILS_PATH, urlParams } from "../../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_DETAILS_PATH, urlParams } from "../../../src/types/page.urls";
 import { validCompanyProfile } from "../../mocks/company.profile.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -26,6 +26,12 @@ const PAGE_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_HEADING = "View and update the director's details";
+
+const NEXT_PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 
 describe("Director details tests", () => {
 
@@ -78,9 +84,9 @@ describe("Director details tests", () => {
   });
 
   describe("POST tests", () => {
-    it("Should redirect on submission", async () => {
+    it("Should redirect to " + DIRECTOR_DATE_OF_CHANGE_PATH + " on submission", async () => {
       const response = await request(app).post(PAGE_URL).send({});
-      expect(response.text).toContain("Redirecting to");
+      expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
     })
 
     it("Should redirect to current directors page when no changes have been made", async () => {

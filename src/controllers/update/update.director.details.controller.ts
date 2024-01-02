@@ -5,8 +5,10 @@ import { urlUtils } from "../../utils/url";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
-import { CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH, 
-        DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH } from "../../types/page.urls";
+import {
+  CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH,
+  DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH
+} from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
@@ -47,5 +49,5 @@ export const post = (req: Request, resp: Response, next: NextFunction) => {
   if (req.body.back_to_active_directors) {
     return resp.redirect(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
   }
-  return resp.redirect(urlUtils.getUrlToPath("", req));
+  return resp.redirect(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req));
 };
