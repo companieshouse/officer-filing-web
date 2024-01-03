@@ -1,0 +1,14 @@
+{
+  "updateDirectorCheckAnswersTitle" : "Check your answers before submitting the update",
+  "updateDirectorCheckAnswersCompanyDetails" : "Company details",
+  "updateDirectorCheckAnswersCompanyName": "Company name",
+  "updateDirectorCheckAnswersCompanyNumber": "Company number",
+  "updateDirectorCheckAnswersDirectorDetails": "Director details",
+  "updateDirectorCheckAnswersChange": "Change",
+  "updateDirectorCheckAnswersDirectorName": "Name",
+  "updateDirectorCheckAnswersDirectorNationality": "Nationality",
+  "updateDirectorCheckAnswersDirectorOccupation": "Occupation",
+  "updateDirectorCheckAnswersAddressDetails": "Address details",
+  "updateDirectorCheckAnswersDateChanged": "Date changed",
+  "updateDirectorCheckAnswersDateDirectorDetailsChanged": "Date the details changed"
+}

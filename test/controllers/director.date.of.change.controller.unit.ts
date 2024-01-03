@@ -8,7 +8,7 @@ import app from "../../src/app";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -20,6 +20,10 @@ const SUBMISSION_ID = "55555555";
 
 
 const PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -52,7 +56,7 @@ describe("Director date details controller tests", () => {
     describe("POST tests", () => {
       it("Should redirect on submission", async () => {
         const response = await request(app).post(PAGE_URL).send({});
-        expect(response.text).toContain("Redirecting to");
+        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
       })
     });
 });
