@@ -34,5 +34,5 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
     return next(e);
   };
 
-  postDirectorName(req, resp, next, UPDATE_DIRECTOR_DETAILS_PATH);
+  postDirectorName(req, resp, next, UPDATE_DIRECTOR_DETAILS_PATH, true);
 };
