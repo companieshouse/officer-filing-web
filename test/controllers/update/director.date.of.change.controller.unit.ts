@@ -1,17 +1,17 @@
-import {validCompanyEstablishedAfter2009Profile, validCompanyProfile} from "../mocks/company.profile.mock";
+import {validCompanyEstablishedAfter2009Profile, validCompanyProfile} from "../../mocks/company.profile.mock";
 
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
 
-import mocks from "../mocks/all.middleware.mock";
-import * as apiEnumerations from "../../src/utils/api.enumerations";
+import mocks from "../../mocks/all.middleware.mock";
+import * as apiEnumerations from "../../../src/utils/api.enumerations";
 import request from "supertest";
-import app from "../../src/app";
-import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { isActiveFeature } from "../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
+import app from "../../../src/app";
+import { getCompanyProfile } from "../../../src/services/company.profile.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
+import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

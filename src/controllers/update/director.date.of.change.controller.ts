@@ -1,20 +1,20 @@
 import { NextFunction, Request, Response } from "express";
-import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, } from "../types/page.urls";
-import { Templates } from "../types/template.paths";
-import { urlUtils } from "../utils/url";
+import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, } from "../../types/page.urls";
+import { Templates } from "../../types/template.paths";
+import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { formatTitleCase } from "../services/confirm.company.service";
-import { retrieveDirectorNameFromFiling } from "../utils/format";
-import { getCompanyProfile } from "../services/company.profile.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
+import { formatTitleCase } from "../../services/confirm.company.service";
+import { retrieveDirectorNameFromFiling } from "../../utils/format";
+import { getCompanyProfile } from "../../services/company.profile.service";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { DirectorDateOfChangeField } from "../model/date.model";
-import { DirectorDateOfChangeValidation } from "../validation/director.date.of.change.validation.config";
-import { buildDateString } from "../utils/date";
-import { validateDateOfChange } from "../validation/date.validation";
-import { ValidationError } from "../model/validation.model";
-import { formatValidationErrors } from "../validation/validation";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { DirectorDateOfChangeField } from "../../model/date.model";
+import { DirectorDateOfChangeValidation } from "../../validation/director.date.of.change.validation.config";
+import { buildDateString } from "../../utils/date";
+import { validateDateOfChange } from "../../validation/date.validation";
+import { ValidationError } from "../../model/validation.model";
+import { formatValidationErrors } from "../../validation/validation";
+import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {

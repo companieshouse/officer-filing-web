@@ -34,7 +34,7 @@ export enum Templates {
   // CH01
   UPDATE_DIRECTOR_DETAILS = "update/update-director-details",
   UPDATE_DIRECTOR_NAME = "update/update-director-name",
-  DIRECTOR_DATE_OF_CHANGE = "director-date-of-change",
+  DIRECTOR_DATE_OF_CHANGE = "update/director-date-of-change",
   UPDATE_DIRECTOR_CHECK_ANSWERS = "update/update-director-check-answers",
 
 }
