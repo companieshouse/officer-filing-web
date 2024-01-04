@@ -31,7 +31,7 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
   }
 }
 
-export const postDirectorName = async (req: Request, res: Response, next: NextFunction, nextPageUrl: string) => {
+export const postDirectorName = async (req: Request, res: Response, next: NextFunction, nextPageUrl: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -44,6 +44,14 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
       lastName: getField(req, DirectorField.LAST_NAME),
       formerNames: getPreviousNamesForFiling(req),
     };
+
+    if (isUpdate) {
+      const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
+        currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
+          officerFiling.nameHasBeenUpdated = true;
+      }
+    }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 

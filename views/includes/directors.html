@@ -36,7 +36,7 @@
     </dl>
       <div class="govuk-!-padding-top-3">
         {% if updateEnabled === "true" %}
-        <button id="directorUpdateButton" name="updateAppointmentId" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="{{officerCard.appointmentId}}">
+        <button id="directorUpdateButton" onclick="_paq.push(['trackGoal', '{{PIWIK_UPDATE_DIRECTOR_START_GOAL_ID}}'])" data-event-id="update-director-button" name="updateAppointmentId" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="{{officerCard.appointmentId}}">
           View and update details
         </button>
         {% endif %}

@@ -8,5 +8,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  postDirectorName(req, res, next, DIRECTOR_DATE_DETAILS_PATH)
+  postDirectorName(req, res, next, DIRECTOR_DATE_DETAILS_PATH, false)
 };

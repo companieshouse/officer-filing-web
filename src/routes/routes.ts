@@ -23,6 +23,7 @@ import * as directorResidentialAddressManual from "../controllers/director.resid
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
+import * as directorDateOfChange from "../controllers/director.date.of.change.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
@@ -33,7 +34,7 @@ import * as updateDirectorDetail from "../controllers/update/update.director.det
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
-import { AP01_ACTIVE } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 import { nameValidator } from "../validation/name.validation";
 import { nationalityValidator } from "../validation/nationality.validation";
@@ -136,10 +137,11 @@ router.post(urls.APPOINT_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware
 router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, appointDirectorSubmitted.get);
 
 // CH01
-router.route(urls.UPDATE_DIRECTOR_DETAILS).all(companyAuthenticationMiddleware)
-.get(updateDirectorDetail.get)
-.post(updateDirectorDetail.post);
+router.get(urls.UPDATE_DIRECTOR_DETAILS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorDetail.get);
+router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updateDirectorDetail.post);
 
-router.route(urls.UPDATE_DIRECTOR_NAME).all()
-.get(updateDirectorName.get)
-.post(nameValidator, updateDirectorName.post)
+router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
+router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
+
+router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
+router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);

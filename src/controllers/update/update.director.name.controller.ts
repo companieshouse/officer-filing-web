@@ -10,8 +10,8 @@ import { getCompanyAppointmentFullRecord } from "../../services/company.appointm
 import { STOP_TYPE } from "../../utils/constants"
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
- getDirectorName(req, resp, next, Templates.UPDATE_DIRECTOR_NAME, UPDATE_DIRECTOR_NAME_PATH, true);
-};
+  getDirectorName(req, resp, next, Templates.UPDATE_DIRECTOR_NAME, UPDATE_DIRECTOR_DETAILS_PATH, true);
+}
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
   // Validate etag before post
