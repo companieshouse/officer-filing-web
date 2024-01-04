@@ -35,10 +35,12 @@ export interface DateValidationType {
         DayMonthYear: ValidationError,
     },
     RuleBased?: {
-        Underage: ValidationError,
+        Underage?: ValidationError,
         Overage?: ValidationError,
         FutureDate?: ValidationError,
-        IncorporationDate?: ValidationError
+        IncorporationDate?: ValidationError,
+        DateOfChangeBeforeAppointment?: ValidationError,
+        Before2009?: ValidationError,
     }
 }
 

@@ -1,0 +1,82 @@
+{# Setup vars that will be used in page #}
+{% set dateOfChangeErrorMessage = '' %}
+{% set isDateOfChangeDayError = false %}
+{% set isDateOfChangeMonthError = false %}
+{% set isDateOfChangeYearError = false %}
+
+
+{# Decide if any field is in error and set boolean that will highlight it in red #}
+{% for key, value in errors %}
+  {% if "date_of_change" in key|string %}
+    {% set dateOfChangeErrorMessage = value %}
+
+    {% if "-day" in key|string %}
+      {% set isDateOfChangeDayError = true %}
+    {% endif %}
+    {% if "-month" in key|string %} 
+      {% set isDateOfChangeMonthError = true %}
+    {% endif %}
+    {% if "-year" in key|string %} 
+      {% set isDateOfChangeYearError = true %}
+    {% endif %}
+
+  {% endif %}
+{% endfor %}
+
+
+{# Set classes on the 3 date input fields (including error classes if applicable) #}
+{% set date_of_change_classes_year = "govuk-input--width-4 govuk-input" %}
+{% set date_of_change_classes_month = "govuk-input--width-2 govuk-input" %}
+{% set date_of_change_classes_day = "govuk-input--width-2 govuk-input" %}
+
+{% if isDateOfChangeDayError %}
+  {% set date_of_change_classes_day = date_of_change_classes_day + "--error" %}
+{% endif %}
+{% if isDateOfChangeMonthError %}
+  {% set date_of_change_classes_month = date_of_change_classes_month + "--error" %}
+{% endif %}
+{% if isDateOfChangeYearError %}
+  {% set date_of_change_classes_year = date_of_change_classes_year + "--error" %}
+{% endif %}
+
+
+{# Render #}
+{{ govukDateInput({
+  errorMessage: dateOfChangeErrorMessage,
+  id: "date_of_change",
+  name: "dateOfChangeDate",
+  namePrefix: "date_of_change",
+  fieldset: {
+    legend: {
+        text: i18n.dateOfChangeTitle,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+  hint: {
+    text: i18n.dateOfChangeTitleHint
+  },
+  items: [
+    {
+      label: i18n.day,
+      classes: date_of_change_classes_day,
+      name: "day",
+      value: date_of_change["date_of_change-day"] if date_of_change,
+      pattern: "*"
+    },
+    {
+      label: i18n.month,
+      classes: date_of_change_classes_month,
+      name: "month",
+      value: date_of_change["date_of_change-month"] if date_of_change,
+      pattern: "*"
+    },
+    {
+      label: i18n.year,
+      classes: date_of_change_classes_year,
+      name: "year",
+      value: date_of_change["date_of_change-year"] if date_of_change,
+      pattern: "*"
+    }
+  ]
+}) }}

@@ -57,6 +57,21 @@ export enum appointmentDateErrorMessageKey {
   APPOINTMENT_DATE_UNDERAGE = "appointment-date-underage",
 }
 
+export enum directorDateOfChangeErrorMessageKey {
+  MISSING_DAY = "change-date-missing-day",
+  MISSING_MONTH = "change-date-missing-month",
+  MISSING_YEAR = "change-date-missing-year",
+  MISSING_DAY_MONTH = "change-date-missing-day-month",
+  MISSING_DAY_YEAR = "change-date-missing-day-year",
+  MISSING_MONTH_YEAR = "change-date-missing-month-year",
+  MISSING_DAY_MONTH_YEAR = "change-date-missing-day-month-year",
+  INVALID_DATE = "change-date-invalid",
+  DATE_OF_CHANGE_BEFORE_APPOINTMENT = "change-date-before-appointment-date",
+  IN_FUTURE = "change-date-in-future",
+  BEFORE_INCORPORATION_DATE = "change-date-before-incorporation-date",
+  BEFORE_2009 = "change-date-before-2009",
+}
+
 export enum titleErrorMessageKey {
   TITLE_CHARACTERS = "title-characters",
   TITLE_LENGTH = "title-length",

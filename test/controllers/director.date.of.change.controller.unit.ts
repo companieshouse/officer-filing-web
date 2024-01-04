@@ -1,12 +1,15 @@
+import {validCompanyEstablishedAfter2009Profile, validCompanyProfile} from "../mocks/company.profile.mock";
+
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
 
 import mocks from "../mocks/all.middleware.mock";
+import * as apiEnumerations from "../../src/utils/api.enumerations";
 import request from "supertest";
 import app from "../../src/app";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { DIRECTOR_DATE_OF_CHANGE_PATH, urlParams } from "../../src/types/page.urls";
 
@@ -14,9 +17,11 @@ const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
+const APPOINTMENT_ID = "987654321";
 
 
 const PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
@@ -24,14 +29,15 @@ const PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const PAGE_HEADING = "When did the director's details change?";
+const PAGE_HEADING = "When did the director&#39;s details change?";
 
 describe("Director date details controller tests", () => {
 
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
-    mockGetCompanyProfile.mockClear();
+    mockPatchOfficerFiling.mockClear();
+    mockGetCompanyProfile.mockResolvedValue(validCompanyEstablishedAfter2009Profile)
   });
           
     describe("GET tests", () => {
@@ -50,9 +56,75 @@ describe("Director date details controller tests", () => {
     });
 
     describe("POST tests", () => {
-      it("Should redirect on submission", async () => {
-        const response = await request(app).post(PAGE_URL).send({});
-        expect(response.text).toContain("Redirecting to");
-      })
+      // #TODO - add tests for valid values, redirect to check your answers
+
+      it("Should display error before patching if date of change is in the future", async () => {
+        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is today or in the past");
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+        const year = new Date().getFullYear() + 1;
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "09",
+            "date_of_change-year": String(year) });
+
+        expect(response.text).toContain("Enter a date that is today or in the past");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display error before patching if date of change before incorporation date", async () => {
+        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is on or after the company's incorporation date");
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+        const year = new Date().getFullYear() + 1;
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "12",
+            "date_of_change-year": "2009" });
+
+        expect(response.text).toContain("Enter a date that is on or after the company&#39;s incorporation date");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display error before patching if date of change before 1 oct 2009", async () => {
+        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director’s details changed must be on or after 1 October 2009. If the director detail was updated before this date, you must submit form 288b instead.");
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+        const year = new Date().getFullYear() + 1;
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "09",
+            "date_of_change-year": "2008" });
+
+        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009. If the director detail was updated before this date, you must submit form 288b instead.");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display error before patching if date of change before appointment date", async () => {
+        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is on or after the date the director was appointed");
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID,
+          appointedOn: new Date("2015-10-10")
+        });
+        const year = new Date().getFullYear() + 1;
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "09",
+            "date_of_change-year": "2014" });
+
+        expect(response.text).toContain("Enter a date that is on or after the date the director was appointed");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
     });
 });
