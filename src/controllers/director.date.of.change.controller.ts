@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UPDATE_DIRECTOR_DETAILS_PATH, } from "../types/page.urls";
+import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -21,7 +21,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    
+
     const officerFiling : OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const dateOfChangeFields = officerFiling.directorsDetailsChangedDate ? officerFiling.directorsDetailsChangedDate.split('-').reverse() : [];
 
@@ -63,8 +63,7 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
 
     await patchOfficerFiling(session, transactionId, submissionId, updatedFiling);
 
-    // #TODO redirect to CYA page.
-    return resp.redirect(urlUtils.getUrlToPath("", req));
+    return resp.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
   } catch(e) {
     return next(e);
   }

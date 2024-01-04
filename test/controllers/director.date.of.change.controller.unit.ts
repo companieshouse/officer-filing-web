@@ -11,7 +11,7 @@ import app from "../../src/app";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -25,6 +25,10 @@ const APPOINTMENT_ID = "987654321";
 
 
 const PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -56,7 +60,27 @@ describe("Director date details controller tests", () => {
     });
 
     describe("POST tests", () => {
-      // #TODO - add tests for valid values, redirect to check your answers
+      it("Should patch officer filing and redirect to check your answers", async () => {
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "09",
+            "date_of_change-year": "2019" });
+
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({
+            directorsDetailsChangedDate: "2019-09-10"
+          })
+        );
+        expect(response.header.location).toEqual(NEXT_PAGE_URL);
+      });
 
       it("Should display error before patching if date of change is in the future", async () => {
         jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is today or in the past");
