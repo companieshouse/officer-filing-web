@@ -1,12 +1,13 @@
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/controllers/director.residential.address.controller");
+jest.mock("../../src/services/officer.filing.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 import { urlUtilsRequestParams } from "../../src/controllers/director.residential.address.controller";
-
+import { getOfficerFiling } from "../../src/services/officer.filing.service";
 import {
   urlParams, 
   DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH,
@@ -20,6 +21,7 @@ import { SA_TO_ROA_ERROR } from "../../src/utils/constants";
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockUrlUtilsRequestParams  = urlUtilsRequestParams as jest.Mock;
+const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -116,10 +118,8 @@ describe("Director correspondence address link only controller tests", () => {
 
     describe("post tests", () => {
       it("should redirect to director residential addess when yes radio selected", async () => {
-        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
-        }, companyProfile: {
-          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
-        }});
+        mockGetOfficerFiling.mockResolvedValueOnce({
+        });
 
         const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_yes"});
 
@@ -128,10 +128,8 @@ describe("Director correspondence address link only controller tests", () => {
       });
 
       it("should redirect to director correspondence address page when no radio selected", async () => {
-        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
-        }, companyProfile: {
-          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
-        }});
+        mockGetOfficerFiling.mockResolvedValueOnce({
+        });
 
         const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_no"});
 
@@ -139,11 +137,9 @@ describe("Director correspondence address link only controller tests", () => {
       });
 
       it("should display an error when no radio button is selected", async () => {
-        mockUrlUtilsRequestParams.mockResolvedValueOnce({ officerFiling: {
+        mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "Test Director"
-        }, companyProfile: {
-          registeredOfficeAddress: REGISTERED_OFFICE_ADDRESS_MOCK
-        }})
+        });
 
         const response = await request(app).post(PAGE_URL);
         expect(response.text).toContain(SA_TO_ROA_ERROR);

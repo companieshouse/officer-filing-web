@@ -8,7 +8,7 @@ import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { patchOfficerFiling } from "../services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
@@ -41,10 +41,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const useLinkingOnly = calculateSaToRoaBooleanValue(req);
-    const { officerFiling } = await urlUtilsRequestParams(req);
+    const linkOnly = calculateSaToRoaBooleanValue(req);
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     
-    if (useLinkingOnly === undefined) {
+    if (linkOnly === undefined) {
       const linkError = createValidationErrorBasic(SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY, {
         templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY,
@@ -55,11 +55,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      isServiceAddressSameAsRegisteredOfficeAddress: useLinkingOnly
+      isServiceAddressSameAsRegisteredOfficeAddress: linkOnly,
+      serviceAddress: undefined
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    if (useLinkingOnly) {
+    if (linkOnly) {
       logger.info(`Director correspondence address link only selected for transaction: ${transactionId}`);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
     } else {
