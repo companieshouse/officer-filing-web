@@ -62,6 +62,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     nationalityLink: urlUtils.getUrlToPath("", req),
     occupationLink: urlUtils.getUrlToPath("", req),
     dateUpdatedLink: urlUtils.getUrlToPath("", req),
-    correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req)
+    correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
+    currentUrl: req.originalUrl,
   });
 }
