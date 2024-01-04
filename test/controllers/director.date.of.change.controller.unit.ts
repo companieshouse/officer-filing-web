@@ -83,7 +83,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if date of change is in the future", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is today or in the past");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -100,7 +99,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if date of change before incorporation date", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is on or after the company's incorporation date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -117,7 +115,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if date of change before 1 oct 2009", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director’s details changed must be on or after 1 October 2009. If the director detail was updated before this date, you must submit form 288b instead.");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -129,12 +126,11 @@ describe("Director date details controller tests", () => {
             "date_of_change-month": "09",
             "date_of_change-year": "2008" });
 
-        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009. If the director detail was updated before this date, you must submit form 288b instead.");
+        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009.");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
       it("Should display error before patching if date of change before appointment date", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is on or after the date the director was appointed");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID,
           appointedOn: new Date("2015-10-10")
