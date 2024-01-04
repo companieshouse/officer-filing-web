@@ -31,6 +31,7 @@ import * as signoutRoute from "../controllers/signout.controller";
 import * as startRoute from "../controllers/start.controller";
 import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
+import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
@@ -139,6 +140,9 @@ router.get(urls.APPOINT_DIRECTOR_SUBMITTED, isFeatureEnabled(AP01_ACTIVE), compa
 // CH01
 router.get(urls.UPDATE_DIRECTOR_DETAILS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorDetail.get);
 router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updateDirectorDetail.post);
+
+router.get(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorCheckAnswers.get);
+router.post(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, updateDirectorCheckAnswers.post);
 
 router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
 router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);

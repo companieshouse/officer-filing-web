@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UPDATE_DIRECTOR_DETAILS_PATH, } from "../types/page.urls";
+import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -31,5 +31,5 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, resp: Response, next: NextFunction) => {
-  return resp.redirect(urlUtils.getUrlToPath("", req));
+  return resp.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
 }

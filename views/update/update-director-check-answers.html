@@ -1,0 +1,161 @@
+{% extends "layout.html" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set title = i18n.updateDirectorCheckAnswersTitle %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+        <h1 class="govuk-heading-l">{{ i18n.updateDirectorCheckAnswersTitle }}</h1>
+        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersCompanyDetails }}</h2>
+
+        {{ govukSummaryList({
+          attributes: {
+            "style": "width:auto"
+          },
+          rows: [
+            {
+              classes: "govuk-summary-list__row--no-actions",
+              key: {
+                text: i18n.updateDirectorCheckAnswersCompanyName
+              },
+              value: {
+                text: company.companyName
+              }
+            },
+            {
+              classes: "govuk-summary-list__row--no-actions",
+              
+              key: {
+                text: i18n.updateDirectorCheckAnswersCompanyNumber
+              },
+              value: {
+                text: company.companyNumber
+              }
+            }
+          ]
+        }) }}
+
+        {% set nationality = officerFiling.nationality1 %}
+        {% if officerFiling.nationality2 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality2 %}
+        {% endif %}
+        {% if officerFiling.nationality3 %}
+          {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
+        {% endif %}
+
+        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: i18n.updateDirectorCheckAnswersDirectorName
+              },
+              value: {
+                text: name
+              },
+              actions: {
+                items: [
+                  {
+                    href: nameLink,
+                    text: i18n.updateDirectorCheckAnswersChange,
+                    visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorName,
+                    attributes: {
+                      "data-event-id": "name-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: i18n.updateDirectorCheckAnswersDirectorNationality
+              },
+              value: {
+                html: nationality
+              },
+              actions: {
+                items: [
+                  {
+                    href: nationalityLink,
+                    text: i18n.updateDirectorCheckAnswersChange,
+                    visuallyHiddenText: updateDirectorCheckAnswersDirectorNationality,
+                    attributes: {
+                      "data-event-id": "nationality-change-link"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: i18n.updateDirectorCheckAnswersDirectorOccupation
+              },
+              value: {
+                text: occupation
+              },
+              actions: {
+                items: [
+                  {
+                    href: occupationLink,
+                    text: i18n.updateDirectorCheckAnswersChange,
+                    visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorOccupation,
+                    attributes: {
+                      "data-event-id": "occupation-change-link"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }) }} 
+
+        {% set officerFiling = officerFiling %}
+        {% include "includes/check-your-answer/address-details.html" %}
+
+        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDateChanged }}</h2>
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: i18n.updateDirectorCheckAnswersDateDirectorDetailsChanged
+              },
+              value: {
+                text: dateUpdated
+              },
+              actions: {
+                items: [
+                  {
+                    href: dateUpdatedLink,
+                    text: i18n.updateDirectorCheckAnswersChange,
+                    visuallyHiddenText: i18n.updateDirectorCheckAnswersDateDirectorDetailsChanged,
+                    attributes: {
+                      "data-event-id": "date-updated-change-link"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }) }}
+
+        {% include "includes/confirm-submit-cancel-button-group.html" %}
+
+      </form>
+    </div>
+
+{% endblock %}
