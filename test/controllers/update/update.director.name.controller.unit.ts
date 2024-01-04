@@ -95,7 +95,12 @@ describe("Update Director name controller tests", () => {
       // Validate all fields change one by one in order to fix the sonar coverage issue (due to OR condition)
 
       it("Should redirect to View and Update Director title is updated", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+        });
         mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag",
           title: "Mr",
           firstName: "John",
           middleNames: "",
@@ -119,7 +124,12 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should redirect to View and Update Director firstName is updated", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+        });
         mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag",
           title: "Dr",
           firstName: "James",
           middleNames: "",
@@ -143,7 +153,12 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should redirect to View and Update Director middleName is updated", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+        });
         mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag",
           title: "Dr",
           firstName: "John",
           middleNames: "Jimothy",
@@ -167,7 +182,12 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should redirect to View and Update Director lastName is updated", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+        });
         mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag",
           title: "Dr",
           firstName: "John",
           middleNames: "",
