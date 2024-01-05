@@ -12,9 +12,9 @@
   "changeCookie3": "ar unrhyw adeg.",
   "cookieNoJS": "Rydym yn defnyddio cwcis i wneud i'n gwasanaethau weithio a chasglu gwybodaeth ddadansoddol. I dderbyn neu wrthod cwcis dadansoddeg, trowch JavaScript ymlaen yn gosodiadau eich porwr ac ail-lwytho'r dudalen hon.",
   "cookieHide": "Cuddio'r neges hon",
-  "confirmAndContinue": "Confirm and continue",
   "appTitle": "Penodi a dileu cyfarwyddwr cwmni",
   "confirmAndContinue": "Cadarnhau a pharhau",
+  "continue": "Parhau",
   "signOut": "Cofrestrwch allan",
   "back": "Cefn",
   "policies": "Polisïau",
@@ -22,5 +22,8 @@
   "contactUs": "Cysylltu â ni",
   "developers": "Datblygwyr",
   "accessibilityStatement": "Datganiad hygyrchedd",
-  "warning": "Rhybudd"
+  "warning": "Rhybudd",
+  "day": "Dydd",
+  "month": "Mis",
+  "year": "Blwyddyn"
 }
