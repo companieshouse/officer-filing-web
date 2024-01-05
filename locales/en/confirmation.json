@@ -1,0 +1,13 @@
+{
+  "updateConfirmationTitle" : "Director update submitted",
+  "referenceNumber" : "Reference number",
+  "director" : "Director",
+  "updateSubmitted": "Update submitted",
+  "whatHappensNextTitle": "What happens next",
+  "whatHappensNextLine1": "We'll send a confirmation email to you which contains your reference number.",
+  "whatHappensNextLine2": "We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.",
+  "whatHappensNextLine3": "We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.",
+  "whatDoYouWantToDoNextTitle": "What do you want to do next?",
+  "testServiceText": "This is a new service. Help us improve it by completing our ",
+  "testServiceLinkText": "short survey"
+}

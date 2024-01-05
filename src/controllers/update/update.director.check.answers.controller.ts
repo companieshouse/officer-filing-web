@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { CURRENT_DIRECTORS_PATH, UPDATE_DIRECTOR_NAME_PATH, DIRECTOR_DATE_OF_CHANGE_PATH } from "../../types/page.urls";
+import {
+  CURRENT_DIRECTORS_PATH,
+  UPDATE_DIRECTOR_NAME_PATH,
+  DIRECTOR_DATE_OF_CHANGE_PATH,
+  UPDATE_DIRECTOR_SUBMITTED_PATH
+} from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { getCompanyProfile } from "../../services/company.profile.service";
@@ -35,8 +40,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     // Close transaction and go to submitted page
-    await closeTransaction(session, companyNumber, submissionId, transactionId);
-    return res.redirect(urlUtils.getUrlToPath("", req));
+    // await closeTransaction(session, companyNumber, submissionId, transactionId);
+    return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_SUBMITTED_PATH, req));
 
   } catch (e) {
     return next(e);
