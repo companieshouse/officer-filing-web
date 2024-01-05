@@ -23,9 +23,8 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
     const currentOfficer = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = currentOfficer.referenceAppointmentId as string;
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    const doEtagsMatch = currentOfficer.referenceEtag === companyAppointment.etag ? true : false;
 
-    if (!doEtagsMatch) {
+    if (currentOfficer.referenceEtag !== companyAppointment.etag) {
       return resp.redirect(
         urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
