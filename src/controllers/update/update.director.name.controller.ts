@@ -1,6 +1,6 @@
 import { getDirectorName, postDirectorName } from "../../controllers/shared.controllers/director.name.controller"
 import { NextFunction, Request, Response } from "express"
-import { UPDATE_DIRECTOR_DETAILS_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../../types/page.urls"
+import { UPDATE_DIRECTOR_DETAILS_PATH } from "../../types/page.urls"
 import { Templates } from "../../types/template.paths"
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
