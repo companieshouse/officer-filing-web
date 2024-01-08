@@ -27,7 +27,12 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 			companyNumber: companyNumber,
 			companyName: companyProfile.companyName,
 			directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-			updateSubmittedType: getUpdateSubmittedType(officerFiling),
+			nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,
+			nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
+			occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,
+			residentialAddressHasBeenUpdated: officerFiling.residentialAddressHasBeenUpdated,
+			correspondenceAddressHasBeenUpdated: officerFiling.correspondenceAddressHasBeenUpdated,
+			updateTypes: getUpdateSubmittedType(officerFiling),
 			...getLocaleInfo(locales, lang),
 			currentUrl : req.originalUrl,
 		})
@@ -40,22 +45,22 @@ export const getUpdateSubmittedType = (officerFiling: OfficerFiling) => {
 	const updateTypes: string[] = [];
 
 	if (officerFiling.nameHasBeenUpdated) {
-		updateTypes.push("Name");
+		updateTypes.push("updateTypeName");
 	}
 	if (officerFiling.nationalityHasBeenUpdated) {
-		updateTypes.push("Nationality");
+		updateTypes.push("updateTypeNationality");
 	}
 	if (officerFiling.occupationHasBeenUpdated) {
-		updateTypes.push("Occupation");
+		updateTypes.push("updateTypeOccupation");
 	}
 	if (officerFiling.residentialAddressHasBeenUpdated) {
-		updateTypes.push("Residential Address");
+		updateTypes.push("updateTypeResidentialAddress");
 	}
 	if (officerFiling.correspondenceAddressHasBeenUpdated) {
-		updateTypes.push("Correspondence Address");
+		updateTypes.push("updateTypeCorrespondenceAddress");
 	}
 
-	return updateTypes.join(", ");
+	return updateTypes;
 }
 
 

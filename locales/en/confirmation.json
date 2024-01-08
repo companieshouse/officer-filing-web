@@ -9,5 +9,10 @@
   "whatHappensNextLine3": "We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.",
   "whatDoYouWantToDoNextTitle": "What do you want to do next?",
   "testServiceText": "This is a new service. Help us improve it by completing our ",
-  "testServiceLinkText": "short survey"
+  "testServiceLinkText": "short survey",
+  "updateTypeName" : "Name",
+  "updateTypeNationality" : "Nationality",
+  "updateTypeOccupation" : "Occupation",
+  "updateTypeResidentialAddress" : "Residential Address",
+  "updateTypeCorrespondenceAddress" : "Correspondence Address"
 }

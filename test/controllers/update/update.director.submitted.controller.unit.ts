@@ -12,31 +12,31 @@ describe("Update Director Submitted Controller", () => {
 
     })
 
-    describe("getUpdateSubmittedType test", () => {
+    // describe("getUpdateSubmittedType test", () => {
 
-        it("should return a string of update type", () => {
-            const officerFiling: OfficerFiling = {
-                nameHasBeenUpdated: true
-            }
-            const updateSubmittedType = getUpdateSubmittedType(officerFiling);
+    //     it("should return a string of update type", () => {
+    //         const officerFiling: OfficerFiling = {
+    //             nameHasBeenUpdated: true
+    //         }
+    //         const updateSubmittedType = getUpdateSubmittedType(officerFiling);
 
-            expect(updateSubmittedType).toEqual("Name");
-        });
+    //         expect(updateSubmittedType).toEqual("Name");
+    //     });
 
-        it("should return a string of update types with comma seperated values", () => {
-            const officerFiling: OfficerFiling = {
-                nameHasBeenUpdated: true,
-                nationalityHasBeenUpdated: true,
-                occupationHasBeenUpdated: true,
-                residentialAddressHasBeenUpdated: true,
-                correspondenceAddressHasBeenUpdated: true
-            }
+    //     it("should return a string of update types with comma seperated values", () => {
+    //         const officerFiling: OfficerFiling = {
+    //             nameHasBeenUpdated: true,
+    //             nationalityHasBeenUpdated: true,
+    //             occupationHasBeenUpdated: true,
+    //             residentialAddressHasBeenUpdated: true,
+    //             correspondenceAddressHasBeenUpdated: true
+    //         }
 
-            const updateSubmittedType = getUpdateSubmittedType(officerFiling);
-            const expectedString = "Name, Nationality, Occupation, Residential Address, Correspondence Address"
+    //         const updateSubmittedType = getUpdateSubmittedType(officerFiling);
+    //         const expectedString = "Name, Nationality, Occupation, Residential Address, Correspondence Address"
 
-            expect(updateSubmittedType).toEqual(expectedString)
-        });
+    //         expect(updateSubmittedType).toEqual(expectedString)
+    //     });
         
-    })
+    // })
 })

@@ -25,7 +25,51 @@
             {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
           </div>
         </div>
+<!--using ifs and else with boolean passed on controller to create comma seperated dynamic string-->
+        {% set submittedTypeString = "" %}
+        {% if nameHasBeenUpdated %}
+          {% set submittedTypeString = i18n.updateTypeName %}
+        {% endif %} 
+        {% if nationalityHasBeenUpdated %}
+          {% if submittedTypeString != "" %}
+            {% set submittedTypeString = submittedTypeString ~ ", " ~ i18n.updateTypeNationality %}
+          {% else %}
+            {% set submittedTypeString = i18n.updateTypeNationality %}
+          {% endif %}
+        {% endif %} 
+        {% if occupationHasBeenUpdated %}
+          {% if submittedTypeString != "" %}
+            {% set submittedTypeString = submittedTypeString ~ ", " ~ i18n.updateTypeOccupation %}
+          {% else %}
+            {% set submittedTypeString = i18n.updateTypeOccupation %}
+          {% endif %}
+        {% endif %} 
+        {% if residentialAddressHasBeenUpdated %}
+          {% if submittedTypeString != "" %}
+            {% set submittedTypeString = submittedTypeString ~ ", " ~ i18n.updateTypeResidentialAddress %}
+          {% else %}
+            {% set submittedTypeString = i18n.updateTypeResidentialAddress %}
+          {% endif %}
+        {% endif %} 
+        {% if correspondenceAddressHasBeenUpdated %}
+          {% if submittedTypeString != "" %}
+            {% set submittedTypeString = submittedTypeString ~ ", " ~ i18n.updateTypeCorrespondenceAddress %}
+          {% else %}
+            {% set submittedTypeString = i18n.updateTypeCorrespondenceAddress %}
+          {% endif %}
+        {% endif %}
 
+<!--loop through elements and find i18n. transaction DOES not work yet. -->
+        {% set submittedTypeString2 = "" %}
+        {% for type in updateTypes %}
+          {% if submittedTypeString2 != "" %}
+            {% set submittedTypeString2 = submittedTypeString2 ~ ", " ~ i18n.[type] %}
+          {% else %}
+            {% set submittedTypeString2 = i18n.[type] %}
+          {% endif %}
+        {% endfor %}
+
+        <h1>submittedTypeString2 : {{ submittedTypeString2 }}</h1>
         {{ govukSummaryList({
           rows: [
             {
@@ -57,7 +101,7 @@
                 text: i18n.updateSubmitted
               },
               value: {
-                text: updateSubmittedType
+                text: submittedTypeString2
               }
             }
           ]
