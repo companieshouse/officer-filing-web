@@ -124,7 +124,7 @@ describe("Director date details controller tests", () => {
             "date_of_change-month": "09",
             "date_of_change-year": "2008" });
 
-        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009.");
+        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
