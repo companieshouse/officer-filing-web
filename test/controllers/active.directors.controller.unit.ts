@@ -218,6 +218,7 @@ describe("Active directors controller tests", () => {
       expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
         referenceAppointmentId: APPOINTMENT_ID,
         referenceEtag: "etag",
+        title: "Dr",
         firstName: "John",
         middleNames: "Elizabeth",
         lastName: "Doe",
