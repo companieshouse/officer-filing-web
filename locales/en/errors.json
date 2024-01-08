@@ -4,11 +4,12 @@
   "error-change-date-missing-month": "Date the director’s details changed must include a month",
   "error-change-date-missing-year": "Date the director’s details changed must include a year",
   "error-change-date-missing-day-month": "Date the director’s details changed must include a day and month",
-  "error-change-date-missing-day-year": "Date the director’s details changed must include a month and year",
+  "error-change-date-missing-day-year": "Date the director’s details changed must include a day and year",
+  "error-change-date-missing-month-year": "Date the director’s details changed must include a month and year",
   "error-change-date-missing-day-month-year": "Enter the date the director’s details changed",
   "error-change-date-invalid": "Date the director’s details changed must be a real date",
   "error-change-date-before-appointment-date": "Enter a date that is on or after the date the director was appointed",
   "error-change-date-in-future" : "Enter a date that is today or in the past",
   "error-change-date-before-incorporation-date": "Enter a date that is on or after the company's incorporation date",
-  "error-change-date-before-2009": "Date the director’s details changed must be on or after 1 October 2009."
+  "error-change-date-before-2009": "Date the director’s details changed must be on or after 1 October 2009"
 }
