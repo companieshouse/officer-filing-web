@@ -19,3 +19,9 @@ export enum AppointmentDateField {
   MONTH = "appointment_date-month",
   YEAR = "appointment_date-year",
 }
+
+export enum DirectorDateOfChangeField {
+  DAY = "date_of_change-day",
+  MONTH = "date_of_change-month",
+  YEAR = "date_of_change-year",
+}

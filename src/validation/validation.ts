@@ -16,6 +16,7 @@ export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z
 /**
  * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.
  * @param validationErrors Contains the error message, the fields to highlight, and the field to link when the error message is clicked
+ * @param lang The language to display the error message in
  * @returns A validation errors object to display on the page
  */
 export function formatValidationErrors(validationErrors: ValidationError[], lang?: string): FormattedValidationErrors {

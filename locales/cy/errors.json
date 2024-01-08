@@ -1,3 +1,14 @@
 {
-  "error-first-name-blank": "Rhowch enw cyntaf llawn y cyfarwyddwr"
+  "error-first-name-blank": "Rhowch enw cyntaf llawn y cyfarwyddwr",
+  "error-change-date-missing-day": "WLE",
+  "error-change-date-missing-month": "WLE",
+  "error-change-date-missing-year": "WLE",
+  "error-change-date-missing-day-month": "WLE",
+  "error-change-date-missing-day-year": "WLE",
+  "error-change-date-missing-day-month-year": "WLE",
+  "error-change-date-invalid": "WLE",
+  "error-change-date-before-appointment-date": "WLE",
+  "error-change-date-in-future" : "WLE",
+  "error-change-date-before-incorporation-date": "WLE",
+  "error-change-date-before-2009": "WLE"
 }

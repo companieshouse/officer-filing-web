@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { DateValidationType, ValidationError } from "../model/validation.model";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 /**
  * Validate date field - checks for missing values, non-numeric characters
@@ -53,6 +54,21 @@ export const validateDateOfAppointment = (dayStr: string, monthStr: string, year
   const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
   const dateOfAppointment = new Date(year, month - 1, day);
   return validateDateOfAppointmentRules(dateOfBirth, dateOfAppointment, dateValidationType, companyProfile);
+}
+
+/**
+ * Validate the date of change field and return a validation error if any of the fields fail validation
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+export const validateDateOfChange = (dayStr: string, monthStr: string, yearStr: string, dateValidationType: DateValidationType, companyProfile: CompanyProfile, officerFiling: OfficerFiling): ValidationError | undefined => {
+  const dateError = validateDate(dayStr, monthStr, yearStr, dateValidationType);
+  if(dateError){
+    return dateError;
+  }
+
+  const day = parseInt(dayStr), month = parseInt(monthStr), year = parseInt(yearStr);
+  const dateOfChange = new Date(year, month - 1, day);
+  return validateDateOfChangeRules(dateOfChange, dateValidationType, companyProfile, officerFiling);
 }
 
 /**
@@ -151,13 +167,38 @@ const validateDateOfAppointmentRules = (dateOfBirth: Date, dateOfAppointment: Da
   if(futureDateValidation){
     return futureDateValidation;
   }
-  const incorporationDateValidation = validateAppointmentAfterIncorporationDate(dateOfAppointment, dateValidationType, companyProfile);
+  const incorporationDateValidation = validateDateAfterIncorporationDate(dateOfAppointment, dateValidationType, companyProfile);
   if(incorporationDateValidation){
     return incorporationDateValidation;
   }
   const underageValidation = validateUnderageAtAppointmentRule(dateOfBirth, dateOfAppointment, dateValidationType);
   if(underageValidation){
     return underageValidation;
+  }
+  return undefined;
+}
+
+/**
+ * Validate rules relating to date of change in director's details
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+
+const validateDateOfChangeRules = (dateOfChange: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile, officerFiling: OfficerFiling): ValidationError | undefined => {
+  const before2009Validation = validateDateBefore2009Oct01(dateOfChange, dateValidationType);
+  if(before2009Validation){
+    return before2009Validation;
+  }
+  const incorporationDateValidation = validateDateAfterIncorporationDate(dateOfChange, dateValidationType, companyProfile);
+  if(incorporationDateValidation){
+    return incorporationDateValidation;
+  }
+  const appointmentDateValidation = validateChangeOfDateBeforeAppointment(dateOfChange, dateValidationType, officerFiling);
+  if(appointmentDateValidation){
+    return appointmentDateValidation;
+  }
+  const futureDateValidation = validateFutureDateRule(dateOfChange, dateValidationType);
+  if(futureDateValidation){
+    return futureDateValidation;
   }
   return undefined;
 }
@@ -191,8 +232,8 @@ const validateUnderageAtAppointmentRule = (dateOfBirth: Date, dateOfAppointment:
  * Validate whether a date of appointment is in the future
  * @returns A ValidationError object if one occurred, else undefined
  */
-const validateFutureDateRule = (dateOfAppointment: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
-  if(dateOfAppointment > new Date()){
+const validateFutureDateRule = (date: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
+  if(date > new Date()){
     return dateValidationType.RuleBased?.FutureDate;
   }
 }
@@ -201,9 +242,34 @@ const validateFutureDateRule = (dateOfAppointment: Date, dateValidationType: Dat
  * Validate whether a date of appointment is after the date of incorporation
  * @returns A ValidationError object if one occurred, else undefined
  */
-const validateAppointmentAfterIncorporationDate = (dateOfAppointment: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile): ValidationError | undefined => {
-  if(dateOfAppointment < new Date(companyProfile.dateOfCreation)){
+const validateDateAfterIncorporationDate = (date: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile): ValidationError | undefined => {
+  if(date < new Date(companyProfile.dateOfCreation)){
     return dateValidationType.RuleBased?.IncorporationDate;
+  }
+}
+/**
+ * Validate whether a date is before the date of appointment
+ * @param date 
+ * @param dateValidationType 
+ * @param officerFiling 
+ * @returns A ValidationError object if one occurred, else undefined
+ */
+const validateChangeOfDateBeforeAppointment = (date: Date, dateValidationType: DateValidationType, officerFiling: OfficerFiling): ValidationError | undefined => {
+  if(officerFiling.appointedOn && date < new Date(officerFiling.appointedOn)){
+    return dateValidationType.RuleBased?.DateOfChangeBeforeAppointment;
+  }
+}
+
+/**
+ * Validate whether a date is before 2009-10-01
+ * @param date 
+ * @param dateValidationType 
+ * @returns 
+ */
+
+const validateDateBefore2009Oct01 = (date: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
+  if(date < new Date("2009-10-01")){
+    return dateValidationType.RuleBased?.Before2009;
   }
 }
 

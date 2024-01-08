@@ -23,7 +23,7 @@ import * as directorResidentialAddressManual from "../controllers/director.resid
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
-import * as directorDateOfChange from "../controllers/director.date.of.change.controller";
+import * as directorDateOfChange from "../controllers/update/director.date.of.change.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";

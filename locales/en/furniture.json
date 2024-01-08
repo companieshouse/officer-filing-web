@@ -14,6 +14,7 @@
   "cookieNoJS": "We use cookies to make our services work and collect analytics information. To accept or reject analytics cookies, turn on JavaScript in your browser settings and reload this page.",
   "cookieHide": "Hide this message",
   "confirmAndContinue": "Confirm and continue",
+  "continue": "Continue",
   "signOut": "Sign out",
   "back": "Back",
   "policies": "Policies",
@@ -21,5 +22,8 @@
   "contactUs": "Contact Us",
   "developers": "Developers",
   "accessibilityStatement": "Accessibility statement",
-  "warning": "Warning"
+  "warning": "Warning",
+  "day": "Day",
+  "month": "Month",
+  "year": "Year"
 }
