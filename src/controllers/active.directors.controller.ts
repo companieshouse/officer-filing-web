@@ -133,6 +133,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag,
+    title: appointment.title,
     firstName: appointment.forename,
     middleNames: appointment.otherForenames,
     lastName: appointment.surname,
