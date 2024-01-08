@@ -14,24 +14,5 @@ export const get = (req: Request, resp: Response, next: NextFunction) => {
 }
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
-  // Validate etag before post
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
-    const currentOfficer = await getOfficerFiling(session, transactionId, submissionId);
-    const appointmentId = currentOfficer.referenceAppointmentId as string;
-    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-
-    if (currentOfficer.referenceEtag !== companyAppointment.etag) {
-      return resp.redirect(
-        urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
-        URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
-    }
-  } catch(e) {
-    return next(e);
-  }
-
   postDirectorName(req, resp, next, UPDATE_DIRECTOR_DETAILS_PATH, true);
 };

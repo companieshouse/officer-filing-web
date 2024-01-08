@@ -6,6 +6,10 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
+import { STOP_TYPE } from "../../utils/constants";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -47,6 +51,16 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
 
     if (isUpdate) {
       const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = currentOfficerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+      if (currentOfficerFiling.referenceEtag !== companyAppointment.etag) {
+        return res.redirect(
+          urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
+          URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
+      }
+
       if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
         currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
           officerFiling.nameHasBeenUpdated = true;
