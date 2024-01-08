@@ -30,10 +30,10 @@
             {% include "includes/confirm-page-summary.html" %}
             <ul class="govuk-list govuk-list--spaced">
                 <li>
-                    <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for the same company</a>
+                    <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.updateDirectorSameCompanyLink }} </a>
                 </li>
                 <li>
-                    <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for a different company</a>
+                    <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.updateDirectorDifferentCompanyLink }} </a>
                 </li>
             </ul>
 
