@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% set title = i18n.updateConfirmationTitle %}
+
+{% block pageTitle %}
+{% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+        {% include "includes/list/errors.html" %}
+
+        <form action="" method="post">
+
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    {{ i18n.updateConfirmationTitle }}
+                </h1>
+                <div class="govuk-panel__body">
+                    {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
+                </div>
+            </div>
+
+
+            {% include "includes/confirm-page-summary.html" %}
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for the same company</a>
+                </li>
+                <li>
+                    <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for a different company</a>
+                </li>
+            </ul>
+
+            <h2 class="govuk-heading-m">{{ i18n.feedbackTitle }}</h2>
+            <p class="govuk-body">{{ i18n.testServiceText}} <a href="https://www.smartsurvey.co.uk/s/directors-conf/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.testServiceLinkText }}</a>.</p>
+        </form>
+    </div>
+</div>
+{% endblock %}
