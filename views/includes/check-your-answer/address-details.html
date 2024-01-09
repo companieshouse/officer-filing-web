@@ -25,7 +25,7 @@
 {% endset %}
 
 {% set displayResidentialAddress %}
-  {% if officerFiling.isServiceAddressSameAsHomeAddress %}
+  {% if officerFiling.isHomeAddressSameAsServiceAddress %}
     The home address is the same as the correspondence address
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list">

@@ -63,7 +63,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
     };
     if (selectedSraAddressChoice === "director_registered_office_address") {
-      officerFilingBody.isServiceAddressSameAsHomeAddress = false;
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
@@ -81,7 +80,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res,  req);
       }
     } else {
-      officerFilingBody.isServiceAddressSameAsHomeAddress = false;
+      officerFilingBody.isHomeAddressSameAsServiceAddress = false;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
     }
