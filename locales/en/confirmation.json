@@ -14,5 +14,10 @@
   "testServiceText": "This is a new service. Help us improve it by completing our ",
   "testServiceLinkText": "short survey",
   "updateSubmitted": "Update submitted",
-  "updateConfirmationTitle" : "Director update submitted"
+  "updateConfirmationTitle" : "Director update submitted",
+  "updateTypeName": "Name",
+  "updateTypeNationality": "Nationality",
+  "updateTypeOccupation": "Occupation",
+  "updateTypeResidentialAddress": "Residential Address",
+  "updateTypeCorrespondenceAddress": "Correspondence Address"
 }

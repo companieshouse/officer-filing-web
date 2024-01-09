@@ -26,6 +26,60 @@
                 </div>
             </div>
 
+            {% set updatedFields = "" %}
+            {% if nameHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ i18n.updateTypeName %}
+            {% endif %}
+            {% if nationalityHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeNationality %}
+            {% endif %}
+            {% if occupationHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeOccupation %}
+            {% endif %}
+            {% if residentialAddressHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeResidentialAddress %}
+            {% endif %}
+            {% if correspondenceAddressHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeCorrespondenceAddress %}
+            {% endif %}
+            {% set submittedTypesString = updatedFields %}
+
+            {{ govukSummaryList({
+                  rows: [
+                    {
+                      key: {
+                        text: i18n.confirmCompanyNumber
+                      },
+                      value: {
+                        text: companyNumber
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.confirmCompanyName
+                      },
+                      value: {
+                        text: companyName
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.director
+                      },
+                      value: {
+                        text: directorName
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.updateSubmitted
+                      },
+                      value: {
+                        text: submittedTypesString
+                      }
+                    }
+                  ]
+            }) }}
 
             {% include "includes/confirm-page-summary.html" %}
             <ul class="govuk-list govuk-list--spaced">

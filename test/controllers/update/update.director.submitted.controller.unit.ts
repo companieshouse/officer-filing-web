@@ -1,5 +1,3 @@
-import {getCompanyProfile} from "../../../src/services/company.profile.service";
-
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/company.profile.service");
 jest.mock("../../../src/services/officer.filing.service");
@@ -12,7 +10,8 @@ import {
   UPDATE_DIRECTOR_SUBMITTED_PATH,
   urlParams
 } from "../../../src/types/page.urls";
-import {getOfficerFiling} from "../../../src/services/officer.filing.service";
+import { getCompanyProfile } from "../../../src/services/company.profile.service";
+import { getOfficerFiling } from "../../../src/services/officer.filing.service";
 import {validCompanyProfile} from "../../mocks/company.profile.mock";
 const SURVEY_LINK = "https://www.smartsurvey.co.uk/s/directors-conf/"
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -51,6 +50,48 @@ describe("Director date details controller tests", () => {
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(TRANSACTION_ID);
       expect(response.text).toContain(SURVEY_LINK);
+    });
+
+    it("Should display single dynamic content for update submitted based on officerFiling", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nameHasBeenUpdated: true,
+        nationalityHasBeenUpdated: false,
+        occupationHasBeenUpdated: false,
+        residentialAddressHasBeenUpdated: false,
+        correspondenceAddressHasBeenUpdated: false,
+      });
+
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+
+      expect(response.text).toContain("Name");
+    });
+
+    it("Should display specific dynamic content for update submitted based on officerFiling", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nameHasBeenUpdated: true,
+        nationalityHasBeenUpdated: false,
+        occupationHasBeenUpdated: false,
+        residentialAddressHasBeenUpdated: true,
+        correspondenceAddressHasBeenUpdated: true,
+      });
+
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+
+      expect(response.text).toContain("Name, Residential Address, Correspondence Address");
+    });
+
+    it("Should display all dynamic content for update submitted based on officerFiling", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nameHasBeenUpdated: true,
+        nationalityHasBeenUpdated: true,
+        occupationHasBeenUpdated: true,
+        residentialAddressHasBeenUpdated: true,
+        correspondenceAddressHasBeenUpdated: true,
+      });
+
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+
+      expect(response.text).toContain("Name, Nationality, Occupation, Residential Address, Correspondence Address");
     });
 
   });

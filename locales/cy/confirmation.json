@@ -14,5 +14,10 @@
   "testServiceText": "WLE ",
   "testServiceLinkText": "WLE",
   "updateSubmitted": "WLE",
-  "updateConfirmationTitle" : "WLE"
+  "updateConfirmationTitle" : "WLE",
+  "updateTypeName": "WLE",
+  "updateTypeNationality": "WLE",
+  "updateTypeOccupation": "WLE",
+  "updateTypeResidentialAddress": "WLE",
+  "updateTypeCorrespondenceAddress": "WLE"
 }

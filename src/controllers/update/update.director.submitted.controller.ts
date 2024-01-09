@@ -30,6 +30,11 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 			companyName: companyProfile.companyName,
 			directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
 			updateDirectorSameCompany: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
+			nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,
+			nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
+			occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,
+			residentialAddressHasBeenUpdated: officerFiling.residentialAddressHasBeenUpdated,
+			correspondenceAddressHasBeenUpdated: officerFiling.correspondenceAddressHasBeenUpdated,
 			...getLocaleInfo(locales, lang),
 			currentUrl : req.originalUrl,
 		})
