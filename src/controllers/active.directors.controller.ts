@@ -22,7 +22,7 @@ import { isActiveFeature } from "../utils/feature.flag";
 import { AP01_ACTIVE, CH01_ACTIVE, PIWIK_APPOINT_DIRECTOR_START_GOAL_ID, PIWIK_REMOVE_DIRECTOR_START_GOAL_ID, PIWIK_UPDATE_DIRECTOR_START_GOAL_ID } from "../utils/properties";
 import { postOfficerFiling } from "../services/officer.filing.service";
 import { PaginationData } from "../types";
-import { selectLang, addLangToUrl } from "../utils/localise";
+import { selectLang, addLangToUrl, getLocalesService, getLocaleInfo } from "../utils/localise";
 import { logger } from "../utils/logger";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
@@ -30,16 +30,15 @@ import { getCompanyAppointmentFullRecord } from "../services/company.appointment
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
     const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-
     let paginatedDirectorsList: OfficerCard[] = [];
     let paginationElement: PaginationData | undefined = undefined;
-
     if (directorList.length !== 0) {
       // Get current page number
       let page = req.query["page"];
@@ -67,7 +66,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     return res.render(Templates.ACTIVE_DIRECTORS, {
-      lang,
       ap01Active: isActiveFeature(AP01_ACTIVE),
       PIWIK_REMOVE_DIRECTOR_START_GOAL_ID,
       PIWIK_APPOINT_DIRECTOR_START_GOAL_ID,
@@ -78,7 +76,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       company: companyProfile,
       pagination: paginationElement,
       updateEnabled: updateEnabled,
-      publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type)
+      publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type),
+      ...getLocaleInfo(locales, lang),
     });
   } catch (e) {
     return next(e);
@@ -98,7 +97,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
   const updateAppointmentId = req.body.updateAppointmentId;
   if (updateAppointmentId) {
-    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId);
+    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId, lang);
   }
 
   return beginAppointmentJourney(req, res, session, transactionId, lang);
@@ -125,7 +124,7 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 /**
  * Post an officer filing and redirect to the first page in the CH01 journey.
 */
-async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any, lang: string | undefined) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const nationalities = appointment.nationality?.split(",");
@@ -170,7 +169,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+  const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang);
   return res.redirect(nextPageUrl);
 }
 
