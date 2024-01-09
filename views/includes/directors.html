@@ -1,17 +1,4 @@
-{% set dateOfBirthMonthName = i18n[officerCard.officer.dateOfBirth.split(' ')[0]] %}
-{% set dateOfBithYear = officerCard.officer.dateOfBirth.split(' ')[1] %}
-
-{% set yearAppointed = officerCard.officer.appointedOn.split(' ')[1] %}
-{% set fullAppointedDate = officerCard.officer.appointedOn.split(' ') %}
-
-{% if fullAppointedDate|length === 2 %}
-  {% set appointedDate = i18n.currentDirectorAppointedBefore + ' ' +  yearAppointed %}
-{% elif fullAppointedDate|length === 3 %}
-  {% set  appointedDate =  fullAppointedDate[0] + ' ' +  i18n[fullAppointedDate[1]] +  ' ' + fullAppointedDate[2] %}
-{% else %}
-  {% set appointedDate = officerCard.officer.appointedOn %}
-{% endif %}
-
+{% import "includes/current-director-date-localisation.html" as macros %}
 <div class="govuk-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">{{officerCard.officer.name}}</h2>
@@ -31,7 +18,7 @@
           {{ i18n.currentDirectorDobLabel }}
         </dt>
         <dd class="govuk-summary-list__value">
-          {{ dateOfBirthMonthName + ' ' + dateOfBithYear}}
+          {{ macros.localiseDateOfBirth(officerCard.officer.dateOfBirth, i18n) }}
         </dd>
       </div>
       <div class="govuk-summary-list__row">
@@ -39,7 +26,7 @@
           {{ i18n.currentDirectorAppointedDateLabel }}
         </dt>
         <dd class="govuk-summary-list__value">
-          {{ appointedDate }}
+          {{ macros.localiseAppointedDate(officerCard.officer.appointedOn, i18n) }}
         </dd>
       </div>
       <!-- empty div tag to reflect the prototype (horizontal line) -->

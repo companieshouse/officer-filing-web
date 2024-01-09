@@ -1,0 +1,23 @@
+{% macro localiseAppointedDate(dateAppointed, i18n) %}
+  {% set yearAppointed = dateAppointed.split(' ')[1] %}
+  {% set fullAppointedDate = dateAppointed.split(' ') %}
+
+  {% if fullAppointedDate|length === 2 %}
+    {% set appointedDate = i18n.currentDirectorAppointedBefore + ' ' +  yearAppointed %}
+    {{ appointedDate }}
+  {% elif fullAppointedDate|length === 3 %}
+    {% set appointedDate = fullAppointedDate[0] + ' ' +  i18n[fullAppointedDate[1]] +  ' ' + fullAppointedDate[2] %}
+    {{ appointedDate }}
+  {% else %}
+    {% set appointedDate = dateAppointed %}
+    {{ appointedDate }}
+  {% endif %}
+{% endmacro %}
+
+{% macro localiseDateOfBirth(dateOfBirth, i18n) %}
+  {% set dateOfBirthMonthName = i18n[dateOfBirth.split(' ')[0]] %}
+  {% set dateOfBirthYear = dateOfBirth.split(' ')[1] %}
+
+  {% set dateOfBirth = dateOfBirthMonthName + ' ' +  dateOfBirthYear %}
+  {{ dateOfBirth }}
+{% endmacro %}
