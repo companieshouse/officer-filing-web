@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's name?" %}
+{% set title = i18n.directorNameTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -18,7 +18,7 @@
 
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">What is the director's name?</h1>
+        <h1 class="govuk-heading-l">{{ i18n.directorNameTitle }}</h1>
 
         {% include "includes/inputs/fields/title-input.html" %}
         {% include "includes/inputs/fields/first-name-input.html" %}
@@ -79,20 +79,21 @@
         {% endif %}
 
         {% if isUpdate %}
-          {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title, if relevant." %}
+          {% set insetText = i18n.directorNamePublicRegisterInformation %}
         {% else %}
           {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant." %}
         {% endif %}
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
+          <h2 class="govuk-heading-m">{{ i18n.directorNamePublicRegisterInformationHeading }}</h2>
             <p>{{ insetText }}</p>
         </div>
 
+        <input type="hidden" name="lang" value="{{lang}}">
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>
