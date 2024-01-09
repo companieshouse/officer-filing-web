@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = [ i18n.currentDirectorTitle + " " + i18n.for + " ", company.companyName] | join  %}
+{% set title = [ i18n.currentDirectorTitle + " " + i18n.currentDirectorTitlefor + " ", company.companyName] | join  %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}

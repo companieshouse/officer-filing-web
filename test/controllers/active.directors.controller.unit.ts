@@ -58,6 +58,43 @@ describe("Active directors controller tests", () => {
     mockGetCompanyAppointmentFullRecord.mockClear();
   });
 
+  describe('localisation tests', () => {
+    const mockRequest = {
+      query: {
+        lang: "en"
+      }
+    };
+
+    it("Should display active non-corporate directors in welsh", async () => {
+      mockRequest.query.lang = "cy"
+      const response = (await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL).query(mockRequest.query));
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("JANE");
+      expect(response.text).toContain("ALICE");
+      expect(response.text).toContain("SMITH");
+      expect(response.text).toContain("tbd");
+      expect(response.text).toContain("tbd");
+      expect(response.text).toContain("tbd 2001");
+      expect(response.text).toContain("tbd");
+      expect(response.text).toContain("11 tbd 2019");
+    }); 
+    
+    it("Should display active non-corporate directors in english", async () => {
+      mockRequest.query.lang = "en"
+      const response = (await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL).query(mockRequest.query));
+
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("JANE");
+      expect(response.text).toContain("ALICE");
+      expect(response.text).toContain("SMITH");
+      expect(response.text).toContain("Director");
+      expect(response.text).toContain("Date of birth");
+      expect(response.text).toContain("December 2001");
+      expect(response.text).toContain("Date appointed");
+      expect(response.text).toContain("11 May 2019");
+    });
+  });
+
   describe("get tests", () => {
 
     it("Should navigate to current directors page", async () => {
