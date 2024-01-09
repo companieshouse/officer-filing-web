@@ -72,11 +72,11 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("JANE");
       expect(response.text).toContain("ALICE");
       expect(response.text).toContain("SMITH");
-      expect(response.text).toContain("tbd");
-      expect(response.text).toContain("tbd");
-      expect(response.text).toContain("tbd 2001");
-      expect(response.text).toContain("tbd");
-      expect(response.text).toContain("11 tbd 2019");
+      expect(response.text).toContain("Cyfarwyddwr");
+      expect(response.text).toContain("Dyddiad geni");
+      expect(response.text).toContain("Rhagfyr 2001");
+      expect(response.text).toContain("Dyddiad penodi");
+      expect(response.text).toContain("11 Mai 2019");
     }); 
     
     it("Should display active non-corporate directors in english", async () => {

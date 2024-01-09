@@ -1,14 +1,14 @@
 {
-  "January": "tbd",
-  "February": "tbd",
-  "March": "tbd",
-  "April": "tbd",
-  "May": "tbd",
-  "June": "tbd",
-  "July": "tbd",
-  "August": "tbd",
-  "September": "tbd",
-  "October": "tbd",
-  "November": "tbd",
-  "December": "tbd"
+  "January": "Ionawr",
+  "February": "Chwefror",
+  "March": "Mawrth",
+  "April": "Ebrill",
+  "May": "Mai",
+  "June": "Mehefin",
+  "July": "Gorffennaf",
+  "August": "Awst",
+  "September": "Medi",
+  "October": "Hydref",
+  "November": "Tachwedd",
+  "December": "Rhagfyr"
 }
