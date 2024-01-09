@@ -19,8 +19,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    console.log("******OFFICER FILING")
-    console.log(officerFiling)
 
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
