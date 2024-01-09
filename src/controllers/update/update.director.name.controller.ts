@@ -7,6 +7,6 @@ export const get = (req: Request, resp: Response, next: NextFunction) => {
   getDirectorName(req, resp, next, Templates.UPDATE_DIRECTOR_NAME, UPDATE_DIRECTOR_DETAILS_PATH, true);
 }
 
-export const post = (req: Request, resp: Response, next: NextFunction) => {
+export const post = async (req: Request, resp: Response, next: NextFunction) => {
   postDirectorName(req, resp, next, UPDATE_DIRECTOR_DETAILS_PATH, true);
-}
+};

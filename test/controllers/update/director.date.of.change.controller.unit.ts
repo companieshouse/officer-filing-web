@@ -124,7 +124,7 @@ describe("Director date details controller tests", () => {
             "date_of_change-month": "09",
             "date_of_change-year": "2008" });
 
-        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009.");
+        expect(response.text).toContain("Date the director’s details changed must be on or after 1 October 2009");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
@@ -142,6 +142,21 @@ describe("Director date details controller tests", () => {
             "date_of_change-year": "2014" });
 
         expect(response.text).toContain("Enter a date that is on or after the date the director was appointed");
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      });
+
+      it("Should display error before patching if date of change does not include month and year", async () => {
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+        const response = await request(app)
+          .post(PAGE_URL)
+          .send({
+            "date_of_change-day": "10",
+            "date_of_change-month": "",
+            "date_of_change-year": "" });
+
+        expect(response.text).toContain("Date the director’s details changed must include a month and year");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
     });

@@ -11,9 +11,6 @@ import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../..
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { validateName } from "../../src/validation/name.validation";
-import { formatValidationErrors } from "../../src/validation/validation";
-import { NameValidation } from "../../src/validation/name.validation.config";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -40,8 +37,9 @@ describe("Director name controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
+      mockGetOfficerFiling.mockClear();
     });
-  
+
     describe("get tests", () => {
       it("Should navigate to director name page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
@@ -109,11 +107,10 @@ describe("Director name controller tests", () => {
 
     describe("post tests", () => {
       it("Should redirect to date of birth page if there are no errors", async () => {  
-
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
-        
+
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
@@ -160,4 +157,4 @@ describe("Director name controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
     });
-});
+  });
