@@ -170,36 +170,36 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Before 1992");
       });
 
-    // it("Should display View and update Director button when CH01 is enabled", async () => {
-    //   const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+    it("Should display View and update Director button when CH01 is enabled", async () => {
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
-    //   expect(mockGetCompanyOfficers).toHaveBeenCalled();
-    //   expect(response.text).toContain("View and update details");
-    // });
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("View and update details");
+    });
 
-    // it("Should not display View and update Director button when CH01 is disabled", async () => {
-    //   mockIsFeatureFlag.mockReturnValue(false);
-    //   const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+    it("Should not display View and update Director button when CH01 is disabled", async () => {
+      mockIsFeatureFlag.mockReturnValue(false);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
-    //   expect(mockGetCompanyOfficers).toHaveBeenCalled();
-    //   expect(response.text).not.toContain("View and update details");
-    // });
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).not.toContain("View and update details");
+    });
 
-    // it("Should show warning for insufficient number of directors for a private company", async () => {
-    //   mockGetCompanyOfficers.mockResolvedValue([]);
-    //   mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-    //   const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+    it("Should show warning for insufficient number of directors for a private company", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
-    //   expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING);
-    // });
+      expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING);
+    });
 
-    // it("Should show warning for insufficient number of directors for a private company", async () => {
-    //   mockGetCompanyOfficers.mockResolvedValue([]);
-    //   mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
-    //   const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
+    it("Should show warning for insufficient number of directors for a private company", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
-    //   expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING);
-    // });
+      expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING);
+    });
   });
 
   describe("post tests", () => {
