@@ -64,6 +64,19 @@ describe("Director date details controller tests", () => {
       expect(response.text).toContain("John Elizabeth Doe");
     });
 
+    it("Should throw an error is officer filing reference appointment is undefined", async () => {
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: undefined,
+        referenceEtag: "ETAG",
+        resignedOn: "2008-08-08"
+      });
+
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+
+      expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
+
     it("Should display single dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         referenceAppointmentId: "app1",
