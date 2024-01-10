@@ -1,0 +1,15 @@
+{
+  "currentDirectorForText": "Current directors for",
+  "currentDirectorTitle": "Current directors",
+  "CurrentDirectorAppointNewDirectorButton": "Appoint new director",
+  "currentDirectorRoleLabel": "Role",
+  "currentDirectorDobLabel": "Date of birth",
+  "currentDirectorAppointedDateLabel": "Date appointed",
+  "currentDirectorDirectorLabel": "Director",
+  "CurrentDirectorsViewAndUpdateButton": "View and update details",
+  "CurrentDirectorsRemoveDirectorButton": "Remove director",
+  "currentDirectorTitlefor": "for",
+  "currentDirectorAppointedBefore": "Before",
+  "currentDirectorPublicWarningError": "This company has no directors, or not enough directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least 2 directors, and at least one must be a person. The company must tell Companies House who they've appointed within 14 days, or risk prosecution.",
+  "currentDirectorPrivateWarningError": "This company has no directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least one director who is a person and tell Companies House within 14 days, or risk prosecution."
+}
