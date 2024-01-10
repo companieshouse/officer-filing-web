@@ -6,14 +6,30 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
+import { STOP_TYPE } from "../../utils/constants";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+    let currentUrl;
+    if(isUpdate){
+      currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
+    }
+    else{
+      currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
+    }
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(templateName, {
+      ...getLocaleInfo(locales, lang),
+      currentUrl: currentUrl,
       templateName: templateName,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
@@ -47,6 +63,16 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
 
     if (isUpdate) {
       const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = currentOfficerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+      if (currentOfficerFiling.referenceEtag !== companyAppointment.etag) {
+        return res.redirect(
+          urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
+          URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
+      }
+
       if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
         currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
           officerFiling.nameHasBeenUpdated = true;
