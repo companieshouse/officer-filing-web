@@ -23,8 +23,6 @@ import { validateRegisteredAddressComplete } from "../validation/address.validat
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
 
-export const linkOnlyNeedsConfirmation = true; // Just so we can have either 1 or 2 ROA screens.
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
@@ -36,8 +34,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
-      isRegisteredAddressComplete,
-      linkOnlyNeedsConfirmation
+      isRegisteredAddressComplete
     });
   } catch (e) {
     return next(e);
@@ -67,8 +64,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
-        isRegisteredAddressComplete,
-        linkOnlyNeedsConfirmation
+        isRegisteredAddressComplete
       });
     }
 
@@ -79,19 +75,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!isRegisteredAddressComplete) {
       if (selectedSraAddressChoice === registeredOfficerAddressValue) {
-        if (linkOnlyNeedsConfirmation) {
-          // Make user confirm on next page. Could have another session variable to track this 
-          // or pass this to the next page via a query param and have it store the user choice.
-          officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = undefined;
-          officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
-          await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-          return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH, req));
-        } else {
-          officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = true;
-          officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
-          await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-          return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
-        }
+        // Make user confirm on next page. Could have another session variable to track this 
+        // or pass this to the next page via a query param and have it store the user choice.
+        officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = undefined;
+        officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;
+        await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+        return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH, req));
       } else {
         officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress = false;
         officerFilingBody.isServiceAddressSameAsHomeAddress = undefined;

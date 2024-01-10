@@ -18,12 +18,8 @@
       {% if 'undefined' not in directorRegisteredOfficeAddress %}
         {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
-      {% if not isRegisteredAddressComplete and not linkOnlyNeedsConfirmation %}
-        {% set directorRegisteredOfficeAddressValue = "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address."%}
-        {% set directorRegisteredOfficeAddressHint = directorRegisteredOfficeAddress %}
-      {% else %}
-        {% set directorRegisteredOfficeAddressHint = "This is the company's registered office address" %}
-      {% endif %}
+      
+      {% set directorRegisteredOfficeAddressHint = "This is the company's registered office address" %}
       
       <form action="" method="post">
         <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
