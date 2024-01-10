@@ -30,6 +30,7 @@ mockGetOfficerFiling.mockResolvedValue({
   resignedOn: "2008-08-08"
 });
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
@@ -45,6 +46,7 @@ describe("Director date details controller tests", () => {
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
+    mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
@@ -58,14 +60,14 @@ describe("Director date details controller tests", () => {
     });
 
     it("Should display the original name of the director", async () => {
-
-      mockGetCompanyAppointmentFullRecord.mockReturnValueOnce(validCompanyAppointment);
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
       expect(response.text).toContain("John Elizabeth Doe");
     });
 
     it("Should display single dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
@@ -80,6 +82,8 @@ describe("Director date details controller tests", () => {
 
     it("Should display specific dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
@@ -94,6 +98,8 @@ describe("Director date details controller tests", () => {
 
     it("Should display all dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: true,
         occupationHasBeenUpdated: true,
