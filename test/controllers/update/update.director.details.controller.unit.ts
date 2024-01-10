@@ -24,12 +24,13 @@ const PAGE_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const PAGE_URL_WELSH = PAGE_URL + "?lang=cy";
 const NEXT_PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const PAGE_HEADING = "View and update the director's details";
+const PAGE_HEADING = "View and update the director&#39;s details";
 
 describe("Director details tests", () => {
 
@@ -56,9 +57,16 @@ describe("Director details tests", () => {
   describe("GET tests", () => {
     it("Should display the update director details page", async () => {
       const response = await request(app).get(PAGE_URL);
-      expect(response.text).toContain("View and update the director's details");
+      expect(response.text).toContain("View and update the director&#39;s details");
       expect(response.text).toContain("Director details");
       expect(response.text).toContain("Address details");
+    });
+
+    it("Should display the update director details page in Welsh", async () => {
+      const response = await request(app).get(PAGE_URL_WELSH);
+      expect(response.text).toContain("TO BE TRANSLATED");
+      expect(response.text).toContain("TO BE TRANSLATED");
+      expect(response.text).toContain("TO BE TRANSLATED");
     });
 
     it("Should display the details for the active director", async () => {

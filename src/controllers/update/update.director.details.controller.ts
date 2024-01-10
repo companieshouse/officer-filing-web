@@ -10,6 +10,7 @@ import {
   DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -19,6 +20,8 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     let updatedData = false;
 
     if (officerFiling.nameHasBeenUpdated || officerFiling.occupationHasBeenUpdated || officerFiling.nationalityHasBeenUpdated ||
@@ -33,6 +36,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       officerFiling: officerFiling,
       ...officerFiling,
       ...companyProfile,
+      ...getLocaleInfo(locales, lang),
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
