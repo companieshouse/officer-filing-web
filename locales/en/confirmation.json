@@ -1,0 +1,23 @@
+{
+  "referenceNumber" : "Reference number",
+  "director" : "Director",
+  "whatHappensNextTitle": "What happens next",
+  "whatHappensNextLine1": "We'll send a confirmation email to you which contains your reference number.",
+  "whatHappensNextLine2": "We'll usually email you within 2 working days to let you know if your submission has been accepted or rejected.",
+  "whatHappensNextLine3_1": "If it's accepted, we'll add it to the company's filing history on the ",
+  "whatHappensNextLine3_2link": "Companies House register",
+  "whatHappensNextLine3_3": "If it's rejected, we'll email you to let you know what to do next.",
+  "whatDoYouWantToDoNextTitle": "What do you want to do next?",
+  "updateDirectorSameCompanyLink": "Update director information for the same company",
+  "updateDirectorDifferentCompanyLink": "Update director information for a different company",
+  "feedbackTitle": "Feedback",
+  "testServiceText": "This is a new service. Help us improve it by completing our ",
+  "testServiceLinkText": "short survey",
+  "updateSubmitted": "Update submitted",
+  "updateConfirmationTitle" : "Director update submitted",
+  "updateTypeName": "Name",
+  "updateTypeNationality": "Nationality",
+  "updateTypeOccupation": "Occupation",
+  "updateTypeResidentialAddress": "Residential Address",
+  "updateTypeCorrespondenceAddress": "Correspondence Address"
+}

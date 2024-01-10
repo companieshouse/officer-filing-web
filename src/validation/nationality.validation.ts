@@ -9,13 +9,16 @@ import { formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { urlUtils } from "../utils/url";
-import { DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
+import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z]+(?: [a-zA-Z]+|-?[a-zA-Z]+(?:-[a-zA-Z]+)?(?: [a-zA-Z]+)?)*$/;
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
@@ -24,10 +27,17 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
     const nationality1 = getField(req, DirectorField.NATIONALITY_1);
     const nationality2 = getField(req, DirectorField.NATIONALITY_2);
     const nationality3 = getField(req, DirectorField.NATIONALITY_3);
+    const isUpdate = req.path.includes("update-director-name");
+    let currentUrl: string;
+    if (isUpdate) {
+      currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req)
+    } else {
+      currentUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)
+    }
 
     const frontendValidationErrors = validateNationality([nationality1, nationality2, nationality3], NationalityValidation);
     if(frontendValidationErrors?.length) {
-      const formattedErrors = formatValidationErrors(frontendValidationErrors);
+      const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
       return res.render(Templates.DIRECTOR_NATIONALITY, {
         templateName: Templates.DIRECTOR_NATIONALITY,
         backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
@@ -37,7 +47,9 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
         typeahead_errors: JSON.stringify(formattedErrors),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         nationality2_hidden: getField(req, DirectorField.NATIONALITY_2_RADIO),
-        nationality3_hidden: getField(req, DirectorField.NATIONALITY_3_RADIO)
+        nationality3_hidden: getField(req, DirectorField.NATIONALITY_3_RADIO),
+        ...getLocaleInfo(locales, lang),
+        currentUrl: currentUrl
       });
     }
     return next();

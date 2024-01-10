@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% set title = i18n.updateConfirmationTitle %}
+
+{% block pageTitle %}
+{% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+        {% include "includes/list/errors.html" %}
+
+        <form action="" method="post">
+
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">
+                    {{ i18n.updateConfirmationTitle }}
+                </h1>
+                <div class="govuk-panel__body">
+                    {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
+                </div>
+            </div>
+
+            {% set updatedFields = "" %}
+            {% if nameHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ i18n.updateTypeName %}
+            {% endif %}
+            {% if nationalityHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeNationality %}
+            {% endif %}
+            {% if occupationHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeOccupation %}
+            {% endif %}
+            {% if residentialAddressHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeResidentialAddress %}
+            {% endif %}
+            {% if correspondenceAddressHasBeenUpdated %}
+              {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeCorrespondenceAddress %}
+            {% endif %}
+            {% set submittedTypesString = updatedFields %}
+
+            {{ govukSummaryList({
+                  rows: [
+                    {
+                      key: {
+                        text: i18n.confirmCompanyNumber
+                      },
+                      value: {
+                        text: companyNumber
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.confirmCompanyName
+                      },
+                      value: {
+                        text: companyName
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.director
+                      },
+                      value: {
+                        text: directorName
+                      }
+                    },
+                    {
+                      key: {
+                        text: i18n.updateSubmitted
+                      },
+                      value: {
+                        text: submittedTypesString
+                      }
+                    }
+                  ]
+            }) }}
+
+            {% include "includes/confirm-page-summary.html" %}
+            <ul class="govuk-list govuk-list--spaced">
+                <li>
+                    <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.updateDirectorSameCompanyLink }} </a>
+                </li>
+                <li>
+                    <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.updateDirectorDifferentCompanyLink }} </a>
+                </li>
+            </ul>
+
+            <h2 class="govuk-heading-m">{{ i18n.feedbackTitle }}</h2>
+            <p class="govuk-body">{{ i18n.testServiceText}} <a href="https://www.smartsurvey.co.uk/s/directors-conf/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.testServiceLinkText }}</a>.</p>
+        </form>
+    </div>
+</div>
+{% endblock %}

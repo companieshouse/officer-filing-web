@@ -1,0 +1,10 @@
+{
+  "directoNationalityTitle": "Beth yw cenedligrwydd y cyfarwyddwr?",
+  "directorNationalityListHint": "Dechreuwch deipio cenedligrwydd, yna dewiswch o'r rhestr",
+  "directorNationalityAddSecondLabel": "Ychwanegu ail genedligrwydd",
+  "directorNationalitySecondNationalityLabel": "Ail genedligrwydd (os yn berthnasol)",
+  "directorNationalitySecondNationalityHint": "Caniateir dinasyddiaeth ddeuol (a elwir hefyd yn genedligrwydd deuol) mewn rhai gwledydd. Mae hyn yn golygu y gallwch fod yn ddinesydd o'ch gwlad eich hun ac o wlad arall.",
+  "directorNationalityAddThirdLabel": "Ychwanegu trydydd cenedligrwydd",
+  "directorNationalityThirdNationalityLabel": "Trydydd cenedligrwydd (os yn berthnasol)",
+  "directorNationalityThirdNationalityHint": "Caniateir dinasyddiaeth luosog (a elwir hefyd yn genedligrwydd lluosog) mewn rhai gwledydd. Mae hyn yn golygu y gallwch fod yn ddinesydd o'ch gwlad eich hun a dwy wlad arall."
+}

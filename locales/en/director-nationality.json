@@ -1,0 +1,10 @@
+{
+  "directoNationalityTitle": "What is the director's nationality?",
+  "directorNationalityListHint": "Start typing a nationality, then choose from the list",
+  "directorNationalityAddSecondLabel": "Add a second nationality",
+  "directorNationalitySecondNationalityLabel": "Second nationality (if relevant)",
+  "directorNationalitySecondNationalityHint": "Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.",
+  "directorNationalityAddThirdLabel": "Add a third nationality",
+  "directorNationalityThirdNationalityLabel": "Third nationality (if relevant)",
+  "directorNationalityThirdNationalityHint": "Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries."
+}

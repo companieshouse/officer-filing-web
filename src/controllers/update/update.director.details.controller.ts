@@ -7,13 +7,15 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { getCompanyProfile } from "../../services/company.profile.service";
 import {
   CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH,
-  DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH,
+  DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH,
   UPDATE_DIRECTOR_NATIONALITY_PATH
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { selectLang, addLangToUrl } from '../../utils/localise';
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
+    const lang = selectLang(req.query.lang);
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -35,7 +37,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       ...officerFiling,
       ...companyProfile,
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
-      nationalityLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req),
+      nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
       isUpdate: true,

@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
       backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      ha_to_sa: calculateHaToSaRadioFromFiling(officerFiling.isServiceAddressSameAsHomeAddress),
+      ha_to_sa: calculateHaToSaRadioFromFiling(officerFiling.isHomeAddressSameAsServiceAddress),
     });
   } catch (e) {
     return next(e);
@@ -36,10 +36,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const isServiceAddressSameAsHomeAddress = calculateHaToSaBooleanValue(req);
+    const isHomeAddressSameAsServiceAddress = calculateHaToSaBooleanValue(req);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     
-    if (isServiceAddressSameAsHomeAddress === undefined) {
+    if (isHomeAddressSameAsServiceAddress === undefined) {
       const linkError = createValidationErrorBasic(HA_TO_SA_ERROR, DirectorField.HA_TO_SA_RADIO);
       return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, {
         templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_LINK,
@@ -50,7 +50,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      isServiceAddressSameAsHomeAddress: isServiceAddressSameAsHomeAddress
+      isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 

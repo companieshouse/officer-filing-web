@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's nationality?" %}
+{% set title = i18n.directoNationalityTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -17,9 +17,12 @@
   {% set dropdownTwoError =  errors.typeahead_input_1 %}
   {% set dropdownThreeError =  errors.typeahead_input_2 %}
 {% endif %}
-{% set typeaheadHint = "Start typing a nationality, then choose from the list|Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.|Multiple citizenship (also known as multiple nationality) is allowed in some countries. This means you can be a citizen of your own country and two other countries." %}
-{% set typeaheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>What is the director's nationality?</label></h1>|<label class='govuk-label' for='typeahead_input_1'>Second nationality (if relevant)</label>|<label class='govuk-label' for='typeahead_input_2'>Third nationality (if relevant)</label>" | safe %}
-  <div class="govuk-grid-row">
+{% set typeaheadHint = i18n.directorNationalityListHint+"|"+i18n.directorNationalitySecondNationalityHint+"|"+i18n.directorNationalityThirdNationalityHint %}
+{% set thirdNationality = "<label class='govuk-label' for='typeahead_input_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
+
+{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityHint~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
+{% set typeaheadTitle =  aheadTitle | safe %}
+<div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
@@ -39,7 +42,7 @@
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
         <p id="nationality-2-link" class="govuk-body" style="display: none;">
-          <a data-event-id="nationality-2-link" href="#" id="second-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a second nationality</a>
+          <a data-event-id="nationality-2-link" href="#" id="second-nationality-link" class="govuk-link govuk-link--no-visited-state">{{ i18n.directorNationalityAddSecondLabel }}</a>
         </p>
 
         <div id="typeahead-form-group-1" class="govuk-form-group">
@@ -52,7 +55,7 @@
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
         <p id= "nationality-3-link" class="govuk-body" style="display: none;">
-          <a data-event-id="nationality-3-link" href="#" id="third-nationality-link" class="govuk-link govuk-link--no-visited-state">Add a third nationality</a>
+          <a data-event-id="nationality-3-link" href="#" id="third-nationality-link" class="govuk-link govuk-link--no-visited-state">{{ i18n.directorNationalityAddThirdLabel }}</a>
         </p>
 
         <div id="typeahead-form-group-2" class="govuk-form-group">
@@ -66,15 +69,15 @@
         </div>
 
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will show the director's nationality on the public Companies House register.</p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.whatInformationShownInOnlineRegisterInsetHint }}</p>
         </div>
 
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
         <!-- Hidden radio buttons to record whether links are clicked -->

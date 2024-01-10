@@ -22,7 +22,7 @@ const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as j
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "What is the director's name?";
+const PAGE_HEADING = "What is the director&#39;s name?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -75,7 +75,6 @@ describe("Update Director name controller tests", () => {
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
-          formerNames: "testFormer"
         });
 
         const response = await request(app).get(DIRECTOR_NAME_URL);
@@ -86,6 +85,19 @@ describe("Update Director name controller tests", () => {
         expect(response.text).toContain("testMiddle");
         expect(response.text).toContain("testLast");
         expect(response.text).not.toContain("testFormer");
+      });
+
+      it("Should render the page in welsh", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+        });
+
+        const response = await request(app).get(DIRECTOR_NAME_URL + "?lang=cy");
+  
+        expect(response.text).toContain("to be translated");
       });
 
     });
