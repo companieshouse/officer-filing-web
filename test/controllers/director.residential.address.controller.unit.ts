@@ -440,11 +440,11 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_PROTECTED_INFORMATION_PAGE_URL);
     });
 
-    it(`should patch the isServiceAddressSameAsHomeAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async () => {
+    it(`should patch the isHomeAddressSameAsServiceAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
-        isServiceAddressSameAsHomeAddress: true,
+        isHomeAddressSameAsServiceAddress: true,
         checkYourAnswersLink: "/check-your-answer"
       });
 
@@ -456,7 +456,7 @@ describe("Director name controller tests", () => {
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
         "directorResidentialAddressChoice": "director_registered_office_address",
         "protectedDetailsBackLink": "/director-home-address",
-        "isServiceAddressSameAsHomeAddress": false
+        "isHomeAddressSameAsServiceAddress": false
       })
 
       //expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);

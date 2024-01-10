@@ -67,10 +67,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    if (patchFiling.data.isServiceAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
     }
-    else if (!patchFiling.data.isServiceAddressSameAsHomeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    else if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
     }
     else {
