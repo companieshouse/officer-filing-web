@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
     const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
-    logger.info("For home address, isResidentialAddressComplete: " + isRegisteredAddressComplete + " officerFiling.isServiceAddressSameAsRegisteredOfficeAddress: " + officerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+    
     if (!isRegisteredAddressComplete && officerFiling.isServiceAddressSameAsRegisteredOfficeAddress) {
       logger.info("Can't use registered office address as residential address because correspondence address is linked so search for address");
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH + "?backLink=" + ADDRESS_START, req));
