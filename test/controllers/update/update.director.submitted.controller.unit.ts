@@ -1,6 +1,6 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/company.profile.service");
-jest.mock("../../../src/servcies/company.appointments.service");
+jest.mock("../../../src/services/company.appointments.service");
 jest.mock("../../../src/services/officer.filing.service");
 
 import mocks from "../../mocks/all.middleware.mock";
