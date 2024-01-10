@@ -14,26 +14,10 @@ import { createValidationErrorBasic, formatValidationErrors, mapValidationRespon
 import { ValidationError } from "../model/validation.model";
 import { nationalityErrorMessageKey, nationalityOneErrorMessageKey, nationalityThreeErrorMessageKey, nationalityTwoErrorMessageKey } from "../utils/api.enumerations.keys";
 import { NATIONALITY_LIST } from "../utils/properties";
+import { getDirectorNationality } from "./shared.controllers/director.nationality.controller";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    return res.render(Templates.DIRECTOR_NATIONALITY, {
-      templateName: Templates.DIRECTOR_NATIONALITY,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
-      typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
-      typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link
-    });
-  } catch (e) {
-    return next(e);
-  }
+  getDirectorNationality(req, res, next, Templates.DIRECTOR_NATIONALITY, DIRECTOR_DATE_DETAILS_PATH)
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

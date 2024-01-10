@@ -20,7 +20,8 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link
+      nationality3_hidden: officerFiling.nationality3Link,
+      isUpdate
     });
   } catch (e) {
     return next(e);
