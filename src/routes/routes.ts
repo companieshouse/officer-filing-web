@@ -33,6 +33,7 @@ import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
 import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
+import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
@@ -147,5 +148,5 @@ router.post(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware,
 router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
 router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
 
-router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
-router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
+router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorNationality.get);
+// router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator);

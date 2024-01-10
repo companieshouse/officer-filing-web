@@ -7,7 +7,8 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { getCompanyProfile } from "../../services/company.profile.service";
 import {
   CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH,
-  DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH
+  DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH,
+  UPDATE_DIRECTOR_NATIONALITY_PATH
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
@@ -34,7 +35,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       ...officerFiling,
       ...companyProfile,
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
-      nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
+      nationalityLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
       correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
       isUpdate: true,
