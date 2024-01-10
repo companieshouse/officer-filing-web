@@ -24,15 +24,19 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
     const isRegisteredAddressComplete  = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
     
-    return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY, {
-      templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY,
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
-      isRegisteredAddressComplete
-    });
+    return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY, getPageOptions(req, officerFiling, companyProfile, isRegisteredAddressComplete));
   } catch (e) {
     return next(e);
+  }
+};
+
+const getPageOptions = (req, officerFiling, companyProfile, isRegisteredAddressComplete) => { 
+  return {
+    templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY,
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
+    isRegisteredAddressComplete
   }
 };
 
