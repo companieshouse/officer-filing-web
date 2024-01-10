@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
-{% set title = "Confirm, if the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+{% set title = "Future Changes to the Registered Office Address" %}
+{% set heading = "If the registered office address changes in future, do you want this to apply to the correspondence address too?" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -12,16 +13,17 @@
 
 {% block content %}
 {% include "includes/grid-row-div-start.html" %}
+      <h1 class="govuk-heading-l">{{title}}</h1>
       
       <form action="" method="post">
         <div class="govuk-form-group">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        {% set hintText =  "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address." %}
+        {% set hintText =  "The director's correspondence address will be recorded as the 'same as the registered office address'." %}
         {% set sa_yes = "sa_to_roa_yes" %}
         {% set fieldset = {
             legend: {
-              text: title,
+              text: heading,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
@@ -48,7 +50,7 @@
               value: "sa_to_roa_no",
               text: "No",
               hint: {
-                text: "You’ll have to manually search for or enter an address which can be a completed copy of the residential address."
+                text: "You’ll need to enter the correspondence address on the next screen"
               },
               checked: sa_to_roa === "sa_to_roa_no",
               attributes: {

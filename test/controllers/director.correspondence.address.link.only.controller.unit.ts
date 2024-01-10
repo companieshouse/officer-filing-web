@@ -26,7 +26,7 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "Confirm, ";
+const PAGE_HEADING = "Future Changes to the Registered Office Address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_ONLY_PATH
