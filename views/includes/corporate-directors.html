@@ -10,12 +10,12 @@
           {{ i18n.currentDirectorRoleLabel }}
         </dt>
         <dd class="govuk-summary-list__value">
-          Director        
+          {{ i18n.currentDirectorDirectorLabel }}      
         </dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-          {{ i18n.currentDirectorDobLabel }}
+          {{ i18n.currentDirectorAppointedDateLabel }}
         </dt>
         <dd class="govuk-summary-list__value">
           {{ macros.localiseAppointedDate(officerCard.officer.appointedOn, i18n) }}
