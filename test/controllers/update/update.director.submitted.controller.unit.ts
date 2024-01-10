@@ -1,5 +1,6 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/company.profile.service");
+jest.mock("../../../src/servcies/company.appointments.service");
 jest.mock("../../../src/services/officer.filing.service");
 
 import mocks from "../../mocks/all.middleware.mock";
@@ -12,13 +13,17 @@ import {
 } from "../../../src/types/page.urls";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
-import {validCompanyProfile} from "../../mocks/company.profile.mock";
+import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
+import { validCompanyProfile } from "../../mocks/company.profile.mock";
+import { validCompanyAppointment } from "../../mocks/company.appointment.mock";
+
 const SURVEY_LINK = "https://www.smartsurvey.co.uk/s/directors-conf/"
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockGetOfficerFiling.mockResolvedValue({
   referenceAppointmentId: "app1",
   referenceEtag: "ETAG",
@@ -50,6 +55,13 @@ describe("Director date details controller tests", () => {
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(TRANSACTION_ID);
       expect(response.text).toContain(SURVEY_LINK);
+    });
+
+    it("Should display the original name of the director", async () => {
+
+      mockGetCompanyAppointmentFullRecord.mockReturnValueOnce(validCompanyAppointment);
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+      expect(response.text).toContain("John Elizabeth Doe");
     });
 
     it("Should display single dynamic content for update submitted based on officerFiling", async () => {
