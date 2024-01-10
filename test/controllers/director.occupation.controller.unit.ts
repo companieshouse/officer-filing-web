@@ -15,7 +15,7 @@ import {
   mockValidValidationStatusResponse
 } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors } from "../../src/controllers/director.occupation.controller";
+import { buildValidationErrors } from "../../src/controllers/shared.controllers/director.occupation.controller";
 import { occupationErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;

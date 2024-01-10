@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% set title = "What is the director's occupation?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+
+
+        <div>
+          <span class="govuk-caption-l">{{directorName}}</span>
+          <h1 class="govuk-heading-l"> What is the director's occupation?</h1>
+          <p class="govuk-body">This is optional. If you do not enter anything, we'll show the director's occupation as 'none' on the public Companies House register. 
+          </p>
+          <div id="typeahead-form-group-0" class="govuk-form-group">
+        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
+            {% set typeaheadTitle = "<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='typeahead_input_0'> Occupation</label></h2>" | safe %}
+            {% set dropdownHint = "For example, carpenter." %}
+            {% set dropdownDefaultText = "Choose occupation" %}
+            {% set errorMessage = errors.typeahead_input_0 %}
+            {% set typeaheadHint = 'Start typing an occupation (for example, carpenter) then choose from the list. <br> If your occupation is not shown, you can enter it directly into the box.' | safe %}
+
+            {% include "includes/inputs/fields/typeahead-input.html" %}
+          </div>
+        </div>
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
+            <p>We will show the director's occupation on the public Companies House register.</p>
+        </div>
+    
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

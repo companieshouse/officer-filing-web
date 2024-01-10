@@ -23,6 +23,7 @@ import * as directorResidentialAddressManual from "../controllers/director.resid
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
+import * as directorUpdateOccupation from "../controllers/update/update.director.occupation.controller";
 import * as directorDateOfChange from "../controllers/update/director.date.of.change.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
 import * as removeDirector from "../controllers/remove.director.controller";
@@ -149,3 +150,6 @@ router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameVali
 
 router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
 router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
+
+router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorUpdateOccupation.get);
+router.post(urls.UPDATE_DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorUpdateOccupation.post);

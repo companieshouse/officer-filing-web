@@ -13,6 +13,14 @@ export const formatTitleCase = (str: string|undefined): string =>  {
     });
 };
 
+export const formatSentenceCase = (str: string|undefined): string =>  {
+  if (!str) {
+    return "";
+  }
+
+  return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+};
+
 export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string =>  {
   if (!dateOfBirth) {
     return "";
