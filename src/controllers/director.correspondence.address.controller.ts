@@ -27,26 +27,30 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
     const isRegisteredAddressComplete = validateRegisteredAddressComplete(companyProfile.registeredOfficeAddress);
-    return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, {
-      templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
-      director_correspondence_address: officerFiling.directorServiceAddressChoice,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
-      isRegisteredAddressComplete
-    });
+    return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, getPageOptions(req, officerFiling, companyProfile, isRegisteredAddressComplete));
   } catch (e) {
     return next(e);
   }
 };
 
+const getPageOptions = (req, officerFiling, companyProfile, isRegisteredAddressComplete) => { 
+  return {
+    templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS,
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
+    optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
+    director_correspondence_address: officerFiling.directorServiceAddressChoice,
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+    isRegisteredAddressComplete
+}};
+
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try{
+  try {
+    const session: Session = req.session as Session;
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
+   
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
     const companyProfile = await getCompanyProfile(companyNumber);
