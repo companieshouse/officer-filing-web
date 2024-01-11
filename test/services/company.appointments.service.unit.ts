@@ -50,6 +50,19 @@ describe("Company Appointments service test", () => {
       });
     });
 
+    it("Should return a company appointment with obfuscated usual residential address if officer is secure", async () => {
+      const response = clone(validCompanyAppointmentResource);
+      response.resource.isSecureOfficer = true;
+
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(response);
+      const returnedAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID);
+
+      expect(returnedAppointment.isSecureOfficer).toEqual(true);
+      Object.getOwnPropertyNames(returnedAppointment.usualResidentialAddress).forEach(property => {
+        expect(returnedAppointment.usualResidentialAddress[property]).toEqual("*******");
+      });
+    });
+
     it("Should throw an error if status code >= 400", async () => {
       const HTTP_STATUS_CODE = 400;
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({

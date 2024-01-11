@@ -5,6 +5,8 @@ import { createPrivateOAuthApiClient } from "./api.service";
 import ApiClient from "private-api-sdk-node/dist/client"
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 
+const obfuscatedPattern = "*******";
+
 /**
  * Get company appointment full record from the company appointments API
  * @param companyNumber The company number that the officer belongs to
@@ -29,7 +31,23 @@ export const getCompanyAppointmentFullRecord = async (session: Session, companyN
     throw createAndLogError(`Company Appointments API returned no resource for appointment ID ${appointmentId}`);
   }
 
-  logger.debug(`Received company appointment ${JSON.stringify(sdkResponse)}`);
+  const companyAppointment: CompanyAppointment = sdkResponse.resource;
 
-  return sdkResponse.resource;
+  if (companyAppointment && companyAppointment.isSecureOfficer === true) {
+    companyAppointment.usualResidentialAddress = {
+      addressLine1: obfuscatedPattern,
+      addressLine2: obfuscatedPattern,
+      careOf: obfuscatedPattern,
+      country: obfuscatedPattern,
+      locality: obfuscatedPattern,
+      poBox: obfuscatedPattern,
+      postalCode: obfuscatedPattern,
+      premises: obfuscatedPattern,
+      region: obfuscatedPattern
+    };
+  }
+
+  logger.debug(`Received company appointment ${JSON.stringify(companyAppointment)}`);
+
+  return companyAppointment;
 };
