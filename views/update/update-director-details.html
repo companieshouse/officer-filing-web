@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Update the director's details" %}
+{% set title = i18n.updateDirectorDetailsTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -17,11 +17,11 @@
           <span class="govuk-caption-l gem-c-title__context">
             {{companyName}}
           </span>
-          <h2 class="govuk-heading-l">View and update the director's details</h2>
+          <h2 class="govuk-heading-l">{{ i18n.updateDirectorDetailsTitle }}</h2>
 
-          <p class="govuk-hint">If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.</p>
+          <p class="govuk-hint"> {{ i18n.updateDirectorDetailsHint }}</p>
           {{ govukInsetText({
-            text: "Any updates made to a director's details are pending until submitted and accepted."
+            text: i18n.updateDirectorDetailsInsetText
           }) }}
 
           {% set nationality = nationality1 %}
@@ -32,12 +32,12 @@
             {% set nationality = nationality + "<br>" + nationality3 %}
           {% endif %}
 
-          <p class="govuk-summary-list__key govuk-heading-m">Director details</p>
+          <p class="govuk-summary-list__key govuk-heading-m">{{ i18n.updateDirectorDetailsHeading }}</p>
           {{ govukSummaryList({
             rows: [
               {
                 key: {
-                  text: "Name"
+                  text: i18n.updateDirectorDetailsName
                 },
                 value: {
                   text: firstName + " " + lastName
@@ -46,7 +46,7 @@
                   items: [
                     {
                       href: nameLink,
-                      text: "Update",
+                      text: i18n.updateDirectorDetailsUpdate,
                       visuallyHiddenText: "Name",
                       attributes: {
                         "data-event-id": "update-name-change-link"
@@ -57,7 +57,7 @@
               },
               {
                 key: {
-                  text: "Nationality"
+                  text: i18n.updateDirectorDetailsNationality
                 },
                 value: {
                   html: nationality
@@ -66,7 +66,7 @@
                   items: [
                     {
                       href: nationalityLink,
-                      text: "Update",
+                      text: i18n.updateDirectorDetailsUpdate,
                       visuallyHiddenText: "nationality",
                       attributes: {
                         "data-event-id": "update-nationality-change-link"
@@ -77,7 +77,7 @@
               },
               {
                 key: {
-                  text: "Occupation"
+                  text: i18n.updateDirectorDetailsOccupation
                 },
                 value: {
                   text: occupation
@@ -86,7 +86,7 @@
                   items: [
                     {
                       href: occupationLink,
-                      text: "Update",
+                      text: i18n.updateDirectorDetailsUpdate,
                       visuallyHiddenText: "occupation",
                       attributes: {
                         "data-event-id": "update-occupation-change-link"
@@ -107,13 +107,13 @@
                   id: "submit",
                   "data-event-id": "update-continue-button"
                 },
-                text: "Continue"
+                text: i18n.continue
               }) }}
-              <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">Cancel</a>
+              <a class="govuk-link" href="{{cancelLink}}" data-event-id="update-cancel-link">{{ i18n.cancel }}</a>
             </div>
           {% else %}
             <button id="backToActiveDirectorsButton" name="back_to_active_directors" class="govuk-button govuk-button--secondary govuk-!-margin-right-2" data-module="govuk-button" value="no-change">
-              Go back to current directors
+              {{ i18n.updateDirectorDetailsGoBackButton }}
             </button>
           {% endif %}
       </form>

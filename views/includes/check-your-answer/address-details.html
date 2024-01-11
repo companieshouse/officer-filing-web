@@ -1,6 +1,6 @@
 {% set displayCorrespondenceAddress %}
   {% if officerFiling.isServiceAddressSameAsRegisteredOfficeAddress %}
-    The correspondence address is the same as the registered office address
+  {{ i18n.updateDirectorDetailsCorrespondenceAddressSameAsROA if isUpdate else "The correspondence address is the same as the registered office address" }}
   {% else %}
     <ul class="govuk-list">
         {% if officerFiling.serviceAddress.premises %}
@@ -26,7 +26,7 @@
 
 {% set displayResidentialAddress %}
   {% if officerFiling.isHomeAddressSameAsServiceAddress %}
-    The home address is the same as the correspondence address
+  {{ i18n.updateDirectorDetailsHomeAddressSameAsCorrespondence if isUpdate else "The home address is the same as the correspondence address" }}
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list">
       {% if officerFiling.residentialAddress.premises %}
@@ -62,7 +62,7 @@
   rows: [
     {
       key: {
-        text: "Address details",
+        text: i18n.updateDirectorDetailsAddressDetails if isUpdate else "Address details",
         classes: "govuk-heading-m"
       },
       value: {
@@ -71,7 +71,7 @@
         items: [
           {
             href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Update" if isUpdate else "Change",
+            text: i18n.updateDirectorDetailsUpdate if isUpdate else "Change",
             visuallyHiddenText: "Director's address details",
             attributes: {
               "data-event-id": "address-change-link"
@@ -82,7 +82,7 @@
     },
     {
       key: {
-        text: "Correspondence address"
+        text: i18n.updateDirectorDetailsCorrespondenceAddress  if isUpdate else "Correspondence address"
       },
       value: {
         html: displayCorrespondenceAddress
@@ -90,7 +90,7 @@
     },
     {
       key: {
-        text: "Home address"
+        text: i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address"
       },
       value: {
         html: displayResidentialAddress
