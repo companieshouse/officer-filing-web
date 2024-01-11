@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_OCCUPATION_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
@@ -23,16 +23,21 @@ import { getValidationStatus } from "../../services/validation.status.service";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { STOP_TYPE } from "../../utils/constants";
+import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 
 
-export const getDirectorOccupation = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getDirectorOccupation = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     return res.render(templateName, {
       templateName: templateName,
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(req, isUpdate),
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
@@ -56,7 +61,7 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   // render validation errors
   if(frontendValidationErrors) {
-    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation);
+    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate));
   }
 
   // patch the filing with occupation when no front end validation errors encountered.
@@ -89,7 +94,7 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   // render backend validation errors
   if (backendValidationErrors.length > 0) {
-    return renderPage(res, req, patchedFiling.data, backendValidationErrors, occupation);
+    return renderPage(res, req, patchedFiling.data, backendValidationErrors, occupation, getCurrentUrl(req, isUpdate));
   }
 
   const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
@@ -99,10 +104,14 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
   }
 };
 
-export const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], occupation: string) => {
+export const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], occupation: string, currentUrl: string) => {
   const formattedErrors = formatValidationErrors(validationErrors);
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
   return res.render(Templates.DIRECTOR_OCCUPATION, {
     templateName: Templates.DIRECTOR_OCCUPATION,
+    ...getLocaleInfo(locales, lang),
+    currentUrl: currentUrl,
     backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
     typeahead_array: OCCUPATION_LIST,
     typeahead_value: formatSentenceCase(occupation),
@@ -110,6 +119,21 @@ export const renderPage = (res: Response, req: Request, officerFiling: OfficerFi
     typeahead_errors: JSON.stringify(formattedErrors),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
   });
+}
+
+/**
+ * Determine the URL of the page based on whether it is part of the AP01 or CH01 flow.
+ * @param req 
+ * @param isUpdate 
+ * @returns 
+ */
+const getCurrentUrl = (req: Request, isUpdate: boolean) => {
+  if(isUpdate){
+    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req);
+    }
+    else{
+    return urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)
+    }
 }
 
 /**

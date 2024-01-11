@@ -1,0 +1,11 @@
+{
+  "directorOccupationTitle": "What is the director's occupation?",
+  "directorOccupationBody": "This is optional. If you do not enter anything, we'll show the director's occupation as 'none' on the public Companies House register.",
+  "directorOccupation": "Occupation",
+  "directorOccupationDropdownHint": "For example, carpenter.",
+  "directorOccupationDropdownDefaultText": "Choose occupation",
+  "directorOccupationTypeaheadHintP1": "Start typing an occupation (for example, carpenter) then choose from the list.",
+  "directorOccupationTypeaheadHintP2": "If your occupation is not shown, you can enter it directly into the box.",
+  "directorOccupationPublicRegisterInformationHeading": "What information we'll show on the public online register",
+  "directorOccupationPublicRegisterInformation": "We will show the director's occupation on the public Companies House register."
+}

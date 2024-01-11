@@ -5,7 +5,7 @@ import { Templates } from "../types/template.paths"
 import { getDirectorOccupation, postDirectorOccupation } from "./shared.controllers/director.occupation.controller";
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
-  getDirectorOccupation(req, resp, next, Templates.UPDATE_DIRECTOR_OCCUPATION, DIRECTOR_NATIONALITY_PATH);
+  getDirectorOccupation(req, resp, next, Templates.UPDATE_DIRECTOR_OCCUPATION, DIRECTOR_NATIONALITY_PATH, false);
 }
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
