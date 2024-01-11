@@ -7,8 +7,6 @@
     "updateDirectorDetailsName" : "Name",
     "updateDirectorDetailsNationality" : "Nationality",
     "updateDirectorDetailsOccupation" : "Occupation",
-    "updateDirectorDetailsContinueButton" : "Continue",
-    "updateDirectorDetailsCancelButton" : "Cancel",
     "updateDirectorDetailsGoBackButton" : "Go back to current directors",
     "updateDirectorDetailsAddressDetails" : "Address details",
     "updateDirectorDetailsCorrespondenceAddressSameAsROA" : "The correspondence address is the same as the registered office address",
