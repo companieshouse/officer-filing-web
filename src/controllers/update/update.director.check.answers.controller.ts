@@ -3,19 +3,26 @@ import {
   CURRENT_DIRECTORS_PATH,
   UPDATE_DIRECTOR_NAME_PATH,
   DIRECTOR_DATE_OF_CHANGE_PATH,
-  UPDATE_DIRECTOR_SUBMITTED_PATH
+  UPDATE_DIRECTOR_SUBMITTED_PATH,
+  URL_QUERY_PARAM,
+  BASIC_STOP_PAGE_PATH
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { getCompanyProfile } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { toReadableFormat } from "../../utils/date";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getValidationStatus } from "../../services/validation.status.service";
 import { closeTransaction } from "../../services/transaction.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { STOP_TYPE } from "../../utils/constants";
+import { getCurrentOrFutureDissolved } from "../../services/stop.page.validation.service";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -38,6 +45,26 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const appointmentId = currentOfficerFiling.referenceAppointmentId as string;
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+    // Check if company has been dissolved
+    if (await getCurrentOrFutureDissolved(session, companyNumber)){
+      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED));
+    }
+
+    // Check if ETAG matches
+    if (currentOfficerFiling.referenceEtag !== companyAppointment.etag) {
+      return res.redirect(
+        urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
+    }
+
+    // Run full api validation
+    const validationStatus = await getValidationStatus(session, transactionId, submissionId);
+    if (!validationStatus.isValid) {
+      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG));
+    }
 
     // Close transaction and go to submitted page
     await closeTransaction(session, companyNumber, submissionId, transactionId);
@@ -62,7 +89,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     officerFiling: officerFiling,
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)), 
     occupation:  formatTitleCase(officerFiling.occupation),
-    dateUpdated: toReadableFormat("2023-12-22"),             // Temporarily hard-coded until changedDate is available
+    dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
     nationalityLink: urlUtils.getUrlToPath("", req),
     occupationLink: urlUtils.getUrlToPath("", req),
