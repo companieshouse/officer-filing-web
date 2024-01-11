@@ -78,6 +78,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       updateEnabled: updateEnabled,
       publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type),
       ...getLocaleInfo(locales, lang),
+      currentUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
     });
   } catch (e) {
     return next(e);
