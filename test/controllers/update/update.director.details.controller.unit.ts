@@ -87,6 +87,7 @@ describe("Director details tests", () => {
       expect(response.text).not.toContain(PAGE_HEADING);
       expect(response.text).toContain(ERROR_PAGE_HEADING)
     });
+
   });
 
   describe("POST tests", () => {

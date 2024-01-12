@@ -32,74 +32,70 @@
             {% set nationality = nationality + "<br>" + nationality3 %}
           {% endif %}
 
+          {% set updateRequiredHtml %}
+          <div class="changes-made">
+            <strong class="govuk-tag govuk-tag--blue">Details updated</strong>
+            <p class="govuk-body-s">Pending until submitted and accepted</p>
+          </div>
+          {% endset -%}
+
           <p class="govuk-summary-list__key govuk-heading-m">{{ i18n.updateDirectorDetailsHeading }}</p>
-          {{ govukSummaryList({
-            rows: [
-              {
-                key: {
-                  text: i18n.updateDirectorDetailsName
-                },
-                value: {
-                  text: firstName + " " + lastName
-                },
-                actions: {
-                  items: [
-                    {
-                      href: nameLink,
-                      text: i18n.updateDirectorDetailsUpdate,
-                      visuallyHiddenText: "Name",
-                      attributes: {
-                        "data-event-id": "update-name-change-link"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                key: {
-                  text: i18n.updateDirectorDetailsNationality
-                },
-                value: {
-                  html: nationality
-                },
-                actions: {
-                  items: [
-                    {
-                      href: nationalityLink,
-                      text: i18n.updateDirectorDetailsUpdate,
-                      visuallyHiddenText: "nationality",
-                      attributes: {
-                        "data-event-id": "update-nationality-change-link"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                key: {
-                  text: i18n.updateDirectorDetailsOccupation
-                },
-                value: {
-                  text: occupation
-                },
-                actions: {
-                  items: [
-                    {
-                      href: occupationLink,
-                      text: i18n.updateDirectorDetailsUpdate,
-                      visuallyHiddenText: "occupation",
-                      attributes: {
-                        "data-event-id": "update-occupation-change-link"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }) }} 
-          {% set officerFiling = officerFiling %}
+
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                {{ i18n.updateDirectorDetailsName }}
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{firstName}} {{lastName}}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="{{nameLink}}" data-event-id="update-name-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update name</span></a>
+              </dd>
+              <dd class="govuk-summary-list__value">
+                {% if nameHasBeenUpdated %}
+                  {{ updateRequiredHtml | safe }}
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                {{ i18n.updateDirectorDetailsNationality }}
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{nationality}}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="#" data-event-id="update-nationality-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update nationality</span></a>
+              </dd>
+              <dd class="govuk-summary-list__value">
+                {% if nationalityHasBeenUpdated %}
+                  {{ updateRequiredHtml | safe }}
+                {% endif %}
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                {{ i18n.updateDirectorDetailsOccupation }}
+              </dt>
+              <dd class="govuk-summary-list__value">
+                {{occupation}}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="#" data-event-id="update-occupation-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update occupation</span></a>
+              </dd>
+              <dd class="govuk-summary-list__value">
+                {% if occupationHasBeenUpdated %}
+                  {{ updateRequiredHtml | safe }}
+                {% endif %}
+              </dd>
+            </div>
+          </dl>
+
           {% set isUpdate = isUpdate %}
-          {% include "includes/check-your-answer/address-details.html" %}
+          {% set cyaDisplay = false %}
+          {% include "../includes/check-your-answer/address-details.html" %}
+
           {% if updatedData %}
             <div class="govuk-button-group">
               {{ govukButton({
