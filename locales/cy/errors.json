@@ -10,5 +10,7 @@
   "error-change-date-before-appointment-date": "WLE",
   "error-change-date-in-future" : "WLE",
   "error-change-date-before-incorporation-date": "WLE",
-  "error-change-date-before-2009": "WLE"
+  "error-change-date-before-2009": "WLE",
+  "error-occupation-length": "to be translated",
+  "error-occupation-characters": "to be translated"
 }

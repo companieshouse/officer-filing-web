@@ -105,8 +105,8 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 };
 
 export const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], occupation: string, currentUrl: string) => {
-  const formattedErrors = formatValidationErrors(validationErrors);
   const lang = selectLang(req.query.lang);
+  const formattedErrors = formatValidationErrors(validationErrors, lang);
   const locales = getLocalesService();
   return res.render(Templates.DIRECTOR_OCCUPATION, {
     templateName: Templates.DIRECTOR_OCCUPATION,

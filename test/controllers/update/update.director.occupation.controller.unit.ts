@@ -27,7 +27,7 @@ const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as j
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "What is the director's occupation?";
+const PAGE_HEADING = "What is the director&#39;s occupation?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_OCCUPATION_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
