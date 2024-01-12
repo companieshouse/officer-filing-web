@@ -60,6 +60,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
+    directorTitle: officerFiling.title,
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)), 
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat("2023-12-22"),             // Temporarily hard-coded until changedDate is available

@@ -28,6 +28,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
+      directorTitle: officerFiling.title,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       updateDirectorSameCompany: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
       nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,

@@ -31,6 +31,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       officerFiling: officerFiling,
+      directorTitle: officerFiling.title,
       ...officerFiling,
       ...companyProfile,
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),

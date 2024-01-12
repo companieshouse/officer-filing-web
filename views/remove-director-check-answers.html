@@ -40,6 +40,12 @@
             }
           ]
         }) }}
+
+        {% set name = directorName %}
+        {% if directorTitle %}
+          {% set name = directorTitle + " " + name %}
+        {% endif %}
+
         <h2 class="govuk-heading-m">Director details</h2>
         {% if corporateDirector %}
           {% include "includes/remove-director-check-answers-corporate-summary.html" %}

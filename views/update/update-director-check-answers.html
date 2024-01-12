@@ -56,6 +56,10 @@
           {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
         {% endif %}
 
+        {% if directorTitle %}
+          {% set name = directorTitle + " " + name %}
+        {% endif %}
+
         <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
 
         {{ govukSummaryList({
