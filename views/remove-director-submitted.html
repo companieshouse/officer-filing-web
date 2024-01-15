@@ -20,6 +20,11 @@
           </div>
         </div>
 
+        {% set name = directorName %}
+        {% if directorTitle %}
+          {% set name = directorTitle + " " + name %}
+        {% endif %}
+
         {{ govukSummaryList({
           rows: [
             {

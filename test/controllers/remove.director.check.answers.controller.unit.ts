@@ -71,7 +71,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name");
-      expect(response.text).toContain("John Middlename Doe");
+      expect(response.text).toContain("Mr John Middlename Doe");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("5 November 2002");
       expect(response.text).toContain("Date appointed");

@@ -35,11 +35,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const directorDtoList: CompanyOfficer[] = await getListActiveDirectorDetails(session, transactionId);
-    console.log("************DTO LIST")
-    console.log(directorDtoList[0])
     const directorList = createOfficerCards(req, [...buildIndividualDirectorsList(directorDtoList), ...buildCorporateDirectorsList(directorDtoList)]);
-    console.log("************Director LIST")
-    console.log(directorList[0])
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     let paginatedDirectorsList: OfficerCard[] = [];
     let paginationElement: PaginationData | undefined = undefined;

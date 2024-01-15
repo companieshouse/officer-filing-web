@@ -25,7 +25,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const companyOfficer: CompanyOfficer = await getDirectorAndTerminationDate(session, transactionId, submissionId);
     console.log("******** COMPANY OFFICER")
     console.log(companyOfficer)
-    
+
     if(companyOfficer.resignedOn === undefined){
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
     }
@@ -50,7 +50,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
       backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
       company: companyProfile,
-     // directorTitle: companyOfficer.,
+      directorTitle: formatTitleCase(companyOfficer.title),
       name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
