@@ -70,11 +70,13 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
           urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
           URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
       }
-
-      if(currentOfficerFiling.nationality1 !== officerFiling.nationality1 || currentOfficerFiling.nationality2 !== officerFiling.nationality2 || currentOfficerFiling.nationality3 !== officerFiling.nationality3) {
-        officerFiling.nameHasBeenUpdated = true;
-      }
+      if(sameNationalityWithChips(officerFiling, companyAppointment)) {
+        officerFiling.nationalityHasBeenUpdated = false;
+      } else {
+        officerFiling.nationalityHasBeenUpdated = true;
+      };
     }
+
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
     return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
@@ -82,3 +84,19 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     return next(e);
   }
 };
+
+const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
+  const nationality = companyAppointment.nationality?.split(",")!;
+  let sameNationality: boolean = false;
+  if (currentOfficerFiling.nationality1 === nationality[0]) {
+    if (((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
+        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3))) 
+        {
+          sameNationality;
+    } 
+    else {
+      sameNationality = true
+    }
+  } 
+  return sameNationality;
+}

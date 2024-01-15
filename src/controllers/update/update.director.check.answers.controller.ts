@@ -3,7 +3,8 @@ import {
   CURRENT_DIRECTORS_PATH,
   UPDATE_DIRECTOR_NAME_PATH,
   DIRECTOR_DATE_OF_CHANGE_PATH,
-  UPDATE_DIRECTOR_SUBMITTED_PATH
+  UPDATE_DIRECTOR_SUBMITTED_PATH,
+  UPDATE_DIRECTOR_NATIONALITY_PATH
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
@@ -15,7 +16,7 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/for
 import { toReadableFormat } from "../../utils/date";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { closeTransaction } from "../../services/transaction.service";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from '../../utils/localise';
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -64,7 +65,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat("2023-12-22"),             // Temporarily hard-coded until changedDate is available
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
-    nationalityLink: urlUtils.getUrlToPath("", req),
+    nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: urlUtils.getUrlToPath("", req),
     dateUpdatedLink: urlUtils.getUrlToPath("", req),
     correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
