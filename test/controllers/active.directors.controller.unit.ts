@@ -58,6 +58,42 @@ describe("Active directors controller tests", () => {
     mockGetCompanyAppointmentFullRecord.mockClear();
   });
 
+  describe('localisation tests', () => {
+    const mockRequest = {
+      query: {
+        lang: "en"
+      }
+    };
+
+    it("Should display active non-corporate directors in welsh", async () => {
+      mockRequest.query.lang = "cy"
+      const response = (await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL).query(mockRequest.query));
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("JANE");
+      expect(response.text).toContain("ALICE");
+      expect(response.text).toContain("SMITH");
+      expect(response.text).toContain("Cyfarwyddwr");
+      expect(response.text).toContain("Dyddiad geni");
+      expect(response.text).toContain("Rhagfyr 2001");
+      expect(response.text).toContain("Dyddiad penodi");
+      expect(response.text).toContain("11 Mai 2019");
+    }); 
+    
+    it("Should display active non-corporate directors in english", async () => {
+      mockRequest.query.lang = "en"
+      const response = (await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL).query(mockRequest.query));
+      expect(mockGetCompanyOfficers).toHaveBeenCalled();
+      expect(response.text).toContain("JANE");
+      expect(response.text).toContain("ALICE");
+      expect(response.text).toContain("SMITH");
+      expect(response.text).toContain("Director");
+      expect(response.text).toContain("Date of birth");
+      expect(response.text).toContain("December 2001");
+      expect(response.text).toContain("Date appointed");
+      expect(response.text).toContain("11 May 2019");
+    });
+  });
+
   describe("get tests", () => {
 
     it("Should navigate to current directors page", async () => {
@@ -112,7 +148,6 @@ describe("Active directors controller tests", () => {
 
     it("Should display active corporate nominee directors", async () => {
         const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?page=2");
-  
         expect(mockGetCompanyOfficers).toHaveBeenCalled();
         expect(response.text).toContain("BIGGER CORP 2");
         expect(response.text).toContain("Director");
@@ -221,7 +256,7 @@ describe("Active directors controller tests", () => {
         firstName: "John",
         middleNames: "Elizabeth",
         lastName: "Doe",
-        formerNames: "John Smith, Old MacDonald",
+        formerNames: "John Smith, Old Macdonald",
         dateOfBirth: "2001-02-01",
         appointedOn: "2019-05-11",
         occupation: "Software Engineer",

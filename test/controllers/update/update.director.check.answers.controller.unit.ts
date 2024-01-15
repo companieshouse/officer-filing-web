@@ -11,7 +11,11 @@ import app from "../../../src/app";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
+import {
+  UPDATE_DIRECTOR_CHECK_ANSWERS_PATH,
+  UPDATE_DIRECTOR_SUBMITTED_PATH,
+  urlParams
+} from "../../../src/types/page.urls";
 import { getValidationStatus } from "../../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse } from "../../mocks/validation.status.response.mock";
 import { closeTransaction } from "../../../src/services/transaction.service";
@@ -29,6 +33,10 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_URL = UPDATE_DIRECTOR_SUBMITTED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -52,11 +60,11 @@ describe("Director check your answers controller tests", () => {
   });
 
   describe("POST tests", () => {
-    it("Should redirect on submission", async () => {
+    it("Should redirect to confirmation submission", async () => {
       mockGetCurrentOrFutureDissolved.mockResolvedValueOnce(false);
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-      const response = await request(app).post(PAGE_URL).send({});
-      expect(response.text).toContain("Redirecting to");
+      const response = await request(app).post(PAGE_URL).send(PAGE_URL);
+      expect(response.header.location).toEqual(NEXT_PAGE_URL)
     })
   });
 

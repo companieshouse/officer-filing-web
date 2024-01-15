@@ -8,11 +8,11 @@ import { REGEX_FOR_VALID_CHARACTERS, createValidationError, createValidationErro
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
-import { CURRENT_DIRECTORS_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { lookupWebValidationMessage } from "../utils/api.enumerations";
 import { formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
-import { selectLang } from "../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
@@ -20,6 +20,7 @@ const NAME_FIELD_LENGTH_160 = 160;
 export const nameValidator = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
         const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
         const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
         const session: Session = req.session as Session;
@@ -33,11 +34,20 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
         const isUpdate = req.path.includes("update-director-name");
         const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
+        let currentUrl;
+        if(isUpdate){
+        currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
+        }
+        else{
+        currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
+        }
 
         if(frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
 
             return res.render(Templates.DIRECTOR_NAME, {
+                ...getLocaleInfo(locales, lang),
+                currentUrl: currentUrl,
                 templateName: Templates.DIRECTOR_NAME,
                 backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
                 typeahead_array: TITLE_LIST,

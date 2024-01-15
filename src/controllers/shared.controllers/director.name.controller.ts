@@ -6,9 +6,10 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
 import { STOP_TYPE } from "../../utils/constants";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
@@ -16,8 +17,19 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+    let currentUrl;
+    if(isUpdate){
+      currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
+    }
+    else{
+      currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
+    }
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(templateName, {
+      ...getLocaleInfo(locales, lang),
+      currentUrl: currentUrl,
       templateName: templateName,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
@@ -46,7 +58,7 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
       firstName: getField(req, DirectorField.FIRST_NAME),
       middleNames: getField(req, DirectorField.MIDDLE_NAMES),
       lastName: getField(req, DirectorField.LAST_NAME),
-      formerNames: getPreviousNamesForFiling(req),
+      formerNames: getPreviousNamesForFiling(req)
     };
 
     if (isUpdate) {
@@ -60,17 +72,20 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
           urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
           URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
       }
-
-      if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
-        currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
+      
+      if (companyAppointment.title?.toUpperCase() != officerFiling.title?.toUpperCase() || 
+        companyAppointment.forename.toUpperCase() != officerFiling.firstName?.toUpperCase() || 
+        companyAppointment.otherForenames.toUpperCase() != officerFiling.middleNames?.toUpperCase() || 
+        companyAppointment.surname.toUpperCase() != officerFiling.lastName?.toUpperCase()) {
           officerFiling.nameHasBeenUpdated = true;
+      } else {
+        officerFiling.nameHasBeenUpdated = false;
       }
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
-  
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPage));
 
   } catch(e) {

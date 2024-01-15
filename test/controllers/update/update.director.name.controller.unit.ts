@@ -22,7 +22,7 @@ const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as j
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "What is the director's name?";
+const PAGE_HEADING = "What is the director&#39;s name?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -75,7 +75,6 @@ describe("Update Director name controller tests", () => {
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
-          formerNames: "testFormer"
         });
 
         const response = await request(app).get(DIRECTOR_NAME_URL);
@@ -86,6 +85,19 @@ describe("Update Director name controller tests", () => {
         expect(response.text).toContain("testMiddle");
         expect(response.text).toContain("testLast");
         expect(response.text).not.toContain("testFormer");
+      });
+
+      it("Should render the page in welsh", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+        });
+
+        const response = await request(app).get(DIRECTOR_NAME_URL + "?lang=cy");
+  
+        expect(response.text).toContain("to be translated");
       });
 
     });
@@ -121,6 +133,9 @@ describe("Update Director name controller tests", () => {
             "previous_names": ""
           });
         expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          nameHasBeenUpdated: true
+        }));
       });
 
       it("Should redirect to View and Update Director firstName is updated", async () => {
@@ -150,6 +165,9 @@ describe("Update Director name controller tests", () => {
             "previous_names": ""
           });
         expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          nameHasBeenUpdated: true
+        }));
       });
 
       it("Should redirect to View and Update Director middleName is updated", async () => {
@@ -179,11 +197,14 @@ describe("Update Director name controller tests", () => {
             "previous_names": ""
           });
         expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          nameHasBeenUpdated: true
+        }));
       });
 
       it("Should redirect to View and Update Director lastName is updated", async () => {
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag"
+          etag: "etag",
         });
         mockGetOfficerFiling.mockResolvedValue({
           referenceAppointmentId: "app1",
@@ -208,6 +229,42 @@ describe("Update Director name controller tests", () => {
             "previous_names": ""
           });
         expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          nameHasBeenUpdated: true
+        }));
+      });
+
+      it("Should redirect to udpate page when nothing has been updated", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag",
+          title: "Dr",
+          forename: "John",
+          otherForenames: "mid",
+          surname: "Smith"
+        });
+        mockGetOfficerFiling.mockResolvedValue({
+          referenceAppointmentId: "app1",
+          referenceEtag: "etag",
+          title: "Dr",
+          firstName: "John",
+          middleNames: "",
+          lastName: "Halpert"
+        });
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          }});
+
+        const response = await request(app)
+          .post(DIRECTOR_NAME_URL)
+          .send({
+            "typeahead_input_0": "Dr",
+            "first_name": "John",
+            "middle_names": "Mid",
+            "last_name": "Smith"
+          });
+        expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          nameHasBeenUpdated: false
+        }));
       });
 
       it("should catch errors on submission if errors", async () => {
@@ -247,5 +304,6 @@ describe("Update Director name controller tests", () => {
           });
         expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
       });
+
     });
 });
