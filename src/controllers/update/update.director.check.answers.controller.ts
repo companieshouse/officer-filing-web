@@ -62,6 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Run full api validation
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
+    console.info(`ANONA Validation status: ${JSON.stringify(validationStatus)}`);
     if (!validationStatus.isValid) {
       return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG));
     }
