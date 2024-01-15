@@ -89,14 +89,11 @@ const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAp
   const nationality = companyAppointment.nationality?.split(",")!;
   let sameNationality: boolean = false;
   if (currentOfficerFiling.nationality1 === nationality[0]) {
-    if (((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
-        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3))) 
+    if (!(((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
+        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3)))) 
         {
-          sameNationality = false;
+          sameNationality = true;
     } 
-    else {
-      sameNationality = true
-    }
   } 
   return sameNationality;
 }
