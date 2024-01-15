@@ -27,5 +27,7 @@
   "error-nationality-length49": "WLE",
   "error-nationality-length48": "WLE",
   "error-duplicate-nationality2": "WLE",
-  "error-duplicate-nationality3": "WLE"
+  "error-duplicate-nationality3": "WLE",
+  "error-occupation-length": "to be translated",
+  "error-occupation-characters": "to be translated"
 }

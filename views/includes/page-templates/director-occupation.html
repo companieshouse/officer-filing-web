@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% set title = i18n.directorOccupationTitle %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+
+
+        <div>
+          <span class="govuk-caption-l">{{directorName}}</span>
+          <h1 class="govuk-heading-l"> {{ i18n.directorOccupationTitle }}</h1>
+          <p class="govuk-body">{{ i18n.directorOccupationBody }} 
+          </p>
+          <div id="typeahead-form-group-0" class="govuk-form-group">
+        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
+            {% set typeaheadTitle = ["<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='typeahead_input_0'>", i18n.directorOccupation, "</label></h2>"] | join | safe %}
+            {% set dropdownHint = i18n.directorOccupationDropdownHint %}
+            {% set dropdownDefaultText = i18n.directorOccupationDropdownDefaultText %}
+            {% set errorMessage = errors.typeahead_input_0 %}
+            {% set typeaheadHint = [i18n.directorOccupationTypeaheadHintP1, " <br> ", i18n.directorOccupationTypeaheadHintP2] | join | safe %}
+
+            {% include "includes/inputs/fields/typeahead-input.html" %}
+          </div>
+        </div>
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">{{ i18n.directorOccupationPublicRegisterInformationHeading }}</h2>
+            <p>{{ i18n.directorOccupationPublicRegisterInformation}}</p>
+        </div>
+
+        <input type="hidden" name="lang" value="{{lang}}">
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: i18n.continue
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

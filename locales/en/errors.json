@@ -28,5 +28,8 @@
   "error-nationality-length49": "For technical reasons, we are currently unable to accept dual nationalities with a total of more than 49 characters",
   "error-nationality-length48": "For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters",
   "error-duplicate-nationality2": "Enter a different second nationality",
-  "error-duplicate-nationality3": "Enter a different third nationality"
+  "error-duplicate-nationality3": "Enter a different third nationality",
+  "error-occupation-length": "Occupation must be 100 characters or less",
+  "error-occupation-characters": "Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes"
+
 }
