@@ -145,7 +145,7 @@ router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updat
 router.get(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorCheckAnswers.get);
 router.post(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, updateDirectorCheckAnswers.post);
 
-router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
+router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorName.get);
 router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
 
 router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
