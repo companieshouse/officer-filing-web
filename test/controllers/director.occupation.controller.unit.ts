@@ -114,6 +114,13 @@ describe("Director occupation controller tests", () => {
         expect(response.text).toContain("Jim Smith");
       });
 
+      it("should catch errors on get if errors", async () => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        const response = await request(app)
+          .get(DIRECTOR_OCCUPATION_URL);
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
+
     });
 
     describe("post tests", () => {
@@ -252,6 +259,14 @@ describe("Director occupation controller tests", () => {
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
+
+      it("should catch errors on submission if errors", async () => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        const response = await request(app)
+          .post(DIRECTOR_OCCUPATION_URL);
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
+      
     });
 
     describe("buildValidationErrors tests", () => {
