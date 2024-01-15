@@ -74,7 +74,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
         officerFiling.nationalityHasBeenUpdated = false;
       } else {
         officerFiling.nationalityHasBeenUpdated = true;
-      };
+      }
     }
 
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
@@ -92,7 +92,7 @@ const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAp
     if (((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
         || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3))) 
         {
-          sameNationality;
+          sameNationality = false;
     } 
     else {
       sameNationality = true

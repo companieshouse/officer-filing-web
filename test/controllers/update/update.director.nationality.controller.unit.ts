@@ -42,7 +42,8 @@ describe("Update director nationality controller tests", () => {
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();
-    mockGetOfficerFiling.mockClear();
+    mockGetOfficerFiling.mockReset();
+    jest.clearAllMocks();
   });
 
   describe("Get tests", () => {
@@ -77,6 +78,12 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=cy");
       expect(response.text).toContain("Beth yw cenedligrwydd y cyfarwyddwr?");
+    });
+
+    it("should catch error", async () => {
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
+      mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+      expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
   });
 
@@ -115,6 +122,29 @@ describe("Update director nationality controller tests", () => {
         nationality1: "Nation1",
         nationality2: undefined,
         nationality3: undefined
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+
+      const response = await request(app)
+        .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+        .send({typeahead_input_0:"British"});
+      expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+        nationalityHasBeenUpdated: false
+      }))
+    });
+
+    it("Should redirect to update director details page after update with nationalityHasBeenUpdated false if different nationality2", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        nationality: "British,Austrian,French"
+      });
+      mockGetOfficerFiling.mockResolvedValue({
+        referenceEtag: "etag",
+        nationality1: "Nation1",
+        nationality2: "",
+        nationality3: ""
       });
       mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
