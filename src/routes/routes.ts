@@ -154,5 +154,5 @@ router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, direc
 
 router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, directorUpdateSubmitted.get);
 
-router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorNationality.get);
+router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorNationality.get);
 router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, updateDirectorNationality.post);

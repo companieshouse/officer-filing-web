@@ -23,7 +23,6 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const locales = getLocalesService();
-    const lang = selectLang(req.query.lang);
     let updatedData = false;
 
     if (officerFiling.nameHasBeenUpdated || officerFiling.occupationHasBeenUpdated || officerFiling.nationalityHasBeenUpdated ||

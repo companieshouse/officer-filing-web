@@ -10,7 +10,7 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
-import { UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, urlParams } from "../../../src/types/page.urls";
+import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, urlParams } from "../../../src/types/page.urls";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -28,6 +28,10 @@ const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const UPDATE_DIRECTOR_DETAILS_URL = UPDATE_DIRECTOR_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -117,12 +121,32 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"})
+        .send({typeahead_input_0:"British"});
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: false
       }))
     });
+
+    it("should redirect to update check your answers page if from CYA ", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        nationality: "British"
+      });
+      mockGetOfficerFiling.mockResolvedValue({
+        referenceEtag: "etag",
+        nationality1: "Nation1",
+        nationality2: undefined,
+        nationality3: undefined
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        checkYourAnswersLink: UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL
+      }});
+      const response = await request(app)
+        .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+        .send({typeahead_input_0:"British"});
+      expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL);
+    })
 
     it("Should redirect to stop page if the etag fails validation", async () => {
       mockGetOfficerFiling.mockResolvedValue({
