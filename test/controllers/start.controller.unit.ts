@@ -26,4 +26,10 @@ describe("start controller tests", () => {
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
   });
 
+ it("Should render the page in welsh", async () => {
+        const response = await request(app)
+              .get("/appoint-update-remove-company-officer/" + "?lang=cy");
+
+        expect(response.text).toContain("to be translated");
+
 });
