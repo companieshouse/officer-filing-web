@@ -8,10 +8,10 @@ import { getCompanyProfile } from "../../services/company.profile.service";
 import {
   CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH,
   DIRECTOR_OCCUPATION_PATH, DIRECTOR_DATE_OF_CHANGE_PATH,
-  UPDATE_DIRECTOR_NATIONALITY_PATH
+  UPDATE_DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_DETAILS_PATH
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { selectLang, addLangToUrl } from '../../utils/localise';
+import { selectLang, addLangToUrl, getLocalesService, getLocaleInfo } from "../../utils/localise";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -22,6 +22,8 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const locales = getLocalesService();
+    const lang = selectLang(req.query.lang);
     let updatedData = false;
 
     if (officerFiling.nameHasBeenUpdated || officerFiling.occupationHasBeenUpdated || officerFiling.nationalityHasBeenUpdated ||
@@ -36,6 +38,8 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       officerFiling: officerFiling,
       ...officerFiling,
       ...companyProfile,
+      ...getLocaleInfo(locales, lang),
+      currentUrl: urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req),
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
       occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),

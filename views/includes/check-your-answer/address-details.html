@@ -1,6 +1,6 @@
 {% set displayCorrespondenceAddress %}
   {% if officerFiling.isServiceAddressSameAsRegisteredOfficeAddress %}
-    The correspondence address is the same as the registered office address
+  {{ i18n.updateDirectorDetailsCorrespondenceAddressSameAsROA if isUpdate else "The correspondence address is the same as the registered office address" }}
   {% else %}
     <ul class="govuk-list">
         {% if officerFiling.serviceAddress.premises %}
@@ -26,7 +26,7 @@
 
 {% set displayResidentialAddress %}
   {% if officerFiling.isHomeAddressSameAsServiceAddress %}
-    The home address is the same as the correspondence address
+  {{ i18n.updateDirectorDetailsHomeAddressSameAsCorrespondence if isUpdate else "The home address is the same as the correspondence address" }}
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list">
       {% if officerFiling.residentialAddress.premises %}
@@ -58,43 +58,83 @@
     {% endif %}
 {% endset %}
 
-{{ govukSummaryList({
-  rows: [
-    {
-      key: {
-        text: "Address details",
-        classes: "govuk-heading-m"
-      },
-      value: {
-      },
-      actions: {
-        items: [
-          {
-            href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-            text: "Update" if isUpdate else "Change",
-            visuallyHiddenText: "Director's address details",
-            attributes: {
-              "data-event-id": "address-change-link"
+{% if cyaDisplay %}
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: i18n.updateDirectorDetailsAddressDetails if isUpdate else "Address details",
+          classes: "govuk-heading-m"
+        },
+        value: {
+        },
+        actions: {
+          items: [
+            {
+              href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
+              text: i18n.updateDirectorDetailsUpdate if isUpdate else "Change",
+              visuallyHiddenText: "Director's address details",
+              attributes: {
+                "data-event-id": "address-change-link"
+              }
             }
-          }
-        ]
-      }
-    },
-    {
-      key: {
-        text: "Correspondence address"
+          ]
+        }
       },
-      value: {
-        html: displayCorrespondenceAddress
-      }
-    },
-    {
-      key: {
-        text: "Home address"
+      {
+        key: {
+          text: i18n.updateDirectorDetailsCorrespondenceAddress  if isUpdate else "Correspondence address"
+        },
+        value: {
+          html: displayCorrespondenceAddress
+        }
       },
-      value: {
-        html: displayResidentialAddress
+      {
+        key: {
+          text: i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address"
+        },
+        value: {
+          html: displayResidentialAddress
+        }
       }
-    }
-  ]
-}) }}
+    ]
+  }) }}
+
+{% else %}
+
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key govuk-heading-m">
+        Address details
+      </dt>
+      <dd class="govuk-summary-list__value">
+      </dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link" href="{{nameLink}}" data-event-id="update-address-change-link">Update<span class="govuk-visually-hidden">Update address</span></a>
+      </dd>
+      <dd class="govuk-summary-list__value">
+        {% if addressHasBeenUpdated %}
+          {{ updateRequiredHtml | safe }}
+        {% endif %}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Correspondence address	
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{displayCorrespondenceAddress | safe}}
+      </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        Home address
+      </dt>
+      <dd class="govuk-summary-list__value">
+        {{displayResidentialAddress | safe}}
+      </dd>
+    </div>
+  </dl>
+
+{% endif %}

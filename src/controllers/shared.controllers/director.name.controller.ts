@@ -58,7 +58,7 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
       firstName: getField(req, DirectorField.FIRST_NAME),
       middleNames: getField(req, DirectorField.MIDDLE_NAMES),
       lastName: getField(req, DirectorField.LAST_NAME),
-      formerNames: getPreviousNamesForFiling(req),
+      formerNames: getPreviousNamesForFiling(req)
     };
 
     if (isUpdate) {
@@ -72,17 +72,20 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
           urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
           URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
       }
-
-      if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
-        currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
+      
+      if (companyAppointment.title?.toUpperCase() != officerFiling.title?.toUpperCase() || 
+        companyAppointment.forename.toUpperCase() != officerFiling.firstName?.toUpperCase() || 
+        companyAppointment.otherForenames.toUpperCase() != officerFiling.middleNames?.toUpperCase() || 
+        companyAppointment.surname.toUpperCase() != officerFiling.lastName?.toUpperCase()) {
           officerFiling.nameHasBeenUpdated = true;
+      } else {
+        officerFiling.nameHasBeenUpdated = false;
       }
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
-  
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPage));
 
   } catch(e) {
