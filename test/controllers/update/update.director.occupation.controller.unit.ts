@@ -94,11 +94,11 @@ describe("Director occupation controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "John",
           lastName: "Smith",
-          referenceEtag: "etag",
-          "occupation:": "Director"
+          referenceEtag: "etag"
         });
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag"
+          etag: "etag",
+          "occupation:": "Director"
         });
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
