@@ -81,7 +81,7 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
     }
 
-    if (officerFiling.occupation != patchedOccupationFiling.occupation) {
+    if (companyAppointment.occupation != patchedOccupationFiling.occupation) {
       patchedOccupationFiling.occupationHasBeenUpdated = true;
     }
     else{
