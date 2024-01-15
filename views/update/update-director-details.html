@@ -63,7 +63,7 @@
                 {{ i18n.updateDirectorDetailsNationality }}
               </dt>
               <dd class="govuk-summary-list__value">
-                {{nationality}}
+                {{ nationality | safe }}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{nationalityLink}}" data-event-id="update-nationality-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update nationality</span></a>
