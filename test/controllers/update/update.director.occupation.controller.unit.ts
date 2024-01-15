@@ -16,6 +16,7 @@ import {
 } from "../../mocks/validation.status.response.mock";
 import { UPDATE_DIRECTOR_OCCUPATION_PATH } from "../../../src/types/page.urls";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { STOP_TYPE } from "../../../src/utils/constants";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -37,6 +38,7 @@ const DIRECTOR_OCCUPATION_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=${STOP_TYPE.ETAG}`;
 
 describe("Director occupation controller tests", () => {
 
@@ -88,11 +90,12 @@ describe("Director occupation controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
-      it("Should redirect to director details page with valid value for occupation", async () => {
+      it("Should redirect to director details page with an updated value for occupation", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "John",
           lastName: "Smith",
-          referenceEtag: "etag"
+          referenceEtag: "etag",
+          "occupation:": "Director"
         });
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
           etag: "etag"
@@ -103,6 +106,29 @@ describe("Director occupation controller tests", () => {
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
+      });
+
+      it("Should redirect to stop page if the etag fails validation", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          firstName: "John",
+          lastName: "Smith",
+          referenceEtag: "etag"
+        });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "differentEtag"
+        });
+
+        const response = await request(app)
+          .post(DIRECTOR_OCCUPATION_URL)
+          .send({ 
+            "typeahead_input_0": "Dr", 
+            "first_name": "John", 
+            "middle_names": "", 
+            "last_name": "Smith", 
+            "previous_names_radio": "Yes", 
+            "previous_names": "Sparrow" 
+          });
+        expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
       });
 
 
