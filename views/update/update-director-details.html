@@ -52,7 +52,7 @@
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{nameLink}}" data-event-id="update-name-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update name</span></a>
               </dd>
-              <dd class="govuk-summary-list__value">
+              <dd class="govuk-summary-list__actions">
                 {% if nameHasBeenUpdated %}
                   {{ updateRequiredHtml | safe }}
                 {% endif %}
@@ -68,7 +68,7 @@
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="#" data-event-id="update-nationality-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update nationality</span></a>
               </dd>
-              <dd class="govuk-summary-list__value">
+              <dd class="govuk-summary-list__actions">
                 {% if nationalityHasBeenUpdated %}
                   {{ updateRequiredHtml | safe }}
                 {% endif %}
@@ -84,7 +84,7 @@
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="#" data-event-id="update-occupation-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update occupation</span></a>
               </dd>
-              <dd class="govuk-summary-list__value">
+              <dd class="govuk-summary-list__actions">
                 {% if occupationHasBeenUpdated %}
                   {{ updateRequiredHtml | safe }}
                 {% endif %}
