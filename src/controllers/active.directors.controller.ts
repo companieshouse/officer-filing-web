@@ -127,18 +127,12 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-  console.log("************ APPOINTMENT ID")
-  console.log(appointmentId)
-  console.log("************ APPOINTMENT")
-  console.log(appointment)
-  console.log("************ TITLE")
-  console.log(appointment.title)
   const nationalities = appointment.nationality?.split(",");
 
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag,
-    //title: appointment.title,
+    title: appointment.title,
     firstName: appointment.forename,
     middleNames: appointment.otherForenames,
     lastName: appointment.surname,
@@ -194,8 +188,6 @@ async function beginAppointmentJourney(req: Request, res: Response, session: Ses
 }
 
 const buildIndividualDirectorsList = (officers: CompanyOfficer[]): any[] => {
-  console.log("OFFICER LIST")
-  console.log(officers[0])
   return officers
   .filter(officer => equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.DIRECTOR) || equalsIgnoreCase(officer.officerRole, OFFICER_ROLE.NOMINEE_DIRECTOR))
   .map(officer => {

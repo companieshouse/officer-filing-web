@@ -14,6 +14,9 @@ import { Session } from "@companieshouse/node-session-handler";
 import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromOfficer  } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { getOfficerFiling } from "../services/officer.filing.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,8 +26,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const companyOfficer: CompanyOfficer = await getDirectorAndTerminationDate(session, transactionId, submissionId);
-    console.log("******** COMPANY OFFICER")
-    console.log(companyOfficer)
+    const appointmentId = (await getOfficerFiling(session, transactionId, submissionId)).referenceAppointmentId as string
+    const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId)
 
     if(companyOfficer.resignedOn === undefined){
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
@@ -50,7 +53,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
       backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
       company: companyProfile,
-      directorTitle: formatTitleCase(companyOfficer.title),
+      directorTitle: formatTitleCase(appointment.title),
       name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
@@ -70,7 +73,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    
+
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     const stopQuery = retrieveStopPageTypeToDisplay(validationStatus);
 
@@ -81,7 +84,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     await closeTransaction(session, companyNumber, submissionId, transactionId);
-  
+
     const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH, req);
 
     return res.redirect(nextPageUrl);
