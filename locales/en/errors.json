@@ -22,6 +22,13 @@
   "error-change-date-in-future" : "Enter a date that is today or in the past",
   "error-change-date-before-incorporation-date": "Enter a date that is on or after the company's incorporation date",
   "error-change-date-before-2009": "Date the director’s details changed must be on or after 1 October 2009",
+  "error-invalid-nationality": "Select a nationality from the list",
+  "error-nationality-blank": "Enter the director’s nationality",
+  "error-nationality-length": "Nationality must be 50 characters or less",
+  "error-nationality-length49": "For technical reasons, we are currently unable to accept dual nationalities with a total of more than 49 characters",
+  "error-nationality-length48": "For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters",
+  "error-duplicate-nationality2": "Enter a different second nationality",
+  "error-duplicate-nationality3": "Enter a different third nationality",
   "error-occupation-length": "Occupation must be 100 characters or less",
   "error-occupation-characters": "Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes"
 

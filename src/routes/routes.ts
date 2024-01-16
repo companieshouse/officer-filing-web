@@ -35,6 +35,7 @@ import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
 import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
+import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
@@ -157,4 +158,7 @@ router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), compa
 router.post(urls.UPDATE_DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorUpdateOccupation.post);
 
 router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, directorUpdateSubmitted.get);
+
+router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorNationality.get);
+router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, updateDirectorNationality.post);
 

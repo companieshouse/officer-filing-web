@@ -98,7 +98,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
   const updateAppointmentId = req.body.updateAppointmentId;
   if (updateAppointmentId) {
-    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId);
+    return beginUpdateJourney(req, res, session, companyNumber, transactionId, updateAppointmentId, lang);
   }
 
   return beginAppointmentJourney(req, res, session, transactionId, lang);
@@ -125,7 +125,7 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 /**
  * Post an officer filing and redirect to the first page in the CH01 journey.
 */
-async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any, lang: string | undefined) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const nationalities = appointment.nationality?.split(",");
@@ -141,9 +141,9 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
     dateOfBirth: appointment.dateOfBirth?.year + "-" + appointment.dateOfBirth?.month?.toString().padStart(2, '0') + "-" + appointment.dateOfBirth?.day?.toString().padStart(2, '0'),
     appointedOn: appointment.appointedOn? appointment.appointedOn: appointment.appointedBefore,
     occupation: appointment.occupation,
-    nationality1: nationalities && nationalities?.length > 0? nationalities[0]: "",
-    nationality2: nationalities && nationalities?.length > 1? nationalities[1]: "",
-    nationality3: nationalities && nationalities?.length > 2? nationalities[2]: "",
+    nationality1: nationalities && nationalities?.length > 0? formatTitleCase(nationalities[0]): "",
+    nationality2: nationalities && nationalities?.length > 1? formatTitleCase(nationalities[1]): "",
+    nationality3: nationalities && nationalities?.length > 2? formatTitleCase(nationalities[2]): "",
     serviceAddress: {
       premises: appointment.serviceAddress?.premises,
       addressLine1: appointment.serviceAddress?.addressLine1,
@@ -171,7 +171,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-  const nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+  const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang);
   return res.redirect(nextPageUrl);
 }
 

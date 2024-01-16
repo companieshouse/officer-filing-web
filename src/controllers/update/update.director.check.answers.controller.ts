@@ -4,6 +4,7 @@ import {
   UPDATE_DIRECTOR_NAME_PATH,
   DIRECTOR_DATE_OF_CHANGE_PATH,
   UPDATE_DIRECTOR_SUBMITTED_PATH,
+  UPDATE_DIRECTOR_NATIONALITY_PATH,
   URL_QUERY_PARAM,
   BASIC_STOP_PAGE_PATH
 } from "../../types/page.urls";
@@ -19,7 +20,7 @@ import { toReadableFormat } from "../../utils/date";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { closeTransaction } from "../../services/transaction.service";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { STOP_TYPE } from "../../utils/constants";
 import { getCurrentOrFutureDissolved } from "../../services/stop.page.validation.service";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -91,7 +92,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
-    nationalityLink: urlUtils.getUrlToPath("", req),
+    nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: urlUtils.getUrlToPath("", req),
     dateUpdatedLink: urlUtils.getUrlToPath("", req),
     correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
