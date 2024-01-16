@@ -13,6 +13,7 @@
   "cookieNoJS": "Rydym yn defnyddio cwcis i wneud i'n gwasanaethau weithio a chasglu gwybodaeth ddadansoddol. I dderbyn neu wrthod cwcis dadansoddeg, trowch JavaScript ymlaen yn gosodiadau eich porwr ac ail-lwytho'r dudalen hon.",
   "cookieHide": "Cuddio'r neges hon",
   "appTitle": "Penodi a dileu cyfarwyddwr cwmni",
+  "appTitleJustRemove": "to be translated",
   "confirmAndContinue": "Cadarnhau a pharhau",
   "continue": "Parhau",
   "cancel": "Canslo",
@@ -26,5 +27,6 @@
   "warning": "Rhybudd",
   "day": "Dydd",
   "month": "Mis",
-  "year": "Blwyddyn"
+  "year": "Blwyddyn",
+  "govUK": "to be translated"
 }

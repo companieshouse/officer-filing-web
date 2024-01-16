@@ -2,7 +2,11 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% block pageTitle %}
-  {{i18n.startTitle}} - {{i18n.govUK}}
+  {% if AP01_ACTIVE === "true" %}
+    {{i18n.appTitle}} - {{i18n.govUK}}
+  {% else %}
+    {{ i18n.appTitleJustRemove }} - {{i18n.govUK}}
+  {% endif %}
 {% endblock %}
 
 {% block signoutBar %}
@@ -15,11 +19,11 @@
 
       {% if AP01_ACTIVE === "true" %}
       <h1 class="govuk-heading-xl">
-        {{ i18n.startTitle }}
+        {{ i18n.appTitle }}
       </h1>
       {% else %}
       <h1 class="govuk-heading-xl">
-        {{ i18n.startTitleJustRemove }}
+        {{ i18n.appTitleJustRemove }}
       </h1>
       {% endif %}
       
