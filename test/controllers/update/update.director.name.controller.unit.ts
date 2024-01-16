@@ -12,6 +12,7 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
+import { doFieldsMatch } from "../../../src/controllers/shared.controllers/director.name.controller";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -306,4 +307,37 @@ describe("Update Director name controller tests", () => {
       });
 
     });
+
+    describe("doFieldsMatch tests", () => {
+      it("Should return true if fields match", () => {
+        const result = doFieldsMatch("test", "test");
+        expect(result).toEqual(true);
+      });
+  
+      it("Should return false if fields do not match", () => {
+        const result = doFieldsMatch("test", "test2");
+        expect(result).toEqual(false);
+      });
+  
+      it("Should return false if one field is undefined", () => {
+        const result = doFieldsMatch(undefined, "test");
+        expect(result).toEqual(false);
+      });
+  
+      it("Should return true if both fields are undefined", () => {
+        const result = doFieldsMatch(undefined, undefined);
+        expect(result).toEqual(true);
+      });
+  
+      it("Should return true if both fields are empty strings", () => {
+        const result = doFieldsMatch("", "");
+        expect(result).toEqual(true);
+      });
+  
+      it("Should return true if one field is undefined and other field is empty string", () => {
+        const result = doFieldsMatch("", undefined);
+        expect(result).toEqual(true);
+      }); 
+    });
+  
 });

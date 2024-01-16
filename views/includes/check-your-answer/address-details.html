@@ -106,12 +106,12 @@
   <dl class="govuk-summary-list">
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key govuk-heading-m">
-        Address details
+        {{ i18n.updateDirectorDetailsAddressDetails }}
       </dt>
       <dd class="govuk-summary-list__value">
       </dd>
       <dd class="govuk-summary-list__actions">
-        <a class="govuk-link" href="{{nameLink}}" data-event-id="update-address-change-link">Update<span class="govuk-visually-hidden">Update address</span></a>
+        <a class="govuk-link" href="{{nameLink}}" data-event-id="update-address-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update address</span></a>
       </dd>
       <dd class="govuk-summary-list__value">
         {% if addressHasBeenUpdated %}
@@ -121,7 +121,7 @@
     </div>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        Correspondence address	
+        {{ i18n.updateDirectorDetailsCorrespondenceAddress }}
       </dt>
       <dd class="govuk-summary-list__value">
         {{displayCorrespondenceAddress | safe}}
@@ -129,7 +129,7 @@
     </div>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key">
-        Home address
+        {{ i18n.updateDirectorDetailsHomeAddress }}
       </dt>
       <dd class="govuk-summary-list__value">
         {{displayResidentialAddress | safe}}
