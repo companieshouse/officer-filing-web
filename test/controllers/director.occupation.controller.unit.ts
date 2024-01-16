@@ -240,26 +240,6 @@ describe("Director occupation controller tests", () => {
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
-      it("Should display errors on page if get back-end validation status returns errors", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusErrorOccupation],
-          isValid: false
-        }
-        const mockPatchOfficerFilingResponse = {
-          data:  {firstName: "John",
-            lastName: "Smith"}
-        }
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponse);
-        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
-
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
-
-        expect(response.text).toContain("Occupation must be 100 characters or less");
-        expect(response.text).toContain("John Smith");
-        expect(mockGetValidationStatus).toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).toHaveBeenCalled();
-      });
-
       it("should catch errors on submission if errors", async () => {
         mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
         const response = await request(app)

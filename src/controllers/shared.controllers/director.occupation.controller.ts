@@ -89,13 +89,6 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
     }
   }
   const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, patchedOccupationFiling);
-  const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-  const backendValidationErrors = buildValidationErrors(validationStatus);
-
-  // render backend validation errors
-  if (backendValidationErrors.length > 0) {
-    return renderPage(res, req, patchedFiling.data, backendValidationErrors, occupation, getCurrentUrl(req, isUpdate));
-  }
 
   const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
   return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
