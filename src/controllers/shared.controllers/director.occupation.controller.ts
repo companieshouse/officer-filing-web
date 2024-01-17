@@ -19,7 +19,6 @@ import {
   mapValidationResponseToAllowedErrorKey
 } from "../../validation/validation";
 import { occupationErrorMessageKey } from "../../utils/api.enumerations.keys";
-import { getValidationStatus } from "../../services/validation.status.service";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { STOP_TYPE } from "../../utils/constants";
@@ -81,7 +80,8 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
     }
 
-    if (companyAppointment.occupation != patchedOccupationFiling.occupation) {
+    if (companyAppointment.occupation?.toLowerCase !== patchedOccupationFiling.occupation?.toLowerCase
+      || (companyAppointment.occupation === "None" && patchedOccupationFiling.occupation !== "")) {
       patchedOccupationFiling.occupationHasBeenUpdated = true;
     }
     else{

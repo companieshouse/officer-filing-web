@@ -17,6 +17,7 @@ import {
 import { UPDATE_DIRECTOR_OCCUPATION_PATH } from "../../../src/types/page.urls";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
+import { Session } from "@companieshouse/node-session-handler";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -104,6 +105,28 @@ describe("Director occupation controller tests", () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
         const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
+        {occupation: "Accountant",  occupationHasBeenUpdated : true})
+        expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
+      });
+
+      it("Should not list occupation as updated in an empty string is provided when the CHIPS value is 'None'", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          firstName: "John",
+          lastName: "Smith",
+          referenceEtag: "etag"
+        });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag",
+          "occupation:": "Director"
+        });
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
+        {occupation: "Accountant",  occupationHasBeenUpdated : true})
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
       });
