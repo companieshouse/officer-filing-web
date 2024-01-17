@@ -43,6 +43,17 @@ export const validCompanyProfile: CompanyProfile = {
   type: "ltd",
 };
 
+export const validAddress = {
+  addressLine1: "Line1",
+  addressLine2: "Line2",
+  careOf: "careOf",
+  country: "England",
+  locality: "locality",
+  poBox: "123",
+  postalCode: "UB7 0GB",
+  premises: "premises",
+};
+
 export const validCompanyEstablishedAfter2009Profile: CompanyProfile = {
   accounts: {
     nextAccounts: {

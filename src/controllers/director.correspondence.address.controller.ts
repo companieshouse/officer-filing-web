@@ -14,6 +14,9 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../s
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
 import { setBackLink } from "../utils/web";
+import { validateManualAddress } from "../validation/manual.address.validation";
+import { CorrespondenceManualAddressValidation } from "../validation/address.validation.config";
+import { logger } from "../utils/logger";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -62,11 +65,26 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       directorServiceAddressChoice: selectedSraAddressChoice,
       serviceAddress: undefined
     };
+
+    let canUseRegisteredOfficeAddress = false;
     if (selectedSraAddressChoice === registeredOfficerAddressValue) {
-      officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+      const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+      if (registeredOfficeAddress !== undefined) {
+        const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
+        if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
+          canUseRegisteredOfficeAddress = true;
+          officerFilingBody.serviceAddress = registeredOfficeAddress;
+        }
+      }
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
+    logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
+    if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+      return res.redirect(urlUtils.getUrlToPath("TODO-Skeleton-Link-Page", req));
+    }
+    
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
     }
