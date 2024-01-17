@@ -23,6 +23,7 @@ import * as directorResidentialAddressManual from "../controllers/director.resid
 import * as directorName from "../controllers/director.name.controller";
 import * as directorNationality from "../controllers/director.nationality.controller";
 import * as directorOccupation from "../controllers/director.occupation.controller";
+import * as directorUpdateOccupation from "../controllers/update/update.director.occupation.controller";
 import * as directorDateOfChange from "../controllers/update/director.date.of.change.controller";
 import * as directorUpdateSubmitted from "../controllers/update/update.director.submitted.controller";
 import * as removeDirectorCheckAnswers from "../controllers/remove.director.check.answers.controller";
@@ -34,6 +35,7 @@ import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
 import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
+import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
@@ -145,10 +147,18 @@ router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updat
 router.get(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorCheckAnswers.get);
 router.post(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, updateDirectorCheckAnswers.post);
 
-router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorName.get);
+router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorName.get);
 router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
 
 router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
 router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
 
+
+router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorUpdateOccupation.get);
+router.post(urls.UPDATE_DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorUpdateOccupation.post);
+
 router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, directorUpdateSubmitted.get);
+
+router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorNationality.get);
+router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, updateDirectorNationality.post);
+

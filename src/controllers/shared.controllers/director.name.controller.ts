@@ -54,11 +54,11 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
     const session: Session = req.session as Session;
 
     const officerFiling: OfficerFiling = {
-      title: getField(req, DirectorField.TITLE),
-      firstName: getField(req, DirectorField.FIRST_NAME),
-      middleNames: getField(req, DirectorField.MIDDLE_NAMES),
-      lastName: getField(req, DirectorField.LAST_NAME),
-      formerNames: getPreviousNamesForFiling(req),
+      title: getField(req, DirectorField.TITLE)?.trim(),
+      firstName: getField(req, DirectorField.FIRST_NAME)?.trim(),
+      middleNames: getField(req, DirectorField.MIDDLE_NAMES)?.trim(),
+      lastName: getField(req, DirectorField.LAST_NAME)?.trim(),
+      formerNames: getPreviousNamesForFiling(req)?.trim()
     };
 
     if (isUpdate) {
@@ -72,17 +72,17 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
           urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
           URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
       }
-
-      if (currentOfficerFiling.title != officerFiling.title || currentOfficerFiling.firstName != officerFiling.firstName || 
-        currentOfficerFiling.middleNames != officerFiling.middleNames || currentOfficerFiling.lastName != officerFiling.lastName) {
-          officerFiling.nameHasBeenUpdated = true;
+      
+      if (doFieldsMatch(companyAppointment.title, officerFiling.title) && doFieldsMatch(companyAppointment.forename, officerFiling.firstName) && doFieldsMatch(companyAppointment.otherForenames, officerFiling.middleNames) && doFieldsMatch(companyAppointment.surname, officerFiling.lastName)) {
+        officerFiling.nameHasBeenUpdated = false;
+      } else {
+        officerFiling.nameHasBeenUpdated = true;
       }
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
     const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
-  
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPage));
 
   } catch(e) {
@@ -118,4 +118,14 @@ const getPreviousNamesForFiling = (req: Request): string|undefined => {
   if (previousNamesRadio == DirectorField.NO) {
     return "";
   }
+}
+
+/**
+ * Compare two strings ignoring case. An empty string is treated the same as undefined.
+ */
+export const doFieldsMatch = (field1: string | undefined, field2: string | undefined): boolean => {
+  if ((!field1 || field1.trim() == "") && (!field2 || field2.trim() == "")) {
+    return true;
+  }
+  return field1?.toUpperCase() == field2?.toUpperCase();
 }

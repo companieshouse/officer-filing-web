@@ -19,7 +19,7 @@ export const validCompanyAppointment: CompanyAppointment = {
             appointments: "appointments-link"
         }
     },
-    name: "John Elizabeth Doe",
+    name: "John elizabeth Doe",
     forename: "John",
     surname: "Doe",
     title: "Mr",

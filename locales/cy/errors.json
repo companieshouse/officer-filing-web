@@ -20,5 +20,14 @@
   "error-change-date-before-appointment-date": "WLE",
   "error-change-date-in-future" : "WLE",
   "error-change-date-before-incorporation-date": "WLE",
-  "error-change-date-before-2009": "WLE"
+  "error-change-date-before-2009": "to be translate",
+  "error-invalid-nationality": "to be translate",
+  "error-nationality-blank": "to be translate",
+  "error-director-nationality-length-50": "to be translate",
+  "error-nationality-length49": "to be translate",
+  "error-nationality-length48": "to be translate",
+  "error-duplicate-nationality2": "to be translate",
+  "error-duplicate-nationality3": "to be translate",
+  "error-occupation-length": "to be translated",
+  "error-occupation-characters": "to be translated"
 }

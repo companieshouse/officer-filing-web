@@ -257,7 +257,7 @@ describe("Active directors controller tests", () => {
         firstName: "John",
         middleNames: "Elizabeth",
         lastName: "Doe",
-        formerNames: "John Smith, Old MacDonald",
+        formerNames: "John Smith, Old Macdonald",
         dateOfBirth: "2001-02-01",
         appointedOn: "2019-05-11",
         occupation: "Software Engineer",
