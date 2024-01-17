@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, 
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH,
         urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {

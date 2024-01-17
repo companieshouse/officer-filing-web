@@ -19,7 +19,6 @@ import {
   mapValidationResponseToAllowedErrorKey
 } from "../../validation/validation";
 import { occupationErrorMessageKey } from "../../utils/api.enumerations.keys";
-import { getValidationStatus } from "../../services/validation.status.service";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { STOP_TYPE } from "../../utils/constants";
