@@ -80,6 +80,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
+  
   return res.render(Templates.UPDATE_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.UPDATE_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),

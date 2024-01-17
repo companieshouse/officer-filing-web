@@ -40,6 +40,10 @@ const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockCloseTransaction = closeTransaction as jest.Mock;
 const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
 
+mockGetOfficerFiling.mockResolvedValue({data:{
+  referenceAppointmentId: "ref_id"
+}});
+
 const COMPANY_NUMBER = "12345678";
 const SUBMISSION_ID = "987654321";
 const TRANSACTION_ID = "11223344";
@@ -67,18 +71,12 @@ describe("Remove director check answers controller tests", () => {
   describe("get tests", () => {
 
     it("Should navigate to current directors page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       const response = await request(app).get(CHECK_ANSWERS_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
     });
 
     it("Should display summary for the non corporate director", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       const response = await request(app).get(CHECK_ANSWERS_URL);
 
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
@@ -98,9 +96,6 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should display summary for the corporate directors, missing date of birth", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
@@ -118,9 +113,6 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should display summary for the corporate-nominee directors, missing date of birth", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateNomineeCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
@@ -138,9 +130,6 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should still render page if date of birth is missing", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirth);
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(response.text).toContain("Company name");
@@ -157,9 +146,6 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should display date of birth without day if day field is missing", async () => {
-      mockGetOfficerFiling.mockResolvedValue({data:{
-        referenceAppointmentId: "ref_id"
-      }});
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirthDay);
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(response.text).toContain("Date of birth");

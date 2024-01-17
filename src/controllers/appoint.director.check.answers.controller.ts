@@ -86,7 +86,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
-    directorTitle: officerFiling.title,
+    directorTitle: formatTitleCase(officerFiling.title),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     formerNames:  formatTitleCase(officerFiling.formerNames),
     occupation:  formatTitleCase(officerFiling.occupation),

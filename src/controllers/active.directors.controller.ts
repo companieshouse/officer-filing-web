@@ -129,6 +129,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const nationalities = appointment.nationality?.split(",");
+  
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag,

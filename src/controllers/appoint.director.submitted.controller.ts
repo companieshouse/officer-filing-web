@@ -24,7 +24,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
-      directorTitle: officerFiling.title,
+      directorTitle: formatTitleCase(officerFiling.title),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       appointedOn: toReadableFormat(officerFiling.appointedOn),
       templateName: Templates.APPOINT_DIRECTOR_SUBMITTED,
