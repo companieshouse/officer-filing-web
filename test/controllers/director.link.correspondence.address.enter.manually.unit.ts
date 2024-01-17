@@ -107,19 +107,7 @@ describe("Director link correspondence address enter manually controller tests",
     });
 
     describe("post tests", () => {
-    //   it("should redirect to director residential address page when yes radio selected", async () => {
-    //     const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_yes"});
-
-    //     expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
-    //     expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-    //   });
-
-    //   it("should redirect to director residential address page when no radio selected", async () => {
-    //     const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "sa_to_roa_no"});
-
-    //     expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
-    //   });
-
+        
       it("should display an error when no radio button is selected", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "Test Director"
