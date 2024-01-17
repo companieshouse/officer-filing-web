@@ -10,4 +10,3 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   postDirectorNationality(req, res, next, DIRECTOR_OCCUPATION_PATH, false)
 };
-

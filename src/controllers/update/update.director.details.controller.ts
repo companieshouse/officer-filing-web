@@ -12,6 +12,7 @@ import {
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { selectLang, addLangToUrl, getLocalesService, getLocaleInfo } from "../../utils/localise";
+import { formatTitleCase } from "../../utils/format";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -35,7 +36,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       officerFiling: officerFiling,
-      directorTitle: officerFiling.title,
+      directorTitle: formatTitleCase(officerFiling.title),
       ...officerFiling,
       ...companyProfile,
       ...getLocaleInfo(locales, lang),
