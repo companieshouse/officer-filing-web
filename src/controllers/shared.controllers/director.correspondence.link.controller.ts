@@ -31,7 +31,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
   }
 };
 
-export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, nextPageUrl: string, backUrlPath: string) => {
+export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: String, nextPageUrl: string, backUrlPath: string) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -42,7 +42,7 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
       return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {
-        templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK,
+        templateName: templateName,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         errors: formatValidationErrors([linkError])
