@@ -134,10 +134,10 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
   if (registeredOfficeAddress !== undefined) {
       const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
       if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
-        logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for residential address");
         canUseRegisteredOfficeAddress = true;
       }
   }
+  logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for residential address");
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
