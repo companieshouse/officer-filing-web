@@ -13,6 +13,9 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { ResidentialManualAddressValidation } from "../validation/address.validation.config";
+import { validateManualAddress } from "../validation/manual.address.validation";
+import { logger } from "../utils/logger";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
@@ -126,6 +129,16 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
 };
 
 const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, formattedErrors?: FormattedValidationErrors) => {
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+  let canUseRegisteredOfficeAddress = false;
+  if (registeredOfficeAddress !== undefined) {
+      const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
+      if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
+        logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for residential address");
+        canUseRegisteredOfficeAddress = true;
+      }
+  }
+
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
     backLinkUrl: getBackLinkUrl(req),
@@ -135,6 +148,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
     protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
-    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice
+    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
+    canUseRegisteredOfficeAddress
   });
 };
