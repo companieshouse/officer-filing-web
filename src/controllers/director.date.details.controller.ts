@@ -3,13 +3,11 @@ import { DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH } from "../types/page.url
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { ValidationError } from "../model/validation.model";
-import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { createValidationError, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../validation/validation";
-import { appointmentDateErrorMessageKey, dobDateErrorMessageKey } from "../utils/api.enumerations.keys";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { formatValidationErrors } from "../validation/validation";
 import { AppointmentDateField, DobDateField } from "../model/date.model";
 import { validateDateOfAppointment, validateDateOfBirth } from "../validation/date.validation";
 import { DobDateValidation } from "../validation/dob.date.validation.config";
-import { getValidationStatus } from "../services/validation.status.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
