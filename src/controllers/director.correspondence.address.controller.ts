@@ -66,21 +66,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       serviceAddress: undefined
     };
 
-    let canUseRegisteredOfficeAddress = false;
-    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
-      const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-      if (registeredOfficeAddress !== undefined) {
-        const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
-        if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
-          canUseRegisteredOfficeAddress = true;
-          officerFilingBody.serviceAddress = registeredOfficeAddress;
-        }
-      }
-    }
-
+    const canUseRegisteredOfficeAddress = checkCanUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
+    
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath("TODO-Skeleton-Link-Page", req));
     }
@@ -100,6 +89,22 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   } catch(e) {
     next(e);
   }
+};
+
+const checkCanUseRegisteredOfficeAddress = (selectedSraAddressChoice, companyProfile, officerFilingBody) => {
+  let canUseRegisteredOfficeAddress = false;
+  if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+    const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+    if (registeredOfficeAddress !== undefined) {
+      const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
+      if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
+        canUseRegisteredOfficeAddress = true;
+        officerFilingBody.serviceAddress = registeredOfficeAddress;
+      }
+    }
+  }
+  logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
+  return canUseRegisteredOfficeAddress;
 };
 
 export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {
