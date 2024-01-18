@@ -152,6 +152,12 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("November 2002");
     });
 
+    it("Should throw error if referenceAppointmentId is undefined", async () => {
+      mockGetOfficerFiling.mockResolvedValue({});
+      const response = await request(app).get(CHECK_ANSWERS_URL);
+      expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
+
     it("Should throw an internal server error if resigned on date is missing", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingResignedOn);
       const response = await request(app).get(CHECK_ANSWERS_URL);
