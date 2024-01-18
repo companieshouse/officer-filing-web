@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% set title = "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+{% set radioName = "sa_to_roa" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -28,8 +29,8 @@
 
         {{ govukRadios({
           errorMessage: errors.sa_to_roa if errors,
-          idPrefix: "sa_to_roa",
-          name: "sa_to_roa",
+          idPrefix: radioName,
+          name: radioName,
           fieldset: fieldset,
           items: [
             {
