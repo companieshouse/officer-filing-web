@@ -80,12 +80,12 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
     }
 
-    if (companyAppointment.occupation?.toLowerCase !== patchedOccupationFiling.occupation?.toLowerCase
-      || (companyAppointment.occupation === "None" && patchedOccupationFiling.occupation !== "")) {
-      patchedOccupationFiling.occupationHasBeenUpdated = true;
+    if ((companyAppointment.occupation?.toLowerCase() === patchedOccupationFiling.occupation?.toLowerCase())
+      || (companyAppointment.occupation === "None" && patchedOccupationFiling.occupation === "")) {
+      patchedOccupationFiling.occupationHasBeenUpdated = false;
     }
     else{
-      patchedOccupationFiling.occupationHasBeenUpdated = false;
+      patchedOccupationFiling.occupationHasBeenUpdated = true;
     }
   }
   const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, patchedOccupationFiling);

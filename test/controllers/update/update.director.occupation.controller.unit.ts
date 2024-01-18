@@ -99,7 +99,7 @@ describe("Director occupation controller tests", () => {
         });
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
           etag: "etag",
-          "occupation:": "Director"
+          occupation: "Director"
         });
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
@@ -111,7 +111,7 @@ describe("Director occupation controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
       });
 
-      it("Should not list occupation as updated in an empty string is provided when the CHIPS value is 'None'", async () => {
+      it("Should not list occupation as updated if an empty string is provided when the CHIPS value is 'None'", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "John",
           lastName: "Smith",
@@ -119,14 +119,14 @@ describe("Director occupation controller tests", () => {
         });
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
           etag: "etag",
-          "occupation:": "Director"
+          occupation: "None"
         });
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : ""});
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {occupation: "Accountant",  occupationHasBeenUpdated : true})
+        {occupation: "",  occupationHasBeenUpdated : false})
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
       });
@@ -143,14 +143,7 @@ describe("Director occupation controller tests", () => {
 
         const response = await request(app)
           .post(DIRECTOR_OCCUPATION_URL)
-          .send({ 
-            "typeahead_input_0": "Dr", 
-            "first_name": "John", 
-            "middle_names": "", 
-            "last_name": "Smith", 
-            "previous_names_radio": "Yes", 
-            "previous_names": "Sparrow" 
-          });
+          .send({"typeahead_input_0" : "Accountant"});
         expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
       });
 
