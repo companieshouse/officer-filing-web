@@ -48,7 +48,8 @@ describe("Director link correspondence address enter manually controller tests",
           firstName: "testFirst",
           middleNames: "testMiddle",
           lastName: "testLast",
-          formerNames: "testFormer"
+          formerNames: "testFormer",
+          isServiceAddressSameAsRegisteredOfficeAddress: undefined
         })
         
         const response = await request(app).get(PAGE_URL);
@@ -110,7 +111,8 @@ describe("Director link correspondence address enter manually controller tests",
         
       it("should display an error when no radio button is selected", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "Test Director"
+          directorName: "Test Director",
+          isServiceAddressSameAsRegisteredOfficeAddress: undefined
         })
 
         const response = await request(app).post(PAGE_URL);
