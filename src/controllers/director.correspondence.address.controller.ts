@@ -71,7 +71,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       serviceAddress: undefined
     };
 
-    const canUseRegisteredOfficeAddress = checkCanUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
+    const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
     
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
@@ -96,20 +96,21 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const checkCanUseRegisteredOfficeAddress = (selectedSraAddressChoice, companyProfile, officerFilingBody) => {
-  let canUseRegisteredOfficeAddress = false;
+const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice, companyProfile, officerFilingBody) => {
+  let useRegisteredOfficeAddress = false;
   if (selectedSraAddressChoice === registeredOfficerAddressValue) {
     const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
     if (registeredOfficeAddress !== undefined) {
       const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
       if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
-        canUseRegisteredOfficeAddress = true;
+        useRegisteredOfficeAddress = true;
         officerFilingBody.serviceAddress = registeredOfficeAddress;
       }
     }
+    logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
   }
-  logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
-  return canUseRegisteredOfficeAddress;
+
+  return useRegisteredOfficeAddress;
 };
 
 export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {
