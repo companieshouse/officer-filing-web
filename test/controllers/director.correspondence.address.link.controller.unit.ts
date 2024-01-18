@@ -4,8 +4,6 @@ jest.mock("../../src/services/officer.filing.service");
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { Request } from "express";
-import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 import { 
