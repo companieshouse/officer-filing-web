@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, DIRECTOR_RESIDENTIAL_ADDRESS_PATH  } from "../types/page.urls";
+import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH  } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { getCorrespondenceLink, postCorrespondenceLink } from "./shared.controllers/director.correspondence.link.controller";
 

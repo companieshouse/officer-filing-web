@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
