@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
-        DIRECTOR_RESIDENTIAL_ADDRESS_PATH} from "../types/page.urls";
+import { 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+  DIRECTOR_OCCUPATION_PATH, 
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -71,7 +76,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      return res.redirect(urlUtils.getUrlToPath("TODO-Skeleton-Link-Page", req));
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
     }
     
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {

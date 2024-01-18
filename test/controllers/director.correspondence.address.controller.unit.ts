@@ -6,11 +6,15 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_CORRESPONDENCE_ADDRESS, 
-         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, urlParams, DIRECTOR_OCCUPATION_PATH_END,
-          DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
-          DIRECTOR_RESIDENTIAL_ADDRESS_PATH} 
-         from '../../src/types/page.urls';
+import {
+  urlParams,
+  DIRECTOR_CORRESPONDENCE_ADDRESS, 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
+  DIRECTOR_OCCUPATION_PATH_END,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../src/services/company.profile.service";
@@ -42,8 +46,11 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-
-  const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH = DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -178,7 +185,7 @@ describe("Director correspondence address controller tests", () => {
           director_correspondence_address: "director_registered_office_address"
         }));
         expect(response.status).toEqual(302);
-        expect(response.text).toContain("Found. Redirecting to " + "TODO-Skeleton-Link-Page");
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH);
       });
 
       it(`should redirect to ${DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL} if different address is selected`, async () => {
