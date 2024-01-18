@@ -40,9 +40,9 @@ const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockCloseTransaction = closeTransaction as jest.Mock;
 const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
 
-mockGetOfficerFiling.mockResolvedValue({data:{
-  referenceAppointmentId: "ref_id"
-}});
+mockGetOfficerFiling.mockResolvedValue({
+  referenceAppointmentId: "ref_id",
+});
 
 const COMPANY_NUMBER = "12345678";
 const SUBMISSION_ID = "987654321";

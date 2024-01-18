@@ -26,7 +26,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const companyOfficer: CompanyOfficer = await getDirectorAndTerminationDate(session, transactionId, submissionId);
-    const appointmentId = (await getOfficerFiling(session, transactionId, submissionId)).referenceAppointmentId as string
+    const appointmentId = (await getOfficerFiling(session, transactionId, submissionId)).referenceAppointmentId as string;
+    if (appointmentId === undefined) {
+      throw new Error("Appointment id is undefined");
+    }
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId)
 
     if(companyOfficer.resignedOn === undefined){
