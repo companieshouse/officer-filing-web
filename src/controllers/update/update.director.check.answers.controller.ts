@@ -7,7 +7,8 @@ import {
   UPDATE_DIRECTOR_NATIONALITY_PATH,
   URL_QUERY_PARAM,
   BASIC_STOP_PAGE_PATH,
-  UPDATE_DIRECTOR_DETAILS_PATH
+  UPDATE_DIRECTOR_DETAILS_PATH,
+  UPDATE_DIRECTOR_OCCUPATION_PATH
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
@@ -99,7 +100,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
     nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
-    occupationLink: urlUtils.getUrlToPath("", req),
+    occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
     dateUpdatedLink: urlUtils.getUrlToPath("", req),
     correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
     currentUrl: req.originalUrl,
