@@ -1,5 +1,6 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/company.profile.service");
+jest.mock("../../../src/services/company.appointments.service");
 jest.mock("../../../src/services/officer.filing.service");
 
 import mocks from "../../mocks/all.middleware.mock";
@@ -12,19 +13,24 @@ import {
 } from "../../../src/types/page.urls";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
-import {validCompanyProfile} from "../../mocks/company.profile.mock";
+import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
+import { validCompanyProfile } from "../../mocks/company.profile.mock";
+import { validCompanyAppointment } from "../../mocks/company.appointment.mock";
+
 const SURVEY_LINK = "https://www.smartsurvey.co.uk/s/directors-conf/"
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockGetOfficerFiling.mockResolvedValue({
   referenceAppointmentId: "app1",
   referenceEtag: "ETAG",
   resignedOn: "2008-08-08"
 });
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
@@ -40,6 +46,7 @@ describe("Director date details controller tests", () => {
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
+    mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
@@ -52,8 +59,28 @@ describe("Director date details controller tests", () => {
       expect(response.text).toContain(SURVEY_LINK);
     });
 
+    it("Should display the original name of the director", async () => {
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+      expect(response.text).toContain("John Elizabeth Doe");
+    });
+
+    it("Should throw an error is officer filing reference appointment is undefined", async () => {
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: undefined,
+        referenceEtag: "ETAG",
+        resignedOn: "2008-08-08"
+      });
+
+      const response = await request(app).get(UPDATE_SUBMITTED_URL);
+
+      expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
+
     it("Should display single dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
@@ -68,6 +95,8 @@ describe("Director date details controller tests", () => {
 
     it("Should display specific dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
@@ -82,6 +111,8 @@ describe("Director date details controller tests", () => {
 
     it("Should display all dynamic content for update submitted based on officerFiling", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
+        referenceAppointmentId: "app1",
+        referenceEtag: "ETAG",
         nameHasBeenUpdated: true,
         nationalityHasBeenUpdated: true,
         occupationHasBeenUpdated: true,

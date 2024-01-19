@@ -1,5 +1,22 @@
-import { getCountryFromKey, getField } from "../../src/utils/web";
+jest.mock("../../src/services/officer.filing.service");
+
+import mocks from "../mocks/all.middleware.mock";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
+import { urlUtils } from "../../src/utils/url";
+import { getCountryFromKey, getField, setRedirectLink } from "../../src/utils/web";
 import { Request } from 'express';
+import { patchOfficerFiling } from "../../src/services/officer.filing.service";
+
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+
+const COMPANY_NUMBER = "12345678";
+const TRANSACTION_ID = "11223344";
+const SUBMISSION_ID = "55555555";
+
+beforeEach(() => {
+  mocks.mockSessionMiddleware.mockClear();
+  mockPatchOfficerFiling.mockClear();
+});
 
 describe('getField', () => {
   it('should return the value of the specified field if it exists and is not empty', () => {
@@ -65,5 +82,47 @@ describe('test getCountryFromKey', () => {
     it('should return undefined for an unknown country key', () => {
       const result = getCountryFromKey('unknown');
       expect(result).toBeUndefined();
+    });
+  });
+
+describe('setRedirectLink', () => {
+    it('should return the redirect link if checkYourAnswersLink is falsy', async () => {
+      const req = {params: {}} as Request;
+      const checkYourAnswersLink = undefined;
+      const redirectLink = '/home';
+  
+      const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
+  
+      expect(result).toBe(redirectLink);
+    });
+  
+    it('should return the redirect link if checkYourAnswersLink does not end with appoint or update cya link', async () => {
+      const req = {params: {}} as Request;
+      const checkYourAnswersLink = '/some-link';
+      const redirectLink = '/home';
+  
+      const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
+  
+      expect(result).toBe(redirectLink);
+    });
+  
+    it('should return the URL to appoint cya if checkYourAnswersLink ends with appoint cya link', async () => {
+      const req = {params: {}} as Request;
+      const checkYourAnswersLink = '/some-link' + APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END;
+      const redirectLink = '/home';
+  
+      const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
+  
+      expect(result).toBe(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    });
+  
+    it('should return the URL to update cya if checkYourAnswersLink ends with update cya link', async () => {
+      const req = {params: {}} as Request;
+      const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
+      const redirectLink = '/home';
+  
+      const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
+  
+      expect(result).toBe(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
     });
   });

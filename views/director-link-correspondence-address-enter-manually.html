@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% set title = "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "includes/grid-row-div-start.html" %}
+      
+      <form action="" method="post">
+        <div class="govuk-form-group">
+        <span class="govuk-caption-l">{{directorName}}</span>
+        {{ govukRadios({
+          errorMessage: errors.sa_to_roa if errors,
+          idPrefix: "sa_to_roa",
+          name: "sa_to_roa",
+          fieldset: {
+            legend: {
+              text: title,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+                value: "sa_to_roa_yes",
+                text: "Yes",
+                checked: sa_to_roa === "sa_to_roa_yes",
+                attributes: {
+                  "data-event-id": "service_address_to_registered_office_address_yes"
+                }
+              },
+              {
+                value: "sa_to_roa_no",
+                text: "No",
+                checked: sa_to_roa === "sa_to_roa_no",
+                attributes: {
+                  "data-event-id": "service_address_to_registered_office_address_no"
+                }
+              }
+          ]
+        }) }}
+      </div>
+
+        {{ govukButton({
+          classes: "govuk-button",
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+      {% include "includes/grid-row-div-end.html" %}
+{% endblock %}

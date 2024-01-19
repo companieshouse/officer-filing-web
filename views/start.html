@@ -2,11 +2,15 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% block pageTitle %}
- {{ SERVICE_NAME }} - GOV.UK
+  {% if AP01_ACTIVE === "true" %}
+    {{i18n.appTitle}} - {{i18n.govUK}}
+  {% else %}
+    {{ i18n.appTitleJustRemove }} - {{i18n.govUK}}
+  {% endif %}
 {% endblock %}
 
 {% block signoutBar %}
-{# Remove signout bar on this page by replacing it with nothing #}
+  {# Remove signout bar on this page by replacing it with nothing #}
 {% endblock %}
 
 {% block content %}
@@ -15,37 +19,40 @@
 
       {% if AP01_ACTIVE === "true" %}
       <h1 class="govuk-heading-xl">
-        Appoint and remove a company director
+        {{ i18n.appTitle }}
       </h1>
       {% else %}
       <h1 class="govuk-heading-xl">
-        Remove a company director
+        {{ i18n.appTitleJustRemove }}
       </h1>
       {% endif %}
       
 
       {% if FEATURE_FLAG_REMOVE_DIRECTOR_20022023 === "true" or AP01_ACTIVE === "true" %}
       {% if AP01_ACTIVE === "true" %}
-        <p class="govuk-body">Use this service to appoint or remove (terminate the appointment of) a director of a limited company.</p>
-        <p class="govuk-body">You can use this service to:</p>
+        <p class="govuk-body">{{ i18n.startUseThisServiceInfo1 }}</p>
+        <p class="govuk-body">{{ i18n.startUseThisServiceInfo2 }}</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>appoint a new director – for now, you can only appoint a director who is a person</li>
-          <li>remove a director – you can remove a director who is a person or a corporate director</li>
+          <li>{{ i18n.startUseThisServiceInfo3 }}</li>
+          <li>{{ i18n.startUseThisServiceInfo4 }}</li>
         </ul>
-        <p class="govuk-body">To appoint a corporate director, you'll need to use our 
-          <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1" data-event-id="web-filing-link-clicked" class="govuk-link">WebFiling service</a> or file a 
-          <a href="https://www.gov.uk/government/collections/companies-house-forms-for-limited-companies#directors-and-secretaries" data-event-id="companies-house-form-link-clicked" class="govuk-link">Companies House form</a>.
+        <p class="govuk-body">{{ i18n.startUseThisServiceInfo5 }}
+          <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1" data-event-id="web-filing-link-clicked" class="govuk-link">{{ i18n.startUseThisServiceInfo6 }}</a> {{ i18n.startUseThisServiceInfo7 }}
+          <a href="https://www.gov.uk/government/collections/companies-house-forms-for-limited-companies#directors-and-secretaries" data-event-id="companies-house-form-link-clicked" class="govuk-link">{{ i18n.startUseThisServiceInfo8 }}</a>.
         </p>
       {% else %}
-        <p class="govuk-body">Use this service to remove (terminate the appointment of) a director of a limited company on the Companies House register, including corporate directors.</p>
+        <p class="govuk-body">{{ i18n.startUseThisServiceInfo1JustRemove }}</p>
       {% endif %}
+      {% set summaryHtml %}
+        <div>{{ i18n.startWhatIsACorporateDirectorTitle }}</div>
+      {% endset %}
         {% set corporateDetails %}
-        <p>This is a company, firm, or any other kind of corporate body that is appointed as the director of another company.</p>
-        <p>For example, COMPANY 1 LIMITED could be the corporate director of COMPANY 2 LIMITED.</p>
+        <p>{{ i18n.startWhatIsACorporateDirectorInfo1 }}</p>
+        <p>{{ i18n.startWhatIsACorporateDirectorInfo2 }}</p>
         {% endset %}
 
         {{ govukDetails({
-          summaryHtml: '<div> What is a corporate director?</div>',
+          summaryHtml: summaryHtml ,
           html: corporateDetails,
           attributes: {
             "data-event-id": "what-is-a-corporate-director-accordion"
@@ -53,44 +60,44 @@
         }) }}
 
         {% if AP01_ACTIVE === "true" %}
-        <h2 class="govuk-heading-m">Before you start</h2>
+        <h2 class="govuk-heading-m">{{ i18n.startBeforeYouStartTitle }}</h2>
         {% endif %}
-        <p class="govuk-body">You'll need:</p>
+        <p class="govuk-body">{{ i18n.startBeforeYouStartYoullNeedTitle }}</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>a Companies House account – we'll ask you to sign in or create one</li>
-          <li>the company number</li>
-          <li>the <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link-clicked">company authentication code</a> </li>
+          <li>{{ i18n.startBeforeYouStartYoullNeedInfo1 }}</li>
+          <li>{{ i18n.startBeforeYouStartYoullNeedInfo2 }}</li>
+          <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
           {% if AP01_ACTIVE !== "true" %}
-          <li>the date the director was removed from the company</li>
+          <li>{{ i18n.startBeforeYouStartYoullNeedRemoveOnlyInfo1 }}</li>
           {% endif %}
         </ul>
         {% if AP01_ACTIVE === "true" %}
         <br>
-        <p class="govuk-body">To appoint a director, you'll need their:</p>
+        <p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedTitle }}</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>name</li>
-          <li>previous names used for business purposes in the past 20 years (if relevant)</li>
-          <li>date of birth</li>
-          <li>nationality</li>
-          <li>occupation (this is optional)</li>
-          <li>correspondence address and home address</li>
-          <li>date of appointment</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedName }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedPreviousName }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedDOB }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedNationality }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedOccupation }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedAddresses }}</li>
+          <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedDOA }}</li>
         </ul>
-        <p class="govuk-body">You'll also need to tell us whether the director has ever applied to 
-          <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register" class="govuk-link" data-event-id="protect-personal-information-link-clicked">protect personal information at Companies House</a>.
+        <p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo1 }}
+          <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register" class="govuk-link" data-event-id="protect-personal-information-link-clicked">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo2 }}</a>
         </p>
         {% endif %}
 
         <br>
         <a href="/appoint-update-remove-company-officer/company-number" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
-          Start now
+          {{ i18n.startStartNowButton }}
           <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
             <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
           </svg>
         </a>
       {% else %}
         <ul>
-          <li>This service is not yet active</li>
+          <li>{{ i18n.startNotActiveYet }}</li>
         </ul>
       {% endif %}
     </div>

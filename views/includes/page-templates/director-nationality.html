@@ -1,0 +1,158 @@
+{% extends "layout.html" %}
+
+{% set title = i18n.directorNationalityTitle %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+
+{% if errors %}
+  {% set dropdownOneError =  errors.typeahead_input_0 %}
+  {% set dropdownTwoError =  errors.typeahead_input_1 %}
+  {% set dropdownThreeError =  errors.typeahead_input_2 %}
+{% endif %}
+{% set typeaheadHint = i18n.directorNationalityListHint+"|"+i18n.directorNationalitySecondNationalityHint+"|"+i18n.directorNationalityThirdNationalityHint %}
+{% set thirdNationality = "<label class='govuk-label' for='typeahead_input_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
+
+{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityHint~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
+{% set typeaheadTitle =  aheadTitle | safe %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+
+      {% include "includes/list/errors.html" %}
+      
+      <form action="" method="post">
+            
+        {% set dropdownDefaultText = "Choose nationality" %}
+        {% if not isUpdate %}
+        <span class="govuk-caption-l">{{directorName}}</span>
+        {% endif %}
+        <div id="typeahead-form-group-0" class="govuk-form-group">
+        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+        {% set dropdownNumber = "0" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set errorMessage = dropdownOneError %}
+        {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
+        </div>
+        <p id="nationality-2-link" class="govuk-body" style="display: none;">
+          <a data-event-id="nationality-2-link" href="#" id="second-nationality-link" class="govuk-link govuk-link--no-visited-state">{{ i18n.directorNationalityAddSecondLabel }}</a>
+        </p>
+
+        <div id="typeahead-form-group-1" class="govuk-form-group">
+        <div id="my-autocomplete-container-1" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+        {% set dropdownNumber = "1" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set errorMessage = dropdownTwoError %}
+        {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
+        </div>
+        <p id= "nationality-3-link" class="govuk-body" style="display: none;">
+          <a data-event-id="nationality-3-link" href="#" id="third-nationality-link" class="govuk-link govuk-link--no-visited-state">{{ i18n.directorNationalityAddThirdLabel }}</a>
+        </p>
+
+        <div id="typeahead-form-group-2" class="govuk-form-group">
+        <div id="my-autocomplete-container-2" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+        {% set dropdownNumber = "2" %}
+        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
+        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+        {% set errorMessage = dropdownThreeError %}
+        {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
+        </div>
+
+        <div class="govuk-inset-text">
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.whatInformationShownInOnlineRegisterInsetHint }}</p>
+        </div>
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: i18n.continue
+        }) }}
+
+        <!-- Hidden radio buttons to record whether links are clicked -->
+        {{ govukRadios({
+          id: "nationality_2_radio",
+          name: "nationality_2_radio",
+          attributes: {
+            "style": "display: none;"
+          },
+          items: [
+            {
+              id: "nationality_2_radio_yes",
+              value: true,
+              text: "Yes"
+            }
+          ]
+        }) }}
+
+        {{ govukRadios({
+          id: "nationality_3_radio",
+          name: "nationality_3_radio",
+          attributes: {
+            "style": "display: none;"
+          },
+          items: [
+            {
+              id: "nationality_3_radio_yes",
+              value: true,
+              text: "Yes"
+            }
+          ]
+        }) }}
+
+      </form>
+    </div>
+    {% include "includes/inputs/fields/typeahead-input.html" %}
+  </div>
+  <script type="text/javascript">
+    //show and hide nationality 
+    $(document).ready(function () {
+      // If link has already been clicked, set up the page as it was before
+      if ("{{nationality2_hidden}}" === "true") {
+        $('#nationality-2-link').hide();
+        radiobtn = document.getElementById("nationality_2_radio_yes");
+        radiobtn.checked = true;
+        $('#nationality-3-link').show();
+      }
+      else {
+        $('#nationality-2-link').show();
+        $('#typeahead-form-group-1').hide();
+        $('#nationality-2-link').click(function () {
+          $('#typeahead-form-group-1').show();
+          $('#nationality-3-link').show();
+          $('#nationality-2-link').hide();
+          radiobtn = document.getElementById("nationality_2_radio_yes");
+          radiobtn.checked = true;
+          return false;
+        });
+      }
+
+      if ("{{nationality3_hidden}}" === "true") {
+        $('#nationality-3-link').hide();
+        radiobtn = document.getElementById("nationality_3_radio_yes");
+        radiobtn.checked = true;
+      }
+      else {
+        $('#typeahead-form-group-2').hide();
+        $('#nationality-3-link').click(function () {
+          $('#typeahead-form-group-2').show();
+          $('#nationality-3-link').hide();
+          radiobtn = document.getElementById("nationality_3_radio_yes");
+          radiobtn.checked = true;
+          return false;
+        });
+      }
+    })
+  </script>
+{% endblock %}

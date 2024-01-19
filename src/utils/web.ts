@@ -1,9 +1,10 @@
 import { Request } from "express";
 import { urlUtils } from "./url";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH } from "../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH } from "../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
+
 /**
  * Get field from the form. If the field is populated then it will be returned, else undefined.
  */
@@ -36,15 +37,22 @@ export const setRedirectLink = async (req: Request, checkYourAnswersLink: string
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
   const session: Session = req.session as Session;
+
   if(checkYourAnswersLink){
     const officerFiling: OfficerFiling = {
       checkYourAnswersLink: ""
-  };
-  await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-  return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    };
+    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+
+    if (checkYourAnswersLink.endsWith(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END)) {
+      return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    } else if (checkYourAnswersLink.endsWith(UPDATE_DIRECTOR_CHECK_ANSWERS_END)) {
+      return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    }
   }
   return redirectLink;
-  }
+}
+
 /**
  * Map the country key returned by postcode lookup to a readable format
  */
