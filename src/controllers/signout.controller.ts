@@ -1,4 +1,4 @@
-import { Handler, NextFunction, Request, response, Response } from "express";
+import { Handler, NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { SIGNOUT_RETURN_URL_SESSION_KEY } from "../utils/constants";
 import { Session } from "@companieshouse/node-session-handler";

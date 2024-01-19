@@ -13,6 +13,14 @@ export const formatTitleCase = (str: string|undefined): string =>  {
     });
 };
 
+export const formatSentenceCase = (str: string|undefined): string =>  {
+  if (!str) {
+    return "";
+  }
+
+  return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+};
+
 export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string =>  {
   if (!dateOfBirth) {
     return "";
@@ -24,10 +32,8 @@ export const formatDateOfBirth = (dateOfBirth: DateOfBirth | undefined): string 
 
   let parseDateOfBirth = new Date(parseInt(dateOfBirth.year), (parseInt(dateOfBirth.month) - 1));
   
-  let dateOfBirthStr = parseDateOfBirth.toLocaleString('default', {month: 'long'}) +
+  return parseDateOfBirth.toLocaleString('default', {month: 'long'}) +
       ' ' + parseDateOfBirth.getFullYear();
-
-  return dateOfBirthStr;
 };
 
 export const formatAppointmentDate = (appointedOn: string | undefined): string =>  {
@@ -43,10 +49,8 @@ export const formatAppointmentDate = (appointedOn: string | undefined): string =
 
   let parseAppointedOn = new Date(parseInt(appointedOnSplit[0]), (parseInt(appointedOnSplit[1]) - 1),  parseInt(appointedOnSplit[2]));
   
-  let appointmentDateStr = parseAppointedOn.getDate() + ' ' + parseAppointedOn.toLocaleString('default', {month: 'long'}) +
+  return parseAppointedOn.getDate() + ' ' + parseAppointedOn.toLocaleString('default', {month: 'long'}) +
       ' ' + parseAppointedOn.getFullYear();
-
-  return appointmentDateStr;
 };
 
 export const toUpperCase = (str: string | undefined): string => {

@@ -1,4 +1,4 @@
-import { getDirectorName, postDirectorName } from "../../controllers/shared.controllers/director.name.controller"
+import { getDirectorName, postDirectorName } from "../shared.controllers/director.name.controller"
 import { NextFunction, Request, Response } from "express"
 import { UPDATE_DIRECTOR_DETAILS_PATH } from "../../types/page.urls"
 import { Templates } from "../../types/template.paths"

@@ -21,6 +21,7 @@ export enum Templates {
   DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS = "director-correspondence-address-choose-address",
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL = "director-correspondence-address-manual",
   DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "director-correspondence-address-link",
+  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY = "director-link-correspondence-address-enter-manually",
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS = "director-confirm-correspondence-address",
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS = "director-confirm-residential-address",
   DIRECTOR_RESIDENTIAL_ADDRESS = "director-residential-address",
@@ -36,6 +37,7 @@ export enum Templates {
   UPDATE_DIRECTOR_NAME = "update/update-director-name",
   DIRECTOR_DATE_OF_CHANGE = "update/director-date-of-change",
   UPDATE_DIRECTOR_CHECK_ANSWERS = "update/update-director-check-answers",
+  UPDATE_DIRECTOR_OCCUPATION = "update/update-director-occupation",
   UPDATE_DIRECTOR_SUBMITTED = "update/update-director-submitted",
-
+  UPDATE_DIRECTOR_NATIONALITY = "update/update-director-nationailty",
 }

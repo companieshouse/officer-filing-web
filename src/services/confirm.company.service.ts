@@ -1,5 +1,4 @@
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { lookupCompanyStatus, lookupCompanyType } from "../utils/api.enumerations";
 import { toReadableFormat } from "../utils/date";
 import { LocalesService } from "@companieshouse/ch-node-utils"
 

@@ -1,0 +1,16 @@
+{
+    "updateDirectorDetailsTitle" : "View and update the director's details",
+    "updateDirectorDetailsHint" : "If you need to tell us about more than one update, and they happened on different dates, you must submit them separately.",
+    "updateDirectorDetailsInsetText" : "Any updates you make to a director's details are pending until you’ve submitted this filing, and we’ve accepted it.",
+    "updateDirectorDetailsHeading" : "Director details",
+    "updateDirectorDetailsUpdate" : "Update",
+    "updateDirectorDetailsName" : "Name",
+    "updateDirectorDetailsNationality" : "Nationality",
+    "updateDirectorDetailsOccupation" : "Occupation",
+    "updateDirectorDetailsGoBackButton" : "Go back to current directors",
+    "updateDirectorDetailsAddressDetails" : "Address details",
+    "updateDirectorDetailsCorrespondenceAddressSameAsROA" : "The correspondence address is the same as the registered office address",
+    "updateDirectorDetailsHomeAddressSameAsCorrespondence" : "The home address is the same as the correspondence address",
+    "updateDirectorDetailsCorrespondenceAddress" : "Correspondence address",
+    "updateDirectorDetailsHomeAddress" : "Home address"
+}

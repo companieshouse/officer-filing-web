@@ -4,8 +4,6 @@ jest.mock("../../src/services/officer.filing.service");
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { Request } from "express";
-import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 import { 
@@ -106,6 +104,17 @@ describe("Director correspondence address link controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
+      it("Should return undefined when saToRoa is undefined", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          isServiceAddressSameAsRegisteredOfficeAddress: null
+        });
+
+        const response = await request(app).get(PAGE_URL);
+
+        expect(response.text).not.toContain('value="sa_to_roa_no" checked');
+        expect(response.text).not.toContain('value="sa_to_roa_yes" checked');
+      });
+
     });
 
     describe("post tests", () => {
@@ -134,6 +143,13 @@ describe("Director correspondence address link controller tests", () => {
       it("should catch error", async () => {
         const response = await request(app).post(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
+
+      it("Should return undefined when sa_to_roa is not 'yes' or 'no'", async () => {
+        const response = await request(app).post(PAGE_URL).send({"sa_to_roa": "notYesOrNo"});
+      
+        expect(response.text).not.toContain('value="sa_to_roa_no" checked');
+        expect(response.text).not.toContain('value="sa_to_roa_yes" checked');
       });
     });
 });
