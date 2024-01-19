@@ -6,7 +6,8 @@ import {
   UPDATE_DIRECTOR_SUBMITTED_PATH,
   UPDATE_DIRECTOR_NATIONALITY_PATH,
   URL_QUERY_PARAM,
-  BASIC_STOP_PAGE_PATH
+  BASIC_STOP_PAGE_PATH,
+  UPDATE_DIRECTOR_DETAILS_PATH
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
@@ -33,6 +34,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+
+    // redirect to update page if no changes have been made
+    if (!officerFiling.nameHasBeenUpdated && !officerFiling.nationalityHasBeenUpdated && !officerFiling.occupationHasBeenUpdated && !officerFiling.correspondenceAddressHasBeenUpdated && !officerFiling.residentialAddressHasBeenUpdated) {
+      return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req));
+    }
   
     renderPage(req, res, companyNumber, officerFiling);
   } catch (e) {
@@ -88,7 +94,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
-    name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)), 
+    name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
