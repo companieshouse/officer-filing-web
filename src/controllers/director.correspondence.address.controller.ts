@@ -96,7 +96,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice, companyProfile, officerFilingBody) => {
+const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, companyProfile: CompanyProfile, officerFilingBody: OfficerFiling): Boolean => {
   let useRegisteredOfficeAddress = false;
   if (selectedSraAddressChoice === registeredOfficerAddressValue) {
     const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
