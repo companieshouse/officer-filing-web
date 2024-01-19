@@ -77,7 +77,7 @@ describe("Update director nationality controller tests", () => {
       });
 
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=cy");
-      expect(response.text).toContain("to be translate");
+      expect(response.text).toContain("to be translated");
     });
 
     it("should catch error", async () => {
