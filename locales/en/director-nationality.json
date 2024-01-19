@@ -1,6 +1,7 @@
 {
   "directorNationalityTitle": "What is the director's nationality?",
   "directorNationalityListHint": "Start typing a nationality, then choose from the list",
+  "directorDropDownDefaultText": "Choose nationality",
   "directorNationalityAddSecondLabel": "Add a second nationality",
   "directorNationalitySecondNationalityLabel": "Second nationality (if relevant)",
   "directorNationalitySecondNationalityHint": "Dual citizenship (also known as dual nationality) is allowed in some countries. This means you can be a citizen of your own country and another country.",
