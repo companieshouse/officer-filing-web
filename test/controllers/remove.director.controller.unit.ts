@@ -224,7 +224,7 @@ describe("Remove director date controller tests", () => {
     it("Should display error if get validation status returns errors", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
       mockRetrieveErrorMessageToDisplay.mockReturnValue("removal-date-after-incorporation-date");
-      mockLookupWebValidationMessage.mockReturnValue("The date you enter must be after the company's incorporation date");
+      mockLookupWebValidationMessage.mockReturnValue("Enter a date that is on or after the company's incorporation date");
       mockGetOfficerFiling.mockReturnValueOnce({
         referenceAppointmentId: APPOINTMENT_ID
       });
@@ -235,7 +235,7 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "8",
                 "removal_date-year": "2010" });
 
-        expect(response.text).toContain("The date you enter must be after the company&#39;s incorporation date");
+        expect(response.text).toContain("Enter a date that is on or after the company&#39;s incorporation date");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
