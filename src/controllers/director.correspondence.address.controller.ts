@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_OCCUPATION_PATH, 
-        DIRECTOR_RESIDENTIAL_ADDRESS_PATH} from "../types/page.urls";
+import { 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+  DIRECTOR_OCCUPATION_PATH, 
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+} from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -14,6 +19,9 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../s
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "./director.residential.address.controller";
 import { setBackLink } from "../utils/web";
+import { validateManualAddress } from "../validation/manual.address.validation";
+import { CorrespondenceManualAddressValidation } from "../validation/address.validation.config";
+import { logger } from "../utils/logger";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -62,11 +70,15 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       directorServiceAddressChoice: selectedSraAddressChoice,
       serviceAddress: undefined
     };
-    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
-      officerFilingBody.serviceAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-    }
 
+    const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
+    
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
+    if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
+    }
+    
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
     }
@@ -82,6 +94,23 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   } catch(e) {
     next(e);
   }
+};
+
+const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, companyProfile: CompanyProfile, officerFilingBody: OfficerFiling): boolean => {
+  let useRegisteredOfficeAddress = false;
+  if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+    const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+    if (registeredOfficeAddress !== undefined) {
+      const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
+      if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
+        useRegisteredOfficeAddress = true;
+        officerFilingBody.serviceAddress = registeredOfficeAddress;
+      }
+    }
+    logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for correspondence address");
+  }
+
+  return useRegisteredOfficeAddress;
 };
 
 export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {

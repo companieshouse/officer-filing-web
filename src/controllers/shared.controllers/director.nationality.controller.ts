@@ -12,7 +12,7 @@ import { getCompanyAppointmentFullRecord } from "../../services/company.appointm
 import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
 import { STOP_TYPE } from "../../utils/constants";
 import { urlUtils } from "../../utils/url";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
 
 export const getDirectorNationality = async (req: Request, res: Response, next: NextFunction, template: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -51,6 +51,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
 
     const officerFiling: OfficerFiling = {
       nationality1: getField(req, DirectorField.NATIONALITY_1),
@@ -78,7 +79,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     }
 
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-    const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
+    const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
     return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
   } catch (e) {
     return next(e);
