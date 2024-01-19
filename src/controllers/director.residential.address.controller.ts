@@ -137,7 +137,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
         canUseRegisteredOfficeAddress = true;
       }
   }
-  logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for residential address");
+  logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for residential address");
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
