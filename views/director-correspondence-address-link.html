@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% set title = "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
-
+{% set radioName = "sa_to_roa" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -17,24 +17,27 @@
       <form action="" method="post">
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
-
-        {{ govukRadios({
-          errorMessage: errors.sa_to_roa if errors,
-          idPrefix: "sa_to_roa",
-          name: "sa_to_roa",
-          fieldset: {
+        {% set hintText =  "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address." %}
+        {% set fieldset = {
             legend: {
               text: title,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
-          },
+          }
+        %}
+
+        {{ govukRadios({
+          errorMessage: errors.sa_to_roa if errors,
+          idPrefix: radioName,
+          name: radioName,
+          fieldset: fieldset,
           items: [
             {
               value: "sa_to_roa_yes",
               text: "Yes",
               hint: {
-                text: "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address."
+                text: hintText
               },
               checked: sa_to_roa === "sa_to_roa_yes",
               attributes: {
