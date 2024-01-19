@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, 
+import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH,
         urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
@@ -129,7 +129,11 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const nationalities = appointment.nationality?.split(",");
-  
+  let occupation = appointment.occupation;
+  if(occupation === "None"){
+    occupation = "";
+  }
+
   const officerFiling: OfficerFiling = {
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag,
@@ -140,7 +144,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
     formerNames: appointment.formerNames?.map(formerName => formatTitleCase(formerName.forenames) + " " + formatTitleCase(formerName.surname)).join(", "),
     dateOfBirth: appointment.dateOfBirth?.year + "-" + appointment.dateOfBirth?.month?.toString().padStart(2, '0') + "-" + appointment.dateOfBirth?.day?.toString().padStart(2, '0'),
     appointedOn: appointment.appointedOn? appointment.appointedOn: appointment.appointedBefore,
-    occupation: appointment.occupation,
+    occupation: occupation,
     nationality1: nationalities && nationalities?.length > 0? formatTitleCase(nationalities[0]): "",
     nationality2: nationalities && nationalities?.length > 1? formatTitleCase(nationalities[1]): "",
     nationality3: nationalities && nationalities?.length > 2? formatTitleCase(nationalities[2]): "",

@@ -1,8 +1,7 @@
 import { urlUtils } from "../utils/url";
 import { OFFICER_FILING } from "../types/page.urls";
 import { Request, Response } from "express";
-import { LocalesService } from "@companieshouse/ch-node-utils";
-import { selectLang, getLocalesService, addLangToUrl, getLocaleInfo } from "../utils/localise";
+import { selectLang, getLocalesService, getLocaleInfo } from "../utils/localise";
 import {
   CHS_URL,
   PIWIK_START_GOAL_ID,

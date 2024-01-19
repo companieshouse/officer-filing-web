@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CURRENT_DIRECTORS_PATH, DATE_DIRECTOR_REMOVED_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DATE_DIRECTOR_REMOVED_PATH, REMOVE_DIRECTOR_SUBMITTED_PATH, BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";

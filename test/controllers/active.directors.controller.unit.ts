@@ -290,5 +290,27 @@ describe("Active directors controller tests", () => {
       }));
     });
 
+    it("Should post filing and redirect to next page CH01 with blank value for occupation", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({...validCompanyAppointment,
+                                                                occupation: "None"});
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
+      });
+
+      const response = await request(app)
+        .post(CURRENT_DIRECTORS_URL)
+        .send({"updateAppointmentId": APPOINTMENT_ID});
+
+      expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+        occupation: "",
+      }));
+    });
+
+    
+
   });
 });
