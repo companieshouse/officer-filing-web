@@ -107,7 +107,7 @@ const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, comp
         officerFilingBody.serviceAddress = registeredOfficeAddress;
       }
     }
-    logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address for correspondence address");
+    logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for correspondence address");
   }
 
   return useRegisteredOfficeAddress;
