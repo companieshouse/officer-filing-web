@@ -19,6 +19,7 @@
             {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
           </div>
         </div>
+        {% import "includes/removal-date-localisation.html" as macros %}
 
         {{ govukSummaryList({
           rows: [
@@ -51,7 +52,7 @@
                 text: i18n.removeDirectorConfirmationDateRemoved
               },
               value: {
-                text: resignedOn
+                text:  macros.localiseRemovalDate(resignedOn, i18n)
               }
             }
           ]
