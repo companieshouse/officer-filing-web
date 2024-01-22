@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+{% set title = i18n.directorLinkCorrespondenceManuallyTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -30,7 +30,10 @@
           items: [
             {
                 value: "sa_to_roa_yes",
-                text: "Yes",
+                text: i18n.yes,
+                hint: {
+                  text: i18n.directorLinkCorrespondenceManuallyHintTextYes
+                },
                 checked: sa_to_roa === "sa_to_roa_yes",
                 attributes: {
                   "data-event-id": "service_address_to_registered_office_address_yes"
@@ -38,7 +41,10 @@
               },
               {
                 value: "sa_to_roa_no",
-                text: "No",
+                text: i18n.no,
+                hint: {
+                  text: i18n.directorLinkCorrespondenceManuallyHintTextNo
+                },
                 checked: sa_to_roa === "sa_to_roa_no",
                 attributes: {
                   "data-event-id": "service_address_to_registered_office_address_no"
