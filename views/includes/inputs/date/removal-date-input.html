@@ -48,28 +48,31 @@
   namePrefix: "removal_date",
   fieldset: {
     legend: {
-      text: "When was the director removed from the company?",
+      text: i18n.dateOfRemoveTitle,
       isPageHeading: true,
       classes: "govuk-fieldset__legend--l"
     }
   },
   hint: {
-    text: "For example, 27 3 2021"
+    text: i18n.dateOfRemoveTitleHint
   },
   items: [
     {
+      label: i18n.day,
       classes: removal_date_classes_day,
       name: "day",
       value: removal_date["removal_date-day"] if removal_date,
       pattern: "*"
     },
     {
+      label: i18n.month,
       classes: removal_date_classes_month,
       name: "month",
       value: removal_date["removal_date-month"] if removal_date,
       pattern: "*"
     },
     {
+      label: i18n.year,
       classes: removal_date_classes_year,
       name: "year",
       value: removal_date["removal_date-year"] if removal_date,
