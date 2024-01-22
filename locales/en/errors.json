@@ -30,6 +30,17 @@
   "error-duplicate-nationality2": "Enter a different second nationality",
   "error-duplicate-nationality3": "Enter a different third nationality",
   "error-occupation-length": "Occupation must be 100 characters or less",
-  "error-occupation-characters": "Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes"
-
+  "error-occupation-characters": "Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
+  "error-removal-date-missing-day": "Date the director was removed must include a day",
+  "error-removal-date-missing-month": "Date the director was removed must include a month",
+  "error-removal-date-missing-year": "Date the director was removed must include a year",
+  "error-removal-date-missing-day-month": "Date the director was removed must include a day and a month",
+  "error-removal-date-missing-day-year": "Date the director was removed must include a day and a year",
+  "error-removal-date-missing-month-year": "Date the director was removed must include a month and a year",
+  "error-removal-date-missing-day-month-year": "Enter the date the director was removed",
+  "error-removal-date-invalid": "Date the director was removed must be a real date",
+  "error-removal-date-after-appointment-date": "Enter a date that is on or after the date the director was appointed",
+  "error-removal-date-in-past" : "Enter a date that is today or in the past",
+  "error-removal-date-after-incorporation-date": "Enter a date that is on or after the company's incorporation date",
+  "error-removal-date-after-2009": "Enter a date that is on or after 1 October 2009. If the director was removed before this date, you must file form 288b instead"
 }

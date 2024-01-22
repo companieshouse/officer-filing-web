@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "When was the director removed from the company?" %}
+{% set title = i18n.dateOfRemoveTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -27,7 +27,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>
