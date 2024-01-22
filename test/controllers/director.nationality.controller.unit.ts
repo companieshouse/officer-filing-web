@@ -54,6 +54,17 @@ describe("Director nationality controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
+      it("Should render the page title in welsh", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          nationality1: "nationality1",
+          nationality2: "nationality2",
+          nationality3: "nationality3",
+        });
+
+        const response = await request(app).get(DIRECTOR_NATIONALITY_URL + "?lang=cy");
+        expect(response.text).toContain("to be translated");
+      });
+
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(DIRECTOR_NATIONALITY_URL);
@@ -72,6 +83,17 @@ describe("Director nationality controller tests", () => {
         const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it("Should redirect to director occupation page with lang cy if provided", async () => {
+        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          }});
+
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British", lang:"cy"});
+        expect(mockPatchOfficerFiling).toHaveBeenCalled();
+        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL + "?lang=cy");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 

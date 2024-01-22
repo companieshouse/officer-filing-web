@@ -12,12 +12,12 @@ import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_P
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getBackLinkUrl } from './../../src/controllers/director.residential.address.controller';
-import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { validCompanyProfile } from "../mocks/company.profile.mock";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../src/services/company.profile.service";
+import { validCompanyProfile, validAddress } from "../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -25,6 +25,7 @@ mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockMapCompanyProfileToOfficerFilingAddress = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -52,11 +53,6 @@ const DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SE
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-
-const mockRes = {
-  render: jest.fn() as any,
-  redirect: jest.fn() as any,
-} as Response;
 
 const mockReq = {
   session: {} as Session,
@@ -92,6 +88,7 @@ describe("Director name controller tests", () => {
     mockGetOfficerFiling.mockReset();
     mockGetCompanyProfile.mockReset();
     mockPatchOfficerFiling.mockReset();
+    mockMapCompanyProfileToOfficerFilingAddress.mockReset();
   });
 
   describe("get tests", () => {
@@ -101,6 +98,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
@@ -119,6 +117,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       mockReq.params = {
         companyNumber: COMPANY_NUMBER,
         transactionId: TRANSACTION_ID,
@@ -126,7 +125,7 @@ describe("Director name controller tests", () => {
       }
       mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
       const response = await request(app).get(PAGE_URL);
-      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END)
+      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END);
     });
 
     it("Should navigate to error page when feature flag is off", async () => {
@@ -148,7 +147,7 @@ describe("Director name controller tests", () => {
       }
       mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
       const backLinkUrl = getBackLinkUrl(mockReq);
-      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)
+      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END);
     });
 
     it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} when user visit page from it`, async () =>  {
@@ -163,7 +162,7 @@ describe("Director name controller tests", () => {
       }
       mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
       const backLinkUrl = getBackLinkUrl(mockReq);
-      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END)
+      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END);
     });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director registered office address`, async () => {
@@ -172,6 +171,7 @@ describe("Director name controller tests", () => {
         ...directorNameMock,
         ...serviceAddressMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -188,6 +188,28 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
     });
 
+    it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with without director registered office address when that address is incomplete`, async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...serviceAddressMock
+      });
+      const invalidAddress = { ...validAddress, premises: undefined };
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(invalidAddress);
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+      expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.premises);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine2);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.region);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.country);
+      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+    });
+
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address when it was selected as correspondence address`, async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
@@ -195,6 +217,7 @@ describe("Director name controller tests", () => {
         ...serviceAddressMock,
         directorServiceAddressChoice: "director_registered_office_address"
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -219,6 +242,7 @@ describe("Director name controller tests", () => {
         ...directorNameMock,
         ...serviceAddressMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -242,6 +266,7 @@ describe("Director name controller tests", () => {
         ...directorNameMock,
         ...serviceAddressMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -261,6 +286,7 @@ describe("Director name controller tests", () => {
         ...directorNameMock,
         ...serviceAddressMock
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -275,6 +301,7 @@ describe("Director name controller tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -304,6 +331,7 @@ describe("Director name controller tests", () => {
         ...directorNameMock,
       });
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = (await request(app).post(PAGE_URL).send({}));
       expect(response.text).toContain("Select the address where the director lives");
       expect(response.text).toContain(PAGE_HEADING);
