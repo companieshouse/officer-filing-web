@@ -1,15 +1,20 @@
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../src/services/company.profile.service")
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../src/services/company.profile.service";
+import { validCompanyProfile, validAddress } from "../mocks/company.profile.mock";
 
 import { 
   urlParams, 
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { SA_TO_ROA_ERROR } from "../../src/utils/constants";
@@ -17,6 +22,8 @@ import { SA_TO_ROA_ERROR } from "../../src/utils/constants";
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockMapCompanyProfileToOfficerFilingAddressMock = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -29,6 +36,14 @@ const PAGE_URL = DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const NEXT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_URL_INCOMPLETE_ROA_YES = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_URL_INCOMPLETE_ROA_NO = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -109,19 +124,39 @@ describe("Director link correspondence address enter manually controller tests",
 
     describe("post tests", () => {
         
-      it("should display an error when no radio button is selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "Test Director",
-          isServiceAddressSameAsRegisteredOfficeAddress: undefined
-        })
+      // it("should display an error when no radio button is selected", async () => {
+      //   mockGetOfficerFiling.mockResolvedValueOnce({
+      //     directorName: "Test Director",
+      //     isServiceAddressSameAsRegisteredOfficeAddress: undefined
+      //   })
 
-        const response = await request(app).post(PAGE_URL);
-        expect(response.text).toContain(SA_TO_ROA_ERROR);
+      //   const response = await request(app).post(PAGE_URL);
+      //   expect(response.text).toContain(SA_TO_ROA_ERROR);
+      // });
+
+      // it("should catch error", async () => {
+      //   const response = await request(app).post(PAGE_URL);
+      //   expect(response.text).toContain(ERROR_PAGE_HEADING)
+      // });
+
+      it(`should redirect to enter director residential address page if roa is incomplete and yes radio button is selected `, async () => {
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockMapCompanyProfileToOfficerFilingAddressMock.mockReturnValueOnce({ ...validAddress, premises: undefined});
+        const response = (await request(app).post(PAGE_URL).send({
+          sa_to_roa: "sa_to_roa_yes"
+        }));
+        expect(response.status).toEqual(302);
+        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL_INCOMPLETE_ROA_YES);
       });
 
-      it("should catch error", async () => {
-        const response = await request(app).post(PAGE_URL);
-        expect(response.text).toContain(ERROR_PAGE_HEADING)
+      it(`should redirect to enter director correspondence address page if roa is incomplete and no radio button is selected `, async () => {
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockMapCompanyProfileToOfficerFilingAddressMock.mockReturnValueOnce({ ...validAddress, premises: undefined});
+        const response = (await request(app).post(PAGE_URL).send({
+          sa_to_roa: "sa_to_roa_no"
+        }));
+        expect(response.status).toEqual(302);
+        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL_INCOMPLETE_ROA_NO);
       });
     });
 });

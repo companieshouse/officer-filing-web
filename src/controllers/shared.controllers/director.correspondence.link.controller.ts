@@ -9,6 +9,9 @@ import { DirectorField } from "../../model/director.model";
 import { getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { SA_TO_ROA_ERROR } from "../../utils/constants";
+import { DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH } from "../../types/page.urls";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string,) => {
   try {
@@ -45,6 +48,14 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
         errors: formatValidationErrors([linkError])
       });
+    }
+
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyProfile = await getCompanyProfile(companyNumber);
+    const validateRoa = validateRegisteredOfficeAddress(companyProfile)
+    if (!validateRoa) {
+      nextPageUrl = isServiceAddressSameAsRegisteredOfficeAddress ? DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH : 
+      DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -84,4 +95,13 @@ export const calculateSaToRoaBooleanValue = (req: Request): boolean|undefined =>
     return false;
   }
   return undefined;
+}
+
+const validateRegisteredOfficeAddress = (companyProfile: CompanyProfile): boolean => {
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+  if (registeredOfficeAddress !== undefined) {
+    return true;
+  } else {
+    return false;
+  }
 }
