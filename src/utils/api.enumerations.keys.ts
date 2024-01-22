@@ -115,8 +115,8 @@ export enum postcodeErrorMessageKey {
 }
 
 export enum premisesErrorMessageKey {
-  PREMISES_CHARACTERS = "premises-characters",
-  PREMISES_LENGTH = "premises-length"
+	PREMISES_CHARACTERS = "premises-characters",
+	PREMISES_LENGTH = "premises-length"
 }
 
 export enum nationalityErrorMessageKey{
@@ -286,4 +286,8 @@ export enum addressPostcodeErrorMessageKey {
   POSTAL_CODE_CHARACTERS = "generic-postal-code-characters",
   POSTAL_CODE_LENGTH = "generic-postal-code-length",
   POSTAL_CODE_UK_INVALID = "postal-code-blank"
+}
+
+export enum saToRoaErrorMessageKey {
+  SA_TO_ROA_ERROR = "sa-to-roa"
 }

@@ -9,7 +9,7 @@ import { DirectorField } from "../../model/director.model";
 import { getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
-import { SA_TO_ROA_ERROR } from "../../utils/constants";
+import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
   try {
@@ -45,14 +45,14 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const linkError = createValidationErrorBasic(SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
+      const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
       return res.render(templateName,{
         templateName: templateName,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-        errors: formatValidationErrors([linkError])
+        errors: formatValidationErrors([linkError], lang)
       });
     }
 
