@@ -55,6 +55,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
       protectedDetailsBackLink: DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+      isHomeAddressSameAsServiceAddress: false
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
