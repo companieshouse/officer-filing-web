@@ -89,6 +89,23 @@ describe("Remove director check answers controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it("Should display summary for the corporate directors, missing date of birth", async () => {
+      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
+      const response = await request(app).get(CHECK_ANSWERS_URL);
+      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
+      expect(response.text).toContain("Company name");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("Company number");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("Name");
+      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text.includes("Date of birth")).toEqual(false);
+      expect(response.text).toContain("Date appointed");
+      expect(response.text).toContain("1 December 2022");
+      expect(response.text).toContain("Date the director was removed from the company");
+      expect(response.text).toContain("4 December 2022");
+    })
+
     it("Should display summary for the corporate directors, missing date of birth in welsh", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
