@@ -14,6 +14,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromOfficer  } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,6 +22,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const companyOfficer: CompanyOfficer = await getDirectorAndTerminationDate(session, transactionId, submissionId);
     
@@ -54,7 +57,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
       changeLink: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
-      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      ...getLocaleInfo(locales, lang),
+      currentUrl: req.originalUrl
     });
   } catch (e) {
     return next(e);
@@ -67,6 +72,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
     
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     const stopQuery = retrieveStopPageTypeToDisplay(validationStatus);
@@ -79,7 +85,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     await closeTransaction(session, companyNumber, submissionId, transactionId);
   
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(REMOVE_DIRECTOR_SUBMITTED_PATH, req), lang);
 
     return res.redirect(nextPageUrl);
   } catch (e) {

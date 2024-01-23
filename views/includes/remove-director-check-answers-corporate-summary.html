@@ -1,8 +1,9 @@
+{% import "includes/current-director-date-localisation.html" as macros %}
 {{ govukSummaryList({
   rows: [
     {
       key: {
-        text: "Name"
+        text: i18n.directorName
       },
       value: {
         text: name
@@ -10,25 +11,25 @@
     },
     {
       key: {
-        text: "Date appointed"
+        text: i18n.dateAppointed
     },
       value: {
-        text: appointedOn
+        text: macros.localiseAppointedDate(appointedOn, i18n)
       }
     },
     {
       key: {
-        text: "Date the director was removed from the company"
+        text: i18n.removeDirectorCheckAnswersDateRemovedText
       },
       value: {
-        text: resignedOn
+        text: macros.localiseRemovalDate(resignedOn, i18n)
       },
       actions: {
         items: [
           {
             href: changeLink,
-            text: "Change",
-            visuallyHiddenText: ["Date the director was removed from the company ", resignedOn] | join,
+            text: i18n.change,
+            visuallyHiddenText: [i18n.removeDirectorCheckAnswersDateRemovedText, resignedOn] | join,
             attributes: {
               "data-event-id": "change-link"
             }

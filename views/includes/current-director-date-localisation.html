@@ -21,3 +21,32 @@
   {% set dateOfBirth = dateOfBirthMonthName + ' ' +  dateOfBirthYear %}
   {{ dateOfBirth }}
 {% endmacro %}
+
+{% macro localiseDateOfBirthFull(dateOfBirth, i18n) %}
+  {% set dateOfBirthYear = dateOfBirth.split(' ')[1] %}
+  {% set fullDateOfBirthDate = dateOfBirth.split(' ') %}
+
+  {% if fullDateOfBirthDate|length === 2 %}
+    {% set dateOfBirth = i18n[fullDateOfBirthDate[0]] + ' ' +  dateOfBirthYear %}
+    {{ dateOfBirth }}
+  {% elif fullDateOfBirthDate|length === 3 %}
+    {% set dateOfBirth = fullDateOfBirthDate[0] + ' ' +  i18n[fullDateOfBirthDate[1]] +  ' ' + fullDateOfBirthDate[2] %}
+    {{ dateOfBirth }}
+  {% else %}
+    {% set dateOfBirth = dateOfBirth %}
+    {{ dateOfBirth }}
+  {% endif %}
+{% endmacro %}
+
+{% macro localiseRemovalDate(resignedOn, i18n) %}
+  {% set yearResigned = resignedOn.split(' ')[1] %}
+  {% set fullResignationDate = resignedOn.split(' ') %}
+
+  {% if fullResignationDate|length === 3 %}
+    {% set resignedOnDate = fullResignationDate[0] + ' ' +  i18n[fullResignationDate[1]] +  ' ' + fullResignationDate[2] %}
+    {{ resignedOnDate }}
+  {% else %}
+    {% set resignedOnDate = dateAppointed %}
+    {{ resignedOnDate }}
+  {% endif %}
+{% endmacro %}
