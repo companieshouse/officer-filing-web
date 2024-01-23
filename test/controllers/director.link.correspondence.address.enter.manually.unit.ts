@@ -8,7 +8,8 @@ import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 import { 
   urlParams, 
-  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
@@ -28,7 +29,11 @@ const PAGE_URL = DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const NEXT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
+const NEXT_PAGE_ON_YES_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const NEXT_PAGE_ON_NO_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -122,6 +127,26 @@ describe("Director link correspondence address enter manually controller tests",
       it("should catch error", async () => {
         const response = await request(app).post(PAGE_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
+
+      it("should navigate to residential address search page when yes radio button is selected", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          isServiceAddressSameAsRegisteredOfficeAddress: undefined
+        })
+
+        const response = await request(app).post(PAGE_URL).send({sa_to_roa: "sa_to_roa_yes"});
+        expect(response.header.location).toContain(NEXT_PAGE_ON_YES_URL);
+      });
+
+      it("should navigate to correpondence address page when no radio button is selected", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          isServiceAddressSameAsRegisteredOfficeAddress: undefined
+        })
+
+        const response = await request(app).post(PAGE_URL).send({sa_to_roa: "sa_to_roa_no"});
+        expect(response.header.location).toContain(NEXT_PAGE_ON_NO_URL);
       });
     });
 });

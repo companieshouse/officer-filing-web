@@ -1,0 +1,7 @@
+{
+  "removeDirectorConfirmationConfirmationTitle" : "Removal of director submitted",
+  "removeDirectorConfirmationNameOfDirector" : "Name of director",
+  "removeDirectorConfirmationDateRemoved" : "Date removed",
+  "removeDirectorConfirmationSameCompanyLink": "Remove another director from the same company",
+  "removeDirectorConfirmationDifferentCompanyLink": "Remove another director from a different company"
+}

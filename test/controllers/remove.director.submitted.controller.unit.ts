@@ -87,7 +87,7 @@ describe("Remove director submitted controller tests", () => {
       expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
 
       expect(response.text).toContain("What happens next");
-      expect(response.text).toContain(WHAT_HAPPENS_NEXT);
+      expect(response.text).toContain("We&#39;ll send a confirmation email to you which contains your reference number.");
       expect(response.text).toContain("What do you want to do next?");
       expect(response.text).toContain("Feedback");
       expect(response.text).toContain(FEEDBACK);
