@@ -21,6 +21,11 @@
         </div>
         {% import "includes/removal-date-localisation.html" as macros %}
 
+        {% set name = directorName %}
+        {% if directorTitle %}
+          {% set name = directorTitle + " " + name %}
+        {% endif %}
+
         {{ govukSummaryList({
           rows: [
             {

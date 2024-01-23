@@ -61,7 +61,7 @@ describe("Director date details controller tests", () => {
 
     it("Should display the original name of the director", async () => {
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
-      expect(response.text).toContain("John Elizabeth Doe");
+      expect(response.text).toContain("Mr John Elizabeth Doe");
     });
 
     it("Should throw an error is officer filing reference appointment is undefined", async () => {
