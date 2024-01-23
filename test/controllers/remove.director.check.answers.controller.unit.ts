@@ -5,6 +5,8 @@ jest.mock("../../src/utils/api.enumerations");
 jest.mock("../../src/services/validation.status.service");
 jest.mock("../../src/services/transaction.service");
 jest.mock("../../src/services/remove.directors.error.keys.service");
+jest.mock("../../src/services/company.appointments.service");
+jest.mock("../../src/services/officer.filing.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -21,16 +23,26 @@ import { mockValidValidationStatusResponse, mockValidationStatusResponseList } f
 import { closeTransaction } from "../../src/services/transaction.service";
 import { retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { STOP_TYPE } from "../../src/utils/constants";
+import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
+import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
 const mockGetDirectorAndTerminationDate = getDirectorAndTerminationDate as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
+const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficer);
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockCloseTransaction = closeTransaction as jest.Mock;
 const mockRetrieveStopScreen = retrieveStopPageTypeToDisplay as jest.Mock;
+
+mockGetOfficerFiling.mockResolvedValue({
+  referenceAppointmentId: "ref_id",
+});
 
 const COMPANY_NUMBER = "12345678";
 const SUBMISSION_ID = "987654321";
@@ -52,6 +64,8 @@ describe("Remove director check answers controller tests", () => {
     mockGetValidationStatus.mockClear();
     mockCloseTransaction.mockClear();
     mockRetrieveStopScreen.mockClear();
+    mockGetCompanyAppointmentFullRecord.mockClear();
+    mockGetOfficerFiling.mockClear();
   });
 
   describe("get tests", () => {
@@ -71,7 +85,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name");
-      expect(response.text).toContain("John Middlename Doe");
+      expect(response.text).toContain("Mr John Middlename Doe");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("5 November 2002");
       expect(response.text).toContain("Date appointed");
@@ -138,7 +152,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name");
-      expect(response.text).toContain("John Middlename Doe");
+      expect(response.text).toContain("Mr John Middlename Doe");
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
@@ -162,6 +176,12 @@ describe("Remove director check answers controller tests", () => {
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(response.text).toContain("Date of birth");
       expect(response.text).toContain("November 2002");
+    });
+
+    it("Should throw error if referenceAppointmentId is undefined", async () => {
+      mockGetOfficerFiling.mockResolvedValue({});
+      const response = await request(app).get(CHECK_ANSWERS_URL);
+      expect(response.text).toContain("Sorry, there is a problem with this service");
     });
 
     it("Should display date of birth without day if day field is missing in welsh", async () => {

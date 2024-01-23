@@ -52,9 +52,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
       protectedDetailsBackLink: DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+      isHomeAddressSameAsServiceAddress: false
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 

@@ -14,6 +14,9 @@ import { Session } from "@companieshouse/node-session-handler";
 import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
 import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromOfficer  } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { getOfficerFiling } from "../services/officer.filing.service";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +29,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const locales = getLocalesService();
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const companyOfficer: CompanyOfficer = await getDirectorAndTerminationDate(session, transactionId, submissionId);
-    
+    const appointmentId = (await getOfficerFiling(session, transactionId, submissionId)).referenceAppointmentId;
+    if (appointmentId === undefined) {
+      throw new Error("Appointment id is undefined");
+    }
+    const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId)
+
     if(companyOfficer.resignedOn === undefined){
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
     }
@@ -51,6 +59,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
       backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
       company: companyProfile,
+      directorTitle: formatTitleCase(appointment.title),
       name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
@@ -73,7 +82,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
-    
+
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     const stopQuery = retrieveStopPageTypeToDisplay(validationStatus);
 

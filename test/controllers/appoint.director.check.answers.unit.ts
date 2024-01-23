@@ -56,6 +56,7 @@ describe("Appoint director check answers controller tests", () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
           firstName: "John",
           lastName: "Doe",
+          title: "Mr",
           formerNames: "James",
           occupation: "Director",
           dateOfBirth: "1990-01-01",
@@ -68,6 +69,7 @@ describe("Appoint director check answers controller tests", () => {
         expect(response.text).toContain("John");
         expect(response.text).toContain("Doe");
         expect(response.text).toContain("James");
+        expect(response.text).toContain("Mr");
         expect(response.text).toContain("Director");
         expect(response.text).toContain("1 January 1990");
         expect(response.text).toContain("1 January 2020");

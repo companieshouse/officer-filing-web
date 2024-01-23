@@ -24,7 +24,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  
     if(officerFiling.referenceAppointmentId === undefined){
       throw Error("Reference appointment ID is missing for submissionId: " + submissionId);
     }
@@ -41,6 +40,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
+      directorTitle: formatTitleCase(companyOfficer.title),
       name: formatTitleCase(retrieveDirectorNameFromAppointment(companyOfficer)),
       resignedOn: toReadableFormat(officerFiling.resignedOn),
       removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
