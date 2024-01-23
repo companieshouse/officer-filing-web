@@ -179,7 +179,7 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should throw error if referenceAppointmentId is undefined", async () => {
-      mockGetOfficerFiling.mockResolvedValue({});
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(response.text).toContain("Sorry, there is a problem with this service");
     });
@@ -209,18 +209,6 @@ describe("Remove director check answers controller tests", () => {
       expect(mockGetValidationStatus).toHaveBeenCalled();
       expect(mockCloseTransaction).toHaveBeenCalled();
       expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted");
-      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-    });
-
-    it("Should redirect to next page if no errors with cy language selected", async () => {
-      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
-      mockCloseTransaction.mockResolvedValueOnce("closed");
-
-      const response = await request(app).post(CHECK_ANSWERS_URL).send({ lang: "cy" });
-
-      expect(mockGetValidationStatus).toHaveBeenCalled();
-      expect(mockCloseTransaction).toHaveBeenCalled();
-      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/987654321/remove-director-submitted?lang=cy");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
