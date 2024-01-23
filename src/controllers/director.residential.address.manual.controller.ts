@@ -37,8 +37,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     let backLink = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req);
     if(residentialAddressBackParam && residentialAddressBackParam.includes("confirm-residential-address")) {
       backLink = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req)
-    } else if(officerFiling.residentialManualAddressBackLink?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
-      backLink = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     }
     
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, {
@@ -52,7 +50,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       residential_address_city: officerFiling.residentialAddress?.locality,
       residential_address_county: officerFiling.residentialAddress?.region,
       typeahead_value: officerFiling.residentialAddress?.country,
-      residential_address_postcode: officerFiling.residentialAddress?.postalCode
+      residential_address_postcode: officerFiling.residentialAddress?.postalCode,
+      residential_address_back_param: residentialAddressBackParam
     });
   } catch (e) {
     return next(e);

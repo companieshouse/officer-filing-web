@@ -21,22 +21,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-
-    let returnPageUrl = officerFiling.serviceAddressBackLink;
-    if (returnPageUrl?.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END)) {
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
-    } else if (returnPageUrl?.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-    } else if (returnPageUrl?.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END)){
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
-    } else {
-      //edge case should not happen
-      returnPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
-    }
     
     return res.render(Templates.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, {
       templateName: Templates.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS,
-      backLinkUrl: returnPageUrl,
+      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req),
       ...officerFiling.serviceAddress

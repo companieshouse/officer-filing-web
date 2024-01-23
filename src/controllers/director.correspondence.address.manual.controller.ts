@@ -38,10 +38,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     let backLink = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req);
     if(correspondenceAddressBackParam && correspondenceAddressBackParam.includes("confirm-correspondence-address")) {
       backLink = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req)
-    } else if(officerFiling.serviceManualAddressBackLink?.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END)) {
-      backLink = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
     }
-
+    
     return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, {
       templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL,
       backLinkUrl: backLink,
@@ -53,7 +51,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       correspondence_address_city: officerFiling.serviceAddress?.locality,
       correspondence_address_county: officerFiling.serviceAddress?.region,
       typeahead_value: officerFiling.serviceAddress?.country,
-      correspondence_address_postcode: officerFiling.serviceAddress?.postalCode
+      correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
+      correspondence_address_back_param: correspondenceAddressBackParam
     });
   } catch (e) {
     return next(e);
