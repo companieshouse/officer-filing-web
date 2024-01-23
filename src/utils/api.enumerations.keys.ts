@@ -115,8 +115,8 @@ export enum postcodeErrorMessageKey {
 }
 
 export enum premisesErrorMessageKey {
-	PREMISES_CHARACTERS = "premises-characters",
-	PREMISES_LENGTH = "premises-length"
+  PREMISES_CHARACTERS = "premises-characters",
+  PREMISES_LENGTH = "premises-length"
 }
 
 export enum nationalityErrorMessageKey{

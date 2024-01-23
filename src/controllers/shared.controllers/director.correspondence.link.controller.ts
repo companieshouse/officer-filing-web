@@ -40,7 +40,7 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const isServiceAddressSameAsRegisteredOfficeAddress = calculateSaToRoaBooleanValue(req);
-     const locales = getLocalesService();
+    const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {

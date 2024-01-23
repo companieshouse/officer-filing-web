@@ -123,8 +123,6 @@ describe("Director link correspondence address enter manually controller tests",
         })
         const response = await request(app).get(PAGE_URL_WELSH);
         expect(response.text).toContain("to be translated");
-        expect(response.text).toContain("to be translated");
-        expect(response.text).toContain("to be translated");
       });
     });
 
