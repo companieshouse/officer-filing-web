@@ -35,8 +35,8 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link,
+      nationality2_hidden: officerFiling.nationality2Link ? officerFiling.nationality2Link : officerFiling.nationality2 ? true : null,
+      nationality3_hidden: officerFiling.nationality3Link ? officerFiling.nationality3Link : officerFiling.nationality3 ? true : null,
       isUpdate,
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl
