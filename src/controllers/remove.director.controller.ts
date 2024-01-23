@@ -23,7 +23,7 @@ import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "../validation/validation";
 import { RemovalDateValidation} from "../validation/remove.date.validation.config";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -67,6 +67,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
     
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = officerFiling.referenceAppointmentId;
@@ -114,13 +115,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
      if (stopPageType) {
       var stopPageUrl = urlUtils.getUrlToPath(APPID_STOP_PAGE_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId);
-      stopPageUrl = urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType);
+      stopPageUrl = addLangToUrl(urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType), lang);
       return res.redirect(stopPageUrl);
      }
     }
 
     // Successfully progress to next page
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
