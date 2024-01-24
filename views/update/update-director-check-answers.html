@@ -63,76 +63,92 @@
           {% set name = directorTitle + " " + name %}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
-
-        {{ govukSummaryList({
-          rows: [
-            {
-              key: {
-                text: i18n.updateDirectorCheckAnswersDirectorName
-              },
-              value: {
-                text: name
-              },
-              actions: {
-                items: [
-                  {
-                    href: nameLink,
-                    text: i18n.updateDirectorCheckAnswersChange,
-                    visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorName,
-                    attributes: {
-                      "data-event-id": "name-change-link"
-                    }
-                  }
-                ]
-              }
+        {% if officerFiling.nameHasBeenUpdated %}
+          {% set nameListElement = {
+            key: {
+              text: i18n.updateDirectorCheckAnswersDirectorName
             },
-            {
-              key: {
-                text: i18n.updateDirectorCheckAnswersDirectorNationality
-              },
-              value: {
-                html: nationality
-              },
-              actions: {
-                items: [
-                  {
-                    href: nationalityLink,
-                    text: i18n.updateDirectorCheckAnswersChange,
-                    visuallyHiddenText: updateDirectorCheckAnswersDirectorNationality,
-                    attributes: {
-                      "data-event-id": "nationality-change-link"
-                    }
-                  }
-                ]
-              }
+            value: {
+              text: name
             },
-            {
-              key: {
-                text: i18n.updateDirectorCheckAnswersDirectorOccupation
-              },
-              value: {
-                text: occupation
-              },
-              actions: {
-                items: [
-                  {
-                    href: occupationLink,
-                    text: i18n.updateDirectorCheckAnswersChange,
-                    visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorOccupation,
-                    attributes: {
-                      "data-event-id": "occupation-change-link"
-                    }
+            actions: {
+              items: [
+                {
+                  href: nameLink,
+                  text: i18n.updateDirectorCheckAnswersChange,
+                  visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorName,
+                  attributes: {
+                    "data-event-id": "name-change-link"
                   }
-                ]
-              }
+                }
+              ]
             }
-          ]
-        }) }} 
+          } %}
+          {% endif %}
+
+          {% if officerFiling.nationalityHasBeenUpdated %}
+            {% set nationalityListElement = {
+                key: {
+                  text: i18n.updateDirectorCheckAnswersDirectorNationality
+                },
+                value: {
+                  html: nationality
+                },
+                actions: {
+                  items: [
+                    {
+                      href: nationalityLink,
+                      text: i18n.updateDirectorCheckAnswersChange,
+                      visuallyHiddenText: updateDirectorCheckAnswersDirectorNationality,
+                      attributes: {
+                        "data-event-id": "nationality-change-link"
+                      }
+                    }
+                  ]
+                }
+              } %}
+          {% endif %}
+
+          {% if officerFiling.occupationHasBeenUpdated %}
+          {% set occupationListElement = {
+            key: {
+              text: i18n.updateDirectorCheckAnswersDirectorOccupation
+            },
+            value: {
+              text: occupation
+            },
+            actions: {
+              items: [
+                {
+                  href: occupationLink,
+                  text: i18n.updateDirectorCheckAnswersChange,
+                  visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorOccupation,
+                  attributes: {
+                    "data-event-id": "occupation-change-link"
+                  }
+                }
+              ]
+            }
+          } %}
+        {% endif %}
+
+        {% if officerFiling.nameHasBeenUpdated or officerFiling.nationalityHasBeenUpdated or officerFiling.occupationHasBeenUpdated %}
+          <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
+
+          {{ govukSummaryList({
+            rows: [
+              nameListElement,
+              nationalityListElement,
+              occupationListElement
+            ]
+          }) }} 
+        {% endif %}
 
         {% set officerFiling = officerFiling %}
-        {% set cyaDisplay = true %}
-        {% include "includes/check-your-answer/address-details.html" %}
+        {% if officerFiling.residentialAddressHasBeenUpdated or officerFiling.correspondenceAddressHasBeenUpdated %}
+          {% set cyaDisplay = true %}
+          {% include "includes/check-your-answer/address-details.html" %}
+        {% endif %}
 
         <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDateChanged }}</h2>
 
