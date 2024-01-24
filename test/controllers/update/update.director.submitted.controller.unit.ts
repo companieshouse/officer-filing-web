@@ -13,9 +13,7 @@ import {
 } from "../../../src/types/page.urls";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
-import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
 import { validCompanyProfile } from "../../mocks/company.profile.mock";
-import { validCompanyAppointment } from "../../mocks/company.appointment.mock";
 
 const SURVEY_LINK = "https://www.smartsurvey.co.uk/s/directors-conf/"
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -23,14 +21,16 @@ mockIsActiveFeature.mockReturnValue(true);
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
-const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockGetOfficerFiling.mockResolvedValue({
+  firstName: "John",
+  middleNames: "Elizabeth",
+  title: "Mr",
+  lastName: "Doe",
   referenceAppointmentId: "app1",
   referenceEtag: "ETAG",
   resignedOn: "2008-08-08"
 });
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
@@ -46,7 +46,6 @@ describe("Director date details controller tests", () => {
   beforeEach(() => {
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
-    mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();
   });
 
