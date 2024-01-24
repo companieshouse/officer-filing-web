@@ -19,5 +19,7 @@
   "updateTypeNationality": "Nationality",
   "updateTypeOccupation": "Occupation",
   "updateTypeResidentialAddress": "Residential Address",
-  "updateTypeCorrespondenceAddress": "Correspondence Address"
+  "updateTypeCorrespondenceAddress": "Correspondence Address",
+  "appointSubmitted": "Appointment submitted",
+  "appointConfirmationTitle" : "Appointment submitted"
 }

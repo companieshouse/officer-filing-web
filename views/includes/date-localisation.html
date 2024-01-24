@@ -1,0 +1,11 @@
+{% macro localiseDate(date, i18n) %}
+  {% set fullDate = date.split(' ') %}
+
+  {% if fullDate|length === 3 %}
+    {% set displayDate = fullDate[0] + ' ' +  i18n[fullDate[1]] +  ' ' + fullDate[2] %}
+    {{ displayDate }}
+  {% else %}
+    {% set displayDate = date %}
+    {{ displayDate }}
+  {% endif %}
+{% endmacro %}
