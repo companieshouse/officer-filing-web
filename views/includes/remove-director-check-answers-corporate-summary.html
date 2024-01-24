@@ -1,9 +1,11 @@
 {% import "includes/date-localisation.html" as macros %}
+{% set i18nCorporateDirector = i18n %}
+
 {{ govukSummaryList({
   rows: [
     {
       key: {
-        text: i18n.directorName
+        text: i18nCorporateDirector.directorName
       },
       value: {
         text: name
@@ -11,25 +13,25 @@
     },
     {
       key: {
-        text: i18n.dateAppointed
+        text: i18nCorporateDirector.dateAppointed
     },
       value: {
-        text: macros.localiseAppointedDate(appointedOn, i18n)
+        text: macros.localiseAppointedDate(appointedOn, i18nCorporateDirector)
       }
     },
     {
       key: {
-        text: i18n.removeDirectorCheckAnswersDateRemovedText
+        text: i18nCorporateDirector.removeDirectorCheckAnswersDateRemovedText
       },
       value: {
-        text: macros.localiseRemovalDate(resignedOn, i18n)
+        text: macros.localiseRemovalDate(resignedOn, i18nCorporateDirector)
       },
       actions: {
         items: [
           {
             href: changeLink,
-            text: i18n.change,
-            visuallyHiddenText: [i18n.removeDirectorCheckAnswersDateRemovedText, resignedOn] | join,
+            text: i18nCorporateDirector.change,
+            visuallyHiddenText: [i18nCorporateDirector.removeDirectorCheckAnswersDateRemovedText, resignedOn] | join,
             attributes: {
               "data-event-id": "change-link"
             }
