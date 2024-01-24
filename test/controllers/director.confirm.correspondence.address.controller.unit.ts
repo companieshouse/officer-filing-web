@@ -13,12 +13,13 @@ import {
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   urlParams
 } from "../../src/types/page.urls";
-import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
@@ -138,6 +139,26 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
-      
+
+      it("should catch error", async () => {
+        mockPatchOfficerFiling.mockRejectedValue(new Error())       
+        const response = await request(app).post(PAGE_URL);
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });  
+
+      it("should set service address same as registered address to false", async () => {
+        const response = await request(app).post(PAGE_URL);
+        mockPatchOfficerFiling.mockReturnValueOnce({
+          data: {
+            isServiceAddressSameAsRegisteredOfficeAddress: false
+          }
+        });
+        
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+          isServiceAddressSameAsRegisteredOfficeAddress: false
+        }));
+      }); 
     });
 });
+
+

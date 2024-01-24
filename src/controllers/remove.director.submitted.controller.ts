@@ -12,6 +12,7 @@ import { formatTitleCase } from "../services/confirm.company.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
 import { retrieveDirectorNameFromAppointment } from "../utils/format";
+import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,7 +24,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  
     if(officerFiling.referenceAppointmentId === undefined){
       throw Error("Reference appointment ID is missing for submissionId: " + submissionId);
     }
@@ -32,15 +32,20 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const companyOfficer: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, officerFiling.referenceAppointmentId);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
     return res.render(Templates.REMOVE_DIRECTOR_SUBMITTED, {
       templateName: Templates.REMOVE_DIRECTOR_SUBMITTED,
       referenceNumber: transactionId,
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
+      directorTitle: formatTitleCase(companyOfficer.title),
       name: formatTitleCase(retrieveDirectorNameFromAppointment(companyOfficer)),
       resignedOn: toReadableFormat(officerFiling.resignedOn),
-      removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req)
+      removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
+      ...getLocaleInfo(locales, lang),
+      currentUrl : req.originalUrl,
     });
   } catch (e) {
     return next(e);

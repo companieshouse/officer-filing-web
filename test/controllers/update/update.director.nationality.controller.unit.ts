@@ -77,13 +77,55 @@ describe("Update director nationality controller tests", () => {
       });
 
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=cy");
-      expect(response.text).toContain("to be translate");
+      expect(response.text).toContain("to be translated");
     });
 
     it("should catch error", async () => {
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
       mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
       expect(response.text).toContain(ERROR_PAGE_HEADING);
+    });
+
+    it ("should show nationality2 if director has nationality2", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality2: "nationality2",
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
+      expect(response.text).not.toContain('"{{nationality2_hidden}}" === "true"');
+    });
+
+    it ("should not show nationality2 if director has no nationality2 and nationality2 link is false", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality2Link: "SHOW-ADD-SECOND-NATIONALITY"
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
+      expect(response.text).toContain('\"SHOW-ADD-SECOND-NATIONALITY\" === \"true\"');
+    });
+
+    it ("should not show nationality3 if director appointment has no nationality3 and nationality3 link is false", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality3Link: "SHOW-ADD-THIRD-NATIONALITY"
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
+      expect(response.text).toContain('\"SHOW-ADD-THIRD-NATIONALITY\" === \"true\"');
+    });
+
+    it ("should show nationality3 if director has nationality3", async () => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality2Link: "nationality2Link",
+        nationality3: "nationality3",
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
+      expect(response.text).toContain('\"nationality2Link\" === \"true\"');
+      expect(response.text).not.toContain('"{{nationality3_hidden}}" === "true"');
     });
   });
 

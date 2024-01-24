@@ -20,7 +20,7 @@
 {% set typeaheadHint = i18n.directorNationalityListHint+"|"+i18n.directorNationalitySecondNationalityHint+"|"+i18n.directorNationalityThirdNationalityHint %}
 {% set thirdNationality = "<label class='govuk-label' for='typeahead_input_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
 
-{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityHint~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
+{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityLabel~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
 {% set typeaheadTitle =  aheadTitle | safe %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -29,7 +29,7 @@
       
       <form action="" method="post">
             
-        {% set dropdownDefaultText = "Choose nationality" %}
+        {% set dropdownDefaultText = i18n.directorDropDownDefaultText %}
         {% if not isUpdate %}
         <span class="govuk-caption-l">{{directorName}}</span>
         {% endif %}

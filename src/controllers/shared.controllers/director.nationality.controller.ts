@@ -12,7 +12,7 @@ import { getCompanyAppointmentFullRecord } from "../../services/company.appointm
 import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
 import { STOP_TYPE } from "../../utils/constants";
 import { urlUtils } from "../../utils/url";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
 
 export const getDirectorNationality = async (req: Request, res: Response, next: NextFunction, template: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -35,8 +35,8 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link,
+      nationality2_hidden: checkNationality2(officerFiling),
+      nationality3_hidden: checkNationality3(officerFiling),
       isUpdate,
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl
@@ -51,6 +51,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
 
     const officerFiling: OfficerFiling = {
       nationality1: getField(req, DirectorField.NATIONALITY_1),
@@ -78,12 +79,27 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     }
 
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-    const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
+    const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
     return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
   } catch (e) {
     return next(e);
   }
 };
+
+const checkNationality3 = (officerFiling: OfficerFiling) => {
+  if (officerFiling.nationality3) {
+    return true;
+  } else {
+    return officerFiling.nationality3Link
+  }
+}
+
+const checkNationality2 = (officerFiling: OfficerFiling) => {
+  if (officerFiling.nationality2) {
+    return true;
+  } else {
+    return officerFiling.nationality2Link
+  }}
 
 const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
   const nationality = companyAppointment.nationality?.split(",")!;

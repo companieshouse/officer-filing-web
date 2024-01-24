@@ -39,6 +39,7 @@ export const mockCompanyOfficer: CompanyOfficer = {
   dateOfBirth: dateOfBirth,
   links: companyOfficerLinks,
   name: "Doe, John Middlename",
+  title: "Mr",
   forename: "John",
   surname: "Doe",
   otherForenames: "Middlename",

@@ -28,5 +28,10 @@
   "day": "Day",
   "month": "Month",
   "year": "Year",
-  "govUK": "GOV.UK"
+  "govUK": "GOV.UK",
+  "yes": "Yes",
+  "no": "No",
+  "companyName": "Company name",
+  "companyNumber": "Company number"
+
 }

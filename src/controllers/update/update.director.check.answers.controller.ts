@@ -37,7 +37,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     // redirect to update page if no changes have been made
-    if (hasBeenUpdated(officerFiling)) {
+    if (hasNotBeenUpdated(officerFiling)) {
       return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req));
     }
   
@@ -95,6 +95,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
+    directorTitle: formatTitleCase(officerFiling.title),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
@@ -107,7 +108,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   });
 }
 
-const hasBeenUpdated = (officerFiling: OfficerFiling): boolean => {
+const hasNotBeenUpdated = (officerFiling: OfficerFiling): boolean => {
   return  !officerFiling.nameHasBeenUpdated && 
           !officerFiling.nationalityHasBeenUpdated && 
           !officerFiling.occupationHasBeenUpdated && 

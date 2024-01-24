@@ -23,6 +23,7 @@ import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "../validation/validation";
 import { RemovalDateValidation} from "../validation/remove.date.validation.config";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -33,6 +34,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = officerFiling.referenceAppointmentId;
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
     if (appointmentId === undefined) {
       throw new Error("Appointment id is undefined");
     }
@@ -49,6 +53,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
       templateName: Templates.REMOVE_DIRECTOR,
       backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      ...getLocaleInfo(locales, lang),
+      currentUrl: req.originalUrl,
     });
   } catch (e) {
     return next(e);
@@ -61,6 +67,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
     
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = officerFiling.referenceAppointmentId;
@@ -78,9 +85,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const resignationDate = year + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');   // Get date in the format yyyy-mm-dd
 
     // Validate the date fields (JS)
-    const dateValidationResult = validateDate(day, month, year, RemovalDateValidation);
+    let removeDateValidationErrors: ValidationError[] = [];
+    let dateValidationResult = validateDate(day, month, year, RemovalDateValidation);
     if (dateValidationResult) {
-      return displayErrorMessage(dateValidationResult, appointment, req, res);
+      removeDateValidationErrors.push(dateValidationResult);
+      return displayErrorMessage(removeDateValidationErrors, appointment, req, res);
     }
 
     // Patch filing with the resignation date
@@ -99,18 +108,20 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
           source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
           link: RemovalDateField.DAY
         }
-        return displayErrorMessage(validationResult, appointment, req, res);
+        removeDateValidationErrors.push(validationResult);
+        return displayErrorMessage(removeDateValidationErrors, appointment, req, res);
       }
+
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
      if (stopPageType) {
       var stopPageUrl = urlUtils.getUrlToPath(APPID_STOP_PAGE_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId);
-      stopPageUrl = urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType);
+      stopPageUrl = addLangToUrl(urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType), lang);
       return res.redirect(stopPageUrl);
      }
     }
 
     // Successfully progress to next page
-    const nextPageUrl = urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
@@ -120,8 +131,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Return the page with the rendered error message
  */
-function displayErrorMessage(validationResult: ValidationError, appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
-  const errors = formatValidationErrors([validationResult]);
+function displayErrorMessage(validationErrors: ValidationError[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
   const dates = {
     [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: req.body[key as string] }), {})
   };
@@ -133,11 +146,15 @@ function displayErrorMessage(validationResult: ValidationError, appointment: Com
     templateName: Templates.REMOVE_DIRECTOR,
     ...req.body,
     ...dates,
-    errors
+    ...getLocaleInfo(locales, lang),
+    currentUrl: req.originalUrl,
+    errors: formatValidationErrors(validationErrors, lang)
   });
 }
 
 function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
   const dates = {
     removal_date : {
       "removal_date-day" : dateFields[2],
@@ -152,5 +169,7 @@ function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointm
     backLinkUrl: backLink,
     templateName: Templates.REMOVE_DIRECTOR,
     ...dates,
+    ...getLocaleInfo(locales, lang),
+    currentUrl: req.originalUrl,
   });
 }

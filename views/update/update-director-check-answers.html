@@ -59,6 +59,10 @@
           {% set nationality = nationality + "<br>" + officerFiling.nationality3 %}
         {% endif %}
 
+        {% if directorTitle %}
+          {% set name = directorTitle + " " + name %}
+        {% endif %}
+
         {% if officerFiling.nameHasBeenUpdated %}
           {% set nameListElement = {
             key: {

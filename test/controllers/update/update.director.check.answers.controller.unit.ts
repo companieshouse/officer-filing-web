@@ -59,9 +59,18 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true})
+      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true
+        firstName: "John",
+        lastName: "Doe",
+        title: "Mr",
+        occupation: "Director",
+      });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John");
+      expect(response.text).toContain("Doe");
+      expect(response.text).toContain("Mr");
+      expect(response.text).toContain("Director");
     });
 
     it("Should navigate to director update details page if no changes are recorded", async () => {
