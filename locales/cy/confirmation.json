@@ -21,5 +21,9 @@
   "updateTypeResidentialAddress": "to be translated",
   "updateTypeCorrespondenceAddress": "to be translated",
   "appointSubmitted": "to be translated",
-  "appointConfirmationTitle" : "to be translated"
+  "appointConfirmationTitle": "to be translated",
+  "nameOfDirector": "to be translated",
+  "appointDirectorConfirmationDateAppointed": "to be translated",
+  "appointConfirmationSameCompanyLink": "to be translated",
+  "appointConfirmationDifferentCompanyLink": "to be translated"
 }

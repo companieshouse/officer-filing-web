@@ -47,7 +47,7 @@
             },
             {
               key: {
-                text: i18n.appointDirectorConfirmationNameOfDirector
+                text: i18n.nameOfDirector
               },
               value: {
                 text: directorName
@@ -66,10 +66,10 @@
         {% include "includes/confirm-page-summary.html" %}
         <ul class="govuk-list govuk-list--spaced">
           <li>
-            <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointDirectorConfirmationSameCompanyLink }}</a>
+            <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointConfirmationSameCompanyLink }}</a>
           </li>
           <li>
-            <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointDirectorConfirmationDifferentCompanyLink}} </a>
+            <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointConfirmationDifferentCompanyLink }} </a>
           </li>
         </ul>
 
