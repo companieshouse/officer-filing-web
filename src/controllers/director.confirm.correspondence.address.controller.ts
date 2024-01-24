@@ -11,8 +11,9 @@ import {
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
-import { getOfficerFiling } from "../services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -35,5 +36,17 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+  try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+
+    const officerFilingBody: OfficerFiling = {
+      isServiceAddressSameAsRegisteredOfficeAddress: false
+    };
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+  }catch(e){
+    return next(e);
+  }
 };

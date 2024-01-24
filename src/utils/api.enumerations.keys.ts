@@ -287,3 +287,7 @@ export enum addressPostcodeErrorMessageKey {
   POSTAL_CODE_LENGTH = "generic-postal-code-length",
   POSTAL_CODE_UK_INVALID = "postal-code-blank"
 }
+
+export enum saToRoaErrorMessageKey {
+  SA_TO_ROA_ERROR = "sa-to-roa"
+}

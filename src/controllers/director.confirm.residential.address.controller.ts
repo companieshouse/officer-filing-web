@@ -42,6 +42,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
+    const officerFilingBody: OfficerFiling = {
+      isHomeAddressSameAsServiceAddress: false
+    };
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     if (officerFiling.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));

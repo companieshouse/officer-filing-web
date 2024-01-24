@@ -37,6 +37,7 @@ describe("Director details tests", () => {
   mockGetOfficerFiling.mockResolvedValue({
     firstName: "John",
     lastName: "Tester",
+    title: "Mr",
     nationality1: "Irish",
     nationality2: "American",
     nationality3: "Welsh",
@@ -72,7 +73,7 @@ describe("Director details tests", () => {
     it("Should display the details for the active director", async () => {
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain("John Tester");
+      expect(response.text).toContain("Mr John Tester");
       expect(response.text).toContain("Irish");
       expect(response.text).toContain("American");
       expect(response.text).toContain("Welsh");

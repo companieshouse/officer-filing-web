@@ -59,9 +59,18 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({})
+      mockGetOfficerFiling.mockResolvedValue({
+        firstName: "John",
+        lastName: "Doe",
+        title: "Mr",
+        occupation: "Director",
+      });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John");
+      expect(response.text).toContain("Doe");
+      expect(response.text).toContain("Mr");
+      expect(response.text).toContain("Director");
     });
   });
 

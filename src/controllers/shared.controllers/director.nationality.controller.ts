@@ -35,8 +35,8 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      nationality2_hidden: officerFiling.nationality2Link,
-      nationality3_hidden: officerFiling.nationality3Link,
+      nationality2_hidden: checkNationality2(officerFiling),
+      nationality3_hidden: checkNationality3(officerFiling),
       isUpdate,
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl
@@ -85,6 +85,21 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
     return next(e);
   }
 };
+
+const checkNationality3 = (officerFiling: OfficerFiling) => {
+  if (officerFiling.nationality3) {
+    return true;
+  } else {
+    return officerFiling.nationality3Link
+  }
+}
+
+const checkNationality2 = (officerFiling: OfficerFiling) => {
+  if (officerFiling.nationality2) {
+    return true;
+  } else {
+    return officerFiling.nationality2Link
+  }}
 
 const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
   const nationality = companyAppointment.nationality?.split(",")!;
