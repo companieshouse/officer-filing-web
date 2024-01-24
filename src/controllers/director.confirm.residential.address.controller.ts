@@ -42,12 +42,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
-    // Patch filing with updated information
-    const officerFilingBody: OfficerFiling = {
-      protectedDetailsBackLink: DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
-    };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     if (officerFiling.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));

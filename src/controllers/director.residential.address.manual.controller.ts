@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -83,8 +80,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
     // Patch filing with updated information
     let officerFiling: OfficerFiling = {
-      residentialAddress: residentialAddress,
-      residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END
+      residentialAddress: residentialAddress
     };
     officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
 

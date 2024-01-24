@@ -435,7 +435,6 @@ describe("Director name controller tests", () => {
       expect(mockPatchOfficerFiling).toHaveBeenCalled();
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
         "directorResidentialAddressChoice": "director_registered_office_address",
-        "protectedDetailsBackLink": "/director-home-address",
         "isHomeAddressSameAsServiceAddress": false
       })
 

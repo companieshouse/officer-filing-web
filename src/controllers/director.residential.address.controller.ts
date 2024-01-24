@@ -48,8 +48,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      directorResidentialAddressChoice: selectedSraAddressChoice,
-      protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
+      directorResidentialAddressChoice: selectedSraAddressChoice
     };
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.isHomeAddressSameAsServiceAddress = false;
