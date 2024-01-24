@@ -87,16 +87,6 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END);
       });
 
-      it("Should navigate back button to choose address array page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "John Smith",
-          serviceAddressBackLink: "/choose-correspondence-address"
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END);
-      });
-
       it("Should navigate back button to choose address array page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",

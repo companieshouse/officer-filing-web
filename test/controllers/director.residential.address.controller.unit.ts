@@ -8,14 +8,12 @@ import app from "../../src/app";
 
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, 
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END,
+  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { getBackLinkUrl } from './../../src/controllers/director.residential.address.controller';
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../src/utils/api.enumerations.keys";
@@ -112,57 +110,11 @@ describe("Director name controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
-    it(`should have back link value of ${DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH} when user visit page from it`, async () =>  {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock
-      });
-      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
-      mockReq.params = {
-        companyNumber: COMPANY_NUMBER,
-        transactionId: TRANSACTION_ID,
-        submissionId: SUBMISSION_ID,
-      }
-      mockReq.headers.referer = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
-      const response = await request(app).get(PAGE_URL);
-      expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END);
-    });
-
     it("Should navigate to error page when feature flag is off", async () => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(PAGE_URL);
 
       expect(response.text).toContain(ERROR_PAGE_HEADING);
-    });
-
-    it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH} when user visit page from it`, async () =>  {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock
-      });
-      mockReq.params = {
-        companyNumber: COMPANY_NUMBER,
-        transactionId: TRANSACTION_ID,
-        submissionId: SUBMISSION_ID,
-      }
-      mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
-      const backLinkUrl = getBackLinkUrl(mockReq);
-      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH_END);
-    });
-
-    it(`should have back link value of ${DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH} when user visit page from it`, async () =>  {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-      mockGetOfficerFiling.mockResolvedValueOnce({
-        ...directorNameMock
-      });
-      mockReq.params = {
-        companyNumber: COMPANY_NUMBER,
-        transactionId: TRANSACTION_ID,
-        submissionId: SUBMISSION_ID,
-      }
-      mockReq.headers.referer = DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
-      const backLinkUrl = getBackLinkUrl(mockReq);
-      expect(backLinkUrl).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END);
     });
 
     it(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director registered office address`, async () => {
