@@ -59,9 +59,47 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({})
+      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true
+        firstName: "John",
+        lastName: "Doe",
+        title: "Mr",
+        occupation: "Director",
+      });
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John");
+      expect(response.text).toContain("Doe");
+      expect(response.text).toContain("Mr");
+      expect(response.text).toContain("Director");
+    });
+
+    it("Should navigate to director update details page if no changes are recorded", async () => {
+      mockGetOfficerFiling.mockResolvedValue({})
+      const response = await request(app).get(PAGE_URL);
+      expect(response.text).not.toContain(PAGE_HEADING);
+      expect(response.text).toContain("update-director-details");
+    });
+
+    it("Should render page with just occupation field for director details", async () => {
+      mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff"})
+      const response = await request(app).get(PAGE_URL);
+      
+      expect(response.text).toContain("Occupation");
+      expect(response.text).toContain("Director Of Stuff");
+      expect(response.text).not.toContain("name-change-link");
+      expect(response.text).not.toContain("nationality-change-link");
+      expect(response.text).not.toContain("address-change-link");
+    });
+
+    it("Should render page with all fields", async () => {
+      mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff"})
+      const response = await request(app).get(PAGE_URL);
+      
+      expect(response.text).toContain("Occupation");
+      expect(response.text).toContain("Director Of Stuff");
+      expect(response.text).not.toContain("name-change-link");
+      expect(response.text).not.toContain("nationality-change-link");
+      expect(response.text).not.toContain("address-change-link");
     });
   });
 

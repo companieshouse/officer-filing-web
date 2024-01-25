@@ -83,6 +83,7 @@ describe("Appoint director submitted controller tests", () => {
         mockGetOfficerFiling.mockReturnValueOnce({
           firstName: "John",
           middleNames: "Elizabeth",
+          title: "Mrs",
           lastName: "Doe",
           appointedOn: "08/08/2008"
         })
@@ -97,6 +98,7 @@ describe("Appoint director submitted controller tests", () => {
         expect(response.text).toContain("12345678");
         expect(response.text).toContain("Name of director");
         expect(response.text).toContain("John Elizabeth Doe");
+        expect(response.text).toContain("Mrs");
         expect(response.text).toContain("Date of appointment");
         expect(response.text).toContain("8 August 2008");
       });

@@ -27,6 +27,10 @@
         </div>
         {% import "includes/date-localisation.html" as macros %}
 
+        {% if directorTitle %}
+          {% set directorName = directorTitle + " " + directorName %}
+        {% endif %}
+
         {{ govukSummaryList({
           rows: [
             {

@@ -22,6 +22,7 @@ export const validCompanyAppointment: CompanyAppointment = {
     name: "John elizabeth Doe",
     forename: "John",
     surname: "Doe",
+    title: "Mr",
     otherForenames: "Elizabeth",
     dateOfBirth: {
       day: "1",
