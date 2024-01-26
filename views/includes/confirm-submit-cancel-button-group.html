@@ -6,5 +6,5 @@
       },
       text: i18n.confirmAndSubmit | default("Confirm and submit")
     }) }}
-    <a class="govuk-link" href="{{cancelLink}}" data-event-id="cancel-link"> {{ i18n.cancel }}</a>
+    <a class="govuk-link" href="{{cancelLink}}" data-event-id="cancel-link"> {{ i18n.cancel | default("Cancel") }}</a>
 </div>
