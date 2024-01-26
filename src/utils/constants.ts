@@ -95,6 +95,12 @@ export enum STOP_TYPE {
   SOMETHING_WENT_WRONG = "something-went-wrong"
 }
 
+export enum FILING_DESCRIPTION {
+  REMOVE_DIRECTOR = "Remove a company director",
+  APPOINT_DIRECTOR = "Appoint a company director",
+  UPDATE_DIRECTOR = "Update a company director"
+};
+
 export const allowedPublicCompanyTypes = new Array("plc");
 
 export const allowedPrivateCompanyTypes = new Array("ltd", "private-limited-guarant-nsc-limited-exemption", "private-limited-guarant-nsc", "private-unlimited", "private-unlimited-nsc", "private-limited-shares-section-30-exemption");
