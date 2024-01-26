@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, 
-        DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, 
+import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
       } from '../types/page.urls';
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -38,19 +37,6 @@ export const urlUtilsRequestParams = async (req: Request) => {
   return { officerFiling, companyProfile, transactionId, submissionId, session };
 }
 
-export const getBackLinkUrl = (req: Request): string => {
-  const callerUrl = req.headers.referer;
-  if (callerUrl !== undefined && callerUrl.includes(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)) {
-    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
-  }
-  else if (callerUrl !== undefined && callerUrl.endsWith(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH_END)) {
-    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req);
-  }
-   else {
-    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
-  }
-}
-
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
@@ -62,8 +48,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const officerFilingBody: OfficerFiling = {
-      directorResidentialAddressChoice: selectedSraAddressChoice,
-      protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
+      directorResidentialAddressChoice: selectedSraAddressChoice
     };
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.isHomeAddressSameAsServiceAddress = false;
@@ -140,7 +125,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS,
-    backLinkUrl: getBackLinkUrl(req),
+    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
     errors: formattedErrors,
     director_address: officerFiling.directorResidentialAddressChoice,
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),

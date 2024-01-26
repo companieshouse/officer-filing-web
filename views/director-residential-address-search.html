@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Where does the director live?" %}
+{% set title = "Find the director's home address" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -19,7 +19,7 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Where does the director live?</h1>
+        <h1 class="govuk-heading-l">Find the director's home address</h1>
         <!-- This is the search page for the residential address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
         <div id="typeahead-hint" class="govuk-hint">

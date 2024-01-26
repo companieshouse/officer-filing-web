@@ -31,7 +31,7 @@ const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "What is the director's correspondence address?";
+const PAGE_HEADING = "Enter the director&#39;s correspondence address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -139,25 +139,6 @@ describe("Director correspondence address controller tests", () => {
 
         expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END);
         expect(response.text).not.toContain("array-page");
-      });
-
-      it("Should populate the back link with array page URL if the filing contains correspondenceManualAddressBackLink as array page", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          serviceAddress: {
-            premises: "The Big House",
-            addressLine1: "One Street",
-            addressLine2: "Two",
-            locality: "Three",
-            region: "Four",
-            country: "Five",
-            postalCode: "TE6 3ST"
-          },
-          serviceManualAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
-        });
-
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END);
       });
 
       it("Should populate the back link with lookup page URL if the filing does not contain correspondenceManualAddressBackLink", async () => {

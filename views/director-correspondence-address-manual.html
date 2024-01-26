@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's correspondence address?" %}
+{% set title = "Enter the director's correspondence address" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
+  {% if correspondence_address_back_param === "confirm-correspondence-address" %}
+    {% set backLinkText = "Go back to 'Confirm the director's correspondence address'" %}
+  {%else%}
+    {% set backLinkText = "Go back to 'Find the director's correspondence address'" %}
+  {%endif%}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -19,7 +24,7 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">What is the director's correspondence address?</h1>
+        <h1 class="govuk-heading-l">Enter the director's correspondence address</h1>
 
         <div id="correspondence-property-address-hint" class="govuk-hint">
           We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.
