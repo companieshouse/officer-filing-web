@@ -12,24 +12,18 @@ import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/locali
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
-export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-    const lang = selectLang(req.query.lang);
-
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     return res.render(templateName,{
       templateName: templateName,
       backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      ...getLocaleInfo(locales, lang),
-      currentUrl: req.originalUrl,
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
       sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
@@ -53,8 +47,6 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
       return res.render(templateName,{
         templateName: templateName,
-        ...getLocaleInfo(locales, lang),
-        currentUrl: req.originalUrl,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
