@@ -95,6 +95,14 @@ describe("Remove director check answers controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it("Should display summary for the non corporate director in welsh", async () => {
+      const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
+
+      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
+      expect(response.text).toContain("to be translated");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it("Should display summary for the corporate directors, missing date of birth", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL);
@@ -110,6 +118,13 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("1 December 2022");
       expect(response.text).toContain("Date the director was removed from the company");
       expect(response.text).toContain("4 December 2022");
+    })
+
+    it("Should display summary for the corporate directors, missing date of birth in welsh", async () => {
+      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
+      const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
+      expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
+      expect(response.text).toContain("to be translated");
     });
 
     it("Should display summary for the corporate-nominee directors, missing date of birth", async () => {
@@ -145,6 +160,17 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("4 December 2022");
     });
 
+    it("Should still render page if date of birth is missing in welsh", async () => {
+      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirth);
+      const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("John Middlename Doe");
+      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("1 Rhagfyr 2022");
+      expect(response.text).toContain("4 Rhagfyr 2022");
+    });
+
     it("Should display date of birth without day if day field is missing", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirthDay);
       const response = await request(app).get(CHECK_ANSWERS_URL);
@@ -153,9 +179,16 @@ describe("Remove director check answers controller tests", () => {
     });
 
     it("Should throw error if referenceAppointmentId is undefined", async () => {
-      mockGetOfficerFiling.mockResolvedValue({});
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       const response = await request(app).get(CHECK_ANSWERS_URL);
       expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
+
+    it("Should display date of birth without day if day field is missing in welsh", async () => {
+      mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirthDay);
+      const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
+      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Tachwedd 2002");
     });
 
     it("Should throw an internal server error if resigned on date is missing", async () => {
