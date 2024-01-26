@@ -35,8 +35,9 @@ const PAGE_HEADING = "View and update the director&#39;s details";
 describe("Director details tests", () => {
 
   mockGetOfficerFiling.mockResolvedValue({
-    firstName: "John",
-    lastName: "Tester",
+    firstName: "JOHN",
+    middleNames: "middle",
+    lastName: "TesteR",
     title: "Mr",
     nationality1: "Irish",
     nationality2: "American",
@@ -73,7 +74,7 @@ describe("Director details tests", () => {
     it("Should display the details for the active director", async () => {
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain("Mr John Tester");
+      expect(response.text).toContain("Mr John Middle Tester");
       expect(response.text).toContain("Irish");
       expect(response.text).toContain("American");
       expect(response.text).toContain("Welsh");
