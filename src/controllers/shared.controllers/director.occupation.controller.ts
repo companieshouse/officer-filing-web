@@ -10,7 +10,7 @@ import { DirectorField } from "../../model/director.model";
 import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
-import { formatSentenceCase, formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatSentenceCase, formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { validateOccupation } from "../../validation/occupation.validation";
 import { OccupationValidation } from "../../validation/occupation.validation.config";
 import {
@@ -33,6 +33,15 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
+    let directorName;
+
+    if (isUpdate){
+      const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
+      directorName = retrieveDirectorNameFromAppointment(companyAppointment)
+    } else {
+      directorName = retrieveDirectorNameFromFiling(officerFiling)
+    }
+    
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
@@ -41,8 +50,10 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
-    });
+      isUpdate,
+      directorName: formatTitleCase(directorName) 
+     } );
+     
   } catch (e) {
     return next(e);
   }

@@ -6,7 +6,7 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { NATIONALITY_LIST } from "../../utils/properties";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
@@ -23,18 +23,24 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     let currentUrl: string;
+    let directorName: string;
+
     if (isUpdate) {
+      const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req)
+      directorName = retrieveDirectorNameFromAppointment(companyAppointment)
     } else {
       currentUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)
+      directorName = retrieveDirectorNameFromFiling(officerFiling)
     }
+
     return res.render(template, {
       templateName: template,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       nationality2_hidden: checkNationality2(officerFiling),
       nationality3_hidden: checkNationality3(officerFiling),
       isUpdate,
