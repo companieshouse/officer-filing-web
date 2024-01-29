@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
@@ -18,21 +19,24 @@ import { ValidationError } from "../model/validation.model";
 import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { validatePostcode } from "../validation/postcode.validation";
-import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
+import { PostcodeValidation, PremiseValidation, ResidentialManualAddressValidation } from "../validation/address.validation.config";
 import { validateUKPostcode } from "../validation/uk.postcode.validation";
 import { validatePremise } from "../validation/premise.validation";
 import { getCountryFromKey } from "../utils/web";
+import { validateManualAddress } from "../validation/manual.address.validation";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../services/company.profile.service";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
       templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-      backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      backLinkUrl: await getBackLink(req, companyNumber),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises
@@ -46,6 +50,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const residentialPostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
@@ -65,13 +70,13 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
+      return await renderPage(res, req, prepareOfficerFiling, companyNumber, jsValidationErrors);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
+      return await renderPage(res, req, prepareOfficerFiling, companyNumber, jsValidationErrors);
     }
 
     // Patch the filing with updated information
@@ -109,14 +114,27 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
+const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, companyNumber: string, validationErrors: ValidationError[]) => {
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {
     templateName: Templates.DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+    backLinkUrl: await getBackLink(req, companyNumber),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     postcode: officerFiling.residentialAddress?.postalCode,
     premises: officerFiling.residentialAddress?.premises,
     errors: formatValidationErrors(validationErrors),
   });
-}
+};
+
+const getBackLink = async (req: Request, companyNumber: string) => {
+  const companyProfile = await getCompanyProfile(companyNumber);
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+  if (registeredOfficeAddress === undefined) {
+    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req);
+  }
+  const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
+  if (registeredOfficeAddressAsCorrespondenceAddressErrors.length !== 0) {
+    return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req);
+  }
+  return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
+};
