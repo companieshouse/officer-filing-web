@@ -32,9 +32,8 @@
             {% set nationality = nationality + "<br>" + nationality3 %}
           {% endif %}
 
-          {% set name = firstName + " " + lastName %}
           {% if directorTitle %}
-            {% set name = directorTitle + " " + name %}
+            {% set directorName = directorTitle + " " + directorName %}
           {% endif %}
 
           {% set updateRequiredHtml %}
@@ -51,7 +50,7 @@
                 {{ i18n.updateDirectorDetailsName }}
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ name }}
+                {{directorName}}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{nameLink}}" data-event-id="update-name-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update name</span></a>
