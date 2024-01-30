@@ -1,6 +1,6 @@
 import { getDirectorCorrespondenceAddress, postDirectorCorrespondenceAddress } from "./shared.controllers/director.correspondence.address.controller"
 import { NextFunction, Request, Response } from "express"
-import {  DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls"
+import {  DIRECTOR_OCCUPATION_PATH } from "../types/page.urls"
 import { Templates } from "../types/template.paths"
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
