@@ -50,9 +50,8 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
-      isUpdate,
       directorName: formatTitleCase(directorName) 
-     } );
+     });
      
   } catch (e) {
     return next(e);

@@ -43,7 +43,6 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       directorName: formatTitleCase(directorName),
       nationality2_hidden: checkNationality2(officerFiling),
       nationality3_hidden: checkNationality3(officerFiling),
-      isUpdate,
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl
     });
