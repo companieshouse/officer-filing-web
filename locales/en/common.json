@@ -1,4 +1,11 @@
 {
-"whatInformationShownInOnlineRegisterInset": "What information we'll show on the public online register",
-"whatInformationShownInOnlineRegisterInsetHint": "We will show the director's nationality on the public Companies House register."
+  "whatInformationShownInOnlineRegisterInset": "What information we'll show on the public online register",
+  "whatInformationShownInOnlineRegisterInsetHint": "We will show the director's nationality on the public Companies House register.",
+  "companyDetails" : "Company details",
+  "companyName": "Company name",
+  "companyNumber": "Company number",
+  "directorDetails": "Director details",
+  "directorName": "Name",
+  "dateAppointed" : "Date appointed",
+  "dateOfBirth" : "Date of birth"
 }

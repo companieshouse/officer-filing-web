@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% import "includes/date-localisation.html" as macros %}
 {% set title = i18n.removeDirectorConfirmationConfirmationTitle %}
 
 {% block pageTitle %}
@@ -19,7 +19,6 @@
             {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
           </div>
         </div>
-        {% import "includes/removal-date-localisation.html" as macros %}
 
         {% set name = directorName %}
         {% if directorTitle %}

@@ -3,9 +3,7 @@ import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -62,10 +60,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
                        "addressLine1": "",
                        "locality": "",
                        "postalCode": correspondencePostalCode,
-                       "country" : ""},
-      serviceManualAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
-      serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
-    };
+                       "country" : ""}    };
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
@@ -93,9 +88,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
               "addressLine2": ukAddress.addressLine2,
               "locality": ukAddress.postTown,
               "postalCode": ukAddress.postcode,
-              "country" : getCountryFromKey(ukAddress.country)},
-            serviceManualAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
-            serviceAddressBackLink: DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END
+              "country" : getCountryFromKey(ukAddress.country)}
           };
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);

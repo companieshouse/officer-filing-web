@@ -32,15 +32,14 @@
             {% set nationality = nationality + "<br>" + nationality3 %}
           {% endif %}
 
-          {% set name = firstName + " " + lastName %}
           {% if directorTitle %}
-            {% set name = directorTitle + " " + name %}
+            {% set directorName = directorTitle + " " + directorName %}
           {% endif %}
 
           {% set updateRequiredHtml %}
           <div style="margin-left: 0.5em; position: relative; text-align: left;">
-            <strong class="govuk-tag govuk-tag--blue">Details updated</strong>
-            <p class="govuk-body-s">Pending until submitted and accepted</p>
+            <strong class="govuk-tag govuk-tag--blue" id="details-updated">Details updated</strong>
+            <p class="govuk-body-s" id="pending-until-submitted">Pending until submitted and accepted</p>
           </div>
           {% endset -%}
 
@@ -51,7 +50,7 @@
                 {{ i18n.updateDirectorDetailsName }}
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ name }}
+                {{directorName}}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{nameLink}}" data-event-id="update-name-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update name</span></a>

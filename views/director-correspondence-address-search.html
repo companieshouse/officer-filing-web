@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's correspondence address?" %}
+{% set title = "Find the director's correspondence address" %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
+  {% set backLinkText = "Go back to 'What is the director's correspondence address'" %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -18,7 +19,7 @@
       
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">What is the director's correspondence address?</h1>
+        <h1 class="govuk-heading-l">Find the director's correspondence address</h1>
         <!-- This is the search page for the correspondence address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
         <div id="typeahead-hint" class="govuk-hint">
