@@ -49,7 +49,7 @@ describe("Director date of change controller tests", () => {
           
     describe("GET tests", () => {
       it("Should navigate to director date of change page", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({
           etag: "etag",
           forename: "John",
           otherForenames: "mid",
@@ -64,9 +64,6 @@ describe("Director date of change controller tests", () => {
       });
 
       it("Should catch error if error occurred", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag"
-        });
         mockGetOfficerFiling.mockRejectedValue("Error getting officer filing");
         const response = await request(app).get(PAGE_URL);
         expect(response.text).not.toContain(PAGE_HEADING);
@@ -76,9 +73,6 @@ describe("Director date of change controller tests", () => {
 
     describe("POST tests", () => {
       it("Should patch officer filing and redirect to check your answers", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-        });
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -101,9 +95,6 @@ describe("Director date of change controller tests", () => {
       });
 
       it("Should display error before patching if date of change is in the future", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-        });
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -120,9 +111,6 @@ describe("Director date of change controller tests", () => {
       });
 
       it("Should display error before patching if date of change before incorporation date", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-        });
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -139,9 +127,6 @@ describe("Director date of change controller tests", () => {
       });
 
       it("Should display error before patching if date of change before 1 oct 2009", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-        });
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -158,9 +143,6 @@ describe("Director date of change controller tests", () => {
       });
 
       it("Should display error before patching if date of change before appointment date", async () => {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-        });
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID,
           appointedOn: new Date("2015-10-10")

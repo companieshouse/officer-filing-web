@@ -99,10 +99,6 @@ describe("Update director nationality controller tests", () => {
     });
 
     it ("should show nationality2 if director has nationality2", async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-        etag: "etag",
-      });
-
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality2: "nationality2",

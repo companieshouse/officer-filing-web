@@ -81,9 +81,6 @@ describe("Director check your answers controller tests", () => {
     });
 
     it("Should navigate to director update details page if no changes are recorded", async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-        etag: "etag",
-      });
       mockGetOfficerFiling.mockResolvedValue({})
       const response = await request(app).get(PAGE_URL);
       expect(response.text).not.toContain(PAGE_HEADING);
