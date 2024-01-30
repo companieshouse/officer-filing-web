@@ -75,7 +75,6 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
 }
 
 const renderPage = async (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], dateOfChangeFields: string[], companyNumber: string,) => {
-  const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
   const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
