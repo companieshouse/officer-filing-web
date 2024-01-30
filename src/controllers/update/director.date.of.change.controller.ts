@@ -16,7 +16,6 @@ import { ValidationError } from "../../model/validation.model";
 import { formatValidationErrors } from "../../validation/validation";
 import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
