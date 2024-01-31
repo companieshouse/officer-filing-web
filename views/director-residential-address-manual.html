@@ -1,12 +1,17 @@
 {% extends "layout.html" %}
 
-{% set title = "Where does the director live?" %}
+{% set title = "Enter the director's home address " %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
+  {% if residential_address_back_param === "confirm-residential-address" %}
+    {% set backLinkText = "Go back to 'Confirm where the director lives'" %}
+  {%else%}
+    {% set backLinkText = "Go back to 'Find the director's home address'" %}
+  {%endif%}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -19,7 +24,7 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Where does the director live?</h1>
+        <h1 class="govuk-heading-l">Enter the director's home address</h1>
 
         <div id="residential-property-address-hint" class="govuk-hint">
           Tell us the director's home address. Only give a business address if they also live there.

@@ -26,10 +26,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    let returnPageUrl = getBackLinkUrl(req, officerFiling);
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl: urlUtils.getUrlToPath(returnPageUrl, req),
+      backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
     });
@@ -38,27 +37,12 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const  getBackLinkUrl = (req: Request, officerFiling: OfficerFiling) => {
-  let returnPageUrl = officerFiling.protectedDetailsBackLink;
-  if(officerFiling.isHomeAddressSameAsServiceAddress === true) {
-    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req);
-  }
-  if (returnPageUrl?.includes(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END)) {
-    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-  } else if (returnPageUrl?.includes(DIRECTOR_RESIDENTIAL_ADDRESS_PATH)) {
-    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
-  } else {
-    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req);
-  }
-}
-
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    let returnPageUrl = getBackLinkUrl(req, officerFiling);
 
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
@@ -71,7 +55,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-        backLinkUrl: urlUtils.getUrlToPath(returnPageUrl, req),
+        backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),

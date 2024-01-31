@@ -1,28 +1,6 @@
-{% set backLinkText = i18n.back | default("Back") %}
-<span id="back-link-span"></span>
-<script>
-  var optionalBackLinkUrl = "{{ optionalBackLinkUrl }}"
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    var backLinkSpan = document.getElementById("back-link-span");
-    if (backLinkSpan) {
-      var backButton = document.createElement('a');
-      backButton.textContent = "{{ backLinkText }}";
-      backButton.className = "govuk-back-link";
-      backButton.setAttribute('data-event-id', 'back-link');
-      backButton.addEventListener('click', () => {
-        if (optionalBackLinkUrl) {
-          backButton.href = optionalBackLinkUrl
-        } else {
-          window.history.back();
-        }
-      });
-      backLinkSpan.appendChild(backButton);
-    }
-  });
-</script>
-<noscript>
+{% if not backLinkText %}
+  {% set backLinkText = i18n.back | default("Back") %}
+{% endif %}
   {{ govukBackLink({
     text: backLinkText,
     href: backLinkUrl,
@@ -30,4 +8,3 @@
       "data-event-id": "back-link"
     }
   }) }}
-</noscript>
