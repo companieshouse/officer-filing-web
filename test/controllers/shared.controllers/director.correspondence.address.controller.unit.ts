@@ -15,7 +15,9 @@ import {
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS,
+  DIRECTOR_DATE_DETAILS_PATH_END,
+  UPDATE_DIRECTOR_DETAILS_END
 } from '../../../src/types/page.urls';
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
@@ -90,7 +92,12 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
-        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END);
+        if (url === PAGE_URL){
+          expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END);
+        }
+        else{
+          expect(response.text).toContain(UPDATE_DIRECTOR_DETAILS_END);
+        }
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
@@ -127,19 +134,24 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
       
-      it.each([PAGE_URL,UPDATE_PAGE_URL])(`should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} with mapped registered office address `, async () => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])(`should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} with mapped registered office address `, async (url) => {
         mockGetCompanyProfile.mockResolvedValue({});
         mockGetOfficerFiling.mockResolvedValueOnce({
           ...directorNameMock
         });
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.locality);
         expect(response.text).not.toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
-        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END)
+        if (url === PAGE_URL){
+          expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END);
+        }
+        else{
+          expect(response.text).toContain(UPDATE_DIRECTOR_DETAILS_END);
+        }
       })
     });
 
