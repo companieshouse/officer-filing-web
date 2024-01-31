@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
