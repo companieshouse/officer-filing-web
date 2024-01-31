@@ -101,13 +101,13 @@ describe("Director correspondence address controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
-      it.each([PAGE_URL,UPDATE_PAGE_URL])(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} page without address line 2`, async () => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} page without address line 2`, async (url) => {
         validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockGetOfficerFiling.mockResolvedValueOnce({
           ...directorNameMock
         });
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(directorNameMock.firstName);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
@@ -117,19 +117,24 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
-        expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END)
+        if (url === PAGE_URL){
+          expect(response.text).toContain(DIRECTOR_OCCUPATION_PATH_END);
+        }
+        else{
+          expect(response.text).toContain(UPDATE_DIRECTOR_DETAILS_END);
+        }
       });
 
-      it.each([PAGE_URL,UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off", async () => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off", async (url) => {
         mockIsActiveFeature.mockReturnValueOnce(false);
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it.each([PAGE_URL,UPDATE_PAGE_URL])("should catch error if getofficerfiling error", async () => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])("should catch error if getofficerfiling error", async (url) => {
         mockGetOfficerFiling.mockRejectedValue("Error getting officer filing");
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
@@ -156,12 +161,12 @@ describe("Director correspondence address controller tests", () => {
     });
 
     describe("post tests", () => {
-      it.each([PAGE_URL,UPDATE_PAGE_URL])(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} page if no radio button is selected`, async () => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} page if no radio button is selected`, async (url) => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockGetOfficerFiling.mockResolvedValueOnce({
           ...directorNameMock,
         });
-        const response = (await request(app).post(PAGE_URL).send({}));
+        const response = (await request(app).post(url).send({}));
         expect(response.text).toContain("Select the director’s correspondence address");
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
@@ -174,8 +179,8 @@ describe("Director correspondence address controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
       
-      it.each([PAGE_URL,UPDATE_PAGE_URL])("should catch error if patch officer filing failed", async () => {
-        const response = (await request(app).post(PAGE_URL).send({}));
+      it.each([PAGE_URL,UPDATE_PAGE_URL])("should catch error if patch officer filing failed", async (url) => {
+        const response = (await request(app).post(url).send({}));
         expect(response.text).not.toContain("Select the director’s correspondence address");
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
