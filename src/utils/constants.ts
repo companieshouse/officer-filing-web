@@ -99,7 +99,7 @@ export enum FILING_DESCRIPTION {
   REMOVE_DIRECTOR = "Remove a company director",
   APPOINT_DIRECTOR = "Appoint a company director",
   UPDATE_DIRECTOR = "Update a company director"
-};
+}
 
 export const allowedPublicCompanyTypes = new Array("plc");
 
