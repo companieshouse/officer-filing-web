@@ -4,31 +4,45 @@ import {
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
-} from "../types/page.urls";
-import { Templates } from "../types/template.paths";
-import { urlUtils } from "../utils/url";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
+} from "../../types/page.urls";
+import { Templates } from "../../types/template.paths";
+import { urlUtils } from "../../utils/url";
+import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
-import { DirectorField } from "../model/director.model";
-import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { DirectorField } from "../../model/director.model";
+import { PostcodeValidation, PremiseValidation } from "../../validation/address.validation.config";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { formatValidationErrors } from "../validation/validation";
-import { ValidationError } from "../model/validation.model";
-import { validateUKPostcode } from "../validation/uk.postcode.validation";
-import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
+import { formatValidationErrors } from "../../validation/validation";
+import { ValidationError } from "../../model/validation.model";
+import { validateUKPostcode } from "../../validation/uk.postcode.validation";
+import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
-import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
-import { getCountryFromKey } from "../utils/web";
-import { validatePostcode } from "../validation/postcode.validation";
-import { validatePremise } from "../validation/premise.validation";
-import { getCorrespondenceAddressLookUp } from "./shared.controllers/director.correspondence.address.search.controller";
+import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
+import { getCountryFromKey } from "../../utils/web";
+import { validatePostcode } from "../../validation/postcode.validation";
+import { validatePremise } from "../../validation/premise.validation";
 
-export const get = (req: Request, res: Response, next: NextFunction) => {
-  return getCorrespondenceAddressLookUp(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, true)
-}
+export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, update?: boolean) => {
+  try {
+    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const session: Session = req.session as Session;
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    return res.render(templateName, {
+      templateName: templateName,
+      enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
+      backLinkUrl: urlUtils.getUrlToPath(backLink, req),
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      postcode: officerFiling.serviceAddress?.postalCode,
+      premises: officerFiling.serviceAddress?.premises
+    });
+  } catch (e) {
+    return next(e);
+  }
+};
 
-export const post = async (req: Request, res: Response, next: NextFunction) => {
+export const postCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
