@@ -161,8 +161,7 @@ describe('setRedirectLink', () => {
         title: "Mr",
         occupation: "Director"
       };
-      (retrieveDirectorNameFromFiling as jest.Mock).mockReturnValue('mockDirectorName');
-  
+      
       const result = await getDirectorNameBasedOnJourney(false, mockSession, mockReq, mockOfficerFiling);
   
       expect(retrieveDirectorNameFromFiling).toHaveBeenCalledWith(mockOfficerFiling);
