@@ -1,5 +1,3 @@
-import * as url from "url";
-
 jest.mock("../../src/utils/feature.flag")
 jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/services/postcode.lookup.service");
