@@ -77,9 +77,6 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      // if(isUpdate){
-      //   return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
-      // } Controller story scheduled for future sprint
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
     }
     
