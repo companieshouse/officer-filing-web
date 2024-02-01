@@ -1,25 +1,35 @@
-jest.mock("../../src/utils/feature.flag");
-jest.mock("../../src/services/officer.filing.service");
-jest.mock("../../src/services/validation.status.service");
+jest.mock("../../../src/utils/feature.flag");
+jest.mock("../../../src/services/officer.filing.service");
+jest.mock("../../../src/services/validation.status.service");
 
-import mocks from "../mocks/all.middleware.mock";
+import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
-import app from "../../src/app";
+import app from "../../../src/app";
 
 import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
+  UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   urlParams
-} from "../../src/types/page.urls";
-import { isActiveFeature } from "../../src/utils/feature.flag";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { createMockValidationStatusError, mockValidValidationStatusResponse, mockValidationStatusError } from "../mocks/validation.status.response.mock";
-import { getValidationStatus } from "../../src/services/validation.status.service";
+} from "../../../src/types/page.urls";
+import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
+import { createMockValidationStatusError, mockValidValidationStatusResponse, mockValidationStatusError } from "../../mocks/validation.status.response.mock";
+import { getValidationStatus } from "../../../src/services/validation.status.service";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors } from "../../src/controllers/director.correspondence.address.manual.controller";
-import { correspondenceAddressAddressLineOneErrorMessageKey, correspondenceAddressAddressLineTwoErrorMessageKey, correspondenceAddressCountryErrorMessageKey, correspondenceAddressLocalityErrorMessageKey, correspondenceAddressPostcodeErrorMessageKey, correspondenceAddressPremisesErrorMessageKey, correspondenceAddressRegionErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { buildValidationErrors } from "../../../src/controllers/shared.controllers/director.correspondence.address.manual.controller";
+import { 
+  correspondenceAddressAddressLineOneErrorMessageKey,
+  correspondenceAddressAddressLineTwoErrorMessageKey,
+  correspondenceAddressCountryErrorMessageKey,
+  correspondenceAddressLocalityErrorMessageKey,
+  correspondenceAddressPostcodeErrorMessageKey,
+  correspondenceAddressPremisesErrorMessageKey,
+  correspondenceAddressRegionErrorMessageKey
+} from "../../../src/utils/api.enumerations.keys";
 
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -37,7 +47,15 @@ const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const UPDATE_PAGE_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -73,23 +91,23 @@ describe("Director correspondence address controller tests", () => {
 
     describe("get tests", () => {
   
-      it("Should navigate to director correspondence address manual page", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to director correspondence address manual page", async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({});
 
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain(PAGE_HEADING);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
-      it("Should navigate to error page when feature flag is off", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
         mockIsActiveFeature.mockReturnValueOnce(false);
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it("Should populate filing data on the page", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should populate filing data on the page", async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           serviceAddress: {
             premises: "The Big House",
@@ -102,7 +120,7 @@ describe("Director correspondence address controller tests", () => {
           }
         });
 
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain("The Big House");
         expect(response.text).toContain("One Street");
@@ -113,10 +131,10 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain("TE6 3ST");
       });
 
-      it("Should navigate to error page when get officer filing throws an error", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when get officer filing throws an error", async (url) => {
         mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
 
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
@@ -165,7 +183,7 @@ describe("Director correspondence address controller tests", () => {
 
       describe("JS validation tests", () => {
 
-        it("Should render validation error with null values passed", async () => {
+        it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should render validation error with null values passed", async (url) => {
           mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValueOnce({
             data: {
@@ -174,7 +192,7 @@ describe("Director correspondence address controller tests", () => {
             }
           });
 
-          const response = await request(app).post(PAGE_URL).send({});
+          const response = await request(app).post(url).send({});
 
           expect(response.text).toContain("Enter a property name or number");
           expect(response.text).toContain("Enter an address");
@@ -185,7 +203,7 @@ describe("Director correspondence address controller tests", () => {
           expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         });
 
-        it("Should render other validation errors", async () => {
+        it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should render other validation errors", async (url) => {
           mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValueOnce({
             data: {
@@ -194,7 +212,7 @@ describe("Director correspondence address controller tests", () => {
             }
           });
 
-          const response = await request(app).post(PAGE_URL).send(invalidData);
+          const response = await request(app).post(url).send(invalidData);
 
           expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
           expect(response.text).toContain("Address line 2 must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
@@ -203,11 +221,9 @@ describe("Director correspondence address controller tests", () => {
 
           expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
         });
-
-
       });
 
-      it("Should patch officer filing with updated information", async () => {
+      it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("Should patch officer filing with updated information", async (url, nextPageUrl) => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
@@ -216,7 +232,7 @@ describe("Director correspondence address controller tests", () => {
           }
         });
 
-        const response = await request(app).post(PAGE_URL).send(validData);
+        const response = await request(app).post(url).send(validData);
 
         expect(mockPatchOfficerFiling).toBeCalledWith(
           expect.objectContaining({}),
@@ -234,26 +250,26 @@ describe("Director correspondence address controller tests", () => {
             }
           })
         );
-        expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
       });
 
-      it("Should redirect to error page when patch officer filing throws an error", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should redirect to error page when patch officer filing throws an error", async (url) => {
         mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error patching officer filing"));
 
-        const response = await request(app).post(PAGE_URL);
+        const response = await request(app).post(url);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it("Should redirect to error page when get validation status throws an error", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should redirect to error page when get validation status throws an error", async (url) => {
         mockGetValidationStatus.mockRejectedValueOnce(new Error("Error getting validation status"));
 
-        const response = await request(app).post(PAGE_URL);
+        const response = await request(app).post(url);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it("Should display errors on page if get validation status returns errors", async () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should display errors on page if get validation status returns errors", async (url) => {
         mockGetValidationStatus.mockResolvedValueOnce({
           errors: [createMockValidationStatusError("Enter a property name or number for the director's correspondence address"), createMockValidationStatusError("Enter a city or town for the director's correspondence address")],
           isValid: false
@@ -265,7 +281,7 @@ describe("Director correspondence address controller tests", () => {
           }
         });
   
-        const response = await request(app).post(PAGE_URL).send(validData);
+        const response = await request(app).post(url).send(validData);
   
         expect(response.text).toContain("Enter a property name or number");
         expect(response.text).toContain("Enter a city or town");
