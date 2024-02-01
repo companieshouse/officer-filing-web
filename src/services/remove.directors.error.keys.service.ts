@@ -32,7 +32,7 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
   };
 
   /**
-   * Work out whether any of the error messages returned within the validation status repsonse require a stop page be displayed to the user.
+   * Work out whether any of the error messages returned within the validation status response require a stop page be displayed to the user.
    * If so, map that error message to the appropriate stop-type and return it.
    * @param validationStatusResponse Contains the errors to be analysed
    * @returns Either the name of the stop type or an empty string

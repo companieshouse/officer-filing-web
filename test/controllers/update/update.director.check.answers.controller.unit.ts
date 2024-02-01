@@ -59,7 +59,7 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true
+      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true,
         firstName: "John",
         lastName: "Doe",
         title: "Mr",
