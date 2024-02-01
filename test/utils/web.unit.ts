@@ -8,15 +8,9 @@ import { getCountryFromKey, getDirectorNameBasedOnJourney, getField, setRedirect
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
-import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../src/utils/format";
-import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
-
-const COMPANY_NUMBER = "12345678";
-const TRANSACTION_ID = "11223344";
-const SUBMISSION_ID = "55555555";
 
 beforeEach(() => {
   mocks.mockSessionMiddleware.mockClear();
