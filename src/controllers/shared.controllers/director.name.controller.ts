@@ -11,22 +11,27 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
 import { STOP_TYPE } from "../../utils/constants";
+import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../../utils/format";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     let currentUrl;
+    let directorName;
+
     if(isUpdate){
+      const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
-    }
-    else{
+      directorName = retrieveDirectorNameFromAppointment(companyAppointment)
+    } else {
       currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
     }
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+
     return res.render(templateName, {
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl,
@@ -40,6 +45,7 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
       last_name: officerFiling.lastName,
       previous_names: officerFiling.formerNames,
       previous_names_radio: calculatePreviousNamesRadioFromFiling(officerFiling.formerNames),
+      directorName: formatTitleCase(directorName),
       isUpdate
     });
   } catch(e) {
