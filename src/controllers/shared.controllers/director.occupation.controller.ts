@@ -7,10 +7,10 @@ import { OCCUPATION_LIST } from "../../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
-import { formatSentenceCase, formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatSentenceCase, formatTitleCase } from "../../utils/format";
 import { validateOccupation } from "../../validation/occupation.validation";
 import { OccupationValidation } from "../../validation/occupation.validation.config";
 import {
@@ -33,15 +33,7 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-    let directorName;
 
-    if (isUpdate){
-      const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
-      directorName = retrieveDirectorNameFromAppointment(companyAppointment)
-    } else {
-      directorName = retrieveDirectorNameFromFiling(officerFiling)
-    }
-    
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
@@ -50,7 +42,7 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
-      directorName: formatTitleCase(directorName) 
+      directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
      });
      
   } catch (e) {
@@ -107,10 +99,11 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
   }
 };
 
-export const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], occupation: string, currentUrl: string) => {
+export const renderPage = async (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], occupation: string, currentUrl: string, isUpdate?: boolean) => {
   const lang = selectLang(req.query.lang);
   const formattedErrors = formatValidationErrors(validationErrors, lang);
   const locales = getLocalesService();
+  const session: Session = req.session as Session;
   return res.render(Templates.DIRECTOR_OCCUPATION, {
     templateName: Templates.DIRECTOR_OCCUPATION,
     ...getLocaleInfo(locales, lang),
@@ -120,7 +113,7 @@ export const renderPage = (res: Response, req: Request, officerFiling: OfficerFi
     typeahead_value: formatSentenceCase(occupation),
     errors: formattedErrors,
     typeahead_errors: JSON.stringify(formattedErrors),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling))
+    directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
   });
 }
 

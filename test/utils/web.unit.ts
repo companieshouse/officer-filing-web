@@ -1,13 +1,17 @@
 jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../src/services/company.appointments.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
 import { urlUtils } from "../../src/utils/url";
-import { getCountryFromKey, getField, setRedirectLink } from "../../src/utils/web";
+import { getCountryFromKey, getDirectorNameBasedOnJourney, getField, setRedirectLink } from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
+import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../src/utils/format";
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -124,5 +128,44 @@ describe('setRedirectLink', () => {
       const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
   
       expect(result).toBe(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    });
+  });
+
+  describe('getDirectorNameBasedOnJourney', () => {
+    it('should retrieve director name from appointment if isUpdate is true', async () => {
+      const mockReq = {} as Request;
+      const mockSession = {};
+      const mockOfficerFiling = { referenceAppointmentId: '123' };
+  
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+         });
+      
+      const result = await getDirectorNameBasedOnJourney(true, mockSession, mockReq, mockOfficerFiling);
+  
+      expect(getCompanyAppointmentFullRecord).toHaveBeenCalledWith(mockSession, urlUtils.getCompanyNumberFromRequestParams(mockReq), '123');
+      expect(retrieveDirectorNameFromAppointment).toHaveBeenCalledWith('mockAppointment');
+      expect(result).toBe('John mid Smith');
+    });
+  
+    it('should retrieve director name from filing if isUpdate is false', async () => {
+      const mockReq = {} as Request;
+      const mockSession = {};
+      const mockOfficerFiling = { 
+        referenceAppointmentId: '123', 
+        firstName: "John",
+        lastName: "Doe",
+        title: "Mr",
+        occupation: "Director"
+      };
+      (retrieveDirectorNameFromFiling as jest.Mock).mockReturnValue('mockDirectorName');
+  
+      const result = await getDirectorNameBasedOnJourney(false, mockSession, mockReq, mockOfficerFiling);
+  
+      expect(retrieveDirectorNameFromFiling).toHaveBeenCalledWith(mockOfficerFiling);
+      expect(result).toBe('John Doe');
     });
   });

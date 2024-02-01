@@ -2,11 +2,10 @@ import { NextFunction, Request, Response } from "express"
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
-
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { NATIONALITY_LIST } from "../../utils/properties";
-import { formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
@@ -23,15 +22,11 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     let currentUrl: string;
-    let directorName: string;
 
     if (isUpdate) {
-      const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req)
-      directorName = retrieveDirectorNameFromAppointment(companyAppointment)
     } else {
       currentUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)
-      directorName = retrieveDirectorNameFromFiling(officerFiling)
     }
 
     return res.render(template, {
@@ -40,7 +35,7 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
-      directorName: formatTitleCase(directorName),
+      directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
       nationality2_hidden: checkNationality2(officerFiling),
       nationality3_hidden: checkNationality3(officerFiling),
       ...getLocaleInfo(locales, lang),
