@@ -57,6 +57,7 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
+
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
         forename: "John",
@@ -71,6 +72,7 @@ describe("Director check your answers controller tests", () => {
         title: "Mr",
         occupation: "Director",
       });
+      
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain("John Mid Smith");
