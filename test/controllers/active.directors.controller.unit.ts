@@ -20,6 +20,7 @@ import { postOfficerFiling } from "../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { validCompanyAppointment, validCompanyAppointmentResource } from "../mocks/company.appointment.mock";
+import { FILING_DESCRIPTION } from "../../src/utils/constants";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
 mockCompanyAuthenticationMiddleware.mockImplementation((req, res, next) => next());
@@ -218,6 +219,7 @@ describe("Active directors controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/date-director-removed");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+          description: FILING_DESCRIPTION.REMOVE_DIRECTOR,
           referenceAppointmentId: APPOINTMENT_ID
         }));
     });
@@ -233,7 +235,9 @@ describe("Active directors controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/director-name");
         expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
-        expect(mockPostOfficerFiling).toHaveBeenCalled();
+        expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+          description: FILING_DESCRIPTION.APPOINT_DIRECTOR
+        }));
     });
 
     it("Should post filing and redirect to next page CH01", async () => {
@@ -306,6 +310,7 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
       expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
       expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+        description: FILING_DESCRIPTION.UPDATE_DIRECTOR,
         occupation: "",
       }));
     });
