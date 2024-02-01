@@ -8,5 +8,5 @@ export const get = (req: Request, resp: Response, next: NextFunction) => {
 }
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
-  postDirectorCorrespondenceAddress(req, resp, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, DIRECTOR_OCCUPATION_PATH);
+  postDirectorCorrespondenceAddress(req, resp, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS, DIRECTOR_OCCUPATION_PATH, false);
 };
