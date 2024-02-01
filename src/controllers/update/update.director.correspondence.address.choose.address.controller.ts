@@ -1,10 +1,9 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   getCorrespondenceAddressChooseAddress, postCorrespondenceAddressChooseAddress
 } from "../shared.controllers/director.correspondence.address.choose.address.controller";
-import {Templates} from "../../types/template.paths";
+import { Templates } from "../../types/template.paths";
 import {
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
 } from "../../types/page.urls";
 
