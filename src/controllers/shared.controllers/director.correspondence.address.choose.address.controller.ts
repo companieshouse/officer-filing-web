@@ -8,9 +8,7 @@ import { DirectorField } from "../../model/director.model";
 import { createValidationError, formatValidationErrors } from "../../validation/validation";
 import { correspondenceAddressErrorMessageKey } from "../../utils/api.enumerations.keys";
 import {
-  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
-  UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
 } from "../../types/page.urls";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
@@ -46,13 +44,13 @@ export const getCorrespondenceAddressChooseAddress = async (req: Request, res: R
   }
 }
 
-export const postCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
+export const postCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, nextPagePath: string, isUpdate: boolean) => {
   const session: Session = req.session as Session;
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  const confirmAddressUrl : string = isUpdate ? urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req) : urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req) ;
+  const confirmAddressUrl = urlUtils.getUrlToPath(nextPagePath, req);
 
   const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
   const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
@@ -102,15 +100,7 @@ interface RenderPageParams {
  * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
  */
 const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
-  let manualAddressUrl : string;
-  let confirmAddressUrl : string;
-  if(!params.isUpdate) {
-    manualAddressUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
-    confirmAddressUrl = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
-  } else {
-    manualAddressUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
-    confirmAddressUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
-  }
+  const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
 
   // Map the addresses to the format that will be displayed on the page
   const addressOptions = params.ukAddresses.map((address: UKAddress) => {
@@ -122,9 +112,8 @@ const renderPage = async (req: Request, res: Response, params: RenderPageParams)
 
   return res.render(params.templateName, {
     templateName: params.templateName,
-    confirmAddressUrl: confirmAddressUrl,
     backLinkUrl: setBackLink(req, params.officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(params.backUrlPath, req)),
-    enterAddressManuallyUrl: manualAddressUrl,
+    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(params.officerFiling)),
     addresses: addressOptions,
     currentPremises: params.officerFiling.serviceAddress?.premises,

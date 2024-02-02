@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
+  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
@@ -12,5 +13,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  await postCorrespondenceAddressChooseAddress(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, false);
+  await postCorrespondenceAddressChooseAddress(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_CHOOSE_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,false);
 };
