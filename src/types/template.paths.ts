@@ -40,4 +40,5 @@ export enum Templates {
   UPDATE_DIRECTOR_OCCUPATION = "update/update-director-occupation",
   UPDATE_DIRECTOR_SUBMITTED = "update/update-director-submitted",
   UPDATE_DIRECTOR_NATIONALITY = "update/update-director-nationailty",
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS = "update/update-director-correspondence-address"
 }

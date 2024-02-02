@@ -38,6 +38,7 @@ import * as updateDirectorCheckAnswers from "../controllers/update/update.direct
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
+import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
@@ -165,4 +166,7 @@ router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), compan
 
 router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorNationality.get);
 router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, updateDirectorNationality.post);
+
+router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddress.get);
+router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddress.post);
 
