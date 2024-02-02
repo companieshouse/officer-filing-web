@@ -18,7 +18,6 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
     const session: Session = req.session as Session;
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
-
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     return res.render(templateName,{
