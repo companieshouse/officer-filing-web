@@ -1,107 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
-import { urlUtils } from "../utils/url";
-import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
-import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
-import { DirectorField } from "../model/director.model";
-import { PostcodeValidation, PremiseValidation } from "../validation/address.validation.config";
-import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { formatValidationErrors } from "../validation/validation";
-import { ValidationError } from "../model/validation.model";
-import { validateUKPostcode } from "../validation/uk.postcode.validation";
-import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../utils/properties";
-import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
-import { getUKAddressesFromPostcode } from "../services/postcode.lookup.service";
-import { getCountryFromKey } from "../utils/web";
-import { validatePostcode } from "../validation/postcode.validation";
-import { validatePremise } from "../validation/premise.validation";
-import { getCorrespondenceAddressLookUp } from "./shared.controllers/director.correspondence.address.search.controller";
+import { getCorrespondenceAddressLookUp, postCorrespondenceAddressLookUp } from "./shared.controllers/director.correspondence.address.search.controller";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
-  return getCorrespondenceAddressLookUp(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, true)
+  return getCorrespondenceAddressLookUp(req, res, next, 
+                                        Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, 
+                                        DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
+                                        DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH);
 }
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const correspondencePostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
-    const correspondencePremise : string = (req.body[DirectorField.PREMISES])?.trim();
-    let jsValidationErrors = validatePostcode(correspondencePostalCode, PostcodeValidation);
-    if(correspondencePremise) {
-      jsValidationErrors = validatePremise(correspondencePremise, PremiseValidation, jsValidationErrors);
-    }
-
-    const prepareOfficerFiling: OfficerFiling = { ...originalOfficerFiling,
-      serviceAddress: {"premises": correspondencePremise,
-                       "addressLine1": "",
-                       "locality": "",
-                       "postalCode": correspondencePostalCode,
-                       "country" : ""}    };
-
-    // Validate formatting errors for fields, render errors if found.
-    if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
-    }
-
-    // Validate postcode field for UK postcode, render errors if postcode not found.
-    const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
-    if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors);
-    }
-
-    // Patch the filing with updated information
-    await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
-
-    // Look up the addresses, as by now validated postcode is valid and exist
-    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''));
-    // If premises is entered by user, loop through addresses to find user entered premise
-    if(correspondencePremise) {
-      for(const ukAddress of ukAddresses) {
-        if(ukAddress.premise.toUpperCase() === correspondencePremise.toUpperCase()) {
-          const officerFiling: OfficerFiling = {
-            serviceAddress: {"premises": ukAddress.premise,
-              "addressLine1": ukAddress.addressLine1,
-              "addressLine2": ukAddress.addressLine2,
-              "locality": ukAddress.postTown,
-              "postalCode": ukAddress.postcode,
-              "country" : getCountryFromKey(ukAddress.country)}
-          };
-          // Patch filing with updated information
-          await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-          const nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
-          return res.redirect(nextPageUrlForConfirm);
-        }
-      }
-    }
-
-    // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-    return res.redirect(nextPageUrl);
-
-  }
-  catch (e) {
-    return next(e);
-  }
-};
-
-const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[]) => {
-  return res.render(Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, {
-    templateName: Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    postcode: officerFiling.serviceAddress?.postalCode,
-    premises: officerFiling.serviceAddress?.premises,
-    errors: formatValidationErrors(validationErrors)
-  });
+  return postCorrespondenceAddressLookUp(req, res, next);
 }
