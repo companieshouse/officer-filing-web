@@ -10,6 +10,9 @@ import { getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "services/company.appointments.service";
+import { checkCorrespondenceAddressUpdate, compareAddress } from "utils/address";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
   try {
@@ -34,7 +37,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
   }
 };
 
-export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageOnYesUrl: string, nextPageOnNoUrl: string, backUrlPath: string) => {
+export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageOnYesUrl: string, nextPageOnNoUrl: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -42,6 +45,8 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const isServiceAddressSameAsRegisteredOfficeAddress = calculateSaToRoaBooleanValue(req);
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
+
+    
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
@@ -59,6 +64,20 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const officerFilingBody: OfficerFiling = {
       isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress
     };
+
+    if(isUpdate){
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
+        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
+      }
+      else if ((compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+        officerFilingBody.correspondenceAddressHasBeenUpdated = false;
+      }
+    }
+
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === true) {
