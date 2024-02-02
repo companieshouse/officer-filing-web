@@ -273,6 +273,15 @@ describe("Director correspondence address array page controller tests", () => {
 
         expect(response.text).toContain("Select the director’s correspondence address");
       });
+
+      it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])
+      ("Should render a page and show error if the postcode is undefined", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({});
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce([]);
+        const response = await request(app).post(url);
+
+        expect(response.text).toContain("Select the director’s correspondence address");
+      });
       
     });
 });
