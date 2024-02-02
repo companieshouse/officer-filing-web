@@ -1,10 +1,10 @@
-jest.mock("../../src/utils/feature.flag")
-jest.mock("../../src/services/officer.filing.service");
-jest.mock("../../src/services/postcode.lookup.service");
+jest.mock("../../../src/utils/feature.flag")
+jest.mock("../../../src/services/officer.filing.service");
+jest.mock("../../../src/services/postcode.lookup.service");
 
-import mocks from "../mocks/all.middleware.mock";
+import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
-import app from "../../src/app";
+import app from "../../../src/app";
 
 import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
@@ -14,10 +14,10 @@ import {
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
   urlParams
-} from "../../src/types/page.urls";
-import { isActiveFeature } from "../../src/utils/feature.flag";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { getUKAddressesFromPostcode } from "../../src/services/postcode.lookup.service";
+} from "../../../src/types/page.urls";
+import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
+import { getUKAddressesFromPostcode } from "../../../src/services/postcode.lookup.service";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
