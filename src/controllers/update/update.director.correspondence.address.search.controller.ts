@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { getCorrespondenceAddressLookUp } from "../../controllers/shared.controllers/director.correspondence.address.search.controller";
-import { UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH} from "../../types/page.urls";
+import { UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH } from "../../types/page.urls";
 import { Templates } from '../../types/template.paths';
 import { postCorrespondenceAddressLookUp } from '../shared.controllers/director.correspondence.address.search.controller';
 

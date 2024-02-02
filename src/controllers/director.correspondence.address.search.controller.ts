@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import {
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { getCorrespondenceAddressLookUp, postCorrespondenceAddressLookUp } from "./shared.controllers/director.correspondence.address.search.controller";
