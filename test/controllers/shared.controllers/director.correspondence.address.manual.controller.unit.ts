@@ -12,7 +12,9 @@ import {
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
   UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END,
   urlParams
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
@@ -30,7 +32,6 @@ import {
   correspondenceAddressPremisesErrorMessageKey,
   correspondenceAddressRegionErrorMessageKey
 } from "../../../src/utils/api.enumerations.keys";
-
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -139,7 +140,7 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it("Should populate the back link with confirm page URL if the request contains a query param and disregard the correspondenceManualAddressBackLink if provided", async () => {
+      it.each([[PAGE_URL, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END]])("Should populate the back link with confirm page URL if the request contains a query param and disregard the correspondenceManualAddressBackLink if provided", async (url, backLinkUrl) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           serviceAddress: {
             premises: "The Big House",
@@ -153,13 +154,13 @@ describe("Director correspondence address controller tests", () => {
           serviceManualAddressBackLink: "array-page"
         });
 
-        const response = await request(app).get(`${PAGE_URL}?backLink=confirm-correspondence-address`);
+        const response = await request(app).get(`${url}?backLink=confirm-correspondence-address`);
 
-        expect(response.text).toContain(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END);
+        expect(response.text).toContain(backLinkUrl);
         expect(response.text).not.toContain("array-page");
       });
 
-      it("Should populate the back link with lookup page URL if the filing does not contain correspondenceManualAddressBackLink", async () => {
+      it.each([[PAGE_URL, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END]])("Should populate the back link with lookup page URL if the filing does not contain correspondenceManualAddressBackLink", async (url, backLinkUrl) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           serviceAddress: {
             premises: "The Big House",
@@ -172,9 +173,9 @@ describe("Director correspondence address controller tests", () => {
           },
         });
 
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
 
-        expect(response.text).toContain(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END);
+        expect(response.text).toContain(backLinkUrl);
       });
 
     });
