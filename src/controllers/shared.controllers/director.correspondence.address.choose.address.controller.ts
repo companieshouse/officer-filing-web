@@ -33,7 +33,14 @@ export const getCorrespondenceAddressChooseAddress = async (req: Request, res: R
       throw new Error("Postal code is undefined");
     }
     const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
-    return renderPage(req, res, officerFiling, addresses, [], templateName, backUrlPath, isUpdate)
+    return renderPage(req, res, {
+      officerFiling: officerFiling,
+      ukAddresses: addresses,
+      validationErrors: [],
+      templateName: templateName,
+      backUrlPath: backUrlPath,
+      isUpdate: isUpdate
+    })
   } catch (e) {
     return next(e);
   }
@@ -53,7 +60,14 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
   const selectedAddress = addresses.find((address: UKAddress) => address.premise === selectedPremises);
   if (!selectedAddress) {
     const validationError = createValidationError(correspondenceAddressErrorMessageKey.CORRESPONDENCE_ADDRESS_BLANK, [DirectorField.ADDRESS_ARRAY], addresses[0]?.premise);
-    return renderPage(req, res, officerFiling, addresses, [validationError], templateName, backUrlPath, isUpdate);
+    return renderPage(req, res, {
+      officerFiling: officerFiling,
+      ukAddresses: addresses,
+      validationErrors: [validationError],
+      templateName: templateName,
+      backUrlPath: backUrlPath,
+      isUpdate: isUpdate
+    });
   }
 
   const patchFiling: OfficerFiling = {
@@ -71,14 +85,26 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
   return res.redirect(confirmAddressUrl);
 
 }
+/**
+ * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
+ * interface created to alleviate the sonar smell for methods over 7 parameters,
+ */
+interface RenderPageParams {
+  officerFiling: OfficerFiling;
+  ukAddresses: UKAddress[];
+  validationErrors: ValidationError[];
+  templateName: string;
+  backUrlPath: string;
+  isUpdate: boolean;
+}
 
 /**
  * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
  */
-const renderPage = async (req: Request, res: Response, officerFiling: OfficerFiling, ukAddresses: UKAddress[], validationErrors: ValidationError[], templateName: string, backUrlPath: string, isUpdate: boolean) => {
+const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
   let manualAddressUrl : string;
   let confirmAddressUrl : string;
-  if(!isUpdate) {
+  if(!params.isUpdate) {
     manualAddressUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req);
     confirmAddressUrl = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req);
   } else {
@@ -87,21 +113,21 @@ const renderPage = async (req: Request, res: Response, officerFiling: OfficerFil
   }
 
   // Map the addresses to the format that will be displayed on the page
-  const addressOptions = ukAddresses.map((address: UKAddress) => {
+  const addressOptions = params.ukAddresses.map((address: UKAddress) => {
     return {
       premises: address.premise,
       formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
     };
   });
 
-  return res.render(templateName, {
-    templateName: templateName,
+  return res.render(params.templateName, {
+    templateName: params.templateName,
     confirmAddressUrl: confirmAddressUrl,
-    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)),
+    backLinkUrl: setBackLink(req, params.officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(params.backUrlPath, req)),
     enterAddressManuallyUrl: manualAddressUrl,
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(params.officerFiling)),
     addresses: addressOptions,
-    currentPremises: officerFiling.serviceAddress?.premises,
-    errors: formatValidationErrors(validationErrors)
+    currentPremises: params.officerFiling.serviceAddress?.premises,
+    errors: formatValidationErrors(params.validationErrors)
   });
 }
