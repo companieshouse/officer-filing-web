@@ -47,10 +47,7 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
   const confirmAddressUrl : string = isUpdate ? urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req) : urlUtils.getUrlToPath(DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, req) ;
 
-  const postalCode = officerFiling?.serviceAddress?.postalCode;
-  if (!postalCode) {
-    throw new Error("Postal code is undefined");
-  }
+  const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
   const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
   const selectedPremises = req.body[DirectorField.ADDRESS_ARRAY];
   const selectedAddress = addresses.find((address: UKAddress) => address.premise === selectedPremises);
