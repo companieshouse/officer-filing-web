@@ -5,7 +5,6 @@
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
-
 {% block backLink %}
   {% include "includes/back-link.html" %}
 {% endblock %}
@@ -13,18 +12,13 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
-
       {% include "includes/list/errors.html" %}
-      
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-
         {% include "includes/list/address-array.html" %}
-
         <div class="govuk-body">
           <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-correspondence-address-manual-link">Enter address manually</a>
         </div>
-
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
