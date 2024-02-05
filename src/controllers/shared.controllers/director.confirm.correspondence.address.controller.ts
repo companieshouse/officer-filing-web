@@ -8,7 +8,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getDirectorNameBasedOnJourney, setBackLink } from "../../utils/web";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
