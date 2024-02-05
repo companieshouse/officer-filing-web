@@ -74,7 +74,7 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
     let officerFiling: OfficerFiling = {
       residentialAddress: residentialAddress
     };
-    officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
+    await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
   
     const nextPageUrl = urlUtils.getUrlToPath(nextPagePath, req);
     return res.redirect(nextPageUrl);
