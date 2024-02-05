@@ -1,20 +1,23 @@
-jest.mock("../../src/utils/feature.flag")
-jest.mock("../../src/services/officer.filing.service");
-jest.mock("../../src/services/postcode.lookup.service");
+jest.mock("../../../src/utils/feature.flag")
+jest.mock("../../../src/services/officer.filing.service");
+jest.mock("../../../src/services/postcode.lookup.service");
 
-import mocks from "../mocks/all.middleware.mock";
+import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
-import app from "../../src/app";
+import app from "../../../src/app";
 
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   urlParams
-} from "../../src/types/page.urls";
-import { isActiveFeature } from "../../src/utils/feature.flag";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../src/services/postcode.lookup.service";
+} from "../../../src/types/page.urls";
+import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
+import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../../src/services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -26,6 +29,10 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Find the director&#39;s home address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_PAGE_URL = UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -85,13 +92,14 @@ describe('Director residential address search controller test', () => {
   });
 
   describe("get tests",  () => {
-    it("Should navigate to director residential address search page", async () => {
+    it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,]])("Should navigate to director residential address search page", async (url, backLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         directorName: "John Smith"
       })
-      const response = await request(app).get(PAGE_URL);
+      const response = await request(app).get(url);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(backLink);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 

@@ -1,6 +1,6 @@
 import { getDirectorResidentialAddressSearch, postDirectorResidentialAddressSearch } from "./shared.controllers/director.residential.address.search.controller"
 import { NextFunction, Request, Response } from "express"
-import { DIRECTOR_RESIDENTIAL_ADDRESS_PATH } from "../types/page.urls"
+import { DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH } from "../types/page.urls"
 import { Templates } from "../types/template.paths"
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {

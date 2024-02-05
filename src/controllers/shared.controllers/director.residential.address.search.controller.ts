@@ -3,10 +3,8 @@ import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../../types/page.urls";
-import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
@@ -60,7 +58,8 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
                            "addressLine1": "",
                            "locality": "",
                            "postalCode": residentialPostalCode,
-                           "country" : ""}
+                           "country" : ""},
+      residentialAddressHasBeenUpdated: false
       };
 
     // Validate formatting errors for fields, render errors if found.
@@ -91,6 +90,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
+          //TODO CHECK WHETHER ADDRESS HAS CHANGED AND SET BOOLEAN
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
