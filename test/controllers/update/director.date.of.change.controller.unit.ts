@@ -10,7 +10,7 @@ import app from "../../../src/app";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
 import { validCompanyEstablishedAfter2009Profile } from "../../mocks/company.profile.mock";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
@@ -61,6 +61,26 @@ describe("Director date of change controller tests", () => {
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("John Mid Smith");
+        expect(response.text).not.toContain("update-director-check-answers");
+
+      });
+
+      it("Should populate backlink as check your answers path if flag is true", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({
+          etag: "etag",
+          forename: "John",
+          otherForenames: "mid",
+          surname: "Smith"
+           });
+    
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          checkYourAnswersLink: "update-director-check-answers"
+        })
+    
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("John Mid Smith");
+        expect(response.text).toContain("update-director-check-answers");
       });
 
       it("Should catch error if error occurred", async () => {

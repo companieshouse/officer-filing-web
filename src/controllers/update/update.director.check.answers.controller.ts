@@ -104,7 +104,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
     nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
-    dateUpdatedLink: urlUtils.getUrlToPath("", req),
+    dateUpdatedLink: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req),
     correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
     currentUrl: req.originalUrl,
   });
