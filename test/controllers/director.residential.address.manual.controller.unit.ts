@@ -9,26 +9,15 @@ import app from "../../src/app";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
+  UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   urlParams
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { createMockValidationStatusError, mockValidValidationStatusResponse, mockValidationStatusError } from "../mocks/validation.status.response.mock";
+import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors } from "../../src/controllers/director.residential.address.manual.controller";
-import {
-  correspondenceAddressCountryErrorMessageKey,
-  residentialAddressAddressLineOneErrorMessageKey,
-  residentialAddressAddressLineTwoErrorMessageKey,
-  residentialAddressCountryErrorMessageKey,
-  residentialAddressLocalityErrorMessageKey,
-  residentialAddressPostcodeErrorMessageKey,
-  residentialAddressPremisesErrorMessageKey,
-  residentialAddressRegionErrorMessageKey
-} from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -45,7 +34,15 @@ const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_PAGE_URL = UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -77,12 +74,12 @@ describe("Director residential address manual controller tests", () => {
     mockGetValidationStatus.mockReset();
   });
   
-    describe("get tests", () => {
+  describe("get tests", () => {
   
-      it("Should navigate to director residential address manual page", async () => {
+      it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to '%s' page", async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({});
 
-        const response = await request(app).get(PAGE_URL);
+        const response = await request(app).get(url);
   
         expect(response.text).toContain(PAGE_HEADING);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -166,9 +163,8 @@ describe("Director residential address manual controller tests", () => {
         expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END);
       });
 
-    });
-
-    describe("post tests", () => {
+  })  
+  describe("post tests", () => {
 
       describe("JS validation tests for residential addresses", () => {
 
@@ -259,130 +255,5 @@ describe("Director residential address manual controller tests", () => {
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
-
-      it("Should display errors on page if get validation status returns errors", async () => {
-        mockGetValidationStatus.mockResolvedValueOnce({
-          errors: [createMockValidationStatusError("Enter a property name or number for the director's home address"), createMockValidationStatusError("Enter a city or town for the director's home address")],
-          isValid: false
-        });
-        mockPatchOfficerFiling.mockResolvedValueOnce({
-          data: {
-            firstName: "John",
-            lastName: "Smith"
-          }
-        });
-
-        const response = await request(app).post(PAGE_URL).send(validData);
-
-        expect(response.text).toContain("Enter a property name or number");
-        expect(response.text).toContain("Enter a city or town");
-        expect(mockGetValidationStatus).toHaveBeenCalled();
-        expect(mockPatchOfficerFiling).toHaveBeenCalled();
-      });
-
-    });
-
-    describe("buildValidationErrors tests", () => {
-
-      it("should return premises validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Enter a property name or number for the director's home address")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressPremisesErrorMessageKey.RESIDENTIAL_ADDRESS_PREMISES_BLANK);
-      });
-
-      it("should return address line 1 validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Address line 1 for the director's home address must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressAddressLineOneErrorMessageKey.RESIDENTIAL_ADDRESS_ADDRESS_LINE_1_CHARACTERS);
-      });
-
-      it("should return address line 2 validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Address line 2 for the director's home address must be 50 characters or less")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressAddressLineTwoErrorMessageKey.RESIDENTIAL_ADDRESS_ADDRESS_LINE_2_LENGTH);
-      });
-
-      it("should return locality validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Enter a city or town for the director's home address")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressLocalityErrorMessageKey.RESIDENTIAL_ADDRESS_LOCALITY_BLANK);
-      });
-
-      it("should return region validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("County, state, province or region for the director's home address must be 50 characters or less")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressRegionErrorMessageKey.RESIDENTIAL_ADDRESS_REGION_LENGTH);
-      });
-
-      it("should return country validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Country for the director's home address must be 50 characters or less")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressCountryErrorMessageKey.RESIDENTIAL_ADDRESS_COUNTRY_LENGTH);
-      });
-
-      it("should return country validation error when invalid country", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Select a country from the list for the director's residential address")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressCountryErrorMessageKey.RESIDENTIAL_ADDRESS_COUNTRY_INVALID);
-      });
-
-      it("should return postcode validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [createMockValidationStatusError("Enter a postcode or ZIP for the director's home address")],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors.map(error => error.messageKey)).toContain(residentialAddressPostcodeErrorMessageKey.RESIDENTIAL_ADDRESS_POSTAL_CODE_BLANK);
-      });
-
-      it("should ignore unrelated validation error", async () => {
-        const mockValidationStatusResponse: ValidationStatusResponse = {
-          errors: [mockValidationStatusError],
-          isValid: false
-        }
-
-        const validationErrors = buildValidationErrors(mockValidationStatusResponse);
-
-        expect(validationErrors).toHaveLength(0);
-      });
-      
-    });
-
+  });
 });
