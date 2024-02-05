@@ -27,8 +27,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
 
     return res.render(templateName, {
       templateName: templateName,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
+      backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
       directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
       enterAddressManuallyUrl: enterAddressManuallyUrl,
       ...officerFiling.serviceAddress
