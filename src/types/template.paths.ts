@@ -41,5 +41,5 @@ export enum Templates {
   UPDATE_DIRECTOR_SUBMITTED = "update/update-director-submitted",
   UPDATE_DIRECTOR_NATIONALITY = "update/update-director-nationailty",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS = "update/update-director-correspondence-address",
-  UPDATE_RESIDENTIAL_CHOOSE_ADDRESS = "update/update-correspondence-address-choose-address.html"
+  UPDATE_RESIDENTIAL_CHOOSE_ADDRESS = "update/update-correspondence-address-choose-address"
 }
