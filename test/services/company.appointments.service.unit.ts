@@ -91,5 +91,42 @@ describe("Company Appointments service test", () => {
           expect(createAndLogError).toHaveBeenCalledWith(expect.stringContaining(`${APPOINTMENT_ID}`));
         });
     });
+
+    it("Should obfuscate residential address when isSecureOfficer is true", async () => {
+      const companyResource = clone(validCompanyAppointmentResource);
+      companyResource.resource.isSecureOfficer = true;
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(companyResource);
+
+      const returnedAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID);
+
+      expect(returnedAppointment.usualResidentialAddress.addressLine1).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.addressLine2).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.careOf).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.country).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.locality).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.poBox).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.postalCode).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.premises).toEqual("********");
+      expect(returnedAppointment.usualResidentialAddress.region).toEqual("********");
+    });
+
+    test.each([false, null, undefined])
+    ("Should not obfuscate residential address when isSecureOfficer is %s", async (isSecureOfficer) => {
+      const companyResource = clone(validCompanyAppointmentResource);
+      companyResource.resource.isSecureOfficer = isSecureOfficer;
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(companyResource);
+
+      const returnedAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, COMPANY_NUMBER, APPOINTMENT_ID);
+
+      expect(returnedAppointment.usualResidentialAddress.addressLine1).toEqual(companyResource.resource.usualResidentialAddress.addressLine1);
+      expect(returnedAppointment.usualResidentialAddress.addressLine2).toEqual(companyResource.resource.usualResidentialAddress.addressLine2);
+      expect(returnedAppointment.usualResidentialAddress.careOf).toEqual(companyResource.resource.usualResidentialAddress.careOf);
+      expect(returnedAppointment.usualResidentialAddress.country).toEqual(companyResource.resource.usualResidentialAddress.country);
+      expect(returnedAppointment.usualResidentialAddress.locality).toEqual(companyResource.resource.usualResidentialAddress.locality);
+      expect(returnedAppointment.usualResidentialAddress.poBox).toEqual(companyResource.resource.usualResidentialAddress.poBox);
+      expect(returnedAppointment.usualResidentialAddress.postalCode).toEqual(companyResource.resource.usualResidentialAddress.postalCode);
+      expect(returnedAppointment.usualResidentialAddress.premises).toEqual(companyResource.resource.usualResidentialAddress.premises);
+      expect(returnedAppointment.usualResidentialAddress.region).toEqual(companyResource.resource.usualResidentialAddress.region);
+    });
   });
 });
