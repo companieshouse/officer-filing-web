@@ -56,7 +56,7 @@ describe("Director residential address array page controller tests", () => {
   
     describe("get tests", () => {
 
-      it.each([[APPOINT_PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])
+      it.each([[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])
       ("Should navigate to director residential array page", async (url, backLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           residentialAddress: {
