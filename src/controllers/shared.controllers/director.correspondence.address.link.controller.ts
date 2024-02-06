@@ -36,7 +36,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
   }
 };
 
-export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageUrl: any, backUrlPath: string, isUpdate: boolean) => {
+export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageUrl: nextPageUrl, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -114,4 +114,9 @@ export const calculateSaToRoaBooleanValue = (req: Request): boolean|undefined =>
     return false;
   }
   return undefined;
+}
+
+export interface nextPageUrl {
+  yes: string,
+  no: string
 }
