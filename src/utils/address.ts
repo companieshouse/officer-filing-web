@@ -1,34 +1,4 @@
-import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
-
-/**
- * Determine whether an update has occured for correspondence address in the given officer filing.
- * @param officerFiling 
- * @param companyAppointment 
- * @returns 
- */
-export const checkCorrespondenceAddressUpdate = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
-    return false;
-  }
-  return compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
-}
-
-
-/**
- * Determine whether an update has occured for residential address in the given officer filing.
- * @param officerFiling 
- * @param companyAppointment 
- * @returns 
- */
-export const checkResidentialAddressUpdate = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if(officerFiling.isHomeAddressSameAsServiceAddress !== companyAppointment.residentialAddressIsSameAsServiceAddress){
-    return false;
-  }
-  return compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
-}
-
-
+import { Address} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 /**
  * Determine whether two addresses are identical.
  * @param dateToConvert 
