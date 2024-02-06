@@ -36,7 +36,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
   }
 };
 
-export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageOnYesUrl: string, nextPageOnNoUrl: string, backUrlPath: string, isUpdate: boolean) => {
+export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageUrl: any, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -80,9 +80,9 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === true) {
-      return res.redirect(urlUtils.getUrlToPath(nextPageOnYesUrl, req));
+      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.yes, req));
     } else {
-      return res.redirect(urlUtils.getUrlToPath(nextPageOnNoUrl, req));
+      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.no, req));
     }
   } catch (e) {
     next(e);

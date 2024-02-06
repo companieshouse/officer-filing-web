@@ -9,5 +9,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  postCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false)
+  postCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {yes: DIRECTOR_RESIDENTIAL_ADDRESS_PATH, no: DIRECTOR_RESIDENTIAL_ADDRESS_PATH}, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false)
 };
