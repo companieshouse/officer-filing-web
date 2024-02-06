@@ -3,7 +3,9 @@ import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -20,6 +22,9 @@ import { PostcodeValidation, PremiseValidation } from "../../validation/address.
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { getCountryFromKey } from "../../utils/web";
+import { compareAddress } from "../../utils/address";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string) => {
   try {
@@ -90,17 +95,39 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
-          //TODO CHECK WHETHER ADDRESS HAS CHANGED AND SET BOOLEAN
+          
+          if(isUpdate) {
+            const appointmentId = officerFiling.referenceAppointmentId as string;
+            const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+            const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+            if(!compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress)){
+              officerFiling.residentialAddressHasBeenUpdated = true;
+            }
+          }
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-          const nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+          let nextPageUrlForConfirm;
+          if(isUpdate) {
+            nextPageUrlForConfirm = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+          }
+          else{
+            nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+          }
+          
           return res.redirect(nextPageUrlForConfirm);
         }
       }
     }
 
     // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    let nextPageUrl;
+    if(isUpdate){
+      nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    }
+    else{
+      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+    }
+    
     return res.redirect(nextPageUrl);
 
   }
