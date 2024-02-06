@@ -96,45 +96,51 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "country" : getCountryFromKey(ukAddress.country)}
           };
           
-          if(isUpdate) {
-            const appointmentId = officerFiling.referenceAppointmentId as string;
-            const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
-            const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-            if(!compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress)){
-              officerFiling.residentialAddressHasBeenUpdated = true;
-            }
-          }
+          setUpdateBoolean(req, isUpdate, session, officerFiling)
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-          let nextPageUrlForConfirm;
-          if(isUpdate) {
-            nextPageUrlForConfirm = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-          }
-          else{
-            nextPageUrlForConfirm = urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-          }
-          
-          return res.redirect(nextPageUrlForConfirm);
+          return res.redirect(getConfirmAddressPath(req, isUpdate));
         }
       }
     }
 
     // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    let nextPageUrl;
-    if(isUpdate){
-      nextPageUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-    }
-    else{
-      nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-    }
-    
-    return res.redirect(nextPageUrl);
+    return res.redirect(getAddressSearchPath(req, isUpdate));
 
   }
   catch (e) {
     return next(e);
   }
 };
+
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
+  if(isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    if(!compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress)){
+      officerFiling.residentialAddressHasBeenUpdated = true;
+    }
+  }
+}
+
+const getConfirmAddressPath = (req: Request, isUpdate: boolean) => {
+  if(isUpdate) {
+    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+  }
+  else{
+    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+  }
+}
+
+const getAddressSearchPath = (req: Request, isUpdate: boolean) => {
+  if(isUpdate){
+    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+  }
+  else{
+    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+  }
+}
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string) => {
   return res.render(templateName, {

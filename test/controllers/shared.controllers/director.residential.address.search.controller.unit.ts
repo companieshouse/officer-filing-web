@@ -183,6 +183,7 @@ describe('Director residential address search controller test', () => {
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should call postcode service for validating postcode when formatting of UK postcode is valid", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"SW1A1AA");
