@@ -38,6 +38,7 @@ import * as updateDirectorCheckAnswers from "../controllers/update/update.direct
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
 import * as updateCorrespondenceAddressChooseAddress from "../controllers/update/update.director.correspondence.address.choose.address.controller";
+import * as updateResidentialAddressChooseAddress from "../controllers/update/update.director.residential.address.choose.address.controller";
 import * as directorCorrespondenceAddressSearchUpdate from "../controllers/update/update.director.correspondence.address.search.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
@@ -177,3 +178,6 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, companyAuthentic
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.post);
+
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateResidentialAddressChooseAddress.get);
+router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, updateResidentialAddressChooseAddress.post);

@@ -1,75 +1,77 @@
 import { NextFunction, Request, Response } from "express";
-import { getCountryFromKey, setBackLink } from "../../utils/web";
+import { Session } from "@companieshouse/node-session-handler";
 import { urlUtils } from "../../utils/url";
+import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
+import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
-import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
-import { DirectorField } from "../../model/director.model";
-import { createValidationError, formatValidationErrors } from "../../validation/validation";
-import { correspondenceAddressErrorMessageKey } from "../../utils/api.enumerations.keys";
-import {
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
-} from "../../types/page.urls";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
-import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { Session } from "@companieshouse/node-session-handler";
+import { getCountryFromKey, setBackLink } from "../../utils/web";
 import { RenderPageParams } from "../../utils/render.page.params";
-
-
-export const getCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
-  try{
+import {
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
+} from "../../types/page.urls";
+import { createValidationError, formatValidationErrors} from "../../validation/validation";
+import { DirectorField } from "../../model/director.model";
+import { residentialAddressErrorMessageKey } from "../../utils/api.enumerations.keys";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+export const getResidentialAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backLinkPath: string, isUpdate: boolean) => {
+  try {
     const session: Session = req.session as Session;
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
-    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
-    const postalCode = officerFiling?.serviceAddress?.postalCode;
-    if (!postalCode) {
+    const postalCode = officerFiling?.residentialAddress?.postalCode;
+    if(!postalCode) {
       throw new Error("Postal code is undefined");
     }
-    const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
+
+    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
+
     return renderPage(req, res, {
       officerFiling: officerFiling,
-      ukAddresses: addresses,
+      ukAddresses: ukAddresses,
       validationErrors: [],
       templateName: templateName,
-      backUrlPath: backUrlPath,
+      backUrlPath: backLinkPath,
       isUpdate: isUpdate
-    })
+    });
+
   } catch (e) {
     return next(e);
   }
-}
+};
 
-export const postCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, nextPagePath: string, isUpdate: boolean) => {
+export const postResidentialAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backLinkPath: string, nextPagePath: string, isUpdate: boolean) => {
   const session: Session = req.session as Session;
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  const confirmAddressUrl = urlUtils.getUrlToPath(nextPagePath, req);
+  const confirmResidentialAddressUrl = urlUtils.getUrlToPath(nextPagePath, req);
 
-  const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
+  const postalCode = officerFiling?.residentialAddress?.postalCode ?? '';
   const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
   const selectedPremises = req.body[DirectorField.ADDRESS_ARRAY];
   const selectedAddress = addresses.find((address: UKAddress) => address.premise === selectedPremises);
-  if (!selectedAddress) {
-    const validationError = createValidationError(correspondenceAddressErrorMessageKey.CORRESPONDENCE_ADDRESS_BLANK, [DirectorField.ADDRESS_ARRAY], addresses[0]?.premise);
+
+  if(!selectedAddress) {
+    const validationError = createValidationError(residentialAddressErrorMessageKey.RESIDENTIAL_ADDRESS_BLANK, [DirectorField.ADDRESS_ARRAY], addresses[0]?.premise);
     return renderPage(req, res, {
-      officerFiling: officerFiling,
+      officerFiling,
       ukAddresses: addresses,
       validationErrors: [validationError],
       templateName: templateName,
-      backUrlPath: backUrlPath,
+      backUrlPath: backLinkPath,
       isUpdate: isUpdate
     });
   }
 
   const patchFiling: OfficerFiling = {
-    serviceAddress: {
+    residentialAddress: {
       premises: selectedAddress.premise,
       addressLine1: selectedAddress.addressLine1,
       addressLine2: selectedAddress.addressLine2,
@@ -78,17 +80,14 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
       postalCode: selectedAddress.postcode
     }
   };
+
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);
 
-  return res.redirect(confirmAddressUrl);
-
+  return res.redirect(confirmResidentialAddressUrl);
 }
 
-/**
- * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
- */
 const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
-  const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
+  const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH;
 
   // Map the addresses to the format that will be displayed on the page
   const addressOptions = params.ukAddresses.map((address: UKAddress) => {
@@ -104,7 +103,8 @@ const renderPage = async (req: Request, res: Response, params: RenderPageParams)
     enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(params.officerFiling)),
     addresses: addressOptions,
-    currentPremises: params.officerFiling.serviceAddress?.premises,
+    currentPremises: params.officerFiling.residentialAddress?.premises,
     errors: formatValidationErrors(params.validationErrors)
   });
+
 }
