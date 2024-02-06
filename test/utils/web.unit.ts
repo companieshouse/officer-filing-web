@@ -4,7 +4,13 @@ jest.mock("../../src/services/company.appointments.service");
 import mocks from "../mocks/all.middleware.mock";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
 import { urlUtils } from "../../src/utils/url";
-import { getCountryFromKey, getDirectorNameBasedOnJourney, getField, setRedirectLink } from "../../src/utils/web";
+import {
+  getAddressOptions,
+  getCountryFromKey,
+  getDirectorNameBasedOnJourney,
+  getField,
+  setRedirectLink
+} from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
@@ -163,3 +169,41 @@ describe('setRedirectLink', () => {
       expect(result).toBe('John Doe');
     });
   });
+
+
+describe('getAddressOptions', () => {
+  it('should return an array of address options', () => {
+    const ukAddresses = [
+      {
+        premise: '123',
+        addressLine1: 'Main Street',
+        addressLine2: 'Apt 4',
+        postTown: 'London',
+        country: 'GB-ENG',
+        postcode: 'SW1A 1AA'
+      },
+      {
+        premise: '456',
+        addressLine1: 'High Street',
+        postTown: 'Manchester',
+        country: 'GB-ENG',
+        postcode: 'M1 1AA'
+      }
+    ];
+
+    const expectedOptions = [
+      {
+        premises: '123',
+        formattedAddress: '123 Main Street, Apt 4, London, England, SW1A 1AA'
+      },
+      {
+        premises: '456',
+        formattedAddress: '456 High Street, Manchester, England, M1 1AA'
+      }
+    ];
+
+    const result = getAddressOptions(ukAddresses);
+
+    expect(result).toEqual(expectedOptions);
+  });
+});

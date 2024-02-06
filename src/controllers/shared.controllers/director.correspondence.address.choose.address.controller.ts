@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getCountryFromKey, setBackLink } from "../../utils/web";
+import {getAddressOptions, getCountryFromKey, setBackLink} from "../../utils/web";
 import { urlUtils } from "../../utils/url";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
@@ -89,14 +89,7 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
  */
 const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
   const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
-
-  // Map the addresses to the format that will be displayed on the page
-  const addressOptions = params.ukAddresses.map((address: UKAddress) => {
-    return {
-      premises: address.premise,
-      formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
-    };
-  });
+  const addressOptions = getAddressOptions(params.ukAddresses);
 
   return res.render(params.templateName, {
     templateName: params.templateName,

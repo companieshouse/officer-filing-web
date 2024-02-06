@@ -4,8 +4,9 @@ import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PAT
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "./format";
+import {formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling} from "./format";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import {UKAddress} from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 
 /**
  * Get field from the form. If the field is populated then it will be returned, else undefined.
@@ -84,4 +85,17 @@ export const getDirectorNameBasedOnJourney = async (isUpdate: boolean | undefine
    directorName = retrieveDirectorNameFromFiling(officerFiling)
   }
   return directorName;
+}
+
+/**
+ * Get the formatted addresses for the page
+ * @param ukAddresses
+ */
+export const getAddressOptions = (ukAddresses: UKAddress[]) => {
+  return ukAddresses.map((address: UKAddress) => {
+    return {
+      premises: address.premise,
+      formattedAddress: formatTitleCase(address.premise + " " + address.addressLine1 + (address.addressLine2 ? ", " + address.addressLine2 : "") + ", " + address.postTown + ", " + getCountryFromKey(address.country)) + ", " + address.postcode
+    };
+  });
 }
