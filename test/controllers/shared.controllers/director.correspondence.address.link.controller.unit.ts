@@ -1,10 +1,11 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../../src/app";
-import { getOfficerFiling } from "../../../src/services/officer.filing.service";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 
 import { 
   urlParams, 
@@ -16,10 +17,15 @@ import {
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
+import { Session } from "@companieshouse/node-session-handler";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -59,6 +65,8 @@ describe("Director correspondence address link controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
+      mockPatchOfficerFiling.mockClear();
     });
   
     describe("get tests", () => {
@@ -140,7 +148,59 @@ describe("Director correspondence address link controller tests", () => {
     });
 
     describe("post tests", () => {
+
+      it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should mark service address updated if link value changes", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: false});
+        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
+
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
+        {isServiceAddressSameAsRegisteredOfficeAddress: true, correspondenceAddressHasBeenUpdated: true})
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should not mark service address updated if link value remains the same", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: true});
+        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
+
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
+        {isServiceAddressSameAsRegisteredOfficeAddress: true})
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should mark service address as not updated if link and service address match company appointments value", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress, serviceAddressIsSameAsRegisteredOfficeAddress: false});
+        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_no"});
+
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
+        {isServiceAddressSameAsRegisteredOfficeAddress: false, correspondenceAddressHasBeenUpdated: false})
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+        const response = await request(app).post(url);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
+
       it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director residential address page when yes radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456"
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
@@ -148,6 +208,10 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director residential address page when no radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456"
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_no"});
 
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
@@ -160,11 +224,6 @@ describe("Director correspondence address link controller tests", () => {
 
         const response = await request(app).post(url);
         expect(response.text).toContain(SA_TO_ROA_ERROR);
-      });
-
-      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
-        const response = await request(app).post(url);
-        expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should return undefined when sa_to_roa is not 'yes' or 'no'", async (url) => {

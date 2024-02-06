@@ -8,7 +8,7 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
  * @returns 
  */
 export const checkCorrespondenceAddressUpdate = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.isServiceAddressSameAsRegisteredOfficeAddress){
+  if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
     return false;
   }
   return compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
@@ -22,7 +22,7 @@ export const checkCorrespondenceAddressUpdate = (officerFiling: OfficerFiling, c
  * @returns 
  */
 export const checkResidentialAddressUpdate = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if(officerFiling.isHomeAddressSameAsServiceAddress !== companyAppointment.isHomeAddressSameAsServiceAddress){
+  if(officerFiling.isHomeAddressSameAsServiceAddress !== companyAppointment.residentialAddressIsSameAsServiceAddress){
     return false;
   }
   return compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);

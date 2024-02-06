@@ -11,8 +11,8 @@ import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
-import { getCompanyAppointmentFullRecord } from "services/company.appointments.service";
-import { checkCorrespondenceAddressUpdate, compareAddress } from "utils/address";
+import { compareAddress } from "../../utils/address";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
   try {
@@ -70,6 +70,7 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      console.log("isServiceAddressSameAsRegisteredOfficeAddress " + isServiceAddressSameAsRegisteredOfficeAddress + " \n CA " + companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress);
       if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }
