@@ -76,7 +76,7 @@ describe("Director date of change controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           checkYourAnswersLink: "update-director-check-answers"
         })
-    
+  
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("John Mid Smith");
