@@ -15,5 +15,5 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  postDirectorCorrespondenceAddressManual(req, res, next, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH);
+  postDirectorCorrespondenceAddressManual(req, res, next, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, false);
 };

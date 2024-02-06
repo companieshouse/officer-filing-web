@@ -24,6 +24,9 @@ import {
 } from "../../utils/api.enumerations.keys";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { compareAddress } from "../../utils/address";
 
 export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths) => {
   try {
@@ -58,7 +61,7 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
   }
 };
 
-export const postDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, nextPage: string, templateName: string, backUrlPath: string) => {
+export const postDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, nextPage: string, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -83,16 +86,27 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     }
 
     // Patch filing with updated information
-    let officerFiling: OfficerFiling = {
+    let officerFilingBody: OfficerFiling = {
       serviceAddress: serviceAddress
     };
-    officerFiling = (await patchOfficerFiling(session, transactionId, submissionId, officerFiling)).data;
+
+    if(isUpdate){
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      if (!(compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
+      }
+    }
+
+    officerFilingBody = (await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody)).data;
 
     // Validate filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
-      return renderPage(req, res, serviceAddress, officerFiling, validationErrors, templateName, backUrlPath);
+      return renderPage(req, res, serviceAddress, officerFilingBody, validationErrors, templateName, backUrlPath);
     }
   
     const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
