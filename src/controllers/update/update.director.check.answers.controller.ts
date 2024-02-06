@@ -17,7 +17,7 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase, retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { toReadableFormat } from "../../utils/date";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getValidationStatus } from "../../services/validation.status.service";
@@ -87,6 +87,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
+  const companyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
   
   return res.render(Templates.UPDATE_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.UPDATE_DIRECTOR_CHECK_ANSWERS,
@@ -96,6 +97,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     company: companyProfile,
     officerFiling: officerFiling,
     directorTitle: formatTitleCase(officerFiling.title),
+    directorNameCompanyAppointment: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     occupation:  formatTitleCase(officerFiling.occupation),
     dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),

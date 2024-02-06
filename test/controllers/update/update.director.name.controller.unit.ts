@@ -54,6 +54,13 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should populate filing data on the page", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+              etag: "etag",
+              forename: "John",
+              otherForenames: "mid",
+              surname: "Smith"
+               });
+
         mockGetOfficerFiling.mockResolvedValueOnce({
           title: "testTitle",
           firstName: "testFirst",
@@ -64,6 +71,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app).get(DIRECTOR_NAME_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("John Mid Smith");
         expect(response.text).toContain("testTitle");
         expect(response.text).toContain("testFirst");
         expect(response.text).toContain("testMiddle");
@@ -71,6 +79,10 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should populate filing data on the page without former name field", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag",
+        });
+
         mockGetOfficerFiling.mockResolvedValueOnce({
           title: "testTitle",
           firstName: "testFirst",
@@ -79,7 +91,6 @@ describe("Update Director name controller tests", () => {
         });
 
         const response = await request(app).get(DIRECTOR_NAME_URL);
-  
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("testTitle");
         expect(response.text).toContain("testFirst");
@@ -89,6 +100,9 @@ describe("Update Director name controller tests", () => {
       });
 
       it("Should render the page in welsh", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+          });
         mockGetOfficerFiling.mockResolvedValueOnce({
           title: "testTitle",
           firstName: "testFirst",

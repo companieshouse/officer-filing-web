@@ -21,7 +21,6 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
     const session: Session = req.session as Session;
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
-
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     return res.render(templateName,{
@@ -70,7 +69,6 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      console.log("isServiceAddressSameAsRegisteredOfficeAddress " + isServiceAddressSameAsRegisteredOfficeAddress + " \n CA " + companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress);
       if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }

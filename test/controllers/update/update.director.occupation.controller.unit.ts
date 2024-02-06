@@ -54,12 +54,20 @@ describe("Director occupation controller tests", () => {
     describe("get tests", () => {
   
       it("Should navigate to director occupation page", async () => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag",
+          forename: "John",
+          otherForenames: "mid",
+          surname: "Smith"
+           });
+
         mockGetOfficerFiling.mockResolvedValueOnce({
           occupation: "Astronaut",
         });
         const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("John Mid Smith");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 

@@ -55,6 +55,13 @@ describe("Update director nationality controller tests", () => {
     });
 
     it("Should populate filing data on the page", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+         });
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality2: "nationality2",
@@ -64,12 +71,17 @@ describe("Update director nationality controller tests", () => {
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John Mid Smith");
       expect(response.text).toContain("nationality1");
       expect(response.text).toContain("nationality2");
       expect(response.text).toContain("nationality3");
     });
 
     it("Should render the page title in welsh", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality2: "nationality2",
@@ -97,6 +109,10 @@ describe("Update director nationality controller tests", () => {
     });
 
     it ("should not show nationality2 if director has no nationality2 and nationality2 link is false", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality2Link: "SHOW-ADD-SECOND-NATIONALITY"
@@ -107,6 +123,10 @@ describe("Update director nationality controller tests", () => {
     });
 
     it ("should not show nationality3 if director appointment has no nationality3 and nationality3 link is false", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality3Link: "SHOW-ADD-THIRD-NATIONALITY"
@@ -117,6 +137,10 @@ describe("Update director nationality controller tests", () => {
     });
 
     it ("should show nationality3 if director has nationality3", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         nationality1: "nationality1",
         nationality2Link: "nationality2Link",

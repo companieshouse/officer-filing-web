@@ -37,6 +37,8 @@ import * as updateDirectorDetail from "../controllers/update/update.director.det
 import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
+import * as updateCorrespondenceAddressChooseAddress from "../controllers/update/update.director.correspondence.address.choose.address.controller";
+import * as directorCorrespondenceAddressSearchUpdate from "../controllers/update/update.director.correspondence.address.search.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
@@ -174,3 +176,8 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMi
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressLink.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressLink.post);
 
+router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressSearchUpdate.get);
+router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, companyAuthenticationMiddleware, directorCorrespondenceAddressSearchUpdate.post);
+
+router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.get);
+router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.post);
