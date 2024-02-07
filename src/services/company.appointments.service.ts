@@ -31,5 +31,24 @@ export const getCompanyAppointmentFullRecord = async (session: Session, companyN
 
   logger.debug(`Received company appointment ${JSON.stringify(sdkResponse)}`);
 
+  if (sdkResponse.resource.isSecureOfficer) {
+    obfuscateResidentialAddress(sdkResponse.resource);
+  }
+
   return sdkResponse.resource;
 };
+
+const obfuscateResidentialAddress = (resource: CompanyAppointment) => {
+  const obfuscatedPattern = "********";
+  resource.usualResidentialAddress = {
+    addressLine1: obfuscatedPattern,
+    addressLine2: obfuscatedPattern,
+    careOf: obfuscatedPattern,
+    country: obfuscatedPattern,
+    locality: obfuscatedPattern,
+    poBox: obfuscatedPattern,
+    postalCode: obfuscatedPattern,
+    premises: obfuscatedPattern,
+    region: obfuscatedPattern,
+  }
+}

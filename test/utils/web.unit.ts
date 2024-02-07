@@ -2,9 +2,10 @@ jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/services/company.appointments.service");
 
 import mocks from "../mocks/all.middleware.mock";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from '../../src/types/page.urls';
 import { urlUtils } from "../../src/utils/url";
 import {
+  setBackLink,
   getAddressOptions,
   getCountryFromKey,
   getDirectorNameBasedOnJourney,
@@ -120,7 +121,17 @@ describe('setRedirectLink', () => {
   
       expect(result).toBe(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
     });
-  
+
+    it('should return the URL to appoint cya if checkYourAnswersLink ends with appoint cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
+
     it('should return the URL to update cya if checkYourAnswersLink ends with update cya link', async () => {
       const req = {params: {}} as Request;
       const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
@@ -129,6 +140,28 @@ describe('setRedirectLink', () => {
       const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
   
       expect(result).toBe(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    });
+
+    it('should return the URL to update cya if checkYourAnswersLink ends with update cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
+
+    it('should return the URL to redirect link if checkYourAnswersLink is undefined with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = undefined;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+
+      expect(result).toBe(urlUtils.getUrlToPath(redirectLink+"?lang=en", req));
     });
   });
 
