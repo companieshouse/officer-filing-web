@@ -1,22 +1,22 @@
-jest.mock("../../src/utils/feature.flag");
-jest.mock("../../src/services/officer.filing.service");
-jest.mock("../../src/services/company.profile.service");
+jest.mock("../../../src/utils/feature.flag");
+jest.mock("../../../src/services/officer.filing.service");
+jest.mock("../../../src/services/company.profile.service");
 
-import mocks from "../mocks/all.middleware.mock";
+import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
-import app from "../../src/app";
+import app from "../../../src/app";
 
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH, 
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, urlParams, DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH, 
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
-  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../src/types/page.urls';
-import { isActiveFeature } from "../../src/utils/feature.flag";
+  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END} from '../../../src/types/page.urls';
+import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
-import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../src/services/company.profile.service";
-import { validCompanyProfile, validAddress } from "../mocks/company.profile.mock";
-import { whereDirectorLiveResidentialErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
+import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
+import { whereDirectorLiveResidentialErrorMessageKey } from "../../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
