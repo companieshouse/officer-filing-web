@@ -6,6 +6,7 @@ import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "./format";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { addLangToUrl } from './localise';
 
 /**
  * Get field from the form. If the field is populated then it will be returned, else undefined.
@@ -23,11 +24,11 @@ export const getField = (req: Request, fieldName: string): string => {
  * Checks whether the user came from the check your answers page and if so,
  *  sets the back link to the check your answers page instead.
  */
-export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string): string => {
+export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string, lang?: string): string => {
   if(checkYourAnswersLink){
-    return checkYourAnswersLink;
+    return addLangToUrl(checkYourAnswersLink, lang);
   }
-  return backLink;
+  return addLangToUrl(backLink, lang);
 };
 
 /**
