@@ -110,12 +110,20 @@ describe('Director residential address search controller test', () => {
   describe("get tests",  () => {
     it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,]])("Should navigate to director residential address search page", async (url, backLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
-        directorName: "John Smith"
+        firstName: "John",
+        lastName: "Smith"
       })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
       const response = await request(app).get(url);
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(backLink);
+      if(url === UPDATE_PAGE_URL){
+        expect(response.text).toContain("John Elizabeth Doe");
+      }
+      else{
+        expect(response.text).toContain("John Smith");
+      }
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
@@ -133,6 +141,7 @@ describe('Director residential address search controller test', () => {
           premises: 123
           } )
       })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
       const response = await request(app).get(url);
 
       expect(response.text).toContain("SW1A1AA");
@@ -149,19 +158,26 @@ describe('Director residential address search controller test', () => {
         firstName: "John",
         lastName: "Smith"
       })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
       const response = await request(app).post(url)
       .send({"postcode": "%%%%%%", "premises": "ゃ"});
 
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain("%%%%%%");
       expect(response.text).toContain("ゃ");
-      expect(response.text).toContain("John Smith");
+      if(url === UPDATE_PAGE_URL){
+        expect(response.text).toContain("John Elizabeth Doe");
+      }
+      else{
+        expect(response.text).toContain("John Smith");
+      }
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should displays errors on page if get validation status returns errors - order and priority test", async (url) => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
       const response = await request(app).post(url)
       .send({"postcode": "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
              "premises": "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
@@ -173,6 +189,7 @@ describe('Director residential address search controller test', () => {
 
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should display error when postcode lookup service returns false", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(false);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
       const response = await request(app).post(url).send({"postcode": "SW1A1XY"});
       
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
