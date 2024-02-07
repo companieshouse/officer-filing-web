@@ -17,6 +17,7 @@ import { formatValidationErrors } from "../../validation/validation";
 import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { setBackLink } from "../../utils/web";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -87,7 +88,7 @@ const renderPage = async (res: Response, req: Request, officerFiling: OfficerFil
 
   return res.render(Templates.DIRECTOR_DATE_OF_CHANGE, {
     templateName: Templates.DIRECTOR_DATE_OF_CHANGE,
-    backLinkUrl: urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang),
     directorName: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
     errors: formatValidationErrors(validationErrors, lang),
     ...officerFiling,
