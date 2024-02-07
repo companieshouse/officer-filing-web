@@ -80,11 +80,19 @@ describe("Director correspondence address link controller tests", () => {
           formerNames: "testFormer"
         })
         
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        }
         const response = await request(app).get(url);
   
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(backLinkUrl);
-        expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        if(url === UPDATE_PAGE_URL){
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
+        else{
+          expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        }
         expect(response.text).toContain('value="sa_to_roa_yes" aria-describedby');
         expect(response.text).toContain('value="sa_to_roa_no" aria-describedby');
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -100,6 +108,9 @@ describe("Director correspondence address link controller tests", () => {
           isServiceAddressSameAsRegisteredOfficeAddress: true
         })
         
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
+        }
         const response = await request(app).get(url);
   
         expect(response.text).toContain('value="sa_to_roa_yes" checked');
@@ -114,9 +125,13 @@ describe("Director correspondence address link controller tests", () => {
           formerNames: "testFormer",
           isServiceAddressSameAsRegisteredOfficeAddress: false
         })
-        
+
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
+        }
+
         const response = await request(app).get(url);
-  
+        
         expect(response.text).toContain('value="sa_to_roa_no" checked');
       });
 
