@@ -19,8 +19,7 @@
             {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
           </div>
         </div>
-        {% import "includes/date-localisation.html" as macros %}
-
+       
         {% set name = directorName %}
         {% if directorTitle %}
           {% set name = directorTitle + " " + name %}
