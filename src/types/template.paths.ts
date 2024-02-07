@@ -43,5 +43,6 @@ export enum Templates {
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS = "update/update-director-correspondence-address",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "update/update-director-correspondence-address-link",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH = "update/update-director-correspondence-address-search",
-  UPDATE_CORRESPONDENCE_CHOOSE_ADDRESS = "update/update-correspondence-address-choose-address"
+  UPDATE_CORRESPONDENCE_CHOOSE_ADDRESS = "update/update-correspondence-address-choose-address",
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK = "update/update-director-residential-address-link"
 }
