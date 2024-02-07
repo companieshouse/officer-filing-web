@@ -137,6 +137,15 @@ describe("Director confirm correspondence address controller tests", () => {
     describe("post tests", () => {
   
       it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456"
+        })
+        
+        if(url === UPDATE_PAGE_URL){
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          etag: "etag"
+        });
+      }
         const response = await request(app).post(url);
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
