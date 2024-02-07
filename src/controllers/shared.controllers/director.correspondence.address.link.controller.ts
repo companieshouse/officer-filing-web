@@ -4,7 +4,6 @@ import { createValidationErrorBasic, formatValidationErrors } from '../../valida
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../services/confirm.company.service";
-import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
 import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
@@ -51,12 +50,13 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
+      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
       return res.render(templateName,{
         templateName: templateName,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        directorName: formatTitleCase(directorName),
         errors: formatValidationErrors([linkError], lang)
       });
     }

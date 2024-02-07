@@ -164,12 +164,36 @@ describe("Director correspondence address link controller tests", () => {
 
     describe("post tests", () => {
 
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should display an error when no radio button is selected", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer"
+        })
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        }
+
+        const response = await request(app).post(url);
+        expect(response.text).toContain(SA_TO_ROA_ERROR);
+        if(url === UPDATE_PAGE_URL){
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
+        else{
+          expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        }
+      });
+
       it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should mark service address updated if link value changes", async (url, redirectLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456",
         })
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: false});
-        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: false});
+        }
+          const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
         {isServiceAddressSameAsRegisteredOfficeAddress: true, correspondenceAddressHasBeenUpdated: true})
@@ -182,7 +206,9 @@ describe("Director correspondence address link controller tests", () => {
           referenceAppointmentId: "123456",
           serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress
         })
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: true});
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: true});
+        }
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
@@ -196,7 +222,10 @@ describe("Director correspondence address link controller tests", () => {
           referenceAppointmentId: "123456",
           serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress
         })
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress, serviceAddressIsSameAsRegisteredOfficeAddress: false});
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress, serviceAddressIsSameAsRegisteredOfficeAddress: false});
+        }
+        
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_no"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
@@ -215,7 +244,9 @@ describe("Director correspondence address link controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456"
         })
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        }
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
@@ -226,19 +257,12 @@ describe("Director correspondence address link controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456"
         })
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        }
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_no"});
 
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-      });
-
-      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should display an error when no radio button is selected", async (url) => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "Test Director"
-        })
-
-        const response = await request(app).post(url);
-        expect(response.text).toContain(SA_TO_ROA_ERROR);
       });
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should return undefined when sa_to_roa is not 'yes' or 'no'", async (url) => {
