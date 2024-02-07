@@ -18,20 +18,19 @@
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
-
+        
+        <span class="govuk-caption-l">{{name}}</span>
         <h1 class="govuk-heading-l">Check your answers before submitting the appointment</h1>
         <!-- This is the page for the appoint a director check your answers screen -->
 
         <h2 class="govuk-heading-m">Company details</h2>
 
         {{ govukSummaryList({
-          attributes: {
-            "style": "width:auto"
-          },
           rows: [
             {
               classes: "govuk-summary-list__row--no-actions",
               key: {
+                id: "appoint-cya-company-name",
                 text: "Company name"
               },
               value: {
@@ -42,6 +41,7 @@
               classes: "govuk-summary-list__row--no-actions",
               
               key: {
+                id: "appoint-cya-company-number",
                 text: "Company number"
               },
               value: {
@@ -73,6 +73,7 @@
           rows: [
             {
               key: {
+                id: "appoint-cya-director-name",
                 text: "Name"
               },
               value: {
@@ -93,6 +94,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-previous-names",
                 text: "Previous names"
               },
               value: {
@@ -113,6 +115,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-date-of-birth",
                 text: "Date of birth"
               },
               value: {
@@ -133,6 +136,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-date-appointed",
                 text: "Date appointed"
               },
               value: {
@@ -153,6 +157,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-nationality",
                 text: "Nationality"
               },
               value: {
@@ -173,6 +178,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-occupation",
                 text: "Occupation"
               },
               value: {
@@ -193,6 +199,7 @@
             },
             {
               key: {
+                id: "appoint-cya-director-protected-details",
                 text: "Has the director applied to protect their details at Companies House?"
               },
               value: {
@@ -223,7 +230,6 @@
           fieldset: {
             legend: {
               text: "Consent to act as a director",
-              isPageHeading: true,
               classes: "govuk-fieldset__legend--m"
             }
           },

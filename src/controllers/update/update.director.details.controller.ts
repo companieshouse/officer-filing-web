@@ -6,13 +6,14 @@ import { getOfficerFiling } from "../../services/officer.filing.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../../services/company.profile.service";
 import {
-  CURRENT_DIRECTORS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, UPDATE_DIRECTOR_NAME_PATH,
+  CURRENT_DIRECTORS_PATH, UPDATE_DIRECTOR_NAME_PATH,
   DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_DETAILS_PATH,
-  UPDATE_DIRECTOR_NATIONALITY_PATH
+  UPDATE_DIRECTOR_NATIONALITY_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
 } from "../../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { selectLang, addLangToUrl, getLocalesService, getLocaleInfo } from "../../utils/localise";
-import { formatTitleCase } from "../../utils/format";
+import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
   try {
@@ -37,6 +38,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
       officerFiling: officerFiling,
       directorTitle: formatTitleCase(officerFiling.title),
+      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       ...officerFiling,
       ...companyProfile,
       ...getLocaleInfo(locales, lang),
@@ -44,7 +46,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
       nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
       occupationLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req),
-      correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+      correspondenceAddressChangeLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
       isUpdate: true,
       updatedData: updatedData,
     })

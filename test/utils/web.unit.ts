@@ -1,17 +1,16 @@
 jest.mock("../../src/services/officer.filing.service");
+jest.mock("../../src/services/company.appointments.service");
 
 import mocks from "../mocks/all.middleware.mock";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from '../../src/types/page.urls';
 import { urlUtils } from "../../src/utils/url";
-import { getCountryFromKey, getField, setRedirectLink } from "../../src/utils/web";
+import { getCountryFromKey, getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
-
-const COMPANY_NUMBER = "12345678";
-const TRANSACTION_ID = "11223344";
-const SUBMISSION_ID = "55555555";
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 
 beforeEach(() => {
   mocks.mockSessionMiddleware.mockClear();
@@ -115,6 +114,16 @@ describe('setRedirectLink', () => {
   
       expect(result).toBe(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
     });
+
+    it('should return the URL to appoint cya if checkYourAnswersLink ends with appoint cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END;
+      const redirectLink = '/home';
+  
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
   
     it('should return the URL to update cya if checkYourAnswersLink ends with update cya link', async () => {
       const req = {params: {}} as Request;
@@ -124,5 +133,65 @@ describe('setRedirectLink', () => {
       const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
   
       expect(result).toBe(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    });
+
+    it('should return the URL to update cya if checkYourAnswersLink ends with update cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
+      const redirectLink = '/home';
+  
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+  
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
+
+    it('should return the URL to redirect link if checkYourAnswersLink is undefined with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = undefined;
+      const redirectLink = '/home';
+  
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+  
+      expect(result).toBe(urlUtils.getUrlToPath(redirectLink+"?lang=en", req));
+    });
+  });
+
+  describe('getDirectorNameBasedOnJourney', () => {
+    it('should retrieve director name from appointment if isUpdate is true', async () => {
+      const mockSession = { transactionId: '123', submissionId: '456' };
+      const mockReq: Request = {}  as Request;
+      mockReq.params = { PARAM_COMPANY_NUMBER: "12345678" };
+
+      const mockOfficerFiling = { 
+        referenceAppointmentId: '123',
+        firstName: "Peter",
+        lastName: "Parker" 
+      };
+
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+      });
+
+      const result = await getDirectorNameBasedOnJourney(true, mockSession, mockReq, mockOfficerFiling);
+      expect(result).toBe('John mid Smith');
+    });
+  
+
+    it('should retrieve director name from filing if isUpdate is false', async () => {
+      const mockReq : Request = { body: {} } as Request;
+      const mockSession = {};
+      const mockOfficerFiling = { 
+        referenceAppointmentId: '123', 
+        firstName: "John",
+        lastName: "Doe"
+      };
+
+      const result = await getDirectorNameBasedOnJourney(false, mockSession, mockReq, mockOfficerFiling);
+      expect(result).toBe('John Doe');
     });
   });

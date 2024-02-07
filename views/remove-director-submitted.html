@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% import "includes/date-localisation.html" as macros %}
 {% set title = i18n.removeDirectorConfirmationConfirmationTitle %}
 
 {% block pageTitle %}
@@ -30,6 +30,7 @@
           rows: [
             {
               key: {
+                id: "remove-submitted-company-name",
                 text: i18n.companyName
               },
               value: {
@@ -38,6 +39,7 @@
             },
             {
               key: {
+                id: "remove-submitted-company-number",
                 text: i18n.companyNumber
               },
               value: {
@@ -46,6 +48,7 @@
             },
             {
               key: {
+                id: "remove-submitted-director-name",
                 text: i18n.removeDirectorConfirmationNameOfDirector
               },
               value: {
@@ -54,10 +57,11 @@
             },
             {
               key: {
+                id: "remove-submitted-date-removed",
                 text: i18n.removeDirectorConfirmationDateRemoved
               },
               value: {
-                text:  macros.localiseDate(resignedOn, i18n)
+                text:  macros.localiseRemovalDate(resignedOn, i18n)
               }
             }
           ]
@@ -72,7 +76,7 @@
             </li>
           </ul>
 
-          <h3 class="govuk-heading-m">{{ i18n.feedbackTitle }}</h3>
+          <h2 class="govuk-heading-m">{{ i18n.feedbackTitle }}</h2>
 
           <p class="govuk-body">{{ i18n.testServiceText}} <a href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.testServiceLinkText }}</a>.</p>
 

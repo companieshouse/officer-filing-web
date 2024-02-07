@@ -2,24 +2,24 @@
   {% if officerFiling.isServiceAddressSameAsRegisteredOfficeAddress %}
   {{ i18n.updateDirectorDetailsCorrespondenceAddressSameAsROA if isUpdate else "The correspondence address is the same as the registered office address" }}
   {% else %}
-    <ul class="govuk-list">
+    <ul class="govuk-list" id="service-address">
         {% if officerFiling.serviceAddress.premises %}
-          <li>{{ officerFiling.serviceAddress.premises | title  }},</li>
+          <li id="service-address-premise-or-title">{{ officerFiling.serviceAddress.premises | title  }},</li>
         {% endif %}
         {% if officerFiling.serviceAddress.addressLine1 %}
-          <li>{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
+          <li id="service-address-line-one">{{ officerFiling.serviceAddress.addressLine1 | title  }},</li>
         {% endif %}
         {% if officerFiling.serviceAddress.addressLine2 %}
-          <li>{{ officerFiling.serviceAddress.addressLine2 | title  }},</li>
+          <li id="service-address-line-two">{{ officerFiling.serviceAddress.addressLine2 | title  }},</li>
         {% endif %}
         {% if officerFiling.serviceAddress.locality %}
-          <li>{{ officerFiling.serviceAddress.locality | title  }},</li>
+          <li id="service-address-locality">{{ officerFiling.serviceAddress.locality | title  }},</li>
         {% endif %}
         {% if officerFiling.serviceAddress.region %}
-          <li>{{ officerFiling.serviceAddress.region | title  }},</li>
+          <li id="service-address-region">{{ officerFiling.serviceAddress.region | title  }},</li>
         {% endif %}
-        <li>{{ officerFiling.serviceAddress.country }}</li>
-        <li>{{ officerFiling.serviceAddress.postalCode }}</li>
+        <li id="service-address-country">{{ officerFiling.serviceAddress.country }}</li>
+        <li id="service-address-postcode">{{ officerFiling.serviceAddress.postalCode }}</li>
     </ul>  
   {% endif %}
 {% endset %}
@@ -28,24 +28,24 @@
   {% if officerFiling.isHomeAddressSameAsServiceAddress %}
   {{ i18n.updateDirectorDetailsHomeAddressSameAsCorrespondence if isUpdate else "The home address is the same as the correspondence address" }}
   {% elif officerFiling.residentialAddress %}
-    <ul class="govuk-list">
+    <ul class="govuk-list" id="residential-address">
       {% if officerFiling.residentialAddress.premises %}
-        <li>{{ officerFiling.residentialAddress.premises | title  }},</li>
+        <li id="residential-address-premise">{{ officerFiling.residentialAddress.premises | title  }},</li>
       {% endif %}
       {% if officerFiling.residentialAddress.addressLine1 %}
-        <li>{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
+        <li id="residential-address-line-one">{{ officerFiling.residentialAddress.addressLine1 | title }},</li>
       {% endif %}
       {% if officerFiling.residentialAddress.addressLine2 %}
-        <li>{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
+        <li id="residential-address-line-two">{{ officerFiling.residentialAddress.addressLine2 | title }},</li>
       {% endif %}
       {% if officerFiling.residentialAddress.locality %}
-        <li>{{ officerFiling.residentialAddress.locality | title }},</li>
+        <li id="residential-address-locality">{{ officerFiling.residentialAddress.locality | title }},</li>
       {% endif %}
       {% if officerFiling.residentialAddress.region %}
-        <li>{{ officerFiling.residentialAddress.region | title }},</li>
+        <li id="residential-address-region">{{ officerFiling.residentialAddress.region | title }},</li>
       {% endif %}
-      <li>{{ officerFiling.residentialAddress.country }}</li>
-      <li>{{ officerFiling.residentialAddress.postalCode }}</li>
+      <li id="residential-address-country">{{ officerFiling.residentialAddress.country }}</li>
+      <li id="residential-address-postcode">{{ officerFiling.residentialAddress.postalCode }}</li>
     </ul>  
   {% endif %}
 {% endset %}
@@ -64,6 +64,7 @@
     rows: [
       {
         key: {
+          id: "address-details",
           text: i18n.updateDirectorDetailsAddressDetails if isUpdate else "Address details",
           classes: "govuk-heading-m"
         },
@@ -76,6 +77,7 @@
               text: i18n.updateDirectorDetailsUpdate if isUpdate else "Change",
               visuallyHiddenText: "Director's address details",
               attributes: {
+                id: "address-change-link",
                 "data-event-id": "address-change-link"
               }
             }
@@ -84,6 +86,7 @@
       },
       {
         key: {
+          id: "correspondence-address",
           text: i18n.updateDirectorDetailsCorrespondenceAddress  if isUpdate else "Correspondence address"
         },
         value: {
@@ -92,6 +95,7 @@
       },
       {
         key: {
+          id: "home-address",
           text: i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address"
         },
         value: {
@@ -103,14 +107,14 @@
 
 {% else %}
   <dl class="govuk-summary-list" style="width:100%">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-heading-m">
+      <div class="govuk-summary-list__row" id="update-director-address-details-div">
+        <dt class="govuk-summary-list__key govuk-heading-m" id="update-director-address-details">
           {{ i18n.updateDirectorDetailsAddressDetails }}
         </dt>
         <dd class="govuk-summary-list__value">
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{{nameLink}}" data-event-id="update-address-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update address</span></a>
+          <a class="govuk-link" id="update-director-details-link" href="{{correspondenceAddressChangeLink}}" data-event-id="update-address-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update address</span></a>
         </dd>
         <dd class="govuk-summary-list__actions">
           {% if addressHasBeenUpdated %}
@@ -119,7 +123,7 @@
         </dd>
       </div>
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt class="govuk-summary-list__key" id="update-director-correspondence-address">
           {{ i18n.updateDirectorDetailsCorrespondenceAddress }}
         </dt>
         <dd class="govuk-summary-list__value">
@@ -131,7 +135,7 @@
         </dd>
       </div>
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt class="govuk-summary-list__key" id="update-director-home-address">
           {{ i18n.updateDirectorDetailsHomeAddress }}
         </dt>
         <dd class="govuk-summary-list__value">

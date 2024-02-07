@@ -35,6 +35,7 @@
           rows: [
             {
               key: {
+                id: "appoint-submitted-company-name",
                 text: i18n.confirmCompanyName
               },
               value: {
@@ -43,6 +44,7 @@
             },
             {
               key: {
+                id: "appoint-submitted-company-number",
                 text: i18n.confirmCompanyNumber
               },
               value: {
@@ -51,6 +53,7 @@
             },
             {
               key: {
+                id: "appoint-submitted-director-name",
                 text: i18n.nameOfDirector
               },
               value: {
@@ -59,10 +62,11 @@
             },
             {
               key: {
+                id: "appoint-submitted-director-date-appointed",
                 text: i18n.appointDirectorConfirmationDateAppointed
               },
               value: {
-                text: macros.localiseDate(appointedOn, i18n)
+                text: macros.localiseAppointedDate(appointedOn, i18n)
               }
             }
           ]

@@ -4,6 +4,7 @@ import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PAT
         urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
+  FILING_DESCRIPTION,
   OFFICER_ROLE,
   allowedPublicCompanyTypes} from "../utils/constants";
   import {
@@ -112,6 +113,7 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
   const officerFiling: OfficerFiling = {
+    description: FILING_DESCRIPTION.REMOVE_DIRECTOR,
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag
   };
@@ -135,6 +137,7 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
   }
 
   const officerFiling: OfficerFiling = {
+    description: FILING_DESCRIPTION.UPDATE_DIRECTOR,
     referenceAppointmentId: appointmentId,
     referenceEtag: appointment.etag,
     title: formatTitleCase(appointment.title),
@@ -184,7 +187,9 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
 */
 async function beginAppointmentJourney(req: Request, res: Response, session: Session, transactionId: string, lang: string | undefined) {
   logger.debug(`Creating an appointment filing`);
-  const officerFiling: OfficerFiling = {};
+  const officerFiling: OfficerFiling = {
+    description: FILING_DESCRIPTION.APPOINT_DIRECTOR
+  };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   

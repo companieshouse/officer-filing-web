@@ -1,4 +1,11 @@
 {
   "whatInformationShownInOnlineRegisterInset": "to be translate",
-  "whatInformationShownInOnlineRegisterInsetHint": "to be translate"
-  }
+  "whatInformationShownInOnlineRegisterInsetHint": "to be translate",
+  "companyDetails" : "to be translated",
+  "companyName": "to be translated",
+  "companyNumber": "to be translated",
+  "directorDetails": "to be translated",
+  "directorName": "to be translated",
+  "dateAppointed" : "to be translated",
+  "dateOfBirth" : "to be translated"
+}

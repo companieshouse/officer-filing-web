@@ -32,26 +32,25 @@
             {% set nationality = nationality + "<br>" + nationality3 %}
           {% endif %}
 
-          {% set name = firstName + " " + lastName %}
           {% if directorTitle %}
-            {% set name = directorTitle + " " + name %}
+            {% set directorName = directorTitle + " " + directorName %}
           {% endif %}
 
           {% set updateRequiredHtml %}
           <div style="margin-left: 0.5em; position: relative; text-align: left;">
-            <strong class="govuk-tag govuk-tag--blue">Details updated</strong>
-            <p class="govuk-body-s">Pending until submitted and accepted</p>
+            <strong class="govuk-tag govuk-tag--blue" id="details-updated">Details updated</strong>
+            <p class="govuk-body-s" id="pending-until-submitted">Pending until submitted and accepted</p>
           </div>
           {% endset -%}
 
           <p class="govuk-summary-list__key govuk-heading-m">{{ i18n.updateDirectorDetailsHeading }}</p>
           <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
+              <dt class="govuk-summary-list__key" id="update-details-director-name">
                 {{ i18n.updateDirectorDetailsName }}
               </dt>
               <dd class="govuk-summary-list__value">
-                {{ name }}
+                {{directorName}}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{nameLink}}" data-event-id="update-name-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update name</span></a>
@@ -63,7 +62,7 @@
               </dd>
             </div>
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
+              <dt class="govuk-summary-list__key" id="update-details-nationality">
                 {{ i18n.updateDirectorDetailsNationality }}
               </dt>
               <dd class="govuk-summary-list__value">
@@ -79,7 +78,7 @@
               </dd>
             </div>
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
+              <dt class="govuk-summary-list__key" id="update-details-occupation">
                 {{ i18n.updateDirectorDetailsOccupation }}
               </dt>
               <dd class="govuk-summary-list__value">

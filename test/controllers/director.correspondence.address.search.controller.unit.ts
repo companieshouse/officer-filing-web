@@ -24,7 +24,7 @@ mockIsActiveFeature.mockReturnValue(true);
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const PAGE_HEADING = "What is the director's correspondence address?";
+const PAGE_HEADING = "Find the director&#39;s correspondence address";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)

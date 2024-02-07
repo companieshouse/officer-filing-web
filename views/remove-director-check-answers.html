@@ -15,16 +15,17 @@
     <div class="govuk-grid-column-three-quarters">
       <form action="" method="post">
 
-        <h1 class="govuk-heading-l">Check your answers before submitting the removal of a director</h1>
+        <h1 class="govuk-heading-l"> {{ i18n.removeDirectorCheckAnswersTitle }} </h1>
 
-        <h2 class="govuk-heading-m">Company details</h2>
+        <h2 class="govuk-heading-m">{{ i18n.companyDetails }}</h2>
 
         {{ govukSummaryList({
           classes: 'govuk-!-margin-bottom-9',
           rows: [
             {
               key: {
-                text: "Company name"
+                id: "remove-cya-company-name",
+                text: i18n.companyName
               },
               value: {
                 text: company.companyName
@@ -32,7 +33,8 @@
             },
             {
               key: {
-                text: "Company number"
+                id: "remove-cya-company-number",
+                text: i18n.companyNumber
               },
               value: {
                 text: company.companyNumber
@@ -45,7 +47,7 @@
           {% set name = directorTitle + " " + name %}
         {% endif %}
 
-        <h2 class="govuk-heading-m">Director details</h2>
+        <h2 class="govuk-heading-m">{{ i18n.directorDetails }}</h2>
         {% if corporateDirector %}
           {% include "includes/remove-director-check-answers-corporate-summary.html" %}
         {% else %}

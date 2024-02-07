@@ -4,6 +4,9 @@ import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PAT
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { patchOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
+import { retrieveDirectorNameFromAppointment, retrieveDirectorNameFromFiling } from "./format";
+import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
+import { addLangToUrl } from './localise';
 
 /**
  * Get field from the form. If the field is populated then it will be returned, else undefined.
@@ -21,11 +24,11 @@ export const getField = (req: Request, fieldName: string): string => {
  * Checks whether the user came from the check your answers page and if so,
  *  sets the back link to the check your answers page instead.
  */
-export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string): string => {
+export const setBackLink = (req: Request, checkYourAnswersLink: string | undefined, backLink: string, lang?: string): string => {
   if(checkYourAnswersLink){
-    return checkYourAnswersLink;
+    return addLangToUrl(checkYourAnswersLink, lang);
   }
-  return backLink;
+  return addLangToUrl(backLink, lang);
 };
 
 /**
@@ -66,4 +69,20 @@ export const getCountryFromKey = (country: string): string => {
     'Isle of Man': 'Isle of Man',
   };
   return countryKeyValueMap[country];
+}
+
+
+/**
+ * Set the directors name depending on AP01/CH01 journey
+ */
+export const getDirectorNameBasedOnJourney = async (isUpdate: boolean | undefined, session, req: Request, officerFiling): Promise<string> => {
+  let directorName;
+
+  if (isUpdate) {
+   const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
+   directorName = retrieveDirectorNameFromAppointment(companyAppointment)
+  } else {
+   directorName = retrieveDirectorNameFromFiling(officerFiling)
+  }
+  return directorName;
 }

@@ -1,11 +1,51 @@
-{% macro localiseDate(date, i18n) %}
-  {% set fullDate = date.split(' ') %}
+{% macro localiseAppointedDate(dateAppointed, i18n) %}
+  {% set yearAppointed = dateAppointed.split(' ')[1] %}
+  {% set fullAppointedDate = dateAppointed.split(' ') %}
 
-  {% if fullDate|length === 3 %}
-    {% set displayDate = fullDate[0] + ' ' +  i18n[fullDate[1]] +  ' ' + fullDate[2] %}
-    {{ displayDate }}
+  {% if fullAppointedDate|length === 2 %}
+    {% set appointedDate = i18n.currentDirectorAppointedBefore + ' ' +  yearAppointed %}
+    {{ appointedDate }}
+  {% elif fullAppointedDate|length === 3 %}
+    {% set appointedDate = fullAppointedDate[0] + ' ' +  i18n[fullAppointedDate[1]] +  ' ' + fullAppointedDate[2] %}
+    {{ appointedDate }}
   {% else %}
-    {% set displayDate = date %}
-    {{ displayDate }}
+    {% set appointedDate = dateAppointed %}
+    {{ appointedDate }}
+  {% endif %}
+{% endmacro %}
+
+{% macro localiseDateOfBirth(dateOfBirth, i18n) %}
+  {% set dateOfBirthMonthName = i18n[dateOfBirth.split(' ')[0]] %}
+  {% set dateOfBirthYear = dateOfBirth.split(' ')[1] %}
+
+  {% set dateOfBirth = dateOfBirthMonthName + ' ' +  dateOfBirthYear %}
+  {{ dateOfBirth }}
+{% endmacro %}
+
+{% macro localiseDateOfBirthFull(dateOfBirth, i18n) %}
+  {% set dateOfBirthYear = dateOfBirth.split(' ')[1] %}
+  {% set fullDateOfBirthDate = dateOfBirth.split(' ') %}
+
+  {% if fullDateOfBirthDate|length === 2 %}
+    {% set dateOfBirth = i18n[fullDateOfBirthDate[0]] + ' ' +  dateOfBirthYear %}
+    {{ dateOfBirth }}
+  {% elif fullDateOfBirthDate|length === 3 %}
+    {% set dateOfBirth = fullDateOfBirthDate[0] + ' ' +  i18n[fullDateOfBirthDate[1]] +  ' ' + fullDateOfBirthDate[2] %}
+    {{ dateOfBirth }}
+  {% else %}
+    {% set dateOfBirth = dateOfBirth %}
+    {{ dateOfBirth }}
+  {% endif %}
+{% endmacro %}
+
+{% macro localiseRemovalDate(resignedOn, i18n) %}
+  {% set fullResignationDate = resignedOn.split(' ') %}
+
+  {% if fullResignationDate|length === 3 %}
+    {% set resignedOnDate = fullResignationDate[0] + ' ' +  i18n[fullResignationDate[1]] +  ' ' + fullResignationDate[2] %}
+    {{ resignedOnDate }}
+  {% else %}
+    {% set resignedOnDate = resignedOn %}
+    {{ resignedOnDate }}
   {% endif %}
 {% endmacro %}

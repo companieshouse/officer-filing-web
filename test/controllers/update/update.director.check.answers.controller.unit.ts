@@ -20,7 +20,6 @@ import {
 } from "../../../src/types/page.urls";
 import { getValidationStatus } from "../../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponse } from "../../mocks/validation.status.response.mock";
-import { closeTransaction } from "../../../src/services/transaction.service";
 import { getCurrentOrFutureDissolved } from "../../../src/services/stop.page.validation.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
@@ -29,7 +28,6 @@ mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
-const mockCloseTransaction = closeTransaction as jest.Mock;
 const mockGetCurrentOrFutureDissolved = getCurrentOrFutureDissolved as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 
@@ -59,14 +57,25 @@ describe("Director check your answers controller tests", () => {
 
   describe("GET tests", () => {
     it("Should navigate to director check your answers page", async () => {
-      mockGetOfficerFiling.mockResolvedValue({nameHasBeenUpdated: true
+
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+         });
+
+      mockGetOfficerFiling.mockResolvedValue({
+        nameHasBeenUpdated: true,
         firstName: "John",
         lastName: "Doe",
         title: "Mr",
         occupation: "Director",
       });
+      
       const response = await request(app).get(PAGE_URL);
       expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("John Mid Smith");
       expect(response.text).toContain("John");
       expect(response.text).toContain("Doe");
       expect(response.text).toContain("Mr");
@@ -81,6 +90,9 @@ describe("Director check your answers controller tests", () => {
     });
 
     it("Should render page with just occupation field for director details", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
       mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff"})
       const response = await request(app).get(PAGE_URL);
       
@@ -92,6 +104,9 @@ describe("Director check your answers controller tests", () => {
     });
 
     it("Should render page with all fields", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
       mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff"})
       const response = await request(app).get(PAGE_URL);
       

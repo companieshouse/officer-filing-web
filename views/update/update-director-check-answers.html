@@ -18,20 +18,22 @@
       {% include "includes/list/errors.html" %}
       
       <form action="" method="post">
-        <span class="govuk-caption-l gem-c-title__context">
-          {{name}}
+        <span class="govuk-caption-l gem-c-title__context" id="update-director-cya--name">
+          {{directorNameCompanyAppointment}}
         </span>
-        <h1 class="govuk-heading-l">{{ i18n.updateDirectorCheckAnswersTitle }}</h1>
-        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersCompanyDetails }}</h2>
-
+        <h1 class="govuk-heading-l" id="update-director-cya-title">{{ i18n.updateDirectorCheckAnswersTitle }}</h1>
+        <h2 class="govuk-heading-m" id="update-director-cya-company-details">{{ i18n.updateDirectorCheckAnswersCompanyDetails }}</h2>
+          
         {{ govukSummaryList({
           attributes: {
-            "style": "width:auto"
+            id: "update-director-cya-summary-list"
           },
           rows: [
             {
               classes: "govuk-summary-list__row--no-actions",
+              id: "update-director-cya-company-name-list",
               key: {
+                id: "update-director-cya-company-name",
                 text: i18n.updateDirectorCheckAnswersCompanyName
               },
               value: {
@@ -40,7 +42,7 @@
             },
             {
               classes: "govuk-summary-list__row--no-actions",
-              
+              id: "update-director-cya-company-number-list",
               key: {
                 text: i18n.updateDirectorCheckAnswersCompanyNumber
               },
@@ -66,6 +68,7 @@
         {% if officerFiling.nameHasBeenUpdated %}
           {% set nameListElement = {
             key: {
+              id: "update-director-name-label",
               text: i18n.updateDirectorCheckAnswersDirectorName
             },
             value: {
@@ -78,10 +81,14 @@
                   text: i18n.updateDirectorCheckAnswersChange,
                   visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorName,
                   attributes: {
+                    id: "update-director-name-change-link",
                     "data-event-id": "name-change-link"
                   }
                 }
               ]
+            },
+            attributes: {
+              id: "updated-director-cya-name-list"
             }
           } %}
           {% endif %}
@@ -89,6 +96,7 @@
           {% if officerFiling.nationalityHasBeenUpdated %}
             {% set nationalityListElement = {
                 key: {
+                  id: "update-director-nationality-label",
                   text: i18n.updateDirectorCheckAnswersDirectorNationality
                 },
                 value: {
@@ -101,10 +109,14 @@
                       text: i18n.updateDirectorCheckAnswersChange,
                       visuallyHiddenText: updateDirectorCheckAnswersDirectorNationality,
                       attributes: {
+                        id: "update-director-nationality-change-link",
                         "data-event-id": "nationality-change-link"
                       }
                     }
                   ]
+                },
+                attributes: {
+                  id: "updated-director-cya-nationality-list"
                 }
               } %}
           {% endif %}
@@ -112,6 +124,7 @@
           {% if officerFiling.occupationHasBeenUpdated %}
           {% set occupationListElement = {
             key: {
+              id: "update-director-occupation-label",
               text: i18n.updateDirectorCheckAnswersDirectorOccupation
             },
             value: {
@@ -124,18 +137,25 @@
                   text: i18n.updateDirectorCheckAnswersChange,
                   visuallyHiddenText: i18n.updateDirectorCheckAnswersDirectorOccupation,
                   attributes: {
+                    id: "update-director-occupation-change-link",
                     "data-event-id": "occupation-change-link"
                   }
                 }
               ]
+            },
+            attributes: {
+              id: "updated-director-cya-occupation-list"
             }
           } %}
         {% endif %}
 
         {% if officerFiling.nameHasBeenUpdated or officerFiling.nationalityHasBeenUpdated or officerFiling.occupationHasBeenUpdated %}
-          <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
+          <h2 class="govuk-heading-m" id="update-director-cya-details">{{ i18n.updateDirectorCheckAnswersDirectorDetails }}</h2>
 
           {{ govukSummaryList({
+            attributes: {
+              id: "update-director-updated-cya-summary-list"
+            },
             rows: [
               nameListElement,
               nationalityListElement,
@@ -150,12 +170,16 @@
           {% include "includes/check-your-answer/address-details.html" %}
         {% endif %}
 
-        <h2 class="govuk-heading-m">{{ i18n.updateDirectorCheckAnswersDateChanged }}</h2>
+        <h2 class="govuk-heading-m" id="update-director-cya-date-changed">{{ i18n.updateDirectorCheckAnswersDateChanged }}</h2>
 
         {{ govukSummaryList({
+          attributes: {
+            id: "update-director-cya-date-changed-summary-list"
+          },
           rows: [
             {
               key: {
+                id: "update-director-date-details-changed",
                 text: i18n.updateDirectorCheckAnswersDateDirectorDetailsChanged
               },
               value: {
@@ -168,6 +192,7 @@
                     text: i18n.updateDirectorCheckAnswersChange,
                     visuallyHiddenText: i18n.updateDirectorCheckAnswersDateDirectorDetailsChanged,
                     attributes: {
+                      id: "update-director-date-details-changed-link",
                       "data-event-id": "date-updated-change-link"
                     }
                   }

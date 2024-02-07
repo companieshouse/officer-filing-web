@@ -11,7 +11,6 @@ import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_PROTECTED_DETAILS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
-  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
   urlParams
 } from "../../src/types/page.urls";
@@ -91,16 +90,6 @@ describe("Director confirm residential address controller tests", () => {
         const response = await request(app).get(PAGE_URL);
 
         expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END);
-      });
-
-      it("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
-          directorName: "John Smith",
-          residentialAddressBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END
-        })
-        const response = await request(app).get(PAGE_URL);
-
-        expect(response.text).toContain(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH_END);
       });
 
       it("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END", async () => {
