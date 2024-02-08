@@ -9,6 +9,9 @@ import { DirectorField } from "../../model/director.model";
 import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { HA_TO_SA_ERROR } from "../../utils/constants";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { compareAddress } from "../../utils/address";
 
 export const getResidentialLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
@@ -36,11 +39,11 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const isHomeAddressSameAsServiceAddress = calculateHaToSaBooleanValue(req);
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     
     if (isHomeAddressSameAsServiceAddress === undefined) {
       const linkError = createValidationErrorBasic(HA_TO_SA_ERROR, DirectorField.HA_TO_SA_RADIO);
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
       return res.render(templateName, {
         templateName: templateName,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
@@ -52,9 +55,23 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
     const officerFilingBody: OfficerFiling = {
       isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    if (officerFiling.checkYourAnswersLink) {
+    if(isUpdate){
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      if(isHomeAddressSameAsServiceAddress !== companyAppointment.residentialAddressIsSameAsServiceAddress){
+        officerFilingBody.residentialAddressHasBeenUpdated = true;
+      }
+      else if ((compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress))){
+        officerFilingBody.residentialAddressHasBeenUpdated = false;
+      }
+    }
+
+    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    
+    if (patchFiling.data.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(getCheckYourAnswersLink(isUpdate), req));
     }
     //TODO do we go to director details or CYA?
