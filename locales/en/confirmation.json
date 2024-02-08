@@ -19,5 +19,11 @@
   "updateTypeNationality": "Nationality",
   "updateTypeOccupation": "Occupation",
   "updateTypeResidentialAddress": "Residential Address",
-  "updateTypeCorrespondenceAddress": "Correspondence Address"
+  "updateTypeCorrespondenceAddress": "Correspondence Address",
+  "appointSubmitted": "Appointment submitted",
+  "appointConfirmationTitle": "Appointment submitted",
+  "nameOfDirector": "Name of director",
+  "appointDirectorConfirmationDateAppointed": "Date of appointment",
+  "appointConfirmationSameCompanyLink": "Update director information for the same company",
+  "appointConfirmationDifferentCompanyLink": "Update director information for a different company"
 }
