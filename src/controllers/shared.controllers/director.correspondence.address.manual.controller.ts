@@ -95,10 +95,10 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (!(compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)){
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
-      }
-    }
+      };
+    };
 
     officerFilingBody = (await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody)).data;
 
@@ -188,4 +188,14 @@ export const renderPage = (req: Request, res: Response, serviceAddress: Address,
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
   });
-}
+};
+
+export const checkIsCorrespondenceAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
+  if (officerFiling.isServiceAddressSameAsRegisteredOfficeAddress === true) {
+    return companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress !== true;
+  }
+  if (companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress === true) {
+    return true;
+  }
+  return !compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
+};
