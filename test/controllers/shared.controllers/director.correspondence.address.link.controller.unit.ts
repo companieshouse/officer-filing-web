@@ -193,7 +193,7 @@ describe("Director correspondence address link controller tests", () => {
         if(url === UPDATE_PAGE_URL){
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: false});
         }
-          const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
+        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
         {isServiceAddressSameAsRegisteredOfficeAddress: true, correspondenceAddressHasBeenUpdated: true})
@@ -212,7 +212,10 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {isServiceAddressSameAsRegisteredOfficeAddress: true})
+        {
+          isServiceAddressSameAsRegisteredOfficeAddress: true,  
+          correspondenceAddressHasBeenUpdated: false
+        });
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });

@@ -12,6 +12,7 @@ import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { compareAddress } from "../../utils/address";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
@@ -65,17 +66,15 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
-        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
-      }
-      else if ((compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
-        officerFilingBody.correspondenceAddressHasBeenUpdated = false;
-      }
+      
+      officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+        { ...officerFilingBody,
+        serviceAddress: officerFiling.serviceAddress }, companyAppointment);
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
