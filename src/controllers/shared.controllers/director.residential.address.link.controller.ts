@@ -74,7 +74,6 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
     if (patchFiling.data.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(getCheckYourAnswersLink(isUpdate), req));
     }
-    //TODO do we go to director details or CYA?
     return res.redirect(urlUtils.getUrlToPath(getRedirectLink(isUpdate), req));
   } catch (e) {
     next(e);
