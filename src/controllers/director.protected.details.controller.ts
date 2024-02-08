@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import {
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
@@ -42,7 +39,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    await getOfficerFiling(session, transactionId, submissionId);
 
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {

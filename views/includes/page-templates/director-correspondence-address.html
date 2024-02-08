@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% set title = "What is the director's correspondence address?" %}
+
+{% block pageTitle %}
+  {% include "includes/page-title.html" %}
+{% endblock %}
+
+{% block backLink %}
+  {% set backLinkText = i18n.back %}
+  {% include "includes/back-link.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+
+      {% include "includes/list/errors.html" %}
+      {% if 'undefined' not in directorRegisteredOfficeAddress %}
+        {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
+      {% endif %}
+
+      
+      <form action="" method="post">
+        <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
+        {{ govukRadios({
+          errorMessage: errors.director_correspondence_address if errors,
+          idPrefix: "director_correspondence_address",
+          name: "director_correspondence_address",
+          fieldset: {
+            legend: {
+              text: "What is the director's correspondence address?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          hint: {
+            text: "We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK."
+          },
+          items: [
+            {
+              value: "director_registered_office_address",
+              text: directorRegisteredOfficeAddressValue,
+              checked: director_correspondence_address === "director_registered_office_address",
+              attributes: {
+                "data-event-id": "director_registered_office_address"
+              },
+              hint: {
+                text: "This is the company's registered office address"              
+              },
+              id: "director_registered_address"
+            },
+            {
+              value: "director_different_address",
+              text: "A different address",
+              checked: director_correspondence_address === "director_different_address",
+              attributes: {
+                "data-event-id": "director-different-correspondence-address"
+              },
+              id: "director_different_address"
+            }
+          ]
+        }) }}
+
+        {% include "includes/inset-text/correspondence-inset-text.html" %}
+
+        {{ govukButton({
+          attributes: {
+            "data-event-id": "continue-button"
+          },
+          text: "Continue"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

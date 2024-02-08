@@ -4,14 +4,16 @@ import { createValidationErrorBasic, formatValidationErrors } from '../../valida
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../services/confirm.company.service";
-import { retrieveDirectorNameFromFiling } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
-import { getField } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { compareAddress } from "../../utils/address";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
-export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -19,11 +21,12 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     return res.render(templateName,{
       templateName: templateName,
       backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
       sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
@@ -33,7 +36,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
   }
 };
 
-export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageOnYesUrl: string, nextPageOnNoUrl: string, backUrlPath: string) => {
+export const postCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, nextPageUrl: NextPageUrl, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -42,15 +45,18 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
 
+    
+
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
+      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
       return res.render(templateName,{
         templateName: templateName,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        directorName: formatTitleCase(directorName),
         errors: formatValidationErrors([linkError], lang)
       });
     }
@@ -58,12 +64,26 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const officerFilingBody: OfficerFiling = {
       isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress
     };
+
+    if(isUpdate){
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
+        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
+      }
+      else if ((compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+        officerFilingBody.correspondenceAddressHasBeenUpdated = false;
+      }
+    }
+
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (isServiceAddressSameAsRegisteredOfficeAddress === true) {
-      return res.redirect(urlUtils.getUrlToPath(nextPageOnYesUrl, req));
+      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.yes, req));
     } else {
-      return res.redirect(urlUtils.getUrlToPath(nextPageOnNoUrl, req));
+      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.no, req));
     }
   } catch (e) {
     next(e);
@@ -95,4 +115,9 @@ export const calculateSaToRoaBooleanValue = (req: Request): boolean|undefined =>
     return false;
   }
   return undefined;
+}
+
+export interface NextPageUrl {
+  yes: string,
+  no: string
 }
