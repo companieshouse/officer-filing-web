@@ -59,58 +59,45 @@
 {% endset %}
 
 {% if cyaDisplay %}
-
-  {{ govukSummaryList({
-    rows: [
-      {
-        key: {
-          id: "address-details",
-          text: i18n.updateDirectorDetailsAddressDetails if isUpdate else "Address details",
-          classes: "govuk-heading-m"
-        },
-        value: {
-        },
-        actions: {
-          items: [
-            {
-              href: correspondenceAddressChangeLink + correspondeneAddressRadio | trim,
-              text: i18n.updateDirectorDetailsUpdate if isUpdate else "Change",
-              visuallyHiddenText: "Director's address details",
-              attributes: {
-                id: "address-change-link",
-                "data-event-id": "address-change-link"
-              }
-            }
-          ]
-        }
-      },
-      {
-        key: {
-          id: "correspondence-address",
-          text: i18n.updateDirectorDetailsCorrespondenceAddress  if isUpdate else "Correspondence address"
-        },
-        value: {
-          html: displayCorrespondenceAddress
-        }
-      },
-      {
-        key: {
-          id: "home-address",
-          text: i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address"
-        },
-        value: {
-          html: displayResidentialAddress
-        }
-      }
-    ]
-  }) }}
+<dl class="govuk-summary-list" style="width:100%">
+  <div class="govuk-summary-list__row" id="address-details-div">
+    <h2 class="govuk-summary-list__key govuk-heading-m" id="address-details">
+     {{ i18n.updateDirectorCheckAnswersAddressDetails if isUpdate else "Address details" }}
+    </h2>
+    <dd class="govuk-summary-list__value">
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" id="address-change-link" href="{{correspondenceAddressChangeLink}}" data-event-id="address-change-link">Change<span class="govuk-visually-hidden">Director's address details</span></a>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key" id="correspondence-address">
+      {{ i18n.updateDirectorDetailsCorrespondenceAddress if isUpdate else "Correspondence address" }}
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{displayCorrespondenceAddress | safe}}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key" id="home-address">
+      {{ i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address" }}
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{displayResidentialAddress | safe}}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+    </dd>
+  </div>
+</dl>
 
 {% else %}
   <dl class="govuk-summary-list" style="width:100%">
       <div class="govuk-summary-list__row" id="update-director-address-details-div">
-        <dt class="govuk-summary-list__key govuk-heading-m" id="update-director-address-details">
+        <h2 class="govuk-summary-list__key govuk-heading-m" id="update-director-address-details">
           {{ i18n.updateDirectorDetailsAddressDetails }}
-        </dt>
+        </h2>
         <dd class="govuk-summary-list__value">
         </dd>
         <dd class="govuk-summary-list__actions">
