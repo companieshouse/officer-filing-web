@@ -25,7 +25,7 @@ import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
-export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
+export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -34,8 +34,8 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     return res.render(templateName, {
       templateName: templateName,
-      enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryLink, req),
-      backLinkUrl: urlUtils.getUrlToPath(backLink, req),
+      enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
+      backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises
@@ -45,7 +45,7 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
   }
 };
 
-export const postDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
+export const postDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -69,13 +69,13 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualEntryLink, isUpdate);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, pageLinks, isUpdate);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualEntryLink, isUpdate);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, pageLinks, isUpdate);
     }
 
     // Patch the filing with updated information
@@ -142,16 +142,22 @@ const getAddressSearchPath = (req: Request, isUpdate: boolean) => {
   }
 }
 
-const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
+const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   const session: Session = req.session as Session;
   const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
   return res.render(templateName, {
     templateName: templateName,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryLink, req),
-    backLinkUrl: urlUtils.getUrlToPath(backLink, req),
+    enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
+    backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.residentialAddress?.postalCode,
     premises: officerFiling.residentialAddress?.premises,
     errors: formatValidationErrors(validationErrors),
   });
+}
+
+
+export interface PageLinks {
+  backLink: string,
+  manualEntryLink: string
 }

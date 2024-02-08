@@ -4,9 +4,9 @@ import { UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, UPDATE_DIRECTOR_RESIDE
 import { Templates } from "../../types/template.paths"
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
-  getDirectorResidentialAddressSearch(req, resp, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, true);
+  getDirectorResidentialAddressSearch(req, resp, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {backLink: UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, manualEntryLink: UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH}, true);
 }
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
-  postDirectorResidentialAddressSearch(req, resp, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, true);
+  postDirectorResidentialAddressSearch(req, resp, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, {backLink: UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, manualEntryLink: UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH}, true);
 };
