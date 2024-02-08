@@ -40,6 +40,7 @@ import * as updateDirectorNationality from "../controllers/update/update.directo
 import * as updateDirectorConfirmCorrespondenceAddress from "../controllers/update/update.director.confirm.correspondence.address.controller";
 import * as updateCorrespondenceAddressChooseAddress from "../controllers/update/update.director.correspondence.address.choose.address.controller";
 import * as directorCorrespondenceAddressSearchUpdate from "../controllers/update/update.director.correspondence.address.search.controller";
+import * as updateDirectorCorrespondenceAddressManual from "../controllers/update/update.director.correspondence.address.manual.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
@@ -170,6 +171,9 @@ router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), compan
 
 router.get(urls.UPDATE_DIRECTOR_NATIONALITY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorNationality.get);
 router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, nationalityValidator, updateDirectorNationality.post);
+
+router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddressManual.get);
+router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressManual.post);
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddress.post);
