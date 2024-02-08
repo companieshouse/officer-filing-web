@@ -1,9 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import {
-  DIRECTOR_PROTECTED_DETAILS_PATH,
-  APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-} from "../../types/page.urls";
-import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";

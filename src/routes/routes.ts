@@ -37,7 +37,7 @@ import * as updateDirectorDetail from "../controllers/update/update.director.det
 import * as updateDirectorCheckAnswers from "../controllers/update/update.director.check.answers.controller";
 import * as updateDirectorName from "../controllers/update/update.director.name.controller";
 import * as updateDirectorNationality from "../controllers/update/update.director.nationality.controller";
-import * as updateDirectorConfirmResidentialAddress from "../controllers/update/update-director.confirm.residential.address.controller";
+import * as updateDirectorConfirmResidentialAddress from "../controllers/update/update.director.confirm.residential.address.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
