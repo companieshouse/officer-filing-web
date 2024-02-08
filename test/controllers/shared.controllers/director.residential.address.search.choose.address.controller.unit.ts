@@ -27,7 +27,7 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetUKAddressesFromPostcode = getUKAddressesFromPostcode as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
-mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -56,6 +56,7 @@ describe("Director residential address array page controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockPatchOfficerFiling.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
       mockGetOfficerFiling.mockClear();
     });
   
