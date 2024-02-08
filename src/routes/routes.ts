@@ -174,7 +174,7 @@ router.post(urls.UPDATE_DIRECTOR_NATIONALITY, companyAuthenticationMiddleware, n
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddress.post);
 
-router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.get);
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.get);
 router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.post);
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressLink.get);

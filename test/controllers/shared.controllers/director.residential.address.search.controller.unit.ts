@@ -9,10 +9,14 @@ import app from "../../../src/app";
 
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
@@ -24,7 +28,6 @@ import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../../src/s
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
-import { Session } from "@companieshouse/node-session-handler";
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
@@ -108,7 +111,7 @@ describe('Director residential address search controller test', () => {
   });
 
   describe("get tests",  () => {
-    it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,]])("Should navigate to director residential address search page", async (url, backLink) => {
+    it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should navigate to director residential address search page", async (url, backLink, manualEntryLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         firstName: "John",
         lastName: "Smith"
@@ -118,6 +121,7 @@ describe('Director residential address search controller test', () => {
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain(manualEntryLink);
       if(url === UPDATE_PAGE_URL){
         expect(response.text).toContain("John Elizabeth Doe");
       }
@@ -134,7 +138,7 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
 
-    it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,]])("Should populate filing on the page", async (url, backLink) => {
+    it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should populate filing on the page", async (url, backLink, manualEntryLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         residentialAddress: ( {
           postalCode: "SW1A1AA",
@@ -147,6 +151,7 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain("SW1A1AA");
       expect(response.text).toContain("123");
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain(manualEntryLink);
     });
   });
 

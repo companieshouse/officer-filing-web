@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
@@ -26,7 +25,7 @@ import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
-export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, isUpdate: boolean) => {
+export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -35,7 +34,7 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     return res.render(templateName, {
       templateName: templateName,
-      enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
+      enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryLink, req),
       backLinkUrl: urlUtils.getUrlToPath(backLink, req),
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.residentialAddress?.postalCode,
@@ -46,7 +45,7 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
   }
 };
 
-export const postDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, isUpdate: boolean) => {
+export const postDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -70,13 +69,13 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, isUpdate);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualEntryLink, isUpdate);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, isUpdate);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualEntryLink, isUpdate);
     }
 
     // Patch the filing with updated information
@@ -143,12 +142,12 @@ const getAddressSearchPath = (req: Request, isUpdate: boolean) => {
   }
 }
 
-const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string, isUpdate: boolean) => {
+const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string, manualEntryLink: string, isUpdate: boolean) => {
   const session: Session = req.session as Session;
   const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
   return res.render(templateName, {
     templateName: templateName,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req),
+    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryLink, req),
     backLinkUrl: urlUtils.getUrlToPath(backLink, req),
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.residentialAddress?.postalCode,
