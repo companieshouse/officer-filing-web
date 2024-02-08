@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH } from "../../types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_PROTECTED_DETAILS_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { createValidationErrorBasic, formatValidationErrors } from '../../validation/validation';
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -58,7 +58,7 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
       return res.redirect(urlUtils.getUrlToPath(getCheckYourAnswersLink(isUpdate), req));
     }
     //TODO do we go to director details or CYA?
-    return res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
+    return res.redirect(urlUtils.getUrlToPath(getRedirectLink(isUpdate), req));
   } catch (e) {
     next(e);
   }
@@ -96,4 +96,11 @@ const getCheckYourAnswersLink = (isUpdate: boolean): string => {
     return UPDATE_DIRECTOR_CHECK_ANSWERS_PATH;
   }
   return APPOINT_DIRECTOR_CHECK_ANSWERS_PATH;
+}
+
+const getRedirectLink = (isUpdate: boolean): string => {
+  if(isUpdate){
+    return UPDATE_DIRECTOR_DETAILS_PATH;
+  }
+  return DIRECTOR_PROTECTED_DETAILS_PATH;
 }
