@@ -97,8 +97,8 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
       if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)){
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
-      };
-    };
+      }
+    }
 
     officerFilingBody = (await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody)).data;
 
