@@ -1,0 +1,7 @@
+{
+  "appointDirectorConfirmationConfirmationTitle" : "Appointment submitted",
+  "appointDirectorConfirmationNameOfDirector" : "Name of director",
+  "appointDirectorConfirmationDateRemoved" : "Date of appointment",
+  "appointDirectorConfirmationSameCompanyLink": "Update director information for the same company",
+  "appointDirectorConfirmationDifferentCompanyLink": "Update director information for a different company"
+}
