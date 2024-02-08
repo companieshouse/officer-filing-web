@@ -10,6 +10,7 @@ export interface RenderPageParams {
   officerFiling: OfficerFiling;
   ukAddresses: UKAddress[];
   validationErrors: ValidationError[];
+  directorName: string,
   templateName: string;
   backUrlPath: string;
   isUpdate: boolean;

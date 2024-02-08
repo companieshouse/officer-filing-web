@@ -5,8 +5,8 @@ import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.fil
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
-import {getAddressOptions, getCountryFromKey, setBackLink} from "../../utils/web";
+import { formatTitleCase } from "../../utils/format";
+import {getAddressOptions, getCountryFromKey, getDirectorNameBasedOnJourney, setBackLink} from "../../utils/web";
 import { RenderPageParams } from "../../utils/render.page.params";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
@@ -23,6 +23,7 @@ export const getResidentialAddressChooseAddress = async (req: Request, res: Resp
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     const postalCode = officerFiling?.residentialAddress?.postalCode;
     if(!postalCode) {
@@ -35,6 +36,7 @@ export const getResidentialAddressChooseAddress = async (req: Request, res: Resp
       officerFiling: officerFiling,
       ukAddresses: ukAddresses,
       validationErrors: [],
+      directorName: directorName,
       templateName: templateName,
       backUrlPath: backLinkPath,
       isUpdate: isUpdate
@@ -51,6 +53,7 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+  const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
   const confirmResidentialAddressUrl = urlUtils.getUrlToPath(nextPagePath, req);
 
   const postalCode = officerFiling?.residentialAddress?.postalCode ?? '';
@@ -64,6 +67,7 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
       officerFiling,
       ukAddresses: addresses,
       validationErrors: [validationError],
+      directorName: directorName,
       templateName: templateName,
       backUrlPath: backLinkPath,
       isUpdate: isUpdate
@@ -94,7 +98,7 @@ const renderPage = async (req: Request, res: Response, params: RenderPageParams)
     templateName: params.templateName,
     backLinkUrl: setBackLink(req, params.officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(params.backUrlPath, req)),
     enterAddressManuallyUrl: urlUtils.getUrlToPath(residentialManualAddressPath, req),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(params.officerFiling)),
+    directorName: formatTitleCase(params.directorName),
     addresses: addressOptions,
     currentPremises: params.officerFiling.residentialAddress?.premises,
     errors: formatValidationErrors(params.validationErrors)

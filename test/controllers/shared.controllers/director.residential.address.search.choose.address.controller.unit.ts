@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/postcode.lookup.service");
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -17,12 +18,16 @@ import {
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getUKAddressesFromPostcode } from "../../../src/services/postcode.lookup.service";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetUKAddressesFromPostcode = getUKAddressesFromPostcode as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -56,7 +61,7 @@ describe("Director residential address array page controller tests", () => {
   
     describe("get tests", () => {
 
-      it.each([[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])
+      it.each([[APPOINT_PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])
       ("Should navigate to director residential array page", async (url, backLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           residentialAddress: {
