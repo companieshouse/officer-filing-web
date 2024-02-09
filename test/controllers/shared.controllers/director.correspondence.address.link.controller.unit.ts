@@ -151,6 +151,11 @@ describe("Director correspondence address link controller tests", () => {
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should return undefined when saToRoa is undefined", async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer",
           isServiceAddressSameAsRegisteredOfficeAddress: null
         });
 
@@ -212,7 +217,7 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {isServiceAddressSameAsRegisteredOfficeAddress: true})
+        {isServiceAddressSameAsRegisteredOfficeAddress: true, "correspondenceAddressHasBeenUpdated": false})
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
@@ -235,6 +240,7 @@ describe("Director correspondence address link controller tests", () => {
       });
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
+        mockGetOfficerFiling.mockReset();
         mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
         const response = await request(app).post(url);
         expect(response.text).toContain(ERROR_PAGE_HEADING)

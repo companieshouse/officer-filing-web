@@ -46,6 +46,7 @@ import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
 import * as updateDirectorResidentialAddressSearch from "../controllers/update/update.director.residential.address.search.controller";
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
+import * as updateDirectorResidentialAddressLink from "../controllers/update/update.director.residential.address.link.controller";
 import * as updateDirectorResidentialAddress from "../controllers/update/update.director.residential.address.controller";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
@@ -121,10 +122,10 @@ router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, companyAuthenticationMi
 router.get(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorConfirmCorrespondenceAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, directorConfirmCorrespondenceAddress.post);
 
-router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.get);
+router.get(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressLink.get);
 router.post(urls.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, directorCorrespondenceAddressLink.post);
 
-router.get(urls.DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, companyAuthenticationMiddleware, directorCorrespondenceAddressEnterManuallyLink.get);
+router.get(urls.DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorCorrespondenceAddressEnterManuallyLink.get);
 router.post(urls.DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, companyAuthenticationMiddleware, directorCorrespondenceAddressEnterManuallyLink.post);
 
 router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddress.get);
@@ -142,7 +143,7 @@ router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, companyAuthenticationMiddl
 router.get(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorConfirmResidentialAddress.get);
 router.post(urls.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, directorConfirmResidentialAddress.post);
 
-router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, directorResidentialAddressLink.get);
+router.get(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, directorResidentialAddressLink.get);
 router.post(urls.DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, directorResidentialAddressLink.post);
 
 router.get(urls.DIRECTOR_PROTECTED_DETAILS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorProtectedDetails.get);
@@ -167,7 +168,7 @@ router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyA
 router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
 
 
-router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorUpdateOccupation.get);
+router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorUpdateOccupation.get);
 router.post(urls.UPDATE_DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorUpdateOccupation.post);
 
 router.get(urls.UPDATE_DIRECTOR_SUBMITTED, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, directorUpdateSubmitted.get);
@@ -192,6 +193,9 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, companyAuthentic
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, updateCorrespondenceAddressChooseAddress.post);
+
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK, isFeatureEnabled(CH01_ACTIVE),companyAuthenticationMiddleware, updateDirectorResidentialAddressLink.get);
+router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorResidentialAddressLink.post);
 
 router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorResidentialAddress.get);
 router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, updateDirectorResidentialAddress.post);
