@@ -48,6 +48,7 @@ import * as updateDirectorResidentialAddressSearch from "../controllers/update/u
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
 import * as updateDirectorResidentialAddressLink from "../controllers/update/update.director.residential.address.link.controller";
 import * as updateDirectorResidentialAddress from "../controllers/update/update.director.residential.address.controller";
+import * as updateDirectorResidentialAddressManual from "../controllers/update/update.director.residential.address.manual.controller";
 import * as urls from "../types/page.urls";
 import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
@@ -205,3 +206,6 @@ router.post(urls.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, companyAuthenti
 
 router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateResidentialAddressChooseAddress.get);
 router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS, companyAuthenticationMiddleware, updateResidentialAddressChooseAddress.post);
+
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressManual.get);
+router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, companyAuthenticationMiddleware, updateDirectorResidentialAddressManual.post);

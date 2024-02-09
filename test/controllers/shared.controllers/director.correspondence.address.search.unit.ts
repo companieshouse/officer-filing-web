@@ -115,21 +115,21 @@ describe('Director correspondence address search controller test', () => {
     });
 
 
-    it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off for '%s'", async () => {
+    it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off for '%s'", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
-      const response = await request(app).get(PAGE_URL);
+      const response = await request(app).get(url);
 
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
 
-    it.each([PAGE_URL, UPDATE_PAGE_URL])("Should populate filing on the '%s' page", async () => {
+    it.each([PAGE_URL, UPDATE_PAGE_URL])("Should populate filing on the '%s' page", async (url) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         serviceAddress: ( {
           postalCode: "SW1A1AA",
           premises: 123
         } )
       })
-      const response = await request(app).get(PAGE_URL);
+      const response = await request(app).get(url);
 
       expect(response.text).toContain("SW1A1AA");
       expect(response.text).toContain("123");
