@@ -5,7 +5,7 @@ import { getCorrespondenceLink, postCorrespondenceLink } from "../shared.control
 
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  getCorrespondenceLink(req, res, next, Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH)
+  getCorrespondenceLink(req, res, next, Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, true)
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

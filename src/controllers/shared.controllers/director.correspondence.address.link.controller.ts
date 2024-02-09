@@ -4,9 +4,8 @@ import { createValidationErrorBasic, formatValidationErrors } from '../../valida
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../services/confirm.company.service";
-import { retrieveDirectorNameFromFiling } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
-import { getField } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
@@ -14,7 +13,7 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { compareAddress } from "../../utils/address";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
-export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -22,11 +21,12 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     return res.render(templateName,{
       templateName: templateName,
       backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
       sa_to_roa: calculateSaToRoaRadioFromFiling(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress),
@@ -50,12 +50,13 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
+      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
       return res.render(templateName,{
         templateName: templateName,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
         backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        directorName: formatTitleCase(directorName),
         errors: formatValidationErrors([linkError], lang)
       });
     }
