@@ -70,10 +70,11 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
+      if(isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress ||
+        !compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress)){
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }
-      else if ((compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+      else {
         officerFilingBody.correspondenceAddressHasBeenUpdated = false;
       }
     }
