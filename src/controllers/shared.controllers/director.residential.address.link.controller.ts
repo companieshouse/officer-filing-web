@@ -61,12 +61,9 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if(isHomeAddressSameAsServiceAddress !== companyAppointment.residentialAddressIsSameAsServiceAddress){
-        officerFilingBody.residentialAddressHasBeenUpdated = true;
-      }
-      else if ((compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress))){
-        officerFilingBody.residentialAddressHasBeenUpdated = false;
-      }
+      officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+        { ...officerFilingBody,
+        residentialAddress: officerFiling.residentialAddress }, companyAppointment);
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
@@ -120,3 +117,14 @@ const getRedirectLink = (isUpdate: boolean): string => {
   }
   return DIRECTOR_PROTECTED_DETAILS_PATH;
 }
+
+export const checkIsResidentialAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
+  console.log("OFFICER FLAG SET AS " + officerFiling.isHomeAddressSameAsServiceAddress)
+  if (officerFiling.isHomeAddressSameAsServiceAddress === true) {
+    return companyAppointment.residentialAddressIsSameAsServiceAddress !== true;
+  }
+  if (companyAppointment.residentialAddressIsSameAsServiceAddress === true) {
+    return true;
+  }
+  return !compareAddress(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
+};

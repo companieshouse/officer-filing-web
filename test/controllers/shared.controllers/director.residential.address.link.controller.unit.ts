@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.appointments.service");
+jest.mock("../../../src/utils/address");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -21,13 +22,17 @@ import {
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { HA_TO_SA_ERROR } from "../../../src/utils/constants";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
-import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
+import { validCompanyAppointment, validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { checkIsResidentialAddressUpdated } from "../../../src/controllers/shared.controllers/director.residential.address.link.controller";
+import { compareAddress } from "../../../src/utils/address";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+const mockCompareAddress = compareAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -74,6 +79,7 @@ describe("Director residential address link controller tests", () => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
+      mockCompareAddress.mockClear();
     });
   
     describe("get tests", () => {
@@ -215,4 +221,50 @@ describe("Director residential address link controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
       });
     });
+
+    describe("checkIsResidentialAddressUpdated tests", () => {
+      
+      it.each([
+        [true, true, false],
+        [true, false, true],
+        [true, undefined, true],
+        [false, true, true],
+        [undefined, true, true],
+      ])("should compare residential address flags", (filingFlag, appointmentFlag, result) => {
+        const officerFiling = {
+          isHomeAddressSameAsServiceAddress: filingFlag,
+        } as OfficerFiling;
+        const companyAppointment = { ...validCompanyAppointment };
+        companyAppointment.residentialAddressIsSameAsServiceAddress = appointmentFlag;
+
+        const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
+         expect(mockCompareAddress).not.toBeCalled();
+        expect(isAddressUpdated).toBe(result);
+      });
+
+      it.each([
+        [validCompanyAppointment.usualResidentialAddress, false],
+        [{
+          premises: "1",
+          addressLine1: "line1",
+          addressLine2: "line2",
+          locality: "locality",
+          region: "region",
+          country: "country"
+         }, true],
+        [undefined, true]
+      ])("should compare residential addresses", (usualResidentialAddress, result) => {
+        const officerFiling = {
+          isHomeAddressSameAsServiceAddress: false,
+          usualResidentialAddress
+        } as OfficerFiling;
+        const companyAppointment = { ...validCompanyAppointment };
+        companyAppointment.residentialAddressIsSameAsServiceAddress = false;
+
+        mockCompareAddress.mockReturnValue(!result);
+        const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
+        expect(mockCompareAddress).toBeCalledWith(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
+        expect(isAddressUpdated).toBe(result);
+      });
+  });
 });
