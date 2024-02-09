@@ -119,7 +119,6 @@ const getRedirectLink = (isUpdate: boolean): string => {
 }
 
 export const checkIsResidentialAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  console.log("OFFICER FLAG SET AS " + officerFiling.isHomeAddressSameAsServiceAddress)
   if (officerFiling.isHomeAddressSameAsServiceAddress === true) {
     return companyAppointment.residentialAddressIsSameAsServiceAddress !== true;
   }
