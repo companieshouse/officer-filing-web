@@ -9,5 +9,5 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export const post = (req: Request, res: Response, next: NextFunction) => {
-  postDirectorResidentialAddress(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH);
+  postDirectorResidentialAddress(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false);
 }

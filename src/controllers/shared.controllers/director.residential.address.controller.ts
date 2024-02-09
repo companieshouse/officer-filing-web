@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
+import { DIRECTOR_PROTECTED_DETAILS_PATH,
+         DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
+         DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
+         APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+         UPDATE_DIRECTOR_CHECK_ANSWERS_PATH,
+         UPDATE_DIRECTOR_DETAILS_PATH,
+         UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
+         UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
       } from '../../types/page.urls';
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
@@ -37,7 +44,7 @@ export const urlUtilsRequestParams = async (req: Request) => {
   return { officerFiling, companyProfile, transactionId, submissionId, session };
 }
 
-export const postDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const postDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
@@ -55,21 +62,37 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
+      if (isUpdate){
+        return patchFiling.data.checkYourAnswersLink
+          ? res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req))
+          : res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req));
+      } else {
       return patchFiling.data.checkYourAnswersLink
         ? res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req))
         : res.redirect(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req));
+      }
+
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
       if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress){
-        return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res,  req);
+        if (isUpdate) {
+            return checkRedirectUrl(officerFiling, urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), res, req);
+        }
+        return checkRedirectUrl(officerFiling, urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), res, req);
       }
       else{
-        return checkRedirectUrl(officerFiling,  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res,  req);
+        if (isUpdate) {
+            return checkRedirectUrl(officerFiling, urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res, req);
+        }
+        return checkRedirectUrl(officerFiling, urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH, req), res, req);
       }
     } else {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+      if (isUpdate) {
+        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
+      }
       return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req));
     }
   } catch (e) {
@@ -131,7 +154,6 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
-    protectedDetailsBackLink: DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
     directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
     canUseRegisteredOfficeAddress
   });
