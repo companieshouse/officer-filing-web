@@ -18,7 +18,7 @@ import { ValidationError } from "../../model/validation.model";
 import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
-import { urlUtilsRequestParams } from "../director.residential.address.controller";
+import { urlUtilsRequestParams } from "../shared.controllers/director.residential.address.controller";
 import { setBackLink } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
