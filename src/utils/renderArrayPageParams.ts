@@ -4,9 +4,8 @@ import { ValidationError } from "../model/validation.model";
 
 /**
  * Interface for the renderPage function parameters
- * Interface created to alleviate the sonar smell for methods over 7 parameters
  */
-export interface RenderPageParams {
+export interface RenderArrayPageParams {
   officerFiling: OfficerFiling;
   ukAddresses: UKAddress[];
   validationErrors: ValidationError[];

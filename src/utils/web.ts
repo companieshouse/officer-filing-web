@@ -86,7 +86,7 @@ export const getDirectorNameBasedOnJourney = async (isUpdate: boolean | undefine
 }
 
 /**
- * Get the formatted addresses for the page
+ * Get the formatted addresses for the array pages
  * @param ukAddresses
  */
 export const getAddressOptions = (ukAddresses: UKAddress[]) => {

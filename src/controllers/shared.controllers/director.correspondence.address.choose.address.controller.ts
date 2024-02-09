@@ -15,7 +15,7 @@ import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { RenderPageParams } from "../../utils/render.page.params";
+import { RenderArrayPageParams } from "../../utils/renderArrayPageParams";
 
 
 export const getCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
@@ -91,7 +91,7 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
 /**
  * Render the page with populated addresses from the postcode lookup service. Display any errors that are passed in.
  */
-const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
+const renderPage = async (req: Request, res: Response, params: RenderArrayPageParams) => {
   const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
   const addressOptions = getAddressOptions(params.ukAddresses);
 

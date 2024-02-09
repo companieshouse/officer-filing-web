@@ -7,7 +7,7 @@ import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.servi
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { formatTitleCase } from "../../utils/format";
 import {getAddressOptions, getCountryFromKey, getDirectorNameBasedOnJourney, setBackLink} from "../../utils/web";
-import { RenderPageParams } from "../../utils/render.page.params";
+import { RenderArrayPageParams } from "../../utils/renderArrayPageParams";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
@@ -16,6 +16,8 @@ import { createValidationError, formatValidationErrors} from "../../validation/v
 import { DirectorField } from "../../model/director.model";
 import { residentialAddressErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+
+
 export const getResidentialAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backLinkPath: string, isUpdate: boolean) => {
   try {
     const session: Session = req.session as Session;
@@ -90,7 +92,7 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
   return res.redirect(confirmResidentialAddressUrl);
 }
 
-const renderPage = async (req: Request, res: Response, params: RenderPageParams) => {
+const renderPage = async (req: Request, res: Response, params: RenderArrayPageParams) => {
   const residentialManualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH;
   const addressOptions = getAddressOptions(params.ukAddresses);
 
