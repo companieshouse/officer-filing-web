@@ -22,7 +22,6 @@ import {
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
-import { validCompanyAppointmentResource } from '../../mocks/company.appointment.mock';
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -65,6 +64,7 @@ describe("Director confirm residential address controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
     });
   
     describe("get tests", () => {
@@ -74,6 +74,7 @@ describe("Director confirm residential address controller tests", () => {
           directorName: "John Smith"
         })
         const response = await request(app).get(url);
+        mockGetCompanyAppointmentFullRecord({});
         expect(response.text).toContain(PAGE_HEADING);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
@@ -91,6 +92,7 @@ describe("Director confirm residential address controller tests", () => {
             postalCode: "SW1A 2AA"
           }
         })
+        mockGetCompanyAppointmentFullRecord({});
         const response = await request(app).get(url);
 
         expect(response.text).toContain("John Smith");

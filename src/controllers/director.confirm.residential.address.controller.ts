@@ -9,7 +9,7 @@ import { Templates } from "../types/template.paths";
 import { getDirectorConfirmResidentialAddress, postDirectorConfirmResidentialAddress } from "./shared.controllers/director.confirm.residential.address.controller";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  getDirectorConfirmResidentialAddress(req, res, next, Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH);
+  getDirectorConfirmResidentialAddress(req, res, next, Templates.DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, false);
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

@@ -4,18 +4,20 @@ import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
-export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string) => {
+export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
   
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryUrl, req),
       ...officerFiling.residentialAddress
     });
