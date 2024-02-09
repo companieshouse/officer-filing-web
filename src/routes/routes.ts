@@ -43,6 +43,7 @@ import * as directorCorrespondenceAddressSearchUpdate from "../controllers/updat
 import * as updateDirectorCorrespondenceAddressManual from "../controllers/update/update.director.correspondence.address.manual.controller";
 import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
+import * as updateDirectorResidentialAddressSearch from "../controllers/update/update.director.residential.address.search.controller";
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
 import * as updateDirectorResidentialAddress from "../controllers/update/update.director.residential.address.controller";
 import * as urls from "../types/page.urls";
@@ -178,6 +179,9 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, companyAuthentic
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddress.post);
+
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.get);
+router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.post);
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressLink.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressLink.post);
