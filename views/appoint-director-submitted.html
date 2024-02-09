@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Appointment submitted" %}
+{% set title = i18n.appointConfirmationTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -19,12 +19,13 @@
 
         <div class="govuk-panel govuk-panel--confirmation">
           <h1 class="govuk-panel__title">
-            Appointment submitted
+            {{ i18n.appointConfirmationTitle }}
           </h1>
           <div class="govuk-panel__body">
-            Reference number<br><strong>{{ referenceNumber }}</strong>
+            {{ i18n.referenceNumber }}<br><strong>{{ referenceNumber }}</strong>
           </div>
         </div>
+        {% import "includes/date-localisation.html" as macros %}
 
         {% if directorTitle %}
           {% set directorName = directorTitle + " " + directorName %}
@@ -35,7 +36,7 @@
             {
               key: {
                 id: "appoint-submitted-company-name",
-                text: "Company name"
+                text: i18n.confirmCompanyName
               },
               value: {
                 text: companyName
@@ -44,7 +45,7 @@
             {
               key: {
                 id: "appoint-submitted-company-number",
-                text: "Company number"
+                text: i18n.confirmCompanyNumber
               },
               value: {
                 text: companyNumber
@@ -53,7 +54,7 @@
             {
               key: {
                 id: "appoint-submitted-director-name",
-                text: "Name of director"
+                text: i18n.nameOfDirector
               },
               value: {
                 text: directorName
@@ -62,10 +63,10 @@
             {
               key: {
                 id: "appoint-submitted-director-date-appointed",
-                text: "Date of appointment"
+                text: i18n.appointDirectorConfirmationDateAppointed
               },
               value: {
-                text: appointedOn
+                text: macros.localiseAppointedDate(appointedOn, i18n)
               }
             }
           ]
@@ -73,15 +74,15 @@
         {% include "includes/confirm-page-summary.html" %}
         <ul class="govuk-list govuk-list--spaced">
           <li>
-            <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for the same company</a>
+            <a href="{{ updateDirectorSameCompany }}" data-event-id="update-director-same-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointConfirmationSameCompanyLink }}</a>
           </li>
           <li>
-            <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state">Update director information for a different company</a>
+            <a href="/company-lookup/search?forward=/appoint-update-remove-company-officer/confirm-company?companyNumber=%7BcompanyNumber%7D" data-event-id="update-director-different-company-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.appointConfirmationDifferentCompanyLink }} </a>
           </li>
         </ul>
 
-        <h2 class="govuk-heading-m">Feedback</h2>
-        <p class="govuk-body">This is a new service. Help us improve it by completing our <a href="https://www.smartsurvey.co.uk/s/directors-conf/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state">quick survey</a>.</p>
+        <h2 class="govuk-heading-m">{{ i18n.feedbackTitle }}</h2>
+        <p class="govuk-body">{{ i18n.testServiceText}} <a href="https://www.smartsurvey.co.uk/s/directors-conf/" data-event-id="feedback-link" class="govuk-link govuk-link--no-visited-state"> {{ i18n.testServiceLinkText }}</a>.</p>
       </form>
     </div>
   </div>
