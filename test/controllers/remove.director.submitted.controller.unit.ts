@@ -79,6 +79,12 @@ describe("Remove director submitted controller tests", () => {
       expect(response.text).toContain("8 August 2008");
     });
 
+    it("Should render the page in welsh", async () => {
+          const response = await request(app).get(SUBMITTED_URL + "?lang=cy");
+               expect(response.text).toContain("to be translated");
+
+    });
+
     it("Should display required subtitles & information", async () => {
       const response = await request(app).get(SUBMITTED_URL);
 
@@ -116,5 +122,6 @@ describe("Remove director submitted controller tests", () => {
       const response = await request(app).get(SUBMITTED_URL);
       expect(response.text).toContain("Sorry, there is a problem with this service");
     });
+
   });
 });

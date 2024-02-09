@@ -46,6 +46,7 @@ export const validCompanyAppointment: CompanyAppointment = {
     etag: "etag",
     personNumber: "123456",
     isPre1992Appointment: false,
+    serviceAddressIsSameAsRegisteredOfficeAddress: true,
     usualResidentialAddress: {
         premises: "premises 01",
         addressLine1: "address line 01",

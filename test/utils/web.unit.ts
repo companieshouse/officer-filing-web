@@ -2,9 +2,16 @@ jest.mock("../../src/services/officer.filing.service");
 jest.mock("../../src/services/company.appointments.service");
 
 import mocks from "../mocks/all.middleware.mock";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../src/types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from '../../src/types/page.urls';
 import { urlUtils } from "../../src/utils/url";
-import { getCountryFromKey, getDirectorNameBasedOnJourney, getField, setRedirectLink } from "../../src/utils/web";
+import {
+  setBackLink,
+  getAddressOptions,
+  getCountryFromKey,
+  getDirectorNameBasedOnJourney,
+  getField,
+  setRedirectLink
+} from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
@@ -114,7 +121,17 @@ describe('setRedirectLink', () => {
   
       expect(result).toBe(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req));
     });
-  
+
+    it('should return the URL to appoint cya if checkYourAnswersLink ends with appoint cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
+
     it('should return the URL to update cya if checkYourAnswersLink ends with update cya link', async () => {
       const req = {params: {}} as Request;
       const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
@@ -123,6 +140,28 @@ describe('setRedirectLink', () => {
       const result = await setRedirectLink(req, checkYourAnswersLink, redirectLink);
   
       expect(result).toBe(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    });
+
+    it('should return the URL to update cya if checkYourAnswersLink ends with update cya link with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = '/some-link' + UPDATE_DIRECTOR_CHECK_ANSWERS_END;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+
+      expect(result).toBe(urlUtils.getUrlToPath(checkYourAnswersLink+"?lang=en", req));
+    });
+
+    it('should return the URL to redirect link if checkYourAnswersLink is undefined with localisation', async () => {
+      const req = {params: {}, query: {}} as Request;
+      req.query.lang = "en"
+      const checkYourAnswersLink = undefined;
+      const redirectLink = '/home';
+
+      const result = setBackLink(req, checkYourAnswersLink, redirectLink, req.query.lang);
+
+      expect(result).toBe(urlUtils.getUrlToPath(redirectLink+"?lang=en", req));
     });
   });
 
@@ -163,3 +202,41 @@ describe('setRedirectLink', () => {
       expect(result).toBe('John Doe');
     });
   });
+
+
+describe('getAddressOptions', () => {
+  it('should return an array of address options', () => {
+    const ukAddresses = [
+      {
+        premise: '123',
+        addressLine1: 'Main Street',
+        addressLine2: 'Apt 4',
+        postTown: 'London',
+        country: 'GB-ENG',
+        postcode: 'SW1A 1AA'
+      },
+      {
+        premise: '456',
+        addressLine1: 'High Street',
+        postTown: 'Manchester',
+        country: 'GB-ENG',
+        postcode: 'M1 1AA'
+      }
+    ];
+
+    const expectedOptions = [
+      {
+        premises: '123',
+        formattedAddress: '123 Main Street, Apt 4, London, England, SW1A 1AA'
+      },
+      {
+        premises: '456',
+        formattedAddress: '456 High Street, Manchester, England, M1 1AA'
+      }
+    ];
+
+    const result = getAddressOptions(ukAddresses);
+
+    expect(result).toEqual(expectedOptions);
+  });
+});
