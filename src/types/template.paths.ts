@@ -45,6 +45,7 @@ export enum Templates {
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH = "update/update-director-residential-address-search",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "update/update-director-correspondence-address-link",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH = "update/update-director-correspondence-address-search",
+  UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS = "update/update-director-confirm-residential-address",
   UPDATE_CORRESPONDENCE_CHOOSE_ADDRESS = "update/update-correspondence-address-choose-address",
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK = "update/update-director-residential-address-link",
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS = "update/update-director-home-address",

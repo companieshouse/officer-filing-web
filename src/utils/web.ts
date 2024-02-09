@@ -76,7 +76,7 @@ export const getCountryFromKey = (country: string): string => {
 /**
  * Set the directors name depending on AP01/CH01 journey
  */
-export const getDirectorNameBasedOnJourney = async (isUpdate: boolean | undefined, session, req: Request, officerFiling: OfficerFiling): Promise<string> => {
+export const getDirectorNameBasedOnJourney = async (isUpdate: boolean | undefined, session: Session, req: Request, officerFiling: OfficerFiling): Promise<string> => {
   if (isUpdate) {
    const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
    return retrieveDirectorNameFromAppointment(companyAppointment)
