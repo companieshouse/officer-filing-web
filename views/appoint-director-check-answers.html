@@ -224,15 +224,11 @@
         {% set officerFiling = officerFiling %}
         {% set cyaDisplay = true %}
         {% include "includes/check-your-answer/address-details.html" %}
+      
+        <h2 class="govuk-fieldset__heading-m">Consent to act as a director</h2>
 
         {{ govukCheckboxes({
           name: "director_consent",
-          fieldset: {
-            legend: {
-              text: "Consent to act as a director",
-              classes: "govuk-fieldset__legend--m"
-            }
-          },
           errorMessage: errors.director_consent if errors,
           items: [
             {
