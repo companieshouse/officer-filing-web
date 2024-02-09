@@ -73,14 +73,15 @@ describe("Director confirm residential address controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith"
         })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+
         const response = await request(app).get(url);
-        mockGetCompanyAppointmentFullRecord({});
         expect(response.text).toContain(PAGE_HEADING);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("Should populate details on the page", async (url) => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockGetOfficerFiling.mockResolvedValue({
           name: "John Smith",
           residentialAddress: {
             premises: "110",
@@ -92,9 +93,21 @@ describe("Director confirm residential address controller tests", () => {
             postalCode: "SW1A 2AA"
           }
         })
-        mockGetCompanyAppointmentFullRecord({});
-        const response = await request(app).get(url);
 
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({
+          name: "John Smith",
+          residentialAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            region: "London",
+            country: "United Kingdom",
+            postalCode: "SW1A 2AA"
+          }
+        });
+        
+        const response = await request(app).get(url);
         expect(response.text).toContain("John Smith");
         expect(response.text).toContain("110");
         expect(response.text).toContain("Test Line 1");
@@ -110,6 +123,7 @@ describe("Director confirm residential address controller tests", () => {
           directorName: "John Smith",
           residentialAddressBackLink: backLink
         })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         const response = await request(app).get(url);
 
         expect(response.text).toContain(backLink);
@@ -120,6 +134,7 @@ describe("Director confirm residential address controller tests", () => {
           directorName: "John Smith",
           residentialAddressBackLink: backLink
         })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         const response = await request(app).get(url);
 
         expect(response.text).toContain(backLink);
@@ -127,6 +142,8 @@ describe("Director confirm residential address controller tests", () => {
 
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
         mockIsActiveFeature.mockReturnValueOnce(false);
+        mockGetOfficerFiling.mockRejectedValue({});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         const response = await request(app).get(url);
   
         expect(response.text).toContain(ERROR_PAGE_HEADING);
