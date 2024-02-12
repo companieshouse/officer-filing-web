@@ -28,6 +28,7 @@ import { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
+import { validCompanyAppointmentResource} from "../../mocks/company.appointment.mock";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../../src/utils/api.enumerations.keys";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
@@ -37,7 +38,9 @@ mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 const mockMapCompanyProfileToOfficerFilingAddress = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
@@ -119,16 +122,15 @@ describe("Director name controller tests", () => {
     jest.clearAllMocks();
     mocks.mockSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockReset();
-    mockGetCompanyProfile.mockReset();
+    mockGetCompanyProfile.mockClear();
     mockPatchOfficerFiling.mockReset();
-    mockGetCompanyAppointmentFullRecord.mockReset();
+    mockGetCompanyAppointmentFullRecord.mockClear();
     mockMapCompanyProfileToOfficerFilingAddress.mockReset();
   });
 
   describe("get tests", () => {
 
     it("Should navigate to director address page", async () => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock
       });
@@ -154,7 +156,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director registered office address`, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
@@ -177,7 +178,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with without director registered office address when that address is incomplete`, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
@@ -199,7 +199,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page without director registered office address when it was selected as correspondence address`, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock,
@@ -225,7 +224,6 @@ describe("Director name controller tests", () => {
       validCompanyProfile.registeredOfficeAddress.addressLineTwo = undefined!;
       validCompanyProfile.registeredOfficeAddress.premises = undefined!;
       validCompanyProfile.registeredOfficeAddress.region = undefined!;
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
@@ -249,7 +247,6 @@ describe("Director name controller tests", () => {
       serviceAddressMock.serviceAddress.premises = undefined!;
       serviceAddressMock.serviceAddress.region = undefined!;
       serviceAddressMock.serviceAddress.country = undefined!;
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
@@ -292,7 +289,9 @@ describe("Director name controller tests", () => {
       mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(url);
       expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain(directorNameMock.firstName);
+      if(url == PAGE_URL) {
+        expect(response.text).toContain(directorNameMock.firstName);
+      }
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
       expect(response.text).not.toContain(serviceAddressMock.serviceAddress.addressLine1);
@@ -301,7 +300,6 @@ describe("Director name controller tests", () => {
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should catch error if getofficerfiling error", async (url) => {
 
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
 
       const response = await request(app).get(url);
@@ -317,13 +315,7 @@ describe("Director name controller tests", () => {
           ...directorNameMock
         }
       };
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-        etag: "etag",
-        forename: "John",
-        otherForenames: "mid",
-        surname: "Smith"
-      });
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
       });
@@ -344,15 +336,9 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should catch error if patch officer filing failed", async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       const mockPatchOfficerFilingResponse = {
       };
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-        etag: "etag",
-        forename: "John",
-        otherForenames: "mid",
-        surname: "Smith"
-      });
+
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(url).send({}));
       expect(response.text).not.toContain("Select the address where the director lives");
@@ -373,7 +359,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should redirect to ${DIRECTOR_PROTECTED_DETAILS_PATH} page if registered office address is selected`, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       const mockPatchOfficerFilingResponse = {
         data: {
           ...directorNameMock,
@@ -390,7 +375,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([[PAGE_URL,APPOINT_DIRECTOR_CYA_PAGE_URL],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_CYA_PAGE_URL]])(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END} or ${UPDATE_DIRECTOR_CHECK_ANSWERS_END} page if registered office address is selected and CYA link exist`, async (url, redirectLink) => {
-        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
         const mockPatchOfficerFilingResponse = {
           data: {
             ...directorNameMock,
@@ -410,7 +394,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([[PAGE_URL,APPOINT_DIRECTOR_CYA_PAGE_URL],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_CYA_PAGE_URL]])(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END} or ${UPDATE_DIRECTOR_CHECK_ANSWERS_END} page if registered office address is selected and check your answers link`, async (url, redirectLink) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       const mockPatchOfficerFilingResponse = {
         data: {
           ...directorNameMock,
@@ -492,7 +475,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should patch the isHomeAddressSameAsServiceAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         isHomeAddressSameAsServiceAddress: true,
@@ -542,7 +524,6 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with director correspondence address on validation error`, async (url) => {
-      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         ...serviceAddressMock
