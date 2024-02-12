@@ -27,7 +27,7 @@ import { validateManualAddress } from "../../validation/manual.address.validatio
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { compareAddress } from "../../utils/address";
-import { RenderManualEntryParams } from "../../utils/renderManualEntryPageParams";
+import { RenderManualEntryParams } from "../../utils/render.page.params";
 
 export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths, isUpdate: boolean) => {
   try {
