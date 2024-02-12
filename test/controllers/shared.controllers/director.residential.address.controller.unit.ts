@@ -300,8 +300,11 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should catch error if getofficerfiling error", async (url) => {
-      const response = await request(app).get(url);
+
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+
+      const response = await request(app).get(url);
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
   });
@@ -314,7 +317,12 @@ describe("Director name controller tests", () => {
           ...directorNameMock
         }
       };
-      mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+      });
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
@@ -336,9 +344,15 @@ describe("Director name controller tests", () => {
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should catch error if patch officer filing failed", async (url) => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       const mockPatchOfficerFilingResponse = {
       };
-      mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        forename: "John",
+        otherForenames: "mid",
+        surname: "Smith"
+      });
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(url).send({}));
       expect(response.text).not.toContain("Select the address where the director lives");

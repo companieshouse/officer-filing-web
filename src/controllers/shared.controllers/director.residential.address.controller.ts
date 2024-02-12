@@ -28,8 +28,8 @@ const directorResidentialChoiceHtmlField: string = "director_address";
 
 export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
-    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, isUpdate);
+    const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
+    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, isUpdate, session);
   } catch (e) {
     next(e);
   }
@@ -52,7 +52,7 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, isUpdate, formattedErrors);
+      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, isUpdate, session, formattedErrors);
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -118,7 +118,7 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = async (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, isUpdate: boolean, formattedErrors?: FormattedValidationErrors) => {
+const renderPage = async (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, isUpdate: boolean, session: Session, formattedErrors?: FormattedValidationErrors) => {
   const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
   let canUseRegisteredOfficeAddress = false;
   if (registeredOfficeAddress !== undefined) {
@@ -129,7 +129,7 @@ const renderPage = async (req: Request, res: Response, officerFiling: OfficerFil
   }
   logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for residential address");
 
-  const directorName = await getDirectorNameBasedOnJourney(isUpdate, req.session as Session, req, officerFiling);
+  const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
     templateName: templateName,
