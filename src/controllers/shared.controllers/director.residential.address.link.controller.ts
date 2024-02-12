@@ -56,7 +56,7 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
       isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);

@@ -24,6 +24,7 @@ import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/we
 import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
@@ -96,7 +97,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "country" : getCountryFromKey(ukAddress.country)}
           };
           
-          setUpdateBoolean(req, isUpdate, session, officerFiling)
+          setUpdateBoolean(req, isUpdate, session, officerFiling);
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           return res.redirect(getConfirmAddressPath(req, isUpdate));
@@ -118,9 +119,9 @@ const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Sessio
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    if(!compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress)){
-      officerFiling.residentialAddressHasBeenUpdated = true;
-    }
+    officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+      { ...officerFiling,
+      residentialAddress: officerFiling.residentialAddress }, companyAppointment);
   }
 }
 

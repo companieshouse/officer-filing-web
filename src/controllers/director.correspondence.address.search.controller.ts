@@ -14,5 +14,5 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  return postCorrespondenceAddressLookUp(req, res, next);
+  return postCorrespondenceAddressLookUp(req, res, next, false);
 }

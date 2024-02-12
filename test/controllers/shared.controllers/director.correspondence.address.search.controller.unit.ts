@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/postcode.lookup.service");
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -21,10 +22,12 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../../src/services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 
 const COMPANY_NUMBER = "12345678";
@@ -176,6 +179,7 @@ describe('Director correspondence address search controller test', () => {
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should call postcode service for validating postcode when formatting of UK postcode is valid for '%s'", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"SW1A1AA");
@@ -210,6 +214,7 @@ describe('Director correspondence address search controller test', () => {
     it.each([[PAGE_URL, CONFIRM_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to '%s' page when premise is part of returned addresses - case and space insensitivity", async (url, redirectUrl) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "IM2 4NN", "premises": "flat 4 lansdowne"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"IM24NN");

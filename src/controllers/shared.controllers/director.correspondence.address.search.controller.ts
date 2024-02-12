@@ -26,6 +26,9 @@ import { getCountryFromKey } from "../../utils/web";
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
 
 export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string) => {
   try {
@@ -46,7 +49,7 @@ export const getCorrespondenceAddressLookUp = async (req: Request, res: Response
   }
 };
 
-export const postCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, isUpdate?: boolean) => {
+export const postCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -100,6 +103,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
+          setUpdateBoolean(req, isUpdate, session, officerFiling);
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
@@ -114,6 +118,17 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
   catch (e) {
     return next(e);
+  }
+};
+
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
+  if(isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    officerFiling.residentialAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      { ...officerFiling,
+      residentialAddress: officerFiling.residentialAddress }, companyAppointment);
   }
 };
 

@@ -3,8 +3,11 @@ import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
@@ -26,7 +29,7 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
   }
 };
 
-export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageurl: string) => {
+export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageurl: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -35,9 +38,19 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const officerFilingBody: OfficerFiling = {
       isHomeAddressSameAsServiceAddress: false
     };
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    if (isUpdate) {
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+        { ...officerFilingBody,
+        residentialAddress: officerFiling.residentialAddress }, companyAppointment);
+    }
+
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
     if (officerFiling.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(checkYourAnswersLink, req));
     }
