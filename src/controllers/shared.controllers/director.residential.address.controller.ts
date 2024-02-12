@@ -22,13 +22,15 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
+import {getDirectorNameBasedOnJourney} from "../../utils/web";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
-export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
-    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath);
+    const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, directorName);
   } catch (e) {
     next(e);
   }
@@ -48,10 +50,11 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, formattedErrors);
+      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, directorName, formattedErrors);
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -117,7 +120,7 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, formattedErrors?: FormattedValidationErrors) => {
+const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, directorName: string, formattedErrors?: FormattedValidationErrors) => {
   const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
   let canUseRegisteredOfficeAddress = false;
   if (registeredOfficeAddress !== undefined) {
@@ -133,7 +136,7 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
     backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
     errors: formattedErrors,
     director_address: officerFiling.directorResidentialAddressChoice,
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    directorName: formatTitleCase(directorName),
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
     manualAddress: formatDirectorResidentialAddress(officerFiling),
     directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
