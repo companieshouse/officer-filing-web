@@ -15,7 +15,7 @@ import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { RenderArrayPageParams } from "../../utils/renderArrayPageParams";
+import { RenderArrayPageParams } from "../../utils/render.page.params";
 
 
 export const getCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
