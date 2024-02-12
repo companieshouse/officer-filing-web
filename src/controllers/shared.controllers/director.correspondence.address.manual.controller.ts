@@ -82,13 +82,13 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     }
 
     // JS validation
-    let validationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+    let jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
 
-    if(validationErrors.length > 0) {
+    if(jsValidationErrors.length > 0) {
       return renderPage(req, res, session, { 
         originalFiling,
         serviceAddress,
-        validationErrors,
+        validationErrors: jsValidationErrors,
         templateName,
         backUrlPath,
         isUpdate
@@ -114,12 +114,12 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
 
     // Validate filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-    validationErrors = buildValidationErrors(validationStatus);
+    const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
       return renderPage(req, res, session, { 
         originalFiling,
         serviceAddress,
-        validationErrors,
+        validationErrors: validationErrors,
         templateName,
         backUrlPath,
         isUpdate
