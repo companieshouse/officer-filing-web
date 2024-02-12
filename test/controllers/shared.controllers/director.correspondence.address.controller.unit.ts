@@ -8,10 +8,10 @@ import app from "../../../src/app";
 
 import {
   urlParams,
-  DIRECTOR_CORRESPONDENCE_ADDRESS, 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
+  DIRECTOR_CORRESPONDENCE_ADDRESS,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_OCCUPATION_PATH_END,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
@@ -20,7 +20,8 @@ import {
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+  UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
 } from '../../../src/types/page.urls';
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
@@ -74,6 +75,10 @@ const DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH = DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH = UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -201,17 +206,18 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
       });
 
-      it(`should redirect to link to incomplete address page if registered office address is selected but the address is incomplete`, async () => {
+      it.each([[PAGE_URL, DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH] ])
+      (`should redirect to link to incomplete address page if registered office address is selected but the address is incomplete`, async (url, nextPageUrl) => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockMapCompanyProfileToOfficerFilingAddressMock.mockReturnValueOnce({ ...validAddress, premises: undefined});
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
           isHomeAddressSameAsServiceAddress: undefined
         }});
-        const response = (await request(app).post(PAGE_URL).send({
+        const response = (await request(app).post(url).send({
           director_correspondence_address: "director_registered_office_address"
         }));
         expect(response.status).toEqual(302);
-        expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PAGE_PATH);
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
       });
 
       it.each([[PAGE_URL,DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL]])(`should redirect to ${DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL} or ${UPDATE_DIRECTOR_MANUAL_ADDRESS_LOOK_UP_PAGE_URL} if different address is selected`, async (url,redirectLink) => {

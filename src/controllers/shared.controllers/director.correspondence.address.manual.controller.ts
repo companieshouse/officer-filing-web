@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { COUNTRY_LIST } from "../../utils/properties";
 import {
   Address,
@@ -10,7 +10,7 @@ import {
   ValidationStatusResponse
 } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField } from "../../utils/web";
+import { getField, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../../validation/validation";
 import { ValidationError } from "../../model/validation.model";
@@ -27,14 +27,16 @@ import { validateManualAddress } from "../../validation/manual.address.validatio
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { compareAddress } from "../../utils/address";
+import { RenderManualEntryParams } from "../../utils/render.page.params";
 
-export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths) => {
+export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req);
@@ -45,7 +47,7 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: backLink,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       typeahead_array: COUNTRY_LIST,
       correspondence_address_premises: officerFiling.serviceAddress?.premises,
       correspondence_address_line_1: officerFiling.serviceAddress?.addressLine1,
@@ -82,7 +84,14 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
 
     if(jsValidationErrors.length > 0) {
-      return renderPage(req, res, serviceAddress, originalFiling, jsValidationErrors, templateName, backUrlPath);
+      return renderPage(req, res, session, { 
+        officerFiling: originalFiling,
+        serviceAddress,
+        validationErrors: jsValidationErrors,
+        templateName,
+        backUrlPath,
+        isUpdate
+      })
     }
 
     // Patch filing with updated information
@@ -106,7 +115,14 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
-      return renderPage(req, res, serviceAddress, officerFilingBody, validationErrors, templateName, backUrlPath);
+      return renderPage(req, res, session, { 
+        officerFiling: originalFiling,
+        serviceAddress,
+        validationErrors,
+        templateName,
+        backUrlPath,
+        isUpdate
+      })
     }
   
     const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
@@ -171,20 +187,21 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   return validationErrors;
 }
 
-export const renderPage = (req: Request, res: Response, serviceAddress: Address, officerFiling: OfficerFiling, validationErrors: ValidationError[], templateName: string, backUrlPath: string) => {
-  const formattedErrors = formatValidationErrors(validationErrors);
-  return res.render(templateName, {
-    templateName: templateName,
-    backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+export const renderPage = async (req: Request, res: Response, session: Session, params: RenderManualEntryParams) => {
+  const formattedErrors = formatValidationErrors(params.validationErrors);
+  const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
+  return res.render(params.templateName, {
+    templateName: params.templateName,
+    backLinkUrl: urlUtils.getUrlToPath(params.backUrlPath, req),
+    directorName: formatTitleCase(directorName),
     typeahead_array: COUNTRY_LIST,
-    correspondence_address_premises: serviceAddress.premises,
-    correspondence_address_line_1: serviceAddress.addressLine1,
-    correspondence_address_line_2: serviceAddress.addressLine2,
-    correspondence_address_city: serviceAddress.locality,
-    correspondence_address_county: serviceAddress.region,
-    typeahead_value: serviceAddress.country,
-    correspondence_address_postcode: serviceAddress.postalCode,
+    correspondence_address_premises: params.serviceAddress.premises,
+    correspondence_address_line_1: params.serviceAddress.addressLine1,
+    correspondence_address_line_2: params.serviceAddress.addressLine2,
+    correspondence_address_city: params.serviceAddress.locality,
+    correspondence_address_county: params.serviceAddress.region,
+    typeahead_value: params.serviceAddress.country,
+    correspondence_address_postcode: params.serviceAddress.postalCode,
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
   });
@@ -199,3 +216,4 @@ export const checkIsCorrespondenceAddressUpdated = (officerFiling: OfficerFiling
   }
   return !compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
 };
+

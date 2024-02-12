@@ -46,8 +46,6 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
 
-    
-
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
