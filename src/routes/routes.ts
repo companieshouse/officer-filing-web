@@ -47,6 +47,7 @@ import { isFeatureEnabled } from "../middleware/is.feature.enabled.middleware";
 import * as updateDirectorCorrespondenceAddress from "../controllers/update/update.director.correspondence.address.controller";
 import * as updateDirectorResidentialAddressSearch from "../controllers/update/update.director.residential.address.search.controller";
 import * as updateDirectorCorrespondenceAddressLink from "../controllers/update/update.director.correspondence.address.link.controller";
+import * as updateDirectorCorrespondenceAddressEnterManuallyLink from "../controllers/update/update.director.link.correspondence.address.enter.manually";
 import * as updateDirectorResidentialAddressLink from "../controllers/update/update.director.residential.address.link.controller";
 import * as updateDirectorResidentialAddress from "../controllers/update/update.director.residential.address.controller";
 import * as updateDirectorResidentialAddressManual from "../controllers/update/update.director.residential.address.manual.controller";
@@ -183,6 +184,9 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, companyAuthentic
 
 router.get(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddress.post);
+
+router.get(urls.UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorCorrespondenceAddressEnterManuallyLink.get);
+router.post(urls.UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY, companyAuthenticationMiddleware, updateDirectorCorrespondenceAddressEnterManuallyLink.post);
 
 router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.get);
 router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH, companyAuthenticationMiddleware, updateDirectorResidentialAddressSearch.post);
