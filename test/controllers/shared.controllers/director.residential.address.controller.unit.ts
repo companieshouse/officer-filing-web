@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag");
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.profile.service");
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -29,12 +30,14 @@ import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/offi
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../../src/utils/api.enumerations.keys";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 const mockMapCompanyProfileToOfficerFilingAddress = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
@@ -118,6 +121,7 @@ describe("Director name controller tests", () => {
     mockGetOfficerFiling.mockReset();
     mockGetCompanyProfile.mockReset();
     mockPatchOfficerFiling.mockReset();
+    mockGetCompanyAppointmentFullRecord.mockReset();
     mockMapCompanyProfileToOfficerFilingAddress.mockReset();
   });
 
@@ -310,6 +314,7 @@ describe("Director name controller tests", () => {
           ...directorNameMock
         }
       };
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
@@ -333,6 +338,7 @@ describe("Director name controller tests", () => {
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should catch error if patch officer filing failed", async (url) => {
       const mockPatchOfficerFilingResponse = {
       };
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
       mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
       const response = (await request(app).post(url).send({}));
       expect(response.text).not.toContain("Select the address where the director lives");
