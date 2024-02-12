@@ -75,24 +75,25 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
     
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    let path: string;
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      const path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
+      path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
       return redirectToPath(path, req, res);
     }
 
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      const path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
+      path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
       return redirectToPath(path, req, res);
     }
 
     if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      const path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
+      path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
       return redirectToPath(path, req, res);
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    const path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
+    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
     return redirectToPath(path, req, res);
 
 
