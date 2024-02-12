@@ -40,7 +40,7 @@ export enum Templates {
   UPDATE_DIRECTOR_OCCUPATION = "update/update-director-occupation",
   UPDATE_DIRECTOR_SUBMITTED = "update/update-director-submitted",
   UPDATE_DIRECTOR_NATIONALITY = "update/update-director-nationailty",
-  UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY = "update/enter-director-correspondence-address",
+  UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY = "update/update-link-correspondence-address-enter-manually",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS = "update/update-director-correspondence-address",
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH = "update/update-director-residential-address-search",
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK = "update/update-director-correspondence-address-link",

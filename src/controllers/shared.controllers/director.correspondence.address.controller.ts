@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { 
-  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, 
+import {
+  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -77,7 +77,11 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
+      if(isUpdate) {
+        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
+      } else {
+        return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
+      }
     }
     
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {

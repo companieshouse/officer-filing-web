@@ -11,7 +11,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     correspondenceAddressSearchPath: UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
     confirmCorrespondenceAddressPath: UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   }
-  getDirectorCorrespondenceAddressManual(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, backLinkUrls);
+  getDirectorCorrespondenceAddressManual(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL, backLinkUrls, true);
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

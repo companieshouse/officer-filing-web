@@ -7,7 +7,7 @@ import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.servi
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { formatTitleCase } from "../../utils/format";
 import {getAddressOptions, getCountryFromKey, getDirectorNameBasedOnJourney, setBackLink} from "../../utils/web";
-import { RenderArrayPageParams } from "../../utils/renderArrayPageParams";
+import { RenderArrayPageParams } from "../../utils/render.page.params";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
