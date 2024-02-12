@@ -19,11 +19,10 @@ import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../../utils/api.
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "../shared.controllers/director.residential.address.controller";
-import { setBackLink } from "../../utils/web";
+import { setBackLink, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
-import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";

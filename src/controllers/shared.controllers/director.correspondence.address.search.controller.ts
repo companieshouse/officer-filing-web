@@ -22,11 +22,10 @@ import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
-import { getCountryFromKey } from "../../utils/web";
+import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
-import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
 export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, isUpdate: boolean) => {
   try {
