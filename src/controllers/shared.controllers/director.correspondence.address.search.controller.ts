@@ -55,9 +55,6 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const correspondencePostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
     const correspondencePremise : string = (req.body[DirectorField.PREMISES])?.trim();
-    const templateName = isUpdate ? Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH : Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH;
-    const backLink = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_PATH;
-    const manualAddressPath = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
     const nextPageConfirmUrl = isUpdate ? UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
     const nextPage = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH;
 
@@ -77,13 +74,13 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualAddressPath, directorName);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, isUpdate, directorName);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualAddressPath, directorName);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, isUpdate, directorName);
     }
 
     // Patch the filing with updated information
@@ -120,10 +117,13 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
 };
 
-const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string, manualAddressLink: string, directorName: string) => {
+const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], isUpdate: boolean, directorName: string) => {
+  const backLink = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_PATH;
+  const manualAddressPath = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
+  const templateName = isUpdate ? Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH : Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH;
   return res.render(templateName, {
     templateName: templateName,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressLink, req),
+    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
     backLinkUrl: urlUtils.getUrlToPath(backLink, req),
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.serviceAddress?.postalCode,
