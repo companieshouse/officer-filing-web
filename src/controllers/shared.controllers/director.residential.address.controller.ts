@@ -15,7 +15,7 @@ import { createValidationErrorBasic, formatValidationErrors } from '../../valida
 import { FormattedValidationErrors, ValidationError } from "../../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";

@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service")
 jest.mock("../../../src/services/company.profile.service")
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -16,7 +17,6 @@ import {
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS,
-  DIRECTOR_DATE_DETAILS_PATH_END,
   UPDATE_DIRECTOR_DETAILS_END,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
@@ -28,6 +28,8 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
+import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
+import {validCompanyAppointmentResource} from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -35,6 +37,8 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockMapCompanyProfileToOfficerFilingAddressMock = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -105,7 +109,13 @@ describe("Director correspondence address controller tests", () => {
         });
         const response = await request(app).get(url);
         expect(response.text).toContain(PAGE_HEADING);
-        expect(response.text).toContain(directorNameMock.firstName);
+        if(url == PAGE_URL) {
+          // from officer filing
+          expect(response.text).toContain("John Doe");
+        } else {
+          // from company appointment
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
         expect(response.text).toContain("Locality");
@@ -126,7 +136,13 @@ describe("Director correspondence address controller tests", () => {
         });
         const response = await request(app).get(url);
         expect(response.text).toContain(PAGE_HEADING);
-        expect(response.text).toContain(directorNameMock.firstName);
+        if(url == PAGE_URL) {
+          // from officer filing
+          expect(response.text).toContain("John Doe");
+        } else {
+          // from company appointment
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).not.toContain("Line2");
         expect(response.text).toContain("Locality");
@@ -179,7 +195,13 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain("Select the director’s correspondence address");
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
-        expect(response.text).toContain(directorNameMock.firstName);
+        if(url == PAGE_URL) {
+          // from officer filing
+          expect(response.text).toContain("John Doe");
+        } else {
+          // from company appointment
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
         expect(mockGetOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).toContain("Locality");

@@ -11,7 +11,7 @@ import {
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { createValidationErrorBasic, formatValidationErrors } from "../../validation/validation";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ValidationError } from "../../model/validation.model";
@@ -23,19 +23,21 @@ import { setBackLink } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
+import {getDirectorNameBasedOnJourney} from "../../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";
 
-export const getDirectorCorrespondenceAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getDirectorCorrespondenceAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
-    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
+    const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
     });
   } catch (e) {
@@ -54,15 +56,18 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const companyProfile = await getCompanyProfile(companyNumber);
 
     const validationErrors = buildResidentialAddressValidationErrors(req);
+
     if (validationErrors.length > 0) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const formattedErrors = formatValidationErrors(validationErrors);
+      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+
       return res.render(templateName, {
         templateName: templateName,
         backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
         errors: formattedErrors,
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
-        directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+        directorName: formatTitleCase(directorName),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       });
     }
