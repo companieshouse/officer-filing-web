@@ -19,14 +19,11 @@ import {
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
-import { mockValidValidationStatusResponse } from "../../mocks/validation.status.response.mock";
-import { getValidationStatus } from "../../../src/services/validation.status.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
-const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 
@@ -76,7 +73,7 @@ describe("Director residential address manual controller tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mocks.mockSessionMiddleware.mockClear();
-    mockGetValidationStatus.mockReset();
+    // mockGetValidationStatus.mockReset();
   });
 
   describe("get tests", () => {
@@ -186,7 +183,6 @@ describe("Director residential address manual controller tests", () => {
 
   describe("post tests", () => {
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should render validation error with null values passed as residential address", async (url) => {
-          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValueOnce({
             data: {
               firstName: "John",
@@ -203,7 +199,6 @@ describe("Director residential address manual controller tests", () => {
       });
 
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should render other validation errors when passing in invalid data as residential address", async (url) => {
-          mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValueOnce({
             data: {
               firstName: "John",
@@ -222,7 +217,6 @@ describe("Director residential address manual controller tests", () => {
       });
 
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should patch officer filing with filing information", async (url) => {
-        mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
             firstName: "John",
@@ -230,14 +224,19 @@ describe("Director residential address manual controller tests", () => {
           }
         });
         if (url === UPDATE_PAGE_URL) {
-          mockGetOfficerFiling.mockResolvedValue({
+          mockGetOfficerFiling.mockResolvedValueOnce({
             referenceAppointmentId: "123"
           });
-          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({ residentialAddressIsSameAsServiceAddress: true});
         }
     
         const response = await request(app).post(url).send(validData);
 
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockGetCompanyAppointmentFullRecord).toBeCalledWith(expect.any(Object), COMPANY_NUMBER, "123");
+        } else {
+          expect(mockGetCompanyAppointmentFullRecord).not.toBeCalled();
+        }
         expect(mockPatchOfficerFiling).toBeCalledWith(
           expect.objectContaining({}),
           TRANSACTION_ID,
@@ -259,23 +258,12 @@ describe("Director residential address manual controller tests", () => {
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should redirect to error page when patch officer filing throws an error", async (url) => {
         mockIsActiveFeature.mockReturnValueOnce(true);
         if (url === UPDATE_PAGE_URL) {
-          mockGetOfficerFiling.mockResolvedValue({
+          mockGetOfficerFiling.mockResolvedValueOnce({
             referenceAppointmentId: "123"
           });
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
         }
         mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error patching officer filing"));
-
-        const response = await request(app).post(url).send(validData);
-
-        expect(response.text).toContain(ERROR_PAGE_HEADING);
-      });
-
-      it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should redirect to error page when get validation status throws an error", async (url) => {
-        mockIsActiveFeature.mockReturnValueOnce(true);
-        mockGetOfficerFiling.mockReturnValueOnce({
-        })
-        mockGetValidationStatus.mockRejectedValueOnce(new Error("Error getting validation status"));
 
         const response = await request(app).post(url).send(validData);
 

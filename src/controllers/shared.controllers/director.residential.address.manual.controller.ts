@@ -17,8 +17,6 @@ import { ResidentialManualAddressValidation } from "../../validation/address.val
 import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { getValidationStatus } from "../../services/validation.status.service";
-import { buildValidationErrors } from "./director.correspondence.address.manual.controller";
 
 export const getResidentialAddressManualEntry = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, confirmResidentialAddress: string) => {
   try {
@@ -81,24 +79,16 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
     };
 
     if (isUpdate) {
-      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const appointmentId = originalFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsResidentialAddressUpdated(officerFiling, companyAppointment)) {
+      if (checkIsResidentialAddressUpdated(originalFiling, companyAppointment)) {
         officerFilingBody.residentialAddressHasBeenUpdated = true;
       }
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
   
-    // Validate filing
-    const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-    const validationErrors = buildValidationErrors(validationStatus);
-    if (validationErrors.length > 0) {
-      return renderPage(req, res, residentialAddress, originalFiling, jsValidationErrors, templateName, backLink);
-    }
- 
     const nextPageUrl = urlUtils.getUrlToPath(nextPagePath, req);
     return res.redirect(nextPageUrl);
   } catch (e) {
