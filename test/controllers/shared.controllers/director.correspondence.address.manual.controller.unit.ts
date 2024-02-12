@@ -240,7 +240,7 @@ describe("Director correspondence address controller tests", () => {
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should redirect to error page when patch officer filing throws an error", async (url) => {
         mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error patching officer filing"));
 
-        const response = await request(app).post(url);
+        const response = await request(app).post(url).send(validData);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
@@ -248,7 +248,7 @@ describe("Director correspondence address controller tests", () => {
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should redirect to error page when get validation status throws an error", async (url) => {
         mockGetValidationStatus.mockRejectedValueOnce(new Error("Error getting validation status"));
 
-        const response = await request(app).post(url);
+        const response = await request(app).post(url).send(validData);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });

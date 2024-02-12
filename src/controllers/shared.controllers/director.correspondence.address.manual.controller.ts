@@ -90,12 +90,12 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
       serviceAddress: serviceAddress
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)){
+      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }
     }
