@@ -73,8 +73,8 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
       
       officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-        { ...officerFilingBody,
-        serviceAddress: officerFiling.serviceAddress }, companyAppointment);
+        { ...officerFilingBody, serviceAddress: officerFiling.serviceAddress }, 
+        companyAppointment);
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
