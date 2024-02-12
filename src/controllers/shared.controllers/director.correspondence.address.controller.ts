@@ -84,14 +84,17 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       const path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
       return redirectToPath(path, req, res);
-    } else if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    }
+
+    if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       const path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
       return redirectToPath(path, req, res);
-    } else {
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      const path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
-      return redirectToPath(path, req, res);
     }
+
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    const path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
+    return redirectToPath(path, req, res);
+
 
   } catch(e) {
     next(e);
