@@ -3,7 +3,6 @@ jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/validation.status.service");
 jest.mock("../../../src/services/company.appointments.service");
 jest.mock("../../../src/utils/address");
-jest.mock("../../../src/validation/manual.address.validation");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -37,7 +36,7 @@ import {
 } from "../../../src/utils/api.enumerations.keys";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { compareAddress } from "../../../src/utils/address";
-import { validateManualAddress } from "../../../src/validation/manual.address.validation";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -45,8 +44,8 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 const mockCompareAddress = compareAddress as jest.Mock;
-const mockValidateManualAddress = validateManualAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -90,57 +89,6 @@ const invalidData = {
   "correspondence_address_postcode": "ゃ"
 }
 
-const nullValidationErrors = [
-    {
-      messageKey: 'premises-blank',
-      source: [ 'correspondence_address_premises' ],
-      link: 'correspondence_address_premises'
-    },
-    {
-      messageKey: 'address-line-one-blank',
-      source: [ 'correspondence_address_line_1' ],
-      link: 'correspondence_address_line_1'
-    },
-    {
-      messageKey: 'locality-blank',
-      source: [ 'correspondence_address_city' ],
-      link: 'correspondence_address_city'
-    },
-    {
-      messageKey: 'country-blank',
-      source: [ 'typeahead_input_0' ],
-      link: 'typeahead_input_0'
-    },
-    {
-      messageKey: 'generic-postal-code-blank',
-      source: [ 'correspondence_address_postcode' ],
-      link: 'correspondence_address_postcode'
-    }
-  ]
-
-const invalidCharacterValidationErrors = [
-    {
-      messageKey: 'premises-characters',
-      source: [ 'correspondence_address_premises' ],
-      link: 'correspondence_address_premises'
-    },
-    {
-      messageKey: 'address-line-two-characters',
-      source: [ 'correspondence_address_line_2' ],
-      link: 'correspondence_address_line_2'
-    },
-    {
-      messageKey: 'region-characters',
-      source: [ 'correspondence_address_county' ],
-      link: 'correspondence_address_county'
-    },
-    {
-      messageKey: 'generic-postal-code-characters',
-      source: [ 'correspondence_address_postcode' ],
-      link: 'correspondence_address_postcode'
-    }
-  ]
-
 describe("Director correspondence address controller tests", () => {
 
     beforeEach(() => {
@@ -148,17 +96,15 @@ describe("Director correspondence address controller tests", () => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetValidationStatus.mockReset();
       mockPatchOfficerFiling.mockReset();
-      mockGetCompanyAppointmentFullRecord.mockReset();
+      mockGetCompanyAppointmentFullRecord.mockClear();
       mockGetOfficerFiling.mockReset();
       mockCompareAddress.mockClear();
-      mockValidateManualAddress.mockClear();
     });
 
    describe("get tests", () => {
   
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to director correspondence address manual page", async (url) => {
         mockGetOfficerFiling.mockResolvedValue({});
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
 
         const response = await request(app).get(url);
   
@@ -185,7 +131,6 @@ describe("Director correspondence address controller tests", () => {
             postalCode: "TE6 3ST"
           }
         });
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
 
         const response = await request(app).get(url);
   
@@ -219,7 +164,6 @@ describe("Director correspondence address controller tests", () => {
           },
           serviceManualAddressBackLink: "array-page"
         });
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
 
         const response = await request(app).get(`${url}?backLink=confirm-correspondence-address`);
 
@@ -239,7 +183,6 @@ describe("Director correspondence address controller tests", () => {
             postalCode: "TE6 3ST"
           },
         });
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         
         const response = await request(app).get(url);
 
@@ -253,7 +196,6 @@ describe("Director correspondence address controller tests", () => {
       describe("JS validation tests", () => {
 
         it.each([[PAGE_URL], [UPDATE_PAGE_URL]])("Should render validation error with null values passed", async (url) => {
-          mockValidateManualAddress.mockReturnValue(nullValidationErrors);
           mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValue({
             data: {
@@ -261,7 +203,6 @@ describe("Director correspondence address controller tests", () => {
               lastName: "Smith",
             }
           });
-          mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
 
           const response = await request(app).post(url).send({});
 
@@ -275,7 +216,6 @@ describe("Director correspondence address controller tests", () => {
         });
 
         it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should render other validation errors", async (url) => {
-          mockValidateManualAddress.mockReturnValue(invalidCharacterValidationErrors);
           mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
           mockGetOfficerFiling.mockResolvedValueOnce({
             data: {
@@ -283,7 +223,6 @@ describe("Director correspondence address controller tests", () => {
               lastName: "Smith",
             }
           });
-          mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
 
           const response = await request(app).post(url).send(invalidData);
 
@@ -307,30 +246,18 @@ describe("Director correspondence address controller tests", () => {
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should redirect to error page when get validation status throws an error", async (url) => {
         mockGetValidationStatus.mockRejectedValueOnce(new Error("Error getting validation status"));
-        mockValidateManualAddress.mockReturnValue({});
-        mockPatchOfficerFiling.mockResolvedValueOnce({
-          data: {
-            firstName: "John",
-            lastName: "Smith"
-          }
-        });
 
-        const response = await request(app).post(url);
-
-        mockGetOfficerFiling.mockResolvedValue({});
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+        const response = await request(app).post(url).send(validData);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
       it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should display errors on page if get validation status returns errors", async (url) => {
-        mockValidateManualAddress.mockReturnValue({});
         mockGetValidationStatus.mockResolvedValue({
           errors: [createMockValidationStatusError("Enter a property name or number for the director's correspondence address"), createMockValidationStatusError("Enter a city or town for the director's correspondence address")],
           isValid: false
         });
         mockGetOfficerFiling.mockResolvedValue({referenceAppointmentId: "ref_id",});
-        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         mockPatchOfficerFiling.mockResolvedValue({
           data: {
             firstName: "John",
@@ -348,7 +275,6 @@ describe("Director correspondence address controller tests", () => {
 
       it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("Should patch officer filing with updated information", async (url, nextPageUrl) => {
         mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
-        mockValidateManualAddress.mockReturnValue({});
         mockGetOfficerFiling.mockResolvedValue({
           referenceAppointmentId: "ref_id",
           serviceAddress: {

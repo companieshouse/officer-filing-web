@@ -10,7 +10,7 @@ import {
   ValidationStatusResponse
 } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField } from "../../utils/web";
+import { getField, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../../validation/validation";
 import { ValidationError } from "../../model/validation.model";
@@ -27,7 +27,6 @@ import { validateManualAddress } from "../../validation/manual.address.validatio
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { compareAddress } from "../../utils/address";
-import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { RenderManualEntryParams } from "../../utils/renderManualEntryPageParams";
 
 export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths, isUpdate: boolean) => {
@@ -82,13 +81,13 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     }
 
     // JS validation
-    let validationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+    const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
 
-    if(validationErrors.length > 0) {
+    if(jsValidationErrors.length > 0) {
       return renderPage(req, res, session, { 
-        originalFiling,
+        officerFiling: originalFiling,
         serviceAddress,
-        validationErrors,
+        validationErrors: jsValidationErrors,
         templateName,
         backUrlPath,
         isUpdate
@@ -114,10 +113,10 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
 
     // Validate filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
-    validationErrors = buildValidationErrors(validationStatus);
+    const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
       return renderPage(req, res, session, { 
-        originalFiling,
+        officerFiling: originalFiling,
         serviceAddress,
         validationErrors,
         templateName,
@@ -190,7 +189,7 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 
 export const renderPage = async (req: Request, res: Response, session: Session, params: RenderManualEntryParams) => {
   const formattedErrors = formatValidationErrors(params.validationErrors);
-  const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.originalFiling);
+  const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
   return res.render(params.templateName, {
     templateName: params.templateName,
     backLinkUrl: urlUtils.getUrlToPath(params.backUrlPath, req),

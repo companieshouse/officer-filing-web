@@ -5,7 +5,7 @@ import { ValidationError } from "../model/validation.model";
  * Interface for the renderPage function parameters
  */
 export interface RenderManualEntryParams {
-  originalFiling: OfficerFiling;
+  officerFiling: OfficerFiling;
   serviceAddress: Address;
   validationErrors: ValidationError[];
   templateName: string;
