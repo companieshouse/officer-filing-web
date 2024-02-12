@@ -1,4 +1,4 @@
-import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
 jest.mock("../../../src/utils/feature.flag");
 jest.mock("../../../src/services/officer.filing.service");
@@ -32,7 +32,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/offi
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../../src/utils/api.enumerations.keys";
-import {validCompanyAppointmentResource} from "../../mocks/company.appointment.mock";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

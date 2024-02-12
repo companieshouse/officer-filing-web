@@ -28,8 +28,8 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
-import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
-import {validCompanyAppointmentResource} from "../../mocks/company.appointment.mock";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

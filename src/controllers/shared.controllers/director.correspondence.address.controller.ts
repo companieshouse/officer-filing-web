@@ -23,7 +23,7 @@ import { setBackLink } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
-import {getDirectorNameBasedOnJourney} from "../../utils/web";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
 const directorChoiceHtmlField: string = "director_correspondence_address";
 const registeredOfficerAddressValue: string = "director_registered_office_address";

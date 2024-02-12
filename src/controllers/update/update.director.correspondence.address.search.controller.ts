@@ -8,7 +8,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
   return getCorrespondenceAddressLookUp(req, res, next, 
                                         Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, 
                                         UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
-                                        UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH)
+                                        UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, true)
 }
 
 export const post = (req: Request, res: Response, next: NextFunction) => {

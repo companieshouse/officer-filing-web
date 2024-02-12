@@ -22,7 +22,7 @@ import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/compa
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
-import {getDirectorNameBasedOnJourney} from "../../utils/web";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
