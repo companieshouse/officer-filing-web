@@ -129,7 +129,7 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
 
- const redirectForSelectedSraAddressChoice = async (patchOfficerFiling, req, res, patchFiling, selectedSraAddressChoice, isUpdate) => {
+ const redirectForSelectedSraAddressChoice = async (doPatchOfficerFiling, req, res, patchFiling, selectedSraAddressChoice, isUpdate) => {
   if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
     if(isUpdate){
       return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
@@ -143,11 +143,10 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
     return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
   }
   else {
-    await patchOfficerFiling();
+    await doPatchOfficerFiling();
     if(isUpdate){
       return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
     }
     return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
   }
  }
- 
