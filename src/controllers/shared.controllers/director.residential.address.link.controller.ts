@@ -11,7 +11,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { HA_TO_SA_ERROR } from "../../utils/constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { compareAddress } from "../../utils/address";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.resential.address.updated";
 
 export const getResidentialLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
@@ -117,13 +117,3 @@ const getRedirectLink = (isUpdate: boolean): string => {
   }
   return DIRECTOR_PROTECTED_DETAILS_PATH;
 }
-
-export const checkIsResidentialAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if (officerFiling.isHomeAddressSameAsServiceAddress === true) {
-    return companyAppointment.residentialAddressIsSameAsServiceAddress !== true;
-  }
-  if (companyAppointment.residentialAddressIsSameAsServiceAddress === true) {
-    return true;
-  }
-  return !compareAddress(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
-};

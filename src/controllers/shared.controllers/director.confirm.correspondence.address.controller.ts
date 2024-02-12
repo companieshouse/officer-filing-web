@@ -9,9 +9,9 @@ import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.fil
 import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { compareAddress } from "../../utils/address";
 
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
@@ -66,7 +66,7 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
     }
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
+    return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
   }catch(e){
     return next(e);
   }

@@ -1,6 +1,7 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.appointments.service");
+jest.mock("../../../src/utils/address");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -18,12 +19,14 @@ import {
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { compareAddress } from "../../../src/utils/address";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+const mockCompareAddress = compareAddress as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -53,7 +56,9 @@ describe("Director confirm correspondence address controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
-       mockGetCompanyAppointmentFullRecord.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
+      mockPatchOfficerFiling.mockReset();
+      mockCompareAddress.mockClear();
     });
   
     describe("get tests", () => {
@@ -136,20 +141,72 @@ describe("Director confirm correspondence address controller tests", () => {
 
     describe("post tests", () => {
   
-      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page with correspondence address updated', async (url, nextPageUrl) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          referenceAppointmentId: "123456"
-        })
-        
-        if(url === UPDATE_PAGE_URL){
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag"
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
         });
-      }
+        
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          serviceAddressIsSameAsRegisteredOfficeAddress: true
+        });
+
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: false
+          }
+        });
+        mockCompareAddress.mockReturnValue(false);
+
         const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
+
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
+        });
+        
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          serviceAddressIsSameAsRegisteredOfficeAddress: true
+        });
+
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: true
+          }
+        });
+        mockCompareAddress.mockReturnValue(true);
+            
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: false})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
 
       it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error', async (url) => {
         mockPatchOfficerFiling.mockRejectedValue(new Error())       
@@ -157,17 +214,11 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });  
 
-      it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error', async (url) => {
-        const response = await request(app).post(url);
-        mockPatchOfficerFiling.mockReturnValueOnce({
-          data: {
-            isServiceAddressSameAsRegisteredOfficeAddress: false
-          }
-        });
-        
-        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
-          isServiceAddressSameAsRegisteredOfficeAddress: false
-        }));
+      it.each([PAGE_URL, UPDATE_PAGE_URL])('should catch error', async (url) => {
+        mockPatchOfficerFiling.mockRejectedValue(new Error())       
+        const resp = await request(app).post(url);
+        expect(resp.text).toContain(ERROR_PAGE_HEADING)
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled;
       }); 
     });
 });
