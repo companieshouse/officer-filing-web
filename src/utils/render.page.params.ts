@@ -3,7 +3,7 @@ import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-l
 import { ValidationError } from "../model/validation.model";
 
 /**
- * Interface for the renderPage function parameters for manual address pages
+ * Interface for the renderPage function parameters for array address pages
  */
 export interface RenderArrayPageParams {
   officerFiling: OfficerFiling;
@@ -15,6 +15,9 @@ export interface RenderArrayPageParams {
   isUpdate: boolean;
 }
 
+/**
+ * Interface for the renderPage function parameters for manual address pages
+ */
 export interface RenderManualEntryParams {
   officerFiling: OfficerFiling;
   serviceAddress: Address;
