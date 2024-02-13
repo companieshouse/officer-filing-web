@@ -23,6 +23,7 @@ import { ResidentialManualAddressValidation } from "../../validation/address.val
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import {RenderAddressRadioParams} from "../../utils/render.page.params";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
@@ -30,7 +31,12 @@ export const getDirectorResidentialAddress = async (req: Request, res: Response,
   try {
     const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, directorName);
+    return renderPage(req, res, {
+      officerFiling: officerFiling,
+      companyProfile: companyProfile,
+      templateName: templateName,
+      backUrlPath: backUrlPath,
+      directorName: directorName});
   } catch (e) {
     next(e);
   }
@@ -54,7 +60,13 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, directorName, formattedErrors);
+      return renderPage(req, res, {
+        officerFiling: officerFiling,
+        companyProfile: companyProfile,
+        templateName: templateName,
+        backUrlPath: backUrlPath,
+        directorName: directorName,
+        formattedErrors: formattedErrors});
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -120,8 +132,8 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, directorName: string, formattedErrors?: FormattedValidationErrors) => {
-  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+const renderPage = (req: Request, res: Response, params: RenderAddressRadioParams) => {
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(params.companyProfile.registeredOfficeAddress);
   let canUseRegisteredOfficeAddress = false;
   if (registeredOfficeAddress !== undefined) {
       const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
@@ -132,14 +144,14 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
   logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for residential address");
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
-    templateName: templateName,
-    backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-    errors: formattedErrors,
-    director_address: officerFiling.directorResidentialAddressChoice,
-    directorName: formatTitleCase(directorName),
-    directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-    manualAddress: formatDirectorResidentialAddress(officerFiling),
-    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
+    templateName: params.templateName,
+    backLinkUrl: urlUtils.getUrlToPath(params.backUrlPath, req),
+    errors: params.formattedErrors,
+    director_address: params.officerFiling.directorResidentialAddressChoice,
+    directorName: formatTitleCase(params.directorName),
+    directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(params.companyProfile),
+    manualAddress: formatDirectorResidentialAddress(params.officerFiling),
+    directorServiceAddressChoice: params.officerFiling.directorServiceAddressChoice,
     canUseRegisteredOfficeAddress
   });
 };
