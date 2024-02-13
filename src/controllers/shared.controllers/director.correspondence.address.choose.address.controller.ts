@@ -16,7 +16,9 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { RenderArrayPageParams } from "../../utils/render.page.params";
-
+import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const getCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try{
@@ -82,6 +84,16 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
       postalCode: selectedAddress.postcode
     }
   };
+
+  if (isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
+      officerFiling.correspondenceAddressHasBeenUpdated = true;
+    }
+  }
+
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);
 
   return res.redirect(confirmAddressUrl);

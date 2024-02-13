@@ -16,7 +16,9 @@ import { createValidationError, formatValidationErrors} from "../../validation/v
 import { DirectorField } from "../../model/director.model";
 import { residentialAddressErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-
+import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const getResidentialAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backLinkPath: string, isUpdate: boolean) => {
   try {
@@ -86,6 +88,17 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
       postalCode: selectedAddress.postcode
     }
   };
+
+  if (isUpdate) {
+    console.log("AKDEBUG ???");
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    if (checkIsResidentialAddressUpdated(officerFiling, companyAppointment)) {
+      console.log("AKDEBUG ??? 2");
+      officerFiling.correspondenceAddressHasBeenUpdated = true;
+    }
+  }
 
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);
 

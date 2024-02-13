@@ -63,7 +63,8 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
     }
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
+
+    return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
   }catch(e){
     return next(e);
   }
