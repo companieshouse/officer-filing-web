@@ -82,9 +82,7 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
       const appointmentId = originalFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsResidentialAddressUpdated(originalFiling, companyAppointment)) {
-        officerFilingBody.residentialAddressHasBeenUpdated = true;
-      }
+      officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(originalFiling, companyAppointment);
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);

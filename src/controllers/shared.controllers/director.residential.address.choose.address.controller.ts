@@ -93,9 +93,7 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    if (checkIsResidentialAddressUpdated(officerFiling, companyAppointment)) {
-      officerFiling.correspondenceAddressHasBeenUpdated = true;
-    }
+    officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
   }
 
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);

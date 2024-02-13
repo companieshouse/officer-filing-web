@@ -126,7 +126,7 @@ const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Sessio
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    officerFiling.residentialAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+    officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
       { ...officerFiling, residentialAddress: officerFiling.residentialAddress },
       companyAppointment);
   }

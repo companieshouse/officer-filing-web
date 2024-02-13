@@ -55,9 +55,7 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
-        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
-      }
+      officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
     }
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);

@@ -22,10 +22,8 @@ import {
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { HA_TO_SA_ERROR } from "../../../src/utils/constants";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
-import { validCompanyAppointment, validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
-import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 import { compareAddress } from "../../../src/utils/address";
-import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
