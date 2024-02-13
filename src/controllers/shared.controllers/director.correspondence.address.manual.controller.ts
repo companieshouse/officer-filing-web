@@ -26,7 +26,7 @@ import { CorrespondenceManualAddressValidation } from "../../validation/address.
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { compareAddress } from "../../utils/address";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 import { RenderManualEntryParams } from "../../utils/render.page.params";
 
 export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths, isUpdate: boolean) => {
@@ -206,14 +206,3 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
     errors: formattedErrors,
   });
 };
-
-export const checkIsCorrespondenceAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  if (officerFiling.isServiceAddressSameAsRegisteredOfficeAddress === true) {
-    return companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress !== true;
-  }
-  if (companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress === true) {
-    return true;
-  }
-  return !compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
-};
-

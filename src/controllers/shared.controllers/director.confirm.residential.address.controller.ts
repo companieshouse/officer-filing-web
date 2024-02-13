@@ -7,7 +7,7 @@ import { formatTitleCase } from "../../utils/format";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
@@ -34,12 +34,12 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     const officerFilingBody: OfficerFiling = {
       isHomeAddressSameAsServiceAddress: false
     };
 
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     if (isUpdate) {
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);

@@ -11,9 +11,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { compareAddress } from "../../utils/address";
-import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
-
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {

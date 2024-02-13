@@ -1,5 +1,5 @@
-import { compareAddress } from "../../src/utils/address";
 import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { compareAddress } from "../../src/utils/address";
 
 describe("compareAddress", () => {
   it("should return true if all address fields are the same", () => {

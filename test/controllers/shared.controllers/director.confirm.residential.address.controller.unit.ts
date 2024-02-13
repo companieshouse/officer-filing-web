@@ -1,6 +1,9 @@
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.appointments.service");
+jest.mock("../../../src/utils/address");
+jest.mock("../../../src/utils/is.address.updated");
+
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -22,12 +25,16 @@ import {
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { compareAddress } from "../../../src/utils/address";
+import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+const mockCompareAddress = compareAddress as jest.Mock;
+const mockCheckIsResidentialAddress = checkIsResidentialAddressUpdated as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -63,8 +70,10 @@ describe("Director confirm residential address controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
-      mockGetOfficerFiling.mockClear();
+      mockGetOfficerFiling.mockReset();
       mockGetCompanyAppointmentFullRecord.mockClear();
+      mockPatchOfficerFiling.mockReset();
+      mockCompareAddress.mockClear();
     });
   
     describe("get tests", () => {
@@ -168,8 +177,57 @@ describe("Director confirm residential address controller tests", () => {
       it.each([[APPOINT_PAGE_URL, NEXT_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("Should redirect to '%s' page", async (url, nextPageUrl) => {
         mockGetOfficerFiling.mockReturnValueOnce({referenceAppointmentId: "123" });
         mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
-        const response = await request(app).post(url);
+       
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isHomeAddressSameAsServiceAddress: false
+          }
+        });
+        mockCheckIsResidentialAddress.mockReturnValue(true);
 
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({residentialAddressHasBeenUpdated: true})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[APPOINT_PAGE_URL, NEXT_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("Should redirect to '%s' page without update flag", async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockReturnValueOnce({
+          isHomeAddressSameAsServiceAddress: true,
+          checkYourAnswersLink: undefined
+        });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          residentialAddressIsSameAsServiceAddress: true
+        });
+
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isHomeAddressSameAsServiceAddress: true
+          }
+        });
+        mockCheckIsResidentialAddress.mockReturnValue(false);
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({residentialAddressHasBeenUpdated: false})
+          );
+        }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
@@ -195,7 +253,6 @@ describe("Director confirm residential address controller tests", () => {
       });  
   
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("should set home address same as service address to false", async (url) => {
-        const response = await request(app).post(url);
         mockGetOfficerFiling.mockReturnValueOnce({referenceAppointmentId: "123"});
         mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         mockPatchOfficerFiling.mockReturnValueOnce({
@@ -203,7 +260,8 @@ describe("Director confirm residential address controller tests", () => {
             isHomeAddressSameAsServiceAddress: false
           }
         });
-       
+        const response = await request(app).post(url);
+        
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
           isHomeAddressSameAsServiceAddress: false
         }));

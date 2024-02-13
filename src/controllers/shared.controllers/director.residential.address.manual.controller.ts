@@ -14,7 +14,7 @@ import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/for
 import { COUNTRY_LIST } from "../../utils/properties";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
-import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 

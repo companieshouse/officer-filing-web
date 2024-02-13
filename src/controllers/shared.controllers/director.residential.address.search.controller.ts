@@ -21,10 +21,9 @@ import { PostcodeValidation, PremiseValidation } from "../../validation/address.
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
-import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsResidentialAddressUpdated } from "./director.residential.address.link.controller";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {

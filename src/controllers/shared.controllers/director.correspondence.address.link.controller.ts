@@ -10,9 +10,8 @@ import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
-import { compareAddress } from "../../utils/address";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 export const getCorrespondenceLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {

@@ -24,8 +24,8 @@ import { HA_TO_SA_ERROR } from "../../../src/utils/constants";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { validCompanyAppointment, validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { checkIsResidentialAddressUpdated } from "../../../src/controllers/shared.controllers/director.residential.address.link.controller";
 import { compareAddress } from "../../../src/utils/address";
+import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -221,50 +221,4 @@ describe("Director residential address link controller tests", () => {
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
       });
     });
-
-    describe("checkIsResidentialAddressUpdated tests", () => {
-      
-      it.each([
-        [true, true, false],
-        [true, false, true],
-        [true, undefined, true],
-        [false, true, true],
-        [undefined, true, true],
-      ])("should compare residential address flags", (filingFlag, appointmentFlag, result) => {
-        const officerFiling = {
-          isHomeAddressSameAsServiceAddress: filingFlag,
-        } as OfficerFiling;
-        const companyAppointment = { ...validCompanyAppointment };
-        companyAppointment.residentialAddressIsSameAsServiceAddress = appointmentFlag;
-
-        const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
-         expect(mockCompareAddress).not.toBeCalled();
-        expect(isAddressUpdated).toBe(result);
-      });
-
-      it.each([
-        [validCompanyAppointment.usualResidentialAddress, false],
-        [{
-          premises: "1",
-          addressLine1: "line1",
-          addressLine2: "line2",
-          locality: "locality",
-          region: "region",
-          country: "country"
-         }, true],
-        [undefined, true]
-      ])("should compare residential addresses", (usualResidentialAddress, result) => {
-        const officerFiling = {
-          isHomeAddressSameAsServiceAddress: false,
-          usualResidentialAddress
-        } as OfficerFiling;
-        const companyAppointment = { ...validCompanyAppointment };
-        companyAppointment.residentialAddressIsSameAsServiceAddress = false;
-
-        mockCompareAddress.mockReturnValue(!result);
-        const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
-        expect(mockCompareAddress).toBeCalledWith(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
-        expect(isAddressUpdated).toBe(result);
-      });
-  });
 });

@@ -54,20 +54,24 @@ describe("Director confirm correspondence address controller tests", () => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
+      mockPatchOfficerFiling.mockReset();
     });
   
     describe("get tests", () => {
-        it.each([PAGE_URL,UPDATE_PAGE_URL])('should navigate to director confirm correspondence address page', async (url) => {
-            mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-                etag: "etag",
-                forename: "John",
-                otherForenames: "mid",
-                surname: "Smith"
-                 });
 
-            mockGetOfficerFiling.mockResolvedValueOnce({
-                directorName: "John Smith"
-                 });
+      it.each([PAGE_URL,UPDATE_PAGE_URL])('should navigate to director confirm correspondence address page', async (url) => {
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            etag: "etag",
+            forename: "John",
+            otherForenames: "mid",
+            surname: "Smith"
+          });
+        }
+
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "John Smith"
+        });
 
         const response = await request(app).get(url);
   
@@ -87,7 +91,10 @@ describe("Director confirm correspondence address controller tests", () => {
             country: "United Kingdom",
             postalCode: "SW1A 2AA"
           }
-        })
+        });
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+        }
         const response = await request(app).get(url);
 
         expect(response.text).toContain("110");
@@ -103,7 +110,9 @@ describe("Director confirm correspondence address controller tests", () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
         });
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({etag:"etagABC"});
+        }
         const response = await request(app).get(url);
         expect(response.text).toContain(backLink);
       });
@@ -112,10 +121,9 @@ describe("Director confirm correspondence address controller tests", () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get(url);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
-
       });
       
-      it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error if getofficerfiling error', async (url) => {
+      it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error if getOfficerFiling error', async (url) => {
         const response = await request(app).get(url);
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
@@ -124,46 +132,185 @@ describe("Director confirm correspondence address controller tests", () => {
       it.each([PAGE_URL,UPDATE_PAGE_URL])('should populate backLink parameter', async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith"
-        })
+        });
+  
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain("backLink=confirm-correspondence-address");
       });
     });
 
     describe("post tests", () => {
+
       it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456"
         })
         
-        if(url === UPDATE_PAGE_URL){
-          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        if (url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValue({
             etag: "etag2",
             serviceAddressIsSameAsRegisteredOfficeAddress: true
           });
         }
         const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+  
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page with correspondence address updated', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
+        });
+
+        if(url === UPDATE_PAGE_URL){
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            serviceAddressIsSameAsRegisteredOfficeAddress: true
+          });
+        }
+
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: false
+          }
+        });
+       
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
+        });
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            serviceAddressIsSameAsRegisteredOfficeAddress: true
+          });
+        }
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: true
+          }
+        });
+
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.not.objectContaining({correspondenceAddressHasBeenUpdated: false})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page with update flag true if different chips address', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
+        });
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            serviceAddressIsSameAsRegisteredOfficeAddress: false
+          });
+        }
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: true
+          }
+        });
+            
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page with update flag true if different chips address and different address', async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
+        });
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            serviceAddressIsSameAsRegisteredOfficeAddress: false
+          });
+        }
+        mockPatchOfficerFiling.mockResolvedValueOnce({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+            isServiceAddressSameAsRegisteredOfficeAddress: true
+          }
+        });
+            
+        const response = await request(app).post(url);
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error', async (url) => {
-        mockPatchOfficerFiling.mockRejectedValue(new Error())       
+        mockPatchOfficerFiling.mockRejectedValue(new Error());
+        if (url === UPDATE_PAGE_URL) {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+            serviceAddressIsSameAsRegisteredOfficeAddress: false
+          });
+        }
         const response = await request(app).post(url);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
-      it.each([PAGE_URL,UPDATE_PAGE_URL])('should catch error', async (url) => {
-        const response = await request(app).post(url);
-        mockPatchOfficerFiling.mockReturnValueOnce({
-          data: {
-            isServiceAddressSameAsRegisteredOfficeAddress: false
-          }
-        });
-        
-        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
-          isServiceAddressSameAsRegisteredOfficeAddress: false
-        }));
+      it.each([PAGE_URL, UPDATE_PAGE_URL])('should catch error when patching filing', async (url) => {
+        mockPatchOfficerFiling.mockRejectedValue(new Error())       
+        const resp = await request(app).post(url);
+        expect(resp.text).toContain(ERROR_PAGE_HEADING)
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled;
       });
     });
 });

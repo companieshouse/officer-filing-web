@@ -16,7 +16,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { RenderArrayPageParams } from "../../utils/render.page.params";
-import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 

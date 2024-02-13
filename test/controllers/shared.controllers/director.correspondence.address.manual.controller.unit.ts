@@ -23,9 +23,9 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { createMockValidationStatusError, mockValidValidationStatusResponse, mockValidationStatusError } from "../../mocks/validation.status.response.mock";
 import { getValidationStatus } from "../../../src/services/validation.status.service";
-import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { buildValidationErrors, checkIsCorrespondenceAddressUpdated } from "../../../src/controllers/shared.controllers/director.correspondence.address.manual.controller";
-import { 
+import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { buildValidationErrors } from "../../../src/controllers/shared.controllers/director.correspondence.address.manual.controller";
+import {
   correspondenceAddressAddressLineOneErrorMessageKey,
   correspondenceAddressAddressLineTwoErrorMessageKey,
   correspondenceAddressCountryErrorMessageKey,
@@ -36,7 +36,7 @@ import {
 } from "../../../src/utils/api.enumerations.keys";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { compareAddress } from "../../../src/utils/address";
-import { validCompanyAppointmentResource, validCompanyAppointment } from "../../mocks/company.appointment.mock";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -451,52 +451,5 @@ describe("Director correspondence address controller tests", () => {
 
         expect(validationErrors).toHaveLength(0);
       });
-      
     });
-
-    describe("checkIsCorrespondenceAddressUpdated tests", () => {
-      
-      it.each([
-        [true, true, false],
-        [true, false, true],
-        [true, undefined, true],
-        [false, true, true],
-        [undefined, true, true],
-      ])("should compare correspondence address flags", (filingFlag, appointmentFlag, result) => {
-        const officerFiling = {
-          isServiceAddressSameAsRegisteredOfficeAddress: filingFlag,
-        } as OfficerFiling;
-        const companyAppointment = { ...validCompanyAppointment };
-        companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = appointmentFlag;
-
-        const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
-         expect(mockCompareAddress).not.toBeCalled();
-        expect(isAddressUpdated).toBe(result);
-      });
-
-      it.each([
-        [validCompanyAppointment.serviceAddress, false],
-        [{
-          premises: "1",
-          addressLine1: "line1",
-          addressLine2: "line2",
-          locality: "locality",
-          region: "region",
-          country: "country"
-         }, true],
-        [undefined, true]
-      ])("should compare correspondence addresses", (serviceAddress, result) => {
-        const officerFiling = {
-          isServiceAddressSameAsRegisteredOfficeAddress: false,
-          serviceAddress
-        } as OfficerFiling;
-        const companyAppointment = { ...validCompanyAppointment };
-        companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = false;
-
-        mockCompareAddress.mockReturnValue(!result);
-        const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
-        expect(mockCompareAddress).toBeCalledWith(officerFiling.serviceAddress, companyAppointment.serviceAddress);
-        expect(isAddressUpdated).toBe(result);
-      });
-  });
 });

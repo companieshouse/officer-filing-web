@@ -28,7 +28,7 @@ import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, isUpdate: boolean) => {
   try {
