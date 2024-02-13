@@ -27,7 +27,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
       enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req)
     } else {
       enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req)
-  }
+    }
 
     return res.render(templateName, {
       templateName: templateName,
