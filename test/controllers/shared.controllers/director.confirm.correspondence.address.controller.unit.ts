@@ -19,14 +19,14 @@ import {
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
-import { isCorrespondenceAddressUpdated } from "../../../src/utils/is.address.updated";
+import { checkIsCorrespondenceAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
-const mockCheckIsCorrespondenceAddress = isCorrespondenceAddressUpdated as jest.Mock;
+const mockCheckIsCorrespondenceAddress = checkIsCorrespondenceAddressUpdated as jest.Mock;
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";

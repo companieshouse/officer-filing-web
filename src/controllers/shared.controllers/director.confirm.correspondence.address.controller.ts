@@ -11,7 +11,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { isCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
@@ -56,7 +56,7 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (isCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
+      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }
       else {

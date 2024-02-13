@@ -2,9 +2,8 @@ jest.mock("../../src/utils/address");
 
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
-import { isCorrespondenceAddressUpdated } from "../../src/utils/is.address.updated";
+import { checkIsCorrespondenceAddressUpdated } from "../../src/utils/is.address.updated";
 import { compareAddress } from "../../src/utils/address";
-
 
 const mockCompareAddress = compareAddress as jest.Mock;
 
@@ -22,7 +21,7 @@ describe("isCorrespondenceAddressUpdate tests", () => {
     const companyAppointment = { ...validCompanyAppointment };
     companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = appointmentFlag;
 
-    const isAddressUpdated = isCorrespondenceAddressUpdated(officerFiling, companyAppointment);
+    const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
      expect(mockCompareAddress).not.toBeCalled();
     expect(isAddressUpdated).toBe(result);
   });
@@ -47,7 +46,7 @@ describe("isCorrespondenceAddressUpdate tests", () => {
     companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = false;
 
     mockCompareAddress.mockReturnValue(!result);
-    const isAddressUpdated = isCorrespondenceAddressUpdated(officerFiling, companyAppointment);
+    const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
     expect(mockCompareAddress).toBeCalledWith(officerFiling.serviceAddress, companyAppointment.serviceAddress);
     expect(isAddressUpdated).toBe(result);
   });
