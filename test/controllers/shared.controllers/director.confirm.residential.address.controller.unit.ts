@@ -68,7 +68,6 @@ describe("Director confirm residential address controller tests", () => {
     });
   
     describe("get tests", () => {
- /* 
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("Should navigate to '%s' page", async (url) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith"
@@ -162,7 +161,6 @@ describe("Director confirm residential address controller tests", () => {
         const response = await request(app).get(url);
         expect(response.text).toContain("backLink=confirm-residential-address");
       });
-      */
     });
 
     describe("post tests", () => {
