@@ -6,6 +6,7 @@ jest.mock("../../../src/services/company.appointments.service");
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../../src/app";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 import {
   DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
@@ -27,8 +28,9 @@ import { getCompanyAppointmentFullRecord } from "../../../src/services/company.a
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
-const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -151,7 +153,13 @@ describe('Director correspondence address search controller test', () => {
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain("%%%%%%");
       expect(response.text).toContain("ゃ");
-      expect(response.text).toContain("John Smith");
+      if(url == PAGE_URL) {
+        // from filing
+        expect(response.text).toContain("John Smith");
+      } else {
+        // from company appointment
+        expect(response.text).toContain("John Elizabeth Doe")
+      }
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();

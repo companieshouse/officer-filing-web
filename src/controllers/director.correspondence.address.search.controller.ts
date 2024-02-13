@@ -10,7 +10,7 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
   return getCorrespondenceAddressLookUp(req, res, next, 
                                         Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH, 
                                         DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, 
-                                        DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH);
+                                        DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, false);
 }
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {

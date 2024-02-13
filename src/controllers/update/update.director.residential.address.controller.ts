@@ -5,7 +5,7 @@ import { getDirectorResidentialAddress, postDirectorResidentialAddress } from ".
 import { Templates } from "../../types/template.paths";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
-  getDirectorResidentialAddress(req, res, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH);
+  getDirectorResidentialAddress(req, res, next, Templates.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, true);
 }
 
 export const post = (req: Request, res: Response, next: NextFunction) => {

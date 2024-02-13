@@ -12,7 +12,7 @@ import {
 import { urlUtils } from "../../utils/url";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
 import { PostcodeValidation, PremiseValidation } from "../../validation/address.validation.config";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -22,7 +22,7 @@ import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
-import { getCountryFromKey } from "../../utils/web";
+import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
@@ -30,17 +30,18 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsCorrespondenceAddressUpdated } from "./director.correspondence.address.manual.controller";
 
-export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string) => {
+export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     return res.render(templateName, {
       templateName: templateName,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
       backLinkUrl: urlUtils.getUrlToPath(backLink, req),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+      directorName: formatTitleCase(directorName),
       postcode: officerFiling.serviceAddress?.postalCode,
       premises: officerFiling.serviceAddress?.premises,
     });
@@ -57,9 +58,6 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const correspondencePostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
     const correspondencePremise : string = (req.body[DirectorField.PREMISES])?.trim();
-    const templateName = isUpdate ? Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH : Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH;
-    const backLink = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_PATH;
-    const manualAddressPath = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
     const nextPageConfirmUrl = isUpdate ? UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
     const nextPage = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH;
 
@@ -75,15 +73,17 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
                        "postalCode": correspondencePostalCode,
                        "country" : ""}    };
 
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, prepareOfficerFiling);
+
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualAddressPath);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, isUpdate, directorName);
     }
 
     // Validate postcode field for UK postcode, render errors if postcode not found.
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
-      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, backLink, manualAddressPath);
+      return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, isUpdate, directorName);
     }
 
     // Patch the filing with updated information
@@ -122,7 +122,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
 };
 
 const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
-  if(isUpdate) {
+  if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
@@ -132,12 +132,15 @@ const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Sessio
   }
 };
 
-const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string, manualAddressLink: string) => {
+const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], isUpdate: boolean, directorName: string) => {
+  const backLink = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_PATH;
+  const manualAddressPath = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
+  const templateName = isUpdate ? Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH : Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH;
   return res.render(templateName, {
     templateName: templateName,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressLink, req),
+    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
     backLinkUrl: urlUtils.getUrlToPath(backLink, req),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+    directorName: formatTitleCase(directorName),
     postcode: officerFiling.serviceAddress?.postalCode,
     premises: officerFiling.serviceAddress?.premises,
     errors: formatValidationErrors(validationErrors)
