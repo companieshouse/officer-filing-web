@@ -120,8 +120,8 @@ const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Sessio
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-      { ...officerFiling,
-      residentialAddress: officerFiling.residentialAddress }, companyAppointment);
+      { ...officerFiling, residentialAddress: officerFiling.residentialAddress },
+      companyAppointment);
   }
 }
 
