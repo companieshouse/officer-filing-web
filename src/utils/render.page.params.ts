@@ -1,7 +1,7 @@
 import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
-import {FormattedValidationErrors, ValidationError} from "../model/validation.model";
-import {CompanyProfile} from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
+import { FormattedValidationErrors, ValidationError } from "../model/validation.model";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 /**
  * Interface for the renderPage function parameters for array address pages

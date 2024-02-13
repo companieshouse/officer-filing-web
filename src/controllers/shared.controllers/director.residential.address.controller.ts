@@ -12,7 +12,7 @@ import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { whereDirectorLiveResidentialErrorMessageKey } from '../../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../../validation/validation';
-import { FormattedValidationErrors, ValidationError } from "../../model/validation.model";
+import { ValidationError } from "../../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase } from "../../utils/format";
@@ -23,7 +23,7 @@ import { ResidentialManualAddressValidation } from "../../validation/address.val
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
-import {RenderAddressRadioParams} from "../../utils/render.page.params";
+import { RenderAddressRadioParams } from "../../utils/render.page.params";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
