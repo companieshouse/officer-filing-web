@@ -75,38 +75,35 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
     
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    let path: string;
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      if(isUpdate) {
-        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
-      } else {
-        return res.redirect(urlUtils.getUrlToPath(DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH, req));
-      }
+      path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
+      return redirectToPath(path, req, res);
     }
-    
+
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      if(isUpdate){
-        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
-      }
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req));
+      path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
+      return redirectToPath(path, req, res);
     }
-    else if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      if(isUpdate){
-        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
-      }
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH, req));
+
+    if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+      path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
+      return redirectToPath(path, req, res);
     }
-    else {
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      if(isUpdate){
-        return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
-      }
-      return res.redirect(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req));
-    }
+
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
+    return redirectToPath(path, req, res);
+
 
   } catch(e) {
     next(e);
   }
+};
+
+const redirectToPath = (path: string, req: Request, res: Response) => {
+    return res.redirect(urlUtils.getUrlToPath(path, req));
 };
 
 const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, companyProfile: CompanyProfile, officerFilingBody: OfficerFiling): boolean => {
