@@ -502,7 +502,6 @@ describe("Director name controller tests", () => {
       })
 
       //expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
-      console.log(response.text);
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH} page if correspondence address is selected and CYA link established`, async (url) => {

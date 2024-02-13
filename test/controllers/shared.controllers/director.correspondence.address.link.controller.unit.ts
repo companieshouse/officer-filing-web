@@ -64,9 +64,9 @@ describe("Director correspondence address link controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
-      mockGetOfficerFiling.mockClear();
-      mockGetCompanyAppointmentFullRecord.mockClear();
-      mockPatchOfficerFiling.mockClear();
+      mockGetOfficerFiling.mockReset();
+      mockGetCompanyAppointmentFullRecord.mockReset();
+      mockPatchOfficerFiling.mockReset();
     });
   
     describe("get tests", () => {
@@ -194,11 +194,12 @@ describe("Director correspondence address link controller tests", () => {
       it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should mark service address updated if link value changes", async (url, redirectLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456",
+          isServiceAddressSameAsRegisteredOfficeAddress: true
         })
         if(url === UPDATE_PAGE_URL){
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: false});
         }
-          const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
+        const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
         {isServiceAddressSameAsRegisteredOfficeAddress: true, correspondenceAddressHasBeenUpdated: true})
@@ -209,7 +210,8 @@ describe("Director correspondence address link controller tests", () => {
       it.each([[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should not mark service address updated if link value remains the same", async (url, redirectLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456",
-          serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress
+          serviceAddress: validCompanyAppointmentResource.resource?.serviceAddress,
+          isServiceAddressSameAsRegisteredOfficeAddress: true
         })
         if(url === UPDATE_PAGE_URL){
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({serviceAddressIsSameAsRegisteredOfficeAddress: true});

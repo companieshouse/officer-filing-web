@@ -11,7 +11,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { compareAddress } from "../../utils/address";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
@@ -56,16 +56,16 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
       const appointmentId = officerFiling.referenceAppointmentId as string;
       const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress !== companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress){
+      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
         officerFilingBody.correspondenceAddressHasBeenUpdated = true;
       }
-      else if ((compareAddress(officerFiling.serviceAddress,companyAppointment.serviceAddress))){
+      else {
         officerFilingBody.correspondenceAddressHasBeenUpdated = false;
       }
     }
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
+    return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
   }catch(e){
     return next(e);
   }

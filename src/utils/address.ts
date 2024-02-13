@@ -1,4 +1,4 @@
-import { Address} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 /**
  * Determine whether two addresses are identical.
  * @param dateToConvert 
@@ -29,4 +29,3 @@ export const compareAddress = (addressOne: Address | undefined, addressTwo: Addr
   }
   return true;
 };
-
