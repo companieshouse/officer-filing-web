@@ -13,7 +13,7 @@ import {
 } from "../../../src/types/page.urls";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling } from "../../../src/services/officer.filing.service";
-import {getCompanyAppointmentFullRecord} from "../../../src/services/company.appointments.service";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { validCompanyProfile } from "../../mocks/company.profile.mock";
 import { validCompanyAppointment } from "../../mocks/company.appointment.mock";
 

@@ -1,6 +1,9 @@
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+
 jest.mock("../../../src/utils/feature.flag");
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.profile.service");
+jest.mock("../../../src/services/company.appointments.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -29,6 +32,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/offi
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
 import { validCompanyProfile, validAddress } from "../../mocks/company.profile.mock";
 import { whereDirectorLiveResidentialErrorMessageKey } from "../../../src/utils/api.enumerations.keys";
+import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -36,6 +40,8 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 const mockMapCompanyProfileToOfficerFilingAddress = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
+const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointmentResource.resource);
 
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
@@ -158,7 +164,13 @@ describe("Director name controller tests", () => {
       mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
       const response = await request(app).get(url);
       expect(response.text).toContain(PAGE_HEADING);
-      expect(response.text).toContain(directorNameMock.firstName);
+      if(url == PAGE_URL) {
+        // from filing
+        expect(response.text).toContain("John Doe");
+      } else {
+        // from company appointment
+        expect(response.text).toContain("John Elizabeth Doe")
+      }
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);

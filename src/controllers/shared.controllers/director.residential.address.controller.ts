@@ -12,23 +12,31 @@ import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { whereDirectorLiveResidentialErrorMessageKey } from '../../utils/api.enumerations.keys';
 import { createValidationErrorBasic, formatValidationErrors } from '../../validation/validation';
-import { FormattedValidationErrors, ValidationError } from "../../model/validation.model";
+import { ValidationError } from "../../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { RenderAddressRadioParams } from "../../utils/render.page.params";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
-export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string) => {
+export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
-    const { officerFiling, companyProfile } = await urlUtilsRequestParams(req);
-    return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath);
+    const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    return renderPage(req, res, {
+      officerFiling: officerFiling,
+      companyProfile: companyProfile,
+      templateName: templateName,
+      backUrlPath: backUrlPath,
+      directorName: directorName});
   } catch (e) {
     next(e);
   }
@@ -48,10 +56,17 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
   try {
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors);
-      return renderPage(req, res, officerFiling, companyProfile, templateName, backUrlPath, formattedErrors);
+      return renderPage(req, res, {
+        officerFiling: officerFiling,
+        companyProfile: companyProfile,
+        templateName: templateName,
+        backUrlPath: backUrlPath,
+        directorName: directorName,
+        formattedErrors: formattedErrors});
     }
 
     const officerFilingBody: OfficerFiling = {
@@ -117,8 +132,8 @@ const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res
     : res.redirect(nextPageUrl);
 };
 
-const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, companyProfile: CompanyProfile, templateName: string, backUrlPath: string, formattedErrors?: FormattedValidationErrors) => {
-  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+const renderPage = (req: Request, res: Response, params: RenderAddressRadioParams) => {
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(params.companyProfile.registeredOfficeAddress);
   let canUseRegisteredOfficeAddress = false;
   if (registeredOfficeAddress !== undefined) {
       const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
@@ -129,14 +144,14 @@ const renderPage = (req: Request, res: Response, officerFiling: OfficerFiling, c
   logger.debug((canUseRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for residential address");
 
   return res.render(Templates.DIRECTOR_RESIDENTIAL_ADDRESS, {
-    templateName: templateName,
-    backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
-    errors: formattedErrors,
-    director_address: officerFiling.directorResidentialAddressChoice,
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-    manualAddress: formatDirectorResidentialAddress(officerFiling),
-    directorServiceAddressChoice: officerFiling.directorServiceAddressChoice,
+    templateName: params.templateName,
+    backLinkUrl: urlUtils.getUrlToPath(params.backUrlPath, req),
+    errors: params.formattedErrors,
+    director_address: params.officerFiling.directorResidentialAddressChoice,
+    directorName: formatTitleCase(params.directorName),
+    directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(params.companyProfile),
+    manualAddress: formatDirectorResidentialAddress(params.officerFiling),
+    directorServiceAddressChoice: params.officerFiling.directorServiceAddressChoice,
     canUseRegisteredOfficeAddress
   });
 };
