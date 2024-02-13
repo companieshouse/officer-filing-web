@@ -25,7 +25,7 @@ import { getCompanyAppointmentFullRecord } from "../../../src/services/company.a
 import { validCompanyAppointment, validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { compareAddress } from "../../../src/utils/address";
-import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.resential.address.updated";
+import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

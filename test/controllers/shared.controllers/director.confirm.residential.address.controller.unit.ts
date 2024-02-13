@@ -2,7 +2,7 @@ jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/company.appointments.service");
 jest.mock("../../../src/utils/address");
-jest.mock("../../../src/utils/is.resential.address.updated");
+jest.mock("../../../src/utils/is.address.updated");
 
 
 import mocks from "../../mocks/all.middleware.mock";
@@ -26,7 +26,7 @@ import {
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { compareAddress } from "../../../src/utils/address";
-import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.resential.address.updated";
+import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);

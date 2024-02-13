@@ -11,3 +11,13 @@ export const checkIsResidentialAddressUpdated = (officerFiling: OfficerFiling, c
   }
   return !compareAddress(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
 };
+
+export const isCorrespondenceAddressUpdated = (officerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
+  if (officerFiling.isServiceAddressSameAsRegisteredOfficeAddress === true) {
+    return companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress !== true;
+  }
+  if (companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress === true) {
+    return true;
+  }
+  return !compareAddress(officerFiling.serviceAddress, companyAppointment.serviceAddress);
+}

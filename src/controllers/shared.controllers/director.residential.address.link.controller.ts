@@ -11,7 +11,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { HA_TO_SA_ERROR } from "../../utils/constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsResidentialAddressUpdated } from "../../utils/is.resential.address.updated";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 export const getResidentialLink = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {

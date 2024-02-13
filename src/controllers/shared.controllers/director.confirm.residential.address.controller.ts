@@ -7,7 +7,7 @@ import { formatTitleCase } from "../../utils/format";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { checkIsResidentialAddressUpdated } from "../../utils/is.resential.address.updated";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
