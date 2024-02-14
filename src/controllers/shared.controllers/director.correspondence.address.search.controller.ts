@@ -12,7 +12,7 @@ import {
 import { urlUtils } from "../../utils/url";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
+import { formatTitleCase } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
 import { PostcodeValidation, PremiseValidation } from "../../validation/address.validation.config";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
