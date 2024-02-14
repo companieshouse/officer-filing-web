@@ -11,8 +11,7 @@ export const getCurrentOrFutureDissolved = async (session: Session, companyNumbe
     const status = response.httpStatusCode as number;
 
     if (status >= 400) {
-      const errorResponse = response as ApiErrorResponse;
-      throw new Error(`Error retrieving company information: ${JSON.stringify(errorResponse)}`);
+      throw new Error(`Error retrieving company information: ${JSON.stringify(response)}`);
     }
     const successfulResponse = response as Resource<boolean>;
     return successfulResponse.resource as boolean;

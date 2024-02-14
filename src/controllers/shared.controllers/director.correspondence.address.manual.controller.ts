@@ -95,7 +95,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     }
 
     // Patch filing with updated information
-    let officerFilingBody: OfficerFiling = {
+    const officerFilingBody: OfficerFiling = {
       serviceAddress: serviceAddress
     };
 
@@ -109,7 +109,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
       }
     }
 
-    officerFilingBody = (await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody)).data;
+    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     // Validate filing
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);

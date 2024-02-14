@@ -59,7 +59,7 @@ function saveReturnPageInSession(req: Request): string {
 }
 
 function getReturnPageFromSession(session: Session): string {
-    const returnPage = session?.getExtraData(SIGNOUT_RETURN_URL_SESSION_KEY) as string | undefined
+    const returnPage = session?.getExtraData(SIGNOUT_RETURN_URL_SESSION_KEY)
     if (returnPage !== undefined && typeof returnPage === 'string') return returnPage
 
     logger.error(`Unable to find page to return the user to. ` 
