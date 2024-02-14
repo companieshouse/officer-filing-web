@@ -74,7 +74,7 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
       return renderPage(req, res, residentialAddress, originalFiling, jsValidationErrors, templateName, backLink);
     }
     // Patch filing with updated information
-    let officerFilingBody: OfficerFiling = {
+    const officerFilingBody: OfficerFiling = {
       residentialAddress: residentialAddress
     };
 
