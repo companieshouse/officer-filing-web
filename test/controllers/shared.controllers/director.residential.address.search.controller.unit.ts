@@ -141,6 +141,7 @@ describe('Director residential address search controller test', () => {
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Back");
       expect(response.text).toContain(manualEntryLink);
       if(url === UPDATE_PAGE_URL){
         expect(response.text).toContain("John Elizabeth Doe");
@@ -167,6 +168,7 @@ describe('Director residential address search controller test', () => {
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
       expect(response.text).toContain(manualEntryLink);
       if(url === UPDATE_PAGE_URL){
         expect(response.text).toContain("John Elizabeth Doe");
@@ -203,6 +205,7 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain("SW1A1AA");
       expect(response.text).toContain("123");
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Back");
       expect(response.text).toContain(manualEntryLink);
     });
 
@@ -225,6 +228,7 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain("SW1A1AA");
       expect(response.text).toContain("123");
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
       expect(response.text).toContain(manualEntryLink);
     });
   });
