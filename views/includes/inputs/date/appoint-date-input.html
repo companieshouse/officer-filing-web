@@ -48,28 +48,31 @@
   namePrefix: "appointment_date",
   fieldset: {
     legend: {
-      text: "When was the director appointed?",
+      text: i18n.dateDetailsDateOfAppointment,
       isPageHeading: true,
       classes: "govuk-fieldset__legend--m"
     }
   },
   hint: {
-    text: "For example, 24 5 2023"
+    text: i18n.dateDetailsDateOfAppointmentHint
   },
   items: [
     {
+      label: i18n.day,
       classes: appointment_date_classes_day,
       name: "day",
       value: appointment_date["appointment_date-day"] if appointment_date,
       pattern: "*"
     },
     {
+      label: i18n.month,
       classes: appointment_date_classes_month,
       name: "month",
       value: appointment_date["appointment_date-month"] if appointment_date,
       pattern: "*"
     },
     {
+      label: i18n.year,
       classes: appointment_date_classes_year,
       name: "year",
       value: appointment_date["appointment_date-year"] if appointment_date,

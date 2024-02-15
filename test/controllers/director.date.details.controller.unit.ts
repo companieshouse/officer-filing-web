@@ -60,6 +60,17 @@ describe("Director date details controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
+      it("Should navigate to director date details page in welsh", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: APPOINTMENT_ID
+        });
+
+        const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL + "?lang=cy");
+        expect(response.text).toContain("to be translated");
+  
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
       it("should catch error if getofficerfiling error on get", async () => {
         const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL);
         expect(response.text).not.toContain(PAGE_HEADING);
@@ -138,7 +149,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if dob day is not a number", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date of birth must be a real date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -157,7 +167,6 @@ describe("Director date details controller tests", () => {
       });
   
       it("Should display error before patching if dob month cannot exist", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date of birth must be a real date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -176,7 +185,6 @@ describe("Director date details controller tests", () => {
       });
   
       it("Should display error before patching if dob year is missing", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date of birth must include a year");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -195,7 +203,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if appointed day is not a number", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must be a real date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID,
         });
@@ -214,7 +221,6 @@ describe("Director date details controller tests", () => {
       });
   
       it("Should display error before patching if appointed month cannot exist", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must be a real date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID,
         });
@@ -233,7 +239,6 @@ describe("Director date details controller tests", () => {
       });
   
       it("Should display error before patching if appointed year is missing", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must include a year");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID,
         });
@@ -252,7 +257,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if dob would be under the age of 16", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("You can only appoint a person as a director if they are at least 16 years old");
         mockGetOfficerFiling.mockReturnValue({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -286,7 +290,6 @@ describe("Director date details controller tests", () => {
       
 
       it("Should display error before patching if dob would be over the age of 110", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("You can only appoint a person as a director if they are under 110 years old");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -305,7 +308,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if date of appointment is in the future", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Enter a date that is today or in the past");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -324,7 +326,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if date of appointment is in the future", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("Date the director was appointed must be on or after the incorporation date");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -343,7 +344,6 @@ describe("Director date details controller tests", () => {
       });
 
       it("Should display error before patching if director would be under 16 on date of appointment", async () => {
-        jest.spyOn(apiEnumerations, 'lookupWebValidationMessage').mockReturnValueOnce("You can only appoint a person as a director if they are at least 16 years old");
         mockGetOfficerFiling.mockReturnValueOnce({
           referenceAppointmentId: APPOINTMENT_ID
         });
@@ -352,10 +352,10 @@ describe("Director date details controller tests", () => {
           .post(DIRECTOR_DATE_DETAILS_URL)
           .send({ "dob_date-day": "15",
                   "dob_date-month": "08",
-                  "dob_date-year": "1950",
+                  "dob_date-year": String(new Date().getFullYear()),
                   "appointment_date-day": "10",
                   "appointment_date-month": "09",
-                  "appointment_date-year": "1960" });
+                  "appointment_date-year": "1973" });
   
         expect(response.text).toContain("You can only appoint a person as a director if they are at least 16 years old");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();

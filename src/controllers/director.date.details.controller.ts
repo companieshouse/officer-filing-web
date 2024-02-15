@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { ValidationError } from "../model/validation.model";
@@ -16,6 +16,7 @@ import { setBackLink, setRedirectLink } from "../utils/web";
 import { buildDateString } from "../utils/date";
 import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
 import { getCompanyProfile } from "../services/company.profile.service";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -81,7 +82,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     await patchOfficerFiling(session, transactionId, submissionId, updateFiling);
 
     const nextPageUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req);
-    return res.redirect(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl));
+    const lang = selectLang(req.query.lang);
+    return res.redirect(addLangToUrl(await setRedirectLink(req, officerFiling.checkYourAnswersLink, nextPageUrl), lang));
 
   } catch (e) {
     return next(e);
@@ -105,12 +107,17 @@ const renderPage = (res: Response, req: Request, officerFiling: OfficerFiling, v
     }
   };
 
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
+
   return res.render(Templates.DIRECTOR_DATE_DETAILS, {
     templateName: Templates.DIRECTOR_DATE_DETAILS,
+    ...getLocaleInfo(locales, lang),
+    currentUrl: urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req),
     backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
     optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
     directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-    errors: formatValidationErrors(validationErrors),
+    errors: formatValidationErrors(validationErrors, lang),
     ...dates,
   });
 }
