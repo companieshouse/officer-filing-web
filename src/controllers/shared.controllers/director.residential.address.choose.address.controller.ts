@@ -91,7 +91,7 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
 
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
   }

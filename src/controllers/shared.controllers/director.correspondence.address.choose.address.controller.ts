@@ -87,7 +87,7 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
 
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment); 
   }

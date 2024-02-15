@@ -116,7 +116,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
 const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
       { ...officerFiling, residentialAddress: officerFiling.residentialAddress },

@@ -124,7 +124,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
 const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
       { ...officerFiling, residentialAddress: officerFiling.residentialAddress },
