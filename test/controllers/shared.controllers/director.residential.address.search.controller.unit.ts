@@ -179,6 +179,27 @@ describe('Director residential address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it.each([
+      [PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should navigate to director residential address search page when ROA undefined", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(undefined);
+
+      const response = await request(app).get(url);
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
+      
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(url);
