@@ -17,13 +17,15 @@ import { ValidationError } from "../../model/validation.model";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { validatePostcode } from "../../validation/postcode.validation";
-import { PostcodeValidation, PremiseValidation } from "../../validation/address.validation.config";
+import { PostcodeValidation, PremiseValidation, ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
+import { validateManualAddress } from "../../validation/manual.address.validation";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
@@ -35,7 +37,7 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     return res.render(templateName, {
       templateName: templateName,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
-      backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
+      backLinkUrl:  await getBackLink(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks),
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises
@@ -148,7 +150,7 @@ const renderPage = async (res: Response, req: Request, officerFiling : OfficerFi
   return res.render(templateName, {
     templateName: templateName,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
-    backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
+    backLinkUrl: await getBackLink(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks),
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.residentialAddress?.postalCode,
     premises: officerFiling.residentialAddress?.premises,
@@ -158,6 +160,20 @@ const renderPage = async (res: Response, req: Request, officerFiling : OfficerFi
 
 
 export interface PageLinks {
-  backLink: string,
+  backLinkWhenCompleteROA: string,
+  backLinkWhenIncompleteROA: string,
   manualEntryLink: string
 }
+
+const getBackLink = async (req: Request, companyNumber: string, pageLinks: PageLinks) => {
+  const companyProfile = await getCompanyProfile(companyNumber);
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+  if (registeredOfficeAddress === undefined) {
+    return urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req);
+  }
+  const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
+  if (registeredOfficeAddressAsCorrespondenceAddressErrors.length !== 0) {
+    return urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req);
+  }
+  return urlUtils.getUrlToPath(pageLinks.backLinkWhenCompleteROA, req);
+};
