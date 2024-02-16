@@ -13,6 +13,7 @@ import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
 import { getField, setRedirectLink } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
 
 import { Session } from "@companieshouse/node-session-handler";
 
@@ -23,11 +24,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
+      ...getLocaleInfo(locales, lang),
+      currentUrl: req.originalUrl,
     });
   } catch (e) {
     return next(e);
@@ -40,6 +46,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
@@ -49,17 +57,19 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
-      const formattedErrors = formatValidationErrors(validationErrors);
+      const formattedErrors = formatValidationErrors(validationErrors, lang);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-        backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+        backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),
+        ...getLocaleInfo(locales, lang),
+        currentUrl: req.originalUrl,
       });
     }
 
-    const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     next(e);
