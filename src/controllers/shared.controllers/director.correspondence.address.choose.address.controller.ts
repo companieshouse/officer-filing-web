@@ -89,7 +89,10 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment); 
+    patchFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: patchFiling.serviceAddress }, 
+      companyAppointment
+    );
   }
   
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);

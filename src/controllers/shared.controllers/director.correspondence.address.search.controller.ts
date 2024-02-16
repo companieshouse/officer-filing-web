@@ -103,7 +103,9 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
-          setUpdateBoolean(req, isUpdate, session, officerFiling);
+
+          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
@@ -121,13 +123,13 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
 };
 
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isServiceAddressSameAsRegisteredOfficeAddress: boolean | undefined) => {
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-      { ...officerFiling, residentialAddress: officerFiling.residentialAddress },
+      { isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
       companyAppointment);
   }
 };

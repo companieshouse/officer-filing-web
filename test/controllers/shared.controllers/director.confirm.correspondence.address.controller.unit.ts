@@ -140,7 +140,6 @@ describe("Director confirm correspondence address controller tests", () => {
     });
 
     describe("post tests", () => {
-
       it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456"
@@ -224,7 +223,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: false})
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -238,7 +237,7 @@ describe("Director confirm correspondence address controller tests", () => {
         });
         if (url === UPDATE_PAGE_URL) {
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-            serviceAddressIsSameAsRegisteredOfficeAddress: false
+            serviceAddressIsSameAsRegisteredOfficeAddress: true
           });
         }
         mockPatchOfficerFiling.mockResolvedValueOnce({
@@ -256,7 +255,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false })
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -270,7 +269,7 @@ describe("Director confirm correspondence address controller tests", () => {
         });
         if (url === UPDATE_PAGE_URL) {
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-            serviceAddressIsSameAsRegisteredOfficeAddress: false
+            serviceAddressIsSameAsRegisteredOfficeAddress: true
           });
         }
         mockPatchOfficerFiling.mockResolvedValueOnce({
@@ -280,7 +279,7 @@ describe("Director confirm correspondence address controller tests", () => {
             isServiceAddressSameAsRegisteredOfficeAddress: true
           }
         });
-            
+          
         const response = await request(app).post(url);
         if (url === UPDATE_PAGE_URL) {
           expect(mockPatchOfficerFiling).toBeCalledTimes(1);
@@ -288,7 +287,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);

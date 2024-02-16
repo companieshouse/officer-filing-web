@@ -96,7 +96,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "country" : getCountryFromKey(ukAddress.country)}
           };
           
-          setUpdateBoolean(req, isUpdate, session, officerFiling);
+          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isHomeAddressSameAsServiceAddress);
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           return res.redirect(getConfirmAddressPath(req, isUpdate));
@@ -113,13 +113,13 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
   }
 };
 
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isHomeAddressSameAsServiceAddress: boolean | undefined) => {
   if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-      { ...officerFiling, residentialAddress: officerFiling.residentialAddress },
+      { isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
       companyAppointment);
   }
 }

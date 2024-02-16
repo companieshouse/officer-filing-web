@@ -45,7 +45,7 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
       const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
       officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-        { ...officerFilingBody, residentialAddress: officerFiling.residentialAddress },
+        { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
         companyAppointment
       );
     }

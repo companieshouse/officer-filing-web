@@ -212,14 +212,17 @@ describe('Director correspondence address search controller test', () => {
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to '%s' page when premise is part of returned addresses", async (url, redirectUrl) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(response.text).toContain("Found. Redirecting to " + redirectUrl);
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to '%s' page when premise is part of returned addresses - case and space insensitivity", async (url, redirectUrl) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
