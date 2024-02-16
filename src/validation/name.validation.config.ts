@@ -78,7 +78,7 @@ export const NameValidation: GenericValidationType = {
         ErrorField: {
             messageKey: formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED,
             source: [DirectorField.PREVIOUS_NAMES_RADIO],
-            link: DirectorField.PREVIOUS_NAMES_RADIO
+            link: DirectorField.YES
         }
     },
     PreviousNamesMissing: {
