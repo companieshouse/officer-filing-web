@@ -10,6 +10,10 @@
   "error-last-name-blank": "Enter the director’s last name",
   "error-last-name-characters": "Last name must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
   "error-last-name-length": "Last name must be 160 characters or less",
+  "error-former-names-length": "Previous names must be 160 characters or less",
+  "error-former-names-characters": "Previous names must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
+  "error-previous-names-radio-unselected": "Select yes if the director used a different name for business purposes in the last 20 years",
+  "error-previous-names-missing": "Enter the director’s previous name or names",
   "error-change-date-missing-day": "Date the director’s details changed must include a day",
   "error-change-date-missing-month": "Date the director’s details changed must include a month",
   "error-change-date-missing-year": "Date the director’s details changed must include a year",
@@ -43,5 +47,6 @@
   "error-removal-date-in-past" : "Enter a date that is today or in the past",
   "error-removal-date-after-incorporation-date": "Enter a date that is on or after the company's incorporation date",
   "error-removal-date-after-2009": "Enter a date that is on or after 1 October 2009. If the director was removed before this date, you must file form 288b instead",
-  "error-sa-to-roa" : "Select yes if the registered office address changes in the future, and you want this to apply to your correspondence address too"
+  "error-sa-to-roa" : "Select yes if the registered office address changes in the future, and you want this to apply to your correspondence address too",
+  "error-no-protected-details-radio-button-selected" : "Select whether the director has applied to protect their details at Companies House"
 }

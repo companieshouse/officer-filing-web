@@ -144,8 +144,7 @@ const validateLastName = (lastName: string, nameValidationType: NameValidationTy
 
 const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
     if (!previousNamesRadio) {
-        const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
-        validationErrors.push(createValidationError(errorMessage, [DirectorField.PREVIOUS_NAMES_RADIO], DirectorField.YES));
+        validationErrors.push(nameValidationType.PreviousNamesRadioUnselected.Name);
     }
     else if (previousNamesRadio == DirectorField.YES) {
         if(formerNames != null && formerNames != "") {
@@ -157,8 +156,7 @@ const validateFormerNames = (formerNames: string, previousNamesRadio: string, na
                 validationErrors.push(nameValidationType.PreviousNamesLength.Name);
             }
         } else {
-            const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
-            validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
+            validationErrors.push(nameValidationType.PreviousNamesMissing.Name);
         }
     }
 }

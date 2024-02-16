@@ -95,8 +95,8 @@ export enum lastNameErrorMessageKey {
 }
 
 export enum formerNamesErrorMessageKey {
-  FORMER_NAMES_RADIO_UNSELECTED = "Select yes if the director used a different name for business purposes in the last 20 years",
-  FORMER_NAMES_MISSING = "Enter the director’s previous name or names",
+  FORMER_NAMES_RADIO_UNSELECTED = "previous-names-radio-unselected",
+  FORMER_NAMES_MISSING = "previous-names-missing",
   FORMER_NAMES_CHARACTERS = "former-names-characters",
   FORMER_NAMES_LENGTH = "former-names-length"
 }
@@ -240,7 +240,7 @@ export enum whereDirectorLiveResidentialErrorMessageKey {
 }
 
 export enum protectedDetailsErrorMessageKey {
-  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "Select whether the director has applied to protect their details at Companies House"
+  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "no-protected-details-radio-button-selected"
 }
 
 export enum whereDirectorLiveCorrespondenceErrorMessageKey {

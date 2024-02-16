@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?" %}
+{% set title = i18n.directorCorrespondenceAddressLinkTitle %}
 {% set radioName = "sa_to_roa" %}
 
 {% block pageTitle %}
@@ -17,7 +17,6 @@
       <form action="" method="post">
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
-        {% set hintText =  "The director's correspondence address will be recorded as the 'same as the registered office address'. This means future changes will also apply to the director's correspondence address." %}
         {% set fieldset = {
             legend: {
               text: title,
@@ -35,9 +34,9 @@
           items: [
             {
               value: "sa_to_roa_yes",
-              text: "Yes",
+              text: i18n.yes,
               hint: {
-                text: hintText
+                text: i18n.directorCorrespondenceAddressLinkYesHint
               },
               checked: sa_to_roa === "sa_to_roa_yes",
               attributes: {
@@ -46,9 +45,9 @@
             },
             {
               value: "sa_to_roa_no",
-              text: "No",
+              text: i18n.no,
               hint: {
-                text: "You’ll have to update the correspondence address manually if it changes."
+                text: i18n.directorCorrespondenceAddressLinkNoHint
               },
               checked: sa_to_roa === "sa_to_roa_no",
               attributes: {
@@ -64,7 +63,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

@@ -106,7 +106,7 @@ describe("Director date details controller tests", () => {
 
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
 
-      expect(response.text).toContain("Name, Residential Address, Correspondence Address");
+      expect(response.text).toContain("Name, Home Address, Correspondence Address");
     });
 
     it("Should display all dynamic content for update submitted based on officerFiling", async () => {
@@ -122,7 +122,7 @@ describe("Director date details controller tests", () => {
 
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
 
-      expect(response.text).toContain("Name, Nationality, Occupation, Residential Address, Correspondence Address");
+      expect(response.text).toContain("Name, Nationality, Occupation, Home Address, Correspondence Address");
     });
 
   });

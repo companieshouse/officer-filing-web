@@ -17,13 +17,18 @@ import { ValidationError } from "../../model/validation.model";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { validatePostcode } from "../../validation/postcode.validation";
-import { PostcodeValidation, PremiseValidation } from "../../validation/address.validation.config";
+import { PostcodeValidation, PremiseValidation, ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
+import { validateManualAddress } from "../../validation/manual.address.validation";
+
+const incompleteROABackLinkText = "Go back to 'What is the directors correspondence address?'";
+const completeROABackLinkText = "Back";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
@@ -32,10 +37,13 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
+
     return res.render(templateName, {
       templateName: templateName,
       enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
-      backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
+      backLinkUrl:  backLinkInfo.backLinkUrl,
+      backLinkText: backLinkInfo.backLinkText,
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.residentialAddress?.postalCode,
       premises: officerFiling.residentialAddress?.premises
@@ -145,10 +153,12 @@ const getAddressSearchPath = (req: Request, isUpdate: boolean) => {
 const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   const session: Session = req.session as Session;
   const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+  const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
   return res.render(templateName, {
     templateName: templateName,
     enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
-    backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLink, req),
+    backLinkUrl: backLinkInfo.backLinkUrl,
+    backLinkText: backLinkInfo.backLinkText,
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.residentialAddress?.postalCode,
     premises: officerFiling.residentialAddress?.premises,
@@ -156,8 +166,21 @@ const renderPage = async (res: Response, req: Request, officerFiling : OfficerFi
   });
 }
 
-
 export interface PageLinks {
-  backLink: string,
+  backLinkWhenCompleteROA: string,
+  backLinkWhenIncompleteROA: string,
   manualEntryLink: string
 }
+
+const getBackLinkInfo = async (req: Request, companyNumber: string, pageLinks: PageLinks) => {
+  const companyProfile = await getCompanyProfile(companyNumber);
+  const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+  if (registeredOfficeAddress === undefined) {
+    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: incompleteROABackLinkText};
+  }
+  const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
+  if (registeredOfficeAddressAsCorrespondenceAddressErrors.length !== 0) {
+    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: incompleteROABackLinkText };
+  }
+  return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenCompleteROA, req), backLinkText: completeROABackLinkText };
+};
