@@ -7,7 +7,7 @@ export const CorrespondenceAddressValidation: GenericValidationType = {
     ErrorField: {
       messageKey: correspondenceAddressErrorMessageKey.CORRESPONDENCE_ADDRESS_BLANK,
       source: [DirectorField.CORRESPONDENCE_ADDRESS_RADIO],
-      link: DirectorField.CORRESPONDENCE_ADDRESS_RADIO
+      link: "director_registered_address"
     }
   }
 }
