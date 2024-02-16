@@ -240,7 +240,7 @@ export enum whereDirectorLiveResidentialErrorMessageKey {
 }
 
 export enum protectedDetailsErrorMessageKey {
-  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "Select whether the director has applied to protect their details at Companies House"
+  NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED = "no-protected-details-radio-button-selected"
 }
 
 export enum whereDirectorLiveCorrespondenceErrorMessageKey {
