@@ -29,8 +29,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-
-      backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+      backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
       ...getLocaleInfo(locales, lang),
@@ -58,12 +57,10 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
-    console.log("validationErrors == ");
-    console.log(validationErrors);
       const formattedErrors = formatValidationErrors(validationErrors, lang);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-        backLinkUrl:  urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req),
+        backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),
@@ -72,7 +69,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    const nextPageUrl = urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
     return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
   } catch (e) {
     next(e);
