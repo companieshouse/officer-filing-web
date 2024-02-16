@@ -70,7 +70,7 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
       
       officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-        { ...officerFilingBody, serviceAddress: officerFiling.serviceAddress }, 
+        { isServiceAddressSameAsRegisteredOfficeAddress: officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress }, 
         companyAppointment);
     }
 
