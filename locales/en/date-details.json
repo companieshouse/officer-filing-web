@@ -1,0 +1,8 @@
+{
+  "dateDetailsTitle": "Date details",
+  "dateDetailsInsetText": "We will show the director's month and year of birth and the date the director was appointed on the public Companies House register.",
+  "dateDetailsDateOfBirth": "What is the director's date of birth?",
+  "dateDetailsDateOfBirthHint": "For example, 27 3 1995",
+  "dateDetailsDateOfAppointment": "When was the director appointed?",
+  "dateDetailsDateOfAppointmentHint": "For example, 24 5 2023"
+}
