@@ -118,6 +118,15 @@ describe("Director protected details controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
 
+      it("Should render the page in welsh", async () => {
+       mockGetOfficerFiling.mockResolvedValueOnce({})
+
+       const response = await request(app).get(PAGE_URL+ "?lang=cy").set({"referer": "protected-details"});
+
+       expect(response.text).toContain("to be translated");
+
+      });
+
     });
 
     describe("post tests", () => {
@@ -153,7 +162,7 @@ describe("Director protected details controller tests", () => {
 
         const response = await request(app).post(PAGE_URL);
 
-        expect(response.text).toContain(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED);
+        expect(response.text).toContain("Select whether the director has applied to protect their details at Companies House");
       });
 
       it("should catch error if patch officer filing failed", async () => {

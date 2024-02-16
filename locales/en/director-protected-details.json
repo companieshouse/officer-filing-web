@@ -1,0 +1,16 @@
+{
+  "directorProtectedDetailsTitle": "Does the director have their personal information protected at Companies House?",
+  "directorProtectedDetailsBackLinkText": "Go back to 'Where does the director live?'",
+  "directorProtectedDetailsProtectedDetails": "Does the director have their personal information protected at Companies House?",
+  "directorProtectedDetailsProtectedDetailsHint": "This includes if they are waiting for the results of an application to protect their personal information.",
+  "directorProtectedDetailsProtectedDetailsNo": "No",
+  "directorProtectedDetailsProtectedDetailsYes": "Yes",
+  "directorProtectedDetailsProtectedDetailsYesHint": "We’ll need to check that the director has applied to protect their details, so your submission will take longer to process.",
+  "directorProtectedDetailsProtectedDetailsInsetText": "We will reject your filing if you select ‘yes’ and the director has not applied to protect their details.",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails1": "Some directors can apply to protect personal information from being shown on the Companies House public online register if they meet certain criteria.",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails2": "You should only select ‘yes’ if the director has:",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails3": "provided evidence that they are eligible to have their details protected",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails4": "paid the £100 fee",
+  "directorProtectedDetailsProtectedDetailsErrorMessage": "Select whether the director has applied to protect their details at Companies House",
+  "directorProtectedDetailsProtectedDetailsGovUKDetails": " What having personal information protected means"
+}

@@ -7,7 +7,7 @@ import { formatTitleCase } from "../../services/confirm.company.service";
 import { DirectorField } from "../../model/director.model";
 import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
-import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
+import { selectLang, getLocalesService, getLocaleInfo, addLangToUrl } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -25,7 +25,7 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
 
     return res.render(templateName,{
       templateName: templateName,
-      backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
+      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(directorName),
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
@@ -53,7 +53,7 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
         templateName: templateName,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
-        backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
+        backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
         directorName: formatTitleCase(directorName),
         errors: formatValidationErrors([linkError], lang)
       });
@@ -75,10 +75,10 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    if (isServiceAddressSameAsRegisteredOfficeAddress === true) {
-      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.yes, req));
+    if (isServiceAddressSameAsRegisteredOfficeAddress) {
+      return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl.yes, req), lang));
     } else {
-      return res.redirect(urlUtils.getUrlToPath(nextPageUrl.no, req));
+      return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl.no, req), lang));
     }
   } catch (e) {
     next(e);

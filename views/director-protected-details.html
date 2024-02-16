@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% set title = "Does the director have their personal information protected at Companies House?" %}
+{% set title = i18n.directorProtectedDetailsTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
-  {% set backLinkText = "Go back to 'Where does the director live?'" %}
+  {% set backLinkText = i18n.directorProtectedDetailsBackLinkText %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -26,18 +26,18 @@
           name: "protected_details",
           fieldset: {
             legend: {
-              text: "Does the director have their personal information protected at Companies House?",
+              text: i18n.directorProtectedDetailsProtectedDetails,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
           },
           hint: {
-            text: "This includes if they are waiting for the results of an application to protect their personal information."
+            text: i18n.directorProtectedDetailsProtectedDetailsHint
           },
           items: [
             {
               value: "protected_details_no",
-              text: "No",
+              text: i18n.directorProtectedDetailsProtectedDetailsNo,
               checked: protected_details === "protected_details_no",
               attributes: {
                 "data-event-id": "protected_details_no"
@@ -45,9 +45,9 @@
             },
             {
               value: "protected_details_yes",
-              text: "Yes",
+              text: i18n.directorProtectedDetailsProtectedDetailsYes,
               hint: {
-                text: "We’ll need to check that the director has applied to protect their details, so your submission will take longer to process."
+                text: i18n.directorProtectedDetailsProtectedDetailsYesHint
               },
               checked: protected_details === "protected_details_yes",
               attributes: {
@@ -58,20 +58,24 @@
         }) }}
 
         {{ govukInsetText({
-          text: "We will reject your filing if you select ‘yes’ and the director has not applied to protect their details."
+          text: i18n.directorProtectedDetailsProtectedDetailsInsetText
         }) }}
 
         {% set accordianDetails %}
-        <p>Some directors can apply to protect personal information from being shown on the Companies House public online register if they meet certain criteria.</p>
-        <p>You should only select ‘yes’ if the director has:</p>
+        <p>{{ i18n.directorProtectedDetailsProtectedDetailsAccordianDetails1 }}</p>
+        <p>{{ i18n.directorProtectedDetailsProtectedDetailsAccordianDetails2 }}</p>
         <ul class="govuk-list govuk-list--bullet">
-          <li>provided evidence that they are eligible to have their details protected</li>
-          <li>paid the £100 fee</li>
+          <li>{{ i18n.directorProtectedDetailsProtectedDetailsAccordianDetails3 }}</li>
+          <li>{{ i18n.directorProtectedDetailsProtectedDetailsAccordianDetails4 }}</li>
         </ul>
         {% endset %}
 
+        {% set summaryHtml %}
+        <div>{{ i18n.directorProtectedDetailsProtectedDetailsGovUKDetails }}</div>
+        {% endset %}
+
         {{ govukDetails({
-          summaryHtml: '<div> What having personal information protected means</div>',
+          summaryHtml: summaryHtml,
           html: accordianDetails,
           attributes: {
             "data-event-id": "protected-details-accordion-clicked"
@@ -83,7 +87,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>
