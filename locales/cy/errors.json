@@ -47,5 +47,12 @@
   "error-removal-date-in-past" : "to be translated",
   "error-removal-date-after-incorporation-date": "to be translated",
   "error-removal-date-after-2009": "to be translated",
-  "error-sa-to-roa" : "to be translated"
+  "error-sa-to-roa" : "to be translated",
+  "error-postal-code-blank": "to be translated",
+  "error-postal-code-invalid": "to be translated",
+  "error-postal-code-characters": "to be translated",
+  "error-postal-code-length": "to be translated",
+  "error-postal-code-full-invalid": "to be translated",
+  "error-premises-characters": "to be translated",
+  "error-premises-length": "to be translated"
 }
