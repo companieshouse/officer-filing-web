@@ -2,6 +2,7 @@ jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/postcode.lookup.service");
 jest.mock("../../../src/services/company.appointments.service");
+jest.mock("../../../src/services/company.profile.service");
 
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
@@ -18,7 +19,9 @@ import {
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
-  urlParams
+  urlParams,
+  DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END
 } from "../../../src/types/page.urls";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
@@ -26,6 +29,8 @@ import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../../src/s
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { validCompanyAppointmentResource } from "../../mocks/company.appointment.mock";
+import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
+
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
@@ -63,6 +68,8 @@ const CONFIRM_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
 
 const mockGetIsValidUKPostcode = getIsValidUKPostcode as jest.Mock;
 const mockGetUKAddressesFromPostcode = getUKAddressesFromPostcode as jest.Mock;
+const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+const mockMapCompanyProfileToOfficerFilingAddress = mapCompanyProfileToOfficerFilingAddress as jest.Mock;
 
 const mockResponseBodyOfUKAddress1: UKAddress = ({
   premise: "123",
@@ -97,6 +104,15 @@ const mockResponseEmptyBodyCaseInsensitivity : UKAddress[] = [
     "country": "Isle of Man"
 }];
 
+const mockValidResidentialAddress = {
+  "premises": "123",
+  "addressLine1": "Main St",
+  "addressLine2": "London",
+  "locality": "Greater London",
+  "postalCode": "SW1A 1AA",
+  "country": "England"
+};
+
 const mockResponseBodyOfUKAddresses: UKAddress[] = [mockResponseBodyOfUKAddress1, mockResponseBodyOfUKAddress2];
 
 describe('Director residential address search controller test', () => {
@@ -109,16 +125,23 @@ describe('Director residential address search controller test', () => {
   });
 
   describe("get tests",  () => {
-    it.each([[PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should navigate to director residential address search page", async (url, backLink, manualEntryLink) => {
+    it.each([
+      [PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should navigate to director residential address search page when ROA complete", async (url, backLink, manualEntryLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         firstName: "John",
         lastName: "Smith"
       })
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
       const response = await request(app).get(url);
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Back");
       expect(response.text).toContain(manualEntryLink);
       if(url === UPDATE_PAGE_URL){
         expect(response.text).toContain("John Elizabeth Doe");
@@ -129,6 +152,54 @@ describe('Director residential address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it.each([
+      [PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should navigate to director residential address search page when ROA incomplete", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce({ ...mockValidResidentialAddress, premises: undefined });
+
+      const response = await request(app).get(url);
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
+      expect(response.text).toContain(manualEntryLink);
+      if(url === UPDATE_PAGE_URL){
+        expect(response.text).toContain("John Elizabeth Doe");
+      }
+      else{
+        expect(response.text).toContain("John Smith");
+      }
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+    it.each([
+      [PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should navigate to director residential address search page when ROA undefined", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(undefined);
+
+      const response = await request(app).get(url);
+
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
+      
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(url);
@@ -136,7 +207,10 @@ describe('Director residential address search controller test', () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
 
-    it.each([[PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END,DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should populate filing on the page", async (url, backLink, manualEntryLink) => {
+    it.each([
+      [PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should populate filing on the page when ROA complete", async (url, backLink, manualEntryLink) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         residentialAddress: ( {
           postalCode: "SW1A1AA",
@@ -144,11 +218,38 @@ describe('Director residential address search controller test', () => {
           } )
       })
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
       const response = await request(app).get(url);
 
       expect(response.text).toContain("SW1A1AA");
       expect(response.text).toContain("123");
       expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Back");
+      expect(response.text).toContain(manualEntryLink);
+    });
+
+    it.each([
+      [PAGE_URL,DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END,DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH_END,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should populate filing on the page when ROA incomplete", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        residentialAddress: ( {
+          postalCode: "SW1A1AA",
+          premises: 123
+          } )
+      })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce({ ...mockValidResidentialAddress, premises: undefined });
+
+      const response = await request(app).get(url);
+
+      expect(response.text).toContain("SW1A1AA");
+      expect(response.text).toContain("123");
+      expect(response.text).toContain(backLink);
+      expect(response.text).toContain("Go back to");
       expect(response.text).toContain(manualEntryLink);
     });
   });
@@ -162,6 +263,9 @@ describe('Director residential address search controller test', () => {
         lastName: "Smith"
       })
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
       const response = await request(app).post(url)
       .send({"postcode": "%%%%%%", "premises": "ゃ"});
 
@@ -181,6 +285,9 @@ describe('Director residential address search controller test', () => {
 
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should displays errors on page if get validation status returns errors - order and priority test", async (url) => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
       const response = await request(app).post(url)
       .send({"postcode": "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%", 
              "premises": "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
@@ -193,6 +300,9 @@ describe('Director residential address search controller test', () => {
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should display error when postcode lookup service returns false", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(false);
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
       const response = await request(app).post(url).send({"postcode": "SW1A1XY"});
       
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -204,6 +314,7 @@ describe('Director residential address search controller test', () => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
+      
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"SW1A1AA");
