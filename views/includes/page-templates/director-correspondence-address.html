@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "What is the director's correspondence address?" %}
+{% set title = i18n.directorCorrespondenceAddressRadioTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -29,13 +29,13 @@
           name: "director_correspondence_address",
           fieldset: {
             legend: {
-              text: "What is the director's correspondence address?",
+              text: i18n.directorCorrespondenceAddressRadioTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
           },
           hint: {
-            text: "We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK."
+            text: i18n.directorCorrespondenceAddressRadioTitleHint
           },
           items: [
             {
@@ -46,13 +46,13 @@
                 "data-event-id": "director_registered_office_address"
               },
               hint: {
-                text: "This is the company's registered office address"              
+                text: i18n.directorCorrespondenceAddressRadioHint              
               },
               id: "director_registered_address"
             },
             {
               value: "director_different_address",
-              text: "A different address",
+              text: i18n.directorCorrespondenceAddressRadioDiffAddress,
               checked: director_correspondence_address === "director_different_address",
               attributes: {
                 "data-event-id": "director-different-correspondence-address"
@@ -68,7 +68,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

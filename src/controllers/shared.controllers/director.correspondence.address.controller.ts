@@ -6,16 +6,17 @@ import {
   DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../utils/format";
-import { createValidationErrorBasic, formatValidationErrors } from "../../validation/validation";
+import { formatValidationErrors } from "../../validation/validation";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { ValidationError } from "../../model/validation.model";
-import { whereDirectorLiveCorrespondenceErrorMessageKey } from "../../utils/api.enumerations.keys";
+import { ValidationError, GenericValidationType } from '../../model/validation.model';
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "../shared.controllers/director.residential.address.controller";
@@ -23,14 +24,20 @@ import { setBackLink, getDirectorNameBasedOnJourney } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
+import { DirectorField } from "../../model/director.model";
+import { CorrespondenceAddressValidation } from "../../validation/director.correspondence.address.config";
 
-const directorChoiceHtmlField: string = "director_correspondence_address";
+const directorChoiceHtmlField: string = DirectorField.CORRESPONDENCE_ADDRESS_RADIO;
 const registeredOfficerAddressValue: string = "director_registered_office_address";
 
 export const getDirectorCorrespondenceAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
@@ -38,6 +45,8 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(directorName),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(req, isUpdate),
     });
   } catch (e) {
     return next(e);
@@ -50,15 +59,19 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
+
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
     const companyProfile = await getCompanyProfile(companyNumber);
 
-    const validationErrors = buildResidentialAddressValidationErrors(req);
+    const validationErrors = buildResidentialAddressValidationErrors(req, CorrespondenceAddressValidation);
 
     if (validationErrors.length > 0) {
+      const lang = selectLang(req.query.lang);
+      const locales = getLocalesService();
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const formattedErrors = formatValidationErrors(validationErrors);
+      const formattedErrors = formatValidationErrors(validationErrors, lang);
       const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
       return res.render(templateName, {
@@ -68,6 +81,8 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(directorName),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+        ...getLocaleInfo(locales, lang),
+        currentUrl: getCurrentUrl(req, isUpdate),
       });
     }
 
@@ -83,31 +98,29 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
 
     if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
-      return redirectToPath(path, req, res);
+      return redirectToPath(path, req, res, lang);
     }
 
     if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
-      return redirectToPath(path, req, res);
+      return redirectToPath(path, req, res, lang);
     }
 
     if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
       path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
-      return redirectToPath(path, req, res);
+      return redirectToPath(path, req, res, lang);
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
     path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
-    return redirectToPath(path, req, res);
-
-
+    return redirectToPath(path, req, res, lang);
   } catch(e) {
     next(e);
   }
 };
 
-const redirectToPath = (path: string, req: Request, res: Response) => {
-    return res.redirect(urlUtils.getUrlToPath(path, req));
+const redirectToPath = (path: string, req: Request, res: Response, lang: string) => {
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(path, req), lang));
 };
 
 const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, companyProfile: CompanyProfile, officerFilingBody: OfficerFiling): boolean => {
@@ -127,10 +140,10 @@ const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, comp
   return useRegisteredOfficeAddress;
 };
 
-export const buildResidentialAddressValidationErrors = (req: Request): ValidationError[] => {
+export const buildResidentialAddressValidationErrors = (req: Request, correspondenceAddressValidationType: GenericValidationType): ValidationError[] => {
   const validationErrors: ValidationError[] = [];
   if (req.body[directorChoiceHtmlField] === undefined) {
-    validationErrors.push(createValidationErrorBasic(whereDirectorLiveCorrespondenceErrorMessageKey.NO_ADDRESS_RADIO_BUTTON_SELECTED, directorChoiceHtmlField));
+    validationErrors.push(correspondenceAddressValidationType.AddressBlank.ErrorField);
   }
   return validationErrors;
 };
@@ -145,3 +158,11 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
           ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
+
+ const getCurrentUrl = (req: Request, isUpdate: boolean): string => {
+  if(isUpdate){
+      return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+    } else {
+      return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+  }
+}
