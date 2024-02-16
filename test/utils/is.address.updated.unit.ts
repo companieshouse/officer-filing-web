@@ -2,12 +2,16 @@ jest.mock("../../src/utils/address");
 
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
-import { checkIsCorrespondenceAddressUpdated } from "../../src/utils/is.address.updated";
+import { checkIsCorrespondenceAddressUpdated, checkIsResidentialAddressUpdated } from "../../src/utils/is.address.updated";
 import { compareAddress } from "../../src/utils/address";
 
 const mockCompareAddress = compareAddress as jest.Mock;
 
 describe("isCorrespondenceAddressUpdate tests", () => {
+  beforeEach(() => {
+    mockCompareAddress.mockReset();
+  });
+  
   it.each([
     [true, true, false],
     [true, false, true],
@@ -22,7 +26,7 @@ describe("isCorrespondenceAddressUpdate tests", () => {
     companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = appointmentFlag;
 
     const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
-     expect(mockCompareAddress).not.toBeCalled();
+    expect(mockCompareAddress).not.toBeCalled();
     expect(isAddressUpdated).toBe(result);
   });
 
@@ -50,4 +54,53 @@ describe("isCorrespondenceAddressUpdate tests", () => {
     expect(mockCompareAddress).toBeCalledWith(officerFiling.serviceAddress, companyAppointment.serviceAddress);
     expect(isAddressUpdated).toBe(result);
   });
-})
+});
+
+describe("checkIsResidentialAddressUpdated tests", () => {
+  beforeEach(() => {
+    mockCompareAddress.mockReset();
+  });
+
+  it.each([
+    [true, true, false],
+    [true, false, true],
+    [true, undefined, true],
+    [false, true, true],
+    [undefined, true, true],
+  ])("should compare residential address flags", (filingFlag, appointmentFlag, result) => {
+    const officerFiling = {
+      isHomeAddressSameAsServiceAddress: filingFlag,
+    } as OfficerFiling;
+    const companyAppointment = { ...validCompanyAppointment };
+    companyAppointment.residentialAddressIsSameAsServiceAddress = appointmentFlag;
+
+    const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
+    expect(mockCompareAddress).not.toBeCalled();
+    expect(isAddressUpdated).toBe(result);
+  });
+
+  it.each([
+    [validCompanyAppointment.usualResidentialAddress, false],
+    [{
+      premises: "1",
+      addressLine1: "line1",
+      addressLine2: "line2",
+      locality: "locality",
+      region: "region",
+      country: "country"
+     }, true],
+    [undefined, true]
+  ])("should compare residential addresses", (usualResidentialAddress, result) => {
+    const officerFiling = {
+      isHomeAddressSameAsServiceAddress: false,
+      usualResidentialAddress
+    } as OfficerFiling;
+    const companyAppointment = { ...validCompanyAppointment };
+    companyAppointment.residentialAddressIsSameAsServiceAddress = false;
+
+    mockCompareAddress.mockReturnValue(!result);
+    const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
+    expect(mockCompareAddress).toBeCalledWith(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
+    expect(isAddressUpdated).toBe(result);
+  });
+});

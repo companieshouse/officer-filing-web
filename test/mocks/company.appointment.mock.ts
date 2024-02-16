@@ -137,6 +137,8 @@ export const companyAppointmentCorporateDirector: CompanyAppointment = {
     etag: "etag",
     personNumber: "123456",
     isPre1992Appointment: true,
+    serviceAddressIsSameAsRegisteredOfficeAddress: true,
+    residentialAddressIsSameAsServiceAddress: true,
     usualResidentialAddress: {
         addressLine1: "address line 3",
         addressLine2: "address line 4",

@@ -21,7 +21,6 @@ import { PostcodeValidation, PremiseValidation, ResidentialManualAddressValidati
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
-import { compareAddress } from "../../utils/address";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
@@ -29,6 +28,7 @@ import { validateManualAddress } from "../../validation/manual.address.validatio
 
 const incompleteROABackLinkText = "Go back to 'What is the directors correspondence address?'";
 const completeROABackLinkText = "Back";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
@@ -104,7 +104,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "country" : getCountryFromKey(ukAddress.country)}
           };
           
-          setUpdateBoolean(req, isUpdate, session, officerFiling)
+          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isHomeAddressSameAsServiceAddress);
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           return res.redirect(getConfirmAddressPath(req, isUpdate));
@@ -121,14 +121,14 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
   }
 };
 
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling) => {
-  if(isUpdate) {
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isHomeAddressSameAsServiceAddress: boolean | undefined) => {
+  if (isUpdate) {
     const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    if(!compareAddress(officerFiling.residentialAddress,companyAppointment.usualResidentialAddress)){
-      officerFiling.residentialAddressHasBeenUpdated = true;
-    }
+    officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+      { isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
+      companyAppointment);
   }
 }
 

@@ -100,7 +100,6 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
     return redirectToPath(path, req, res);
 
-
   } catch(e) {
     next(e);
   }
@@ -145,3 +144,4 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
           ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
+

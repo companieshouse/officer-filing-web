@@ -40,20 +40,19 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
       isHomeAddressSameAsServiceAddress: false
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsResidentialAddressUpdated(officerFiling, companyAppointment)) {
-        officerFilingBody.residentialAddressHasBeenUpdated = true;
-      }else {
-        officerFilingBody.residentialAddressHasBeenUpdated = false;
-      }
+      officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+        { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
+        companyAppointment
+      );
     }
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    if (officerFiling?.checkYourAnswersLink) {
+    if (officerFiling.checkYourAnswersLink) {
       return res.redirect(urlUtils.getUrlToPath(checkYourAnswersLink, req));
     }
     return res.redirect(urlUtils.getUrlToPath(nextPageurl, req));
