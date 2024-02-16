@@ -59,7 +59,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-    const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
+    const lang = selectLang(req.query.lang);
 
     const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
@@ -68,7 +68,6 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     const validationErrors = buildResidentialAddressValidationErrors(req, CorrespondenceAddressValidation);
 
     if (validationErrors.length > 0) {
-      const lang = selectLang(req.query.lang);
       const locales = getLocalesService();
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const formattedErrors = formatValidationErrors(validationErrors, lang);
