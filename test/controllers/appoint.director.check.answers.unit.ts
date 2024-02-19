@@ -76,6 +76,25 @@ describe("Appoint director check answers controller tests", () => {
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
 
+      it("Should navigate to the appoint director check answers page in welsh", async () => {
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+          firstName: "John",
+          lastName: "Doe",
+          title: "Mr",
+          formerNames: "James",
+          occupation: "Director",
+          dateOfBirth: "1990-01-01",
+          appointedOn: "2020-01-01"
+        }});
+        const response = await request(app).get(PAGE_URL + "?lang=cy");
+  
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain("1 Ionawr 1990");
+        expect(response.text).toContain("1 Ionawr 2020");
+        expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      });
+
       it("should display address details section with correspondence address if not linked", async () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
           firstName: "John",

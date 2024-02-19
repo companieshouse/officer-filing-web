@@ -78,5 +78,6 @@
   "error-appointment-date-after-incorporation-date" : "to be translated",
   "error-appointment-date-underage" : "to be translated",
   "error-appointment-date-missing" : "to be translated",
-  "error-no-protected-details-radio-button-selected" : "to be translated"
+  "error-no-protected-details-radio-button-selected" : "to be translated",
+  "error-consent-to-act-as-director" : "to be translated"
 }
