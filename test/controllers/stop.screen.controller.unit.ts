@@ -159,6 +159,16 @@ describe("Stop screen controller tests", () => {
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
+  it("Should navigate to etag stop screen in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
+
+    expect(response.text).toContain("To be translated");
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+  });
+
   it("Should display something-went-wrong stop-screen heading and content", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
