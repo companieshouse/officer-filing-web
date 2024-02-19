@@ -48,28 +48,31 @@
   namePrefix: "dob_date",
   fieldset: {
     legend: {
-      text: "What is the director's date of birth?",
+      text: i18n.dateDetailsDateOfBirth,
       isPageHeading: true,
       classes: "govuk-fieldset__legend--m"
     }
   },
   hint: {
-    text: "For example, 27 3 1995"
+    text: i18n.dateDetailsDateOfBirthHint
   },
   items: [
     {
+      label: i18n.day,
       classes: dob_date_classes_day,
       name: "day",
       value: dob_date["dob_date-day"] if dob_date,
       pattern: "*"
     },
     {
+      label: i18n.month,
       classes: dob_date_classes_month,
       name: "month",
       value: dob_date["dob_date-month"] if dob_date,
       pattern: "*"
     },
     {
+      label: i18n.year,
       classes: dob_date_classes_year,
       name: "year",
       value: dob_date["dob_date-year"] if dob_date,

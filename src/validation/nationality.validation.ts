@@ -1,6 +1,6 @@
 
 import { NextFunction, Request, Response } from "express";
-import { NationalityValidationType, ValidationError } from "../model/validation.model";
+import { GenericValidationType, ValidationError } from "../model/validation.model";
 import { NATIONALITY_LIST } from "../utils/properties";
 import { getField, setBackLink } from "../utils/web";
 import { DirectorField } from "../model/director.model";
@@ -58,7 +58,7 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
   }
 };
 
-export const validateNationality = (nationality: string[], nationalityValidationType: NationalityValidationType): ValidationError[] | undefined => {
+export const validateNationality = (nationality: string[], nationalityValidationType: GenericValidationType): ValidationError[] | undefined => {
   const validationError: ValidationError[] = []
   if(nationality) {
     validateNationality1(nationality, nationalityValidationType, validationError);
@@ -72,53 +72,53 @@ export const validateNationality = (nationality: string[], nationalityValidation
   return validationError;
 }
 
-export const validateNationality1 = (nationality: string[], nationalityValidationType: NationalityValidationType, validationError: ValidationError[]) => {
+export const validateNationality1 = (nationality: string[], nationalityValidationType: GenericValidationType, validationError: ValidationError[]) => {
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[0]) {
     validateCommonNationality(nationality, validationError, nationalityValidationType, nationalityList);  
   } else {
     //blank field
-    validationError.push(nationalityValidationType.Nationality1Blank.Nationality)
+    validationError.push(nationalityValidationType.Nationality1Blank.ErrorField)
   }
 }
 
-export const validateNationality2 = (nationality: string[], nationalityValidationType: NationalityValidationType, validationError: ValidationError[]) => {
+export const validateNationality2 = (nationality: string[], nationalityValidationType: GenericValidationType, validationError: ValidationError[]) => {
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[1]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_2)) {
       if (!nationality[1].trim().length || invalidPattern(nationality[1], VALID_NATIONALITY_CHARACTER)) {
-          validationError.push(nationalityValidationType.Nationality2InvalidCharacter.Nationality);
+          validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
       } else if ((nationality[1].length > 50)) {
-          validationError.push(nationalityValidationType.Nationality2LengthValidator.Nationality);
+          validationError.push(nationalityValidationType.Nationality2LengthValidator.ErrorField);
       }  else if (nationality[1] && nationality[2] && (`${nationality[1]},${nationality[2]}`.length > 49)) {
             //dual max length 49
           validationError.push(
-            nationalityValidationType.DualNationality2LengthValidator.Nationality,
-            nationalityValidationType.DualNationality3LengthValidator.Nationality);
+            nationalityValidationType.DualNationality2LengthValidator.ErrorField,
+            nationalityValidationType.DualNationality3LengthValidator.ErrorField);
       } else if (nationality[1] == nationality[2]) {
           //duplicated
           validationError.push(
-            nationalityValidationType.DuplicatedNationality2Validator.Nationality,
-            nationalityValidationType.DuplicatedNationality3Validator.Nationality
+            nationalityValidationType.DuplicatedNationality2Validator.ErrorField,
+            nationalityValidationType.DuplicatedNationality3Validator.ErrorField
         )            
       } else if (!nationalityList.includes(nationality[1])) {
-          validationError.push(nationalityValidationType.Nationality2AllowedList.Nationality);
+          validationError.push(nationalityValidationType.Nationality2AllowedList.ErrorField);
       } 
     }
   }
 }
 
-export const validateNationality3 = (nationality: string[], nationalityValidationType: NationalityValidationType, validationError: ValidationError[]) => {
+export const validateNationality3 = (nationality: string[], nationalityValidationType: GenericValidationType, validationError: ValidationError[]) => {
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[2]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_3)) {
       if (!nationality[2].trim().length || invalidPattern(nationality[2], VALID_NATIONALITY_CHARACTER)) {
-            validationError.push(nationalityValidationType.Nationality3InvalidCharacter.Nationality);
+            validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
       } else if ((nationality[2].length > 50)) {
-            validationError.push(nationalityValidationType.Nationality3LengthValidator.Nationality);  
+            validationError.push(nationalityValidationType.Nationality3LengthValidator.ErrorField);  
       } 
       else if (!nationalityList.includes(nationality[2])) {
-        validationError.push(nationalityValidationType.Nationality3AllowedList.Nationality);
+        validationError.push(nationalityValidationType.Nationality3AllowedList.ErrorField);
       } 
    }
   }
@@ -134,45 +134,45 @@ const invalidPattern = (input: string, regex: RegExp): boolean => {
 const validateCommonNationality = (
       nationality: string[], 
       validationError: ValidationError[], 
-      nationalityValidationType: NationalityValidationType, 
+      nationalityValidationType: GenericValidationType, 
       nationalityList: string[]) => {
   if (!nationality[0].trim().length || invalidPattern(nationality[0], VALID_NATIONALITY_CHARACTER)) {
     //character
-    validationError.push(nationalityValidationType.Nationality1InvalidCharacter.Nationality);
+    validationError.push(nationalityValidationType.Nationality1InvalidCharacter.ErrorField);
   } else if ((nationality[0].length > 50)) {
     //length
-    validationError.push(nationalityValidationType.Nationality1LengthValidator.Nationality);
+    validationError.push(nationalityValidationType.Nationality1LengthValidator.ErrorField);
   } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 48)) {
     //all max length 48
     validationError.push(
-      nationalityValidationType.MultipleNationality1maxLength48Validator.Nationality,
-      nationalityValidationType.MultipleNationality2maxLength48Validator.Nationality,
-      nationalityValidationType.MultipleNationality3maxLength48Validator.Nationality);
+      nationalityValidationType.MultipleNationality1maxLength48Validator.ErrorField,
+      nationalityValidationType.MultipleNationality2maxLength48Validator.ErrorField,
+      nationalityValidationType.MultipleNationality3maxLength48Validator.ErrorField);
   } else if (nationality[0] && nationality[1] && (`${nationality[0]},${nationality[1]}`.length > 49)) {
     //dual max length 49
     validationError.push(
-      nationalityValidationType.DualNationality1LengthValidator.Nationality,
-      nationalityValidationType.DualNationality2LengthValidator.Nationality);
+      nationalityValidationType.DualNationality1LengthValidator.ErrorField,
+      nationalityValidationType.DualNationality2LengthValidator.ErrorField);
   } else if (nationality[0] && nationality[2] && (`${nationality[0]},${nationality[2]}`.length > 49)) {
     //dual max length 49
     validationError.push(
-      nationalityValidationType.DualNationality1LengthValidator.Nationality,
-      nationalityValidationType.DualNationality3LengthValidator.Nationality);
+      nationalityValidationType.DualNationality1LengthValidator.ErrorField,
+      nationalityValidationType.DualNationality3LengthValidator.ErrorField);
   } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
     //all max length 48
     validationError.push(
-      nationalityValidationType.MultipleNationality1maxLength50Validator.Nationality,
-      nationalityValidationType.MultipleNationality2maxLength50Validator.Nationality,
-      nationalityValidationType.MultipleNationality3maxLength50Validator.Nationality);
+      nationalityValidationType.MultipleNationality1maxLength50Validator.ErrorField,
+      nationalityValidationType.MultipleNationality2maxLength50Validator.ErrorField,
+      nationalityValidationType.MultipleNationality3maxLength50Validator.ErrorField);
   } else if (nationality[0] == nationality[1]) {
     //duplicated
-    validationError.push(nationalityValidationType.DuplicatedNationality2Validator.Nationality);
+    validationError.push(nationalityValidationType.DuplicatedNationality2Validator.ErrorField);
   } else if (nationality[0] == nationality[2]) {
     //duplicated
-    validationError.push(nationalityValidationType.DuplicatedNationality3Validator.Nationality);
+    validationError.push(nationalityValidationType.DuplicatedNationality3Validator.ErrorField);
   } else if (!nationalityList.includes(nationality[0])) {
     //list validation
-    validationError.push(nationalityValidationType.Nationality1AllowedList.Nationality);
+    validationError.push(nationalityValidationType.Nationality1AllowedList.ErrorField);
   }
 }
 

@@ -73,10 +73,10 @@ describe("Director confirm correspondence address controller tests", () => {
           directorName: "John Smith"
         });
 
-        const response = await request(app).get(url);
+      const response = await request(app).get(url);
   
-        expect(response.text).toContain(PAGE_HEADING);
-        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it.each([PAGE_URL,UPDATE_PAGE_URL])("Should populate details on the page", async (url) => {

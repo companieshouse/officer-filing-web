@@ -4,8 +4,19 @@ import { urlParams } from "../types/page.urls";
 
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../services/company.profile.service";
-import { COMPANY_NAME_PLACEHOLDER, STOP_TYPE, STOP_PAGE_CONTENT } from "../utils/constants";
+import {
+    COMPANY_NAME_PLACEHOLDER,
+    STOP_TYPE,
+    STOP_PAGE_CONTENT,
+    ETAG_PAGE_HEADER,
+    ETAG_PAGE_BODY_1,
+    ETAG_PAGE_BODY_2,
+    ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK,
+    ETAG_PAGE_BODY_CONTACT_US_LINK,
+    ETAG_PAGE_BODY_3
+} from "../utils/constants";
 import { urlUtils } from "../utils/url";
+import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -27,6 +38,9 @@ const setContent = async (req: Request, stopType: string) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+    const localeInfo = getLocaleInfo(locales, lang);
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
@@ -64,8 +78,13 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.ETAG: { 
             return {
-                pageHeader: STOP_PAGE_CONTENT.etag.pageHeader,
+                pageHeader: STOP_PAGE_CONTENT.etag.pageHeader.replace(new RegExp(ETAG_PAGE_HEADER, 'g'), localeInfo.i18n.stopPageEtagPageHeader),
                 pageBody: STOP_PAGE_CONTENT.etag.pageBody
+                    .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageEtagPageBody1)
+                    .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
+                    .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
+                    .replace(new RegExp(ETAG_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageEtagContactUsLink)
+                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageEtagPageBody3)
             }
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 

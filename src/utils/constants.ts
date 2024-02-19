@@ -33,6 +33,12 @@ export const TRANSACTION_ID_PLACEHOLDER = "TRANSACTION_ID_PLACEHOLDER";
 export const APPOINTMENT_ID_PLACEHOLDER = "APPOINTMENT_ID_PLACEHOLDER";
 export const CONSENT_TO_ACT_AS_DIRECTOR = "Select if you confirm that by submitting this information, the person named has consented to act as director";
 export const HA_TO_SA_ERROR = "Select yes if the correspondence address changes in the future and you want this to apply to the home address";
+export const ETAG_PAGE_HEADER = "ETAG_PAGE_HEADER";
+export const ETAG_PAGE_BODY_1 = "ETAG_PAGE_BODY_1";
+export const ETAG_PAGE_BODY_2 = "ETAG_PAGE_BODY_2";
+export const ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK = "ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK";
+export const ETAG_PAGE_BODY_CONTACT_US_LINK = "ETAG_PAGE_BODY_3_CONTACT_US_LINK";
+export const ETAG_PAGE_BODY_3 = "ETAG_PAGE_BODY_3";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",
@@ -141,10 +147,10 @@ export const STOP_PAGE_CONTENT =
       `
     },
     etag:{
-      pageHeader: "Someone has already made updates for this director",
-      pageBody: `<p>Since you started using this service, someone else has submitted an update to this director's details.</p>
-      <p>If you still need to submit this update, you'll need to <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+      pageHeader: ETAG_PAGE_HEADER,
+      pageBody: `<p>` + ETAG_PAGE_BODY_1 + `</p>
+      <p>` + ETAG_PAGE_BODY_2 + `<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
+      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + ETAG_PAGE_BODY_CONTACT_US_LINK + `</a>` + ETAG_PAGE_BODY_3 + `</p>
       `
     },
     somethingWentWrong:{

@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% set title = "Find the director's correspondence address" %}
+{% set title = i18n.directorCorrespondenceSearchTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
-  {% set backLinkText = "Go back to 'What is the director's correspondence address'" %}
+  {% set backLinkText = i18n.backToCorrespondenceAddress %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -19,11 +19,11 @@
       
       <form action="" method="post">
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Find the director's correspondence address</h1>
+        <h1 class="govuk-heading-l">{{ i18n.directorCorrespondenceSearchTitle }}</h1>
         <!-- This is the search page for the correspondence address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
         <div id="typeahead-hint" class="govuk-hint">
-          We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.
+          {{i18n.directorCorrespondenceSearchHint}}
         </div>
         {% include "includes/inputs/fields/postcode-input.html" %}
         {% include "includes/inputs/fields/postcode-premises-input.html" %}
@@ -32,11 +32,11 @@
         attributes: {
         "data-event-id": "continue-button"
         },
-        text: "Find address"
+        text: i18n.findAddress
         }) }}
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-correspondence-address-manual-link">Enter address manually</a>
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-correspondence-address-manual-link">{{i18n.enterAddressManually}}</a>
         </div>
 
       </form>

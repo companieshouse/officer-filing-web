@@ -1,0 +1,12 @@
+{
+  "directorCorrespondenceAddressRadioTitle": "What is the director's correspondence address?",
+  "directorCorrespondenceAddressRadioTitleHint": "We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.",
+  "directorCorrespondenceAddressRadioHint": "This is the company's registered office address",
+  "directorCorrespondenceAddressRadioDiffAddress": "A different address",
+  "directorCorrespondenceAddressRadioInsetHint": "We will show this address on the public Companies House register.",
+  "directorCorrespondenceAddressRadioAccordionTitle" :"My correspondence address is the same as my home address",
+  "directorCorrespondenceAddressRadioHaCaAccordionText": "We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register.",
+  "directorCorrespondenceAddressRadioAgentAccordionText": "If you run your company from home and do not want your home address available to the public, there is a",
+  "directorCorrespondenceAddressRadioAgentAccordionLinkText": "list of agents who can provide registered office services (opens in new tab).",
+  "directorCorrespondenceAddressRadioAgentOtherAgentAccordionText": "A quick online search will show other agents who offer similar services. All providers will charge a fee."
+}
