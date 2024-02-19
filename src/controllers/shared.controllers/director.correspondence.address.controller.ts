@@ -40,7 +40,7 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
 
     return res.render(templateName, {
       templateName: templateName,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(directorName),
@@ -75,7 +75,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
 
       return res.render(templateName, {
         templateName: templateName,
-        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
+        backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
         errors: formattedErrors,
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(directorName),
