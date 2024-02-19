@@ -55,6 +55,7 @@
   "error-postal-code-full-invalid": "to be translated",
   "error-premises-characters": "to be translated",
   "error-premises-length": "to be translated",
+  "error-correspondence-address-blank": "to be translated",
   "error-dob-date-missing-day": "to be translated",
   "error-dob-date-missing-month": "to be translated",
   "error-dob-date-missing-year": "to be translated",

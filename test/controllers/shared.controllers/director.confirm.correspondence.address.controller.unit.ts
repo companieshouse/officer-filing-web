@@ -63,22 +63,22 @@ describe("Director confirm correspondence address controller tests", () => {
   
     describe("get tests", () => {
 
-        it.each([PAGE_URL,UPDATE_PAGE_URL])('should navigate to director confirm correspondence address page', async (url) => {
-            mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-                etag: "etag",
-                forename: "John",
-                otherForenames: "mid",
-                surname: "Smith"
-                 });
+      it.each([PAGE_URL,UPDATE_PAGE_URL])('should navigate to director confirm correspondence address page', async (url) => {
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+              etag: "etag",
+              forename: "John",
+              otherForenames: "mid",
+              surname: "Smith"
+               });
 
-            mockGetOfficerFiling.mockResolvedValueOnce({
-                directorName: "John Smith"
-                 });
+          mockGetOfficerFiling.mockResolvedValueOnce({
+              directorName: "John Smith"
+               });
 
-        const response = await request(app).get(url);
+      const response = await request(app).get(url);
   
-        expect(response.text).toContain(PAGE_HEADING);
-        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
       it.each([PAGE_URL,UPDATE_PAGE_URL])("Should populate details on the page", async (url) => {

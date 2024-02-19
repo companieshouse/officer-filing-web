@@ -1,102 +1,102 @@
 import { titleErrorMessageKey, firstNameErrorMessageKey, middleNameErrorMessageKey, lastNameErrorMessageKey, formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
 import { DirectorField } from "../model/director.model";
-import { NameValidationType } from "../model/validation.model";
+import { GenericValidationType } from "../model/validation.model";
 
 // Configuration required for name validation error messages
-export const NameValidation: NameValidationType = {
+export const NameValidation: GenericValidationType = {
     TitleInvalidCharacter: {
-        Name: {
+        ErrorField: {
             messageKey: titleErrorMessageKey.TITLE_CHARACTERS,
             source: [DirectorField.TITLE],
             link: DirectorField.TITLE
         }
     },
     TitleLength: {
-        Name: {
+        ErrorField: {
             messageKey: titleErrorMessageKey.TITLE_LENGTH,
             source: [DirectorField.TITLE],
             link: DirectorField.TITLE
         }
     },
     FirstNameBlank: {
-        Name: {
+        ErrorField: {
             messageKey: firstNameErrorMessageKey.FIRST_NAME_BLANK,
             source: [DirectorField.FIRST_NAME],
             link: DirectorField.FIRST_NAME
         }
     },
     FirstNameInvalidCharacter: {
-        Name: {
+        ErrorField: {
             messageKey: firstNameErrorMessageKey.FIRST_NAME_CHARACTERS,
             source: [DirectorField.FIRST_NAME],
             link: DirectorField.FIRST_NAME
         }
     },
     FirstNameLength: {
-        Name: {
+        ErrorField: {
             messageKey: firstNameErrorMessageKey.FIRST_NAME_LENGTH,
             source: [DirectorField.FIRST_NAME],
             link: DirectorField.FIRST_NAME
         }
     },
     MiddleNamesInvalidCharacter: {
-        Name: {
+        ErrorField: {
             messageKey: middleNameErrorMessageKey.MIDDLE_NAME_CHARACTERS,
             source: [DirectorField.MIDDLE_NAMES],
             link: DirectorField.MIDDLE_NAMES
         }
     },
     MiddleNamesLength: {
-        Name: {
+        ErrorField: {
             messageKey: middleNameErrorMessageKey.MIDDLE_NAME_LENGTH,
             source: [DirectorField.MIDDLE_NAMES],
             link: DirectorField.MIDDLE_NAMES
         }
     },
     LastNameBlank: {
-        Name: {
+        ErrorField: {
             messageKey: lastNameErrorMessageKey.LAST_NAME_BLANK,
             source: [DirectorField.LAST_NAME],
             link: DirectorField.LAST_NAME
         }
     },
     LastNameInvalidCharacter: {
-        Name: {
+        ErrorField: {
             messageKey: lastNameErrorMessageKey.LAST_NAME_CHARACTERS,
             source: [DirectorField.LAST_NAME],
             link: DirectorField.LAST_NAME
         }
     },
     LastNameLength: {
-        Name: {
+        ErrorField: {
             messageKey: lastNameErrorMessageKey.LAST_NAME_LENGTH,
             source: [DirectorField.LAST_NAME],
             link: DirectorField.LAST_NAME
         }
     },
     PreviousNamesRadioUnselected: {
-        Name: {
+        ErrorField: {
             messageKey: formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED,
             source: [DirectorField.PREVIOUS_NAMES_RADIO],
-            link: DirectorField.PREVIOUS_NAMES_RADIO
+            link: DirectorField.YES
         }
     },
     PreviousNamesMissing: {
-        Name: {
+        ErrorField: {
             messageKey: formerNamesErrorMessageKey.FORMER_NAMES_MISSING,
             source: [DirectorField.PREVIOUS_NAMES],
             link: DirectorField.PREVIOUS_NAMES
         }
     },
     PreviousNamesInvalidCharacter: {
-        Name: {
+        ErrorField: {
             messageKey: formerNamesErrorMessageKey.FORMER_NAMES_CHARACTERS,
             source: [DirectorField.PREVIOUS_NAMES],
             link: DirectorField.PREVIOUS_NAMES
         }
     },
     PreviousNamesLength: {
-        Name: {
+        ErrorField: {
             messageKey: formerNamesErrorMessageKey.FORMER_NAMES_LENGTH,
             source: [DirectorField.PREVIOUS_NAMES],
             link: DirectorField.PREVIOUS_NAMES

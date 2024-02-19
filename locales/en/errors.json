@@ -55,6 +55,7 @@
   "error-postal-code-full-invalid": "Enter a UK postcode. If the address is outside the UK, enter the address manually",
   "error-premises-characters": "Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes",
   "error-premises-length": "Property name or number must be 200 characters or less",
+  "error-correspondence-address-blank": "Select the director’s correspondence address",
   "error-dob-date-missing-day": "Date of birth must include a day",
   "error-dob-date-missing-month": "Date of birth must include a month",
   "error-dob-date-missing-year": "Date of birth must include a year",

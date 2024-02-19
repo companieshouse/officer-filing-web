@@ -110,14 +110,8 @@ export interface PremiseValidationType {
     }
 }
 
-export interface NationalityValidationType {
+export interface GenericValidationType {
     [key: string]: {
-        Nationality: ValidationError;
-    }
-}
-
-export interface NameValidationType {
-    [key: string]: {
-        Name: ValidationError;
+        ErrorField: ValidationError;
     }
 }
