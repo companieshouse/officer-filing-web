@@ -52,7 +52,7 @@ describe("Appoint director check answers controller tests", () => {
   
     describe("get tests", () => {
   
-      it("Should navigate to the appoint director check answers page", async () => {
+      it.each([[true, "Yes"],[false, "No"]])("Should navigate to the appoint director check answers page", async (appliedToProtectDetails, protectedDetailsString) => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
           firstName: "John",
           lastName: "Doe",
@@ -60,7 +60,8 @@ describe("Appoint director check answers controller tests", () => {
           formerNames: "James",
           occupation: "Director",
           dateOfBirth: "1990-01-01",
-          appointedOn: "2020-01-01"
+          appointedOn: "2020-01-01",
+          directorAppliedToProtectDetails: appliedToProtectDetails
         }});
         const response = await request(app).get(PAGE_URL);
   
@@ -73,6 +74,7 @@ describe("Appoint director check answers controller tests", () => {
         expect(response.text).toContain("Director");
         expect(response.text).toContain("1 January 1990");
         expect(response.text).toContain("1 January 2020");
+        expect(response.text).toContain(protectedDetailsString + '\n')
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
 
@@ -84,7 +86,7 @@ describe("Appoint director check answers controller tests", () => {
           formerNames: "James",
           occupation: "Director",
           dateOfBirth: "1990-01-01",
-          appointedOn: "2020-01-01"
+          appointedOn: "2020-01-01",
         }});
         const response = await request(app).get(PAGE_URL + "?lang=cy");
   
