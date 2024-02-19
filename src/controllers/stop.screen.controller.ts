@@ -16,7 +16,7 @@ import {
     ETAG_PAGE_BODY_3
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
-import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {

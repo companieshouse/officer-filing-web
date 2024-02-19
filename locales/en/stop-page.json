@@ -1,8 +1,8 @@
 {
-    "stopPageETAGPageHeader": "Someone has already made updates for this director",
-    "stopPageETAGPageBody1": "Since you started using this service, someone else has submitted an update to this director's details.",
-    "stopPageETAGPageBody2": "If you still need to submit this update, you'll need to ",
-    "stopPageETAGStartServiceAgainLink": "start the service again",
-    "stopPageETAGContactUsLink": "Contact us",
-    "stopPageETAGPageBody3": " if you have any questions."
+    "stopPageEtagPageHeader": "Someone has already made updates for this director",
+    "stopPageEtagPageBody1": "Since you started using this service, someone else has submitted an update to this director's details.",
+    "stopPageEtagPageBody2": "If you still need to submit this update, you'll need to ",
+    "stopPageEtagStartServiceAgainLink": "start the service again",
+    "stopPageEtagContactUsLink": "Contact us",
+    "stopPageEtagPageBody3": " if you have any questions."
 }
