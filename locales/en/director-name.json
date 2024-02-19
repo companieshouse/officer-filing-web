@@ -10,6 +10,9 @@
   "directorNameTitleLabel": "Professional or honorary title (if relevant)",
   "directorNameTitleDropdownHint": "For example, Doctor or Professor.",
   "directorNameTitleDropdownDefaultText": "Choose title",
-  "directorNameTitleTypeaheadHint": "Start typing a title, such as Dr or Professor, then choose from the list."
-
+  "directorNameTitleTypeaheadHint": "Start typing a title, such as Dr or Professor, then choose from the list.",
+  "directorNamePreviousNameText": "Has the director used a different name for business purposes in the last 20 years?",
+  "directorNameInsetText": "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant.",
+  "directorPreviousNameLabel": "Previous names",
+  "directorPreviousNameHint": "If the director has more than one previous name, separate each name with a comma."
 }
