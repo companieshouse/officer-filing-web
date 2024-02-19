@@ -26,6 +26,12 @@ describe("service availability middleware tests", () => {
     expect(mockPatchOfficerFiling).toHaveBeenCalled();
   });
 
+  it("should patch the check your answers link if the referrer was the check your answers page and has query params", async () => {
+    const req = { headers: { referer: "director-check-answers?lang=en" } } as unknown as Request;
+    checkYourAnswersMiddleware()(req, res, next);
+    expect(mockPatchOfficerFiling).toHaveBeenCalled();
+  });
+
   it("should not patch the check your answers link if the referrer was not the check your answers page", async () => {
     const req = { headers: { referer: "director-name" }} as unknown as Request;
     checkYourAnswersMiddleware()(req, res, next);
