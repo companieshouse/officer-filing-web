@@ -81,7 +81,7 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.isHomeAddressSameAsServiceAddress = false;
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-      console.log("AKDEBUG officerFilingBody.residentialAddress: ", JSON.stringify(companyProfile.registeredOfficeAddress));
+     
       if (isUpdate) {
         const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
         officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
