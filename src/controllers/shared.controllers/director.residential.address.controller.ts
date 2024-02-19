@@ -72,6 +72,7 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     const officerFilingBody: OfficerFiling = {
       directorResidentialAddressChoice: selectedSraAddressChoice
     };
+
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.isHomeAddressSameAsServiceAddress = false;
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);

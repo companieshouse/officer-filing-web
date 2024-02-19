@@ -8,5 +8,5 @@ export const get = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export const post = (req: Request, res: Response, next: NextFunction) => {
-  postResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH);
+  postResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, false);
 }

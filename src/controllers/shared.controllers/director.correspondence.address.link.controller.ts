@@ -63,13 +63,14 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
       isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      
       officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-        { ...officerFilingBody, serviceAddress: officerFiling.serviceAddress }, 
+        { isServiceAddressSameAsRegisteredOfficeAddress: officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress }, 
         companyAppointment);
     }
 

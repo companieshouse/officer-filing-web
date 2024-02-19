@@ -249,7 +249,8 @@ describe("Director residential address array page controller tests", () => {
               locality: "Test Town",
               country: "England",
               postalCode: "TE6 6ST"
-            }
+            },
+            residentialAddressHasBeenUpdated: url === UPDATE_PAGE_URL ? true : undefined,
           }
         );
       });

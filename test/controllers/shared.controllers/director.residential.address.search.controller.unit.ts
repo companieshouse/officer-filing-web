@@ -339,6 +339,7 @@ describe('Director residential address search controller test', () => {
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to director residential address choose address page when premise is part of returned addresses", async (url, redirectLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);
@@ -348,6 +349,7 @@ describe('Director residential address search controller test', () => {
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to director residential address choose address page when premise is part of returned addresses - case and space insensitivity", async (url, redirectLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource);

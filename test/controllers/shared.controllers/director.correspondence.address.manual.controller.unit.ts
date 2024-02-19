@@ -25,7 +25,7 @@ import { createMockValidationStatusError, mockValidValidationStatusResponse, moc
 import { getValidationStatus } from "../../../src/services/validation.status.service";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../../src/controllers/shared.controllers/director.correspondence.address.manual.controller";
-import { 
+import {
   correspondenceAddressAddressLineOneErrorMessageKey,
   correspondenceAddressAddressLineTwoErrorMessageKey,
   correspondenceAddressCountryErrorMessageKey,
@@ -239,7 +239,7 @@ describe("Director correspondence address controller tests", () => {
         mockPatchOfficerFiling.mockRejectedValue(new Error("Error patching officer filing"));
         mockGetOfficerFiling.mockRejectedValue({});
 
-        const response = await request(app).post(url);
+        const response = await request(app).post(url).send(validData);
 
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
@@ -451,6 +451,5 @@ describe("Director correspondence address controller tests", () => {
 
         expect(validationErrors).toHaveLength(0);
       });
-      
     });
 });
