@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Date details" %}
+{% set title = i18n.dateDetailsTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -21,22 +21,22 @@
         <span class="govuk-caption-l gem-c-title__context">
           {{directorName}}
         </span>
-        <h1 class="govuk-heading-l">Date details</h1>
+        <h1 class="govuk-heading-l">{{ i18n.dateDetailsTitle }}</h1>
         
         {% include "includes/inputs/date/dob-date-input.html" %}
         <br>
         {% include "includes/inputs/date/appoint-date-input.html" %}
 
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will show the director's month and year of birth and the date the director was appointed on the public Companies House register.</p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.dateDetailsInsetText }}</p>
         </div>
 
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

@@ -13,7 +13,6 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
-
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -26,7 +25,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
       enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req)
     } else {
       enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req)
-  }
+    }
 
     return res.render(templateName, {
       templateName: templateName,
@@ -51,20 +50,19 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
       isServiceAddressSameAsRegisteredOfficeAddress: false
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      if (checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment)) {
-        officerFilingBody.correspondenceAddressHasBeenUpdated = true;
-      }
-      else {
-        officerFilingBody.correspondenceAddressHasBeenUpdated = false;
-      }
+      officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated( 
+        { isServiceAddressSameAsRegisteredOfficeAddress: officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress }, 
+        companyAppointment
+      );
     }
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
     return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
   }catch(e){
     return next(e);

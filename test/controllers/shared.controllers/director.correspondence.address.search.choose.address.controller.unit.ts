@@ -250,7 +250,8 @@ describe("Director correspondence address array page controller tests", () => {
               locality: "Test Town",
               country: "England",
               postalCode: "TE6 6ST"
-            }
+            },
+            correspondenceAddressHasBeenUpdated: url === UPDATE_PAGE_URL? true: undefined
           }
         );
       });

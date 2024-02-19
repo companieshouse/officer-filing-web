@@ -137,13 +137,15 @@ describe("Director confirm correspondence address controller tests", () => {
       });  
 
       it("should set service address same as registered address to false", async () => {
-        const response = await request(app).post(PAGE_URL);
+        
         mockPatchOfficerFiling.mockReturnValueOnce({
           data: {
             isServiceAddressSameAsRegisteredOfficeAddress: false
           }
         });
         
+        const response = await request(app).post(PAGE_URL);
+
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
           isServiceAddressSameAsRegisteredOfficeAddress: false
         }));

@@ -4,10 +4,12 @@ import {
   DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
   DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
   UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
   UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
@@ -26,6 +28,10 @@ import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/we
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, isUpdate: boolean) => {
   try {
@@ -34,10 +40,14 @@ export const getCorrespondenceAddressLookUp = async (req: Request, res: Response
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     return res.render(templateName, {
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(isUpdate, req),
       templateName: templateName,
-      enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
-      backLinkUrl: urlUtils.getUrlToPath(backLink, req),
+      enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualAddressPath, req), lang),
+      backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(backLink, req),lang),
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.serviceAddress?.postalCode,
       premises: officerFiling.serviceAddress?.premises,
@@ -89,6 +99,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
     // Look up the addresses, as by now validated postcode is valid and exist
     const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''));
     // If premises is entered by user, loop through addresses to find user entered premise
+    const lang = selectLang(req.query.lang);
     if(correspondencePremise) {
       for(const ukAddress of ukAddresses) {
         if(ukAddress.premise.toUpperCase() === correspondencePremise.toUpperCase()) {
@@ -100,16 +111,19 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
+
+          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
-          return res.redirect(nextPageUrlForConfirm);
+          return res.redirect(addLangToUrl(nextPageUrlForConfirm,lang));
         }
       }
     }
     // Redirect user to choose addresses if premises not supplied or not found in addresses array
     const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
-    return res.redirect(nextPageUrl);
+    return res.redirect(addLangToUrl(nextPageUrl, lang));
 
   }
   catch (e) {
@@ -117,17 +131,40 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
 };
 
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isServiceAddressSameAsRegisteredOfficeAddress: boolean | undefined) => {
+  if (isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      { isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
+      companyAppointment);
+  }
+};
+
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], isUpdate: boolean, directorName: string) => {
   const backLink = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_PATH;
   const manualAddressPath = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
   const templateName = isUpdate ? Templates.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH : Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH;
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
   return res.render(templateName, {
+    ...getLocaleInfo(locales, lang),
     templateName: templateName,
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
-    backLinkUrl: urlUtils.getUrlToPath(backLink, req),
+    currentUrl: getCurrentUrl(isUpdate, req),
+    enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualAddressPath, req), lang),
+    backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(backLink, req), lang),
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.serviceAddress?.postalCode,
     premises: officerFiling.serviceAddress?.premises,
-    errors: formatValidationErrors(validationErrors)
+    errors: formatValidationErrors(validationErrors, lang)
   });
 }
+
+const getCurrentUrl = (isUpdate: boolean, req: Request) => {
+  if(isUpdate){
+    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req)
+  }
+  return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req)
+}
+

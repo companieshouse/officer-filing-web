@@ -1,17 +1,17 @@
 <div class="govuk-inset-text">
-    <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-      <p>We will show this address on the public Companies House register.</p>
-  </div>
+    <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+    <p>{{ i18n.directorCorrespondenceAddressRadioInsetHint }}</p>
+</div>
 
-  {% set correspondenceAddressSameAsHomeAddress %}
-    <p>We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register. </p>
-    <p>If you run your company from home and do not want your home address available to the public, there is a  <a href="https://www.gov.uk/government/publications/formation-and-company-secretarial-agents/company-formation-agents-and-secretarial-agents" data-event-id="list-of-agents-link" class="govuk-link" target="_blank" rel="noopener noreferrer"> list of agents who can provide registered office services (opens in new tab).</a> </p> 
-    <p>A quick online search will show other agents who offer similar services. All providers will charge a fee. </p>
-  {% endset %}
-  {{ govukDetails({
-    summaryHtml: '<div> My correspondence address is the same as my home address </div>',
-    html: correspondenceAddressSameAsHomeAddress,
-    attributes: {
-      "data-event-id": "my-correspondance-address-is-my-home-address-accordion"
-    }
-  }) }}
+{% set correspondenceAddressSameAsHomeAddress %}
+  <p>{{ i18n.directorCorrespondenceAddressRadioHaCaAccordionText }}</p>
+  <p>{{ i18n.directorCorrespondenceAddressRadioAgentAccordionText }}  <a href="https://www.gov.uk/government/publications/formation-and-company-secretarial-agents/company-formation-agents-and-secretarial-agents" data-event-id="list-of-agents-link" class="govuk-link" target="_blank" rel="noopener noreferrer">{{ i18n.directorCorrespondenceAddressRadioAgentAccordionLinkText }}</a> </p> 
+  <p>{{ i18n.directorCorrespondenceAddressRadioAgentOtherAgentAccordionText }} </p>
+{% endset %}
+{{ govukDetails({
+  summaryHtml: '<div>'~i18n.directorCorrespondenceAddressRadioAccordionTitle~'</div>',
+  html: correspondenceAddressSameAsHomeAddress,
+  attributes: {
+    "data-event-id": "my-correspondance-address-is-my-home-address-accordion"
+  }
+}) }}

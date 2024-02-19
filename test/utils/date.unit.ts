@@ -17,7 +17,6 @@ describe("toReadableFormat", () => {
   it("should localise cy date", () => {
     const date = "2020-01-01";
     const result = toReadableFormat(date, "cy");
-    console.log("result", result)
     expect(result).toEqual("1 Ionawr 2020");
   });
 

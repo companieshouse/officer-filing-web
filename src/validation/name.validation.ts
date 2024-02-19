@@ -1,17 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { NameValidationType, ValidationError } from "../model/validation.model";
+import { GenericValidationType, ValidationError } from "../model/validation.model";
 import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
 import { NameValidation } from "./name.validation.config";
-import { REGEX_FOR_VALID_CHARACTERS, createValidationError, createValidationErrorBasic, formatValidationErrors } from "./validation";
+import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
-import { lookupWebValidationMessage } from "../utils/api.enumerations";
-import { formerNamesErrorMessageKey } from "../utils/api.enumerations.keys";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 const NAME_FIELD_LENGTH_50 = 50;
@@ -69,7 +67,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const validateName = (req: Request, nameValidationType: NameValidationType, isUpdate: boolean): ValidationError[] => {
+export const validateName = (req: Request, nameValidationType: GenericValidationType, isUpdate: boolean): ValidationError[] => {
     const title = getField(req, DirectorField.TITLE);
     const firstName = getField(req, DirectorField.FIRST_NAME);
     const middleNames = getField(req, DirectorField.MIDDLE_NAMES);
@@ -89,76 +87,74 @@ export const validateName = (req: Request, nameValidationType: NameValidationTyp
     return validationErrors;
 };
 
-const validateTitle = (title: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
+const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
         if (!title.match(REGEX_FOR_VALID_CHARACTERS)){
             // invalid characters
-            validationErrors.push(nameValidationType.TitleInvalidCharacter.Name);
+            validationErrors.push(nameValidationType.TitleInvalidCharacter.ErrorField);
         } else if (title.length > NAME_FIELD_LENGTH_50){
             // character count limit
-            validationErrors.push(nameValidationType.TitleLength.Name);
+            validationErrors.push(nameValidationType.TitleLength.ErrorField);
         }
     }
 }
 
-const validateFirstName = (firstName: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
+const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(firstName != null && firstName != "") {
         if (!firstName.match(REGEX_FOR_VALID_CHARACTERS)){
             // invalid characters
-            validationErrors.push(nameValidationType.FirstNameInvalidCharacter.Name);
+            validationErrors.push(nameValidationType.FirstNameInvalidCharacter.ErrorField);
         } else if (firstName.length > NAME_FIELD_LENGTH_50){
             // character count limit
-            validationErrors.push(nameValidationType.FirstNameLength.Name);
+            validationErrors.push(nameValidationType.FirstNameLength.ErrorField);
         }
     } else {
         // blank field
-        validationErrors.push(nameValidationType.FirstNameBlank.Name);
+        validationErrors.push(nameValidationType.FirstNameBlank.ErrorField);
     }
 }
 
-const validateMiddleNames = (middleNames: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
+const validateMiddleNames = (middleNames: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(middleNames != null && middleNames != "") {
         if (!middleNames.match(REGEX_FOR_VALID_CHARACTERS)){
             // invalid characters
-            validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.Name);
+            validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.ErrorField);
         } else if (middleNames.length > NAME_FIELD_LENGTH_50){
             // character count limit
-            validationErrors.push(nameValidationType.MiddleNamesLength.Name);
+            validationErrors.push(nameValidationType.MiddleNamesLength.ErrorField);
         }
     }
 }
 
-const validateLastName = (lastName: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
+const validateLastName = (lastName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(lastName != null && lastName != "") {
         if (!lastName.match(REGEX_FOR_VALID_CHARACTERS)){
             // invalid characters
-            validationErrors.push(nameValidationType.LastNameInvalidCharacter.Name);
+            validationErrors.push(nameValidationType.LastNameInvalidCharacter.ErrorField);
         } else if (lastName.length > NAME_FIELD_LENGTH_160){
             // character count limit
-            validationErrors.push(nameValidationType.LastNameLength.Name);
+            validationErrors.push(nameValidationType.LastNameLength.ErrorField);
         }
     } else {
-        validationErrors.push(nameValidationType.LastNameBlank.Name);
+        validationErrors.push(nameValidationType.LastNameBlank.ErrorField);
     }
 }
 
-const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: NameValidationType, validationErrors: ValidationError[]) => {
+const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if (!previousNamesRadio) {
-        const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_RADIO_UNSELECTED);
-        validationErrors.push(createValidationError(errorMessage, [DirectorField.PREVIOUS_NAMES_RADIO], DirectorField.YES));
+        validationErrors.push(nameValidationType.PreviousNamesRadioUnselected.ErrorField);
     }
     else if (previousNamesRadio == DirectorField.YES) {
         if(formerNames != null && formerNames != "") {
             if (!formerNames.match(REGEX_FOR_VALID_CHARACTERS)){
                 // invalid characters
-                validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.Name);
+                validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.ErrorField);
             } else if (formerNames.length > NAME_FIELD_LENGTH_160){
                 // character count limit
-                validationErrors.push(nameValidationType.PreviousNamesLength.Name);
+                validationErrors.push(nameValidationType.PreviousNamesLength.ErrorField);
             }
         } else {
-            const errorMessage = lookupWebValidationMessage(formerNamesErrorMessageKey.FORMER_NAMES_MISSING);
-            validationErrors.push(createValidationErrorBasic(errorMessage, DirectorField.PREVIOUS_NAMES));
+            validationErrors.push(nameValidationType.PreviousNamesMissing.ErrorField);
         }
     }
 }

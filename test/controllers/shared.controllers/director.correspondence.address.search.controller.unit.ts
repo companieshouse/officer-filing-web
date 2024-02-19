@@ -1,5 +1,3 @@
-import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
-
 jest.mock("../../../src/utils/feature.flag")
 jest.mock("../../../src/services/officer.filing.service");
 jest.mock("../../../src/services/postcode.lookup.service");
@@ -25,6 +23,7 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getUKAddressesFromPostcode, getIsValidUKPostcode } from "../../../src/services/postcode.lookup.service";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
+import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
@@ -120,6 +119,16 @@ describe('Director correspondence address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it.each([[PAGE_URL, "en", PAGE_HEADING], [UPDATE_PAGE_URL, "en", PAGE_HEADING], [PAGE_URL, "cy", "to be translated"], [UPDATE_PAGE_URL, "cy", "to be translated"]])(`Should navigate to '%s' page in english and welsh`, async (url, language, heading) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        directorName: "John Smith"
+      })
+      const response = await request(app).get(url + "?lang=" + language);
+
+      expect(response.text).toContain(heading);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off for '%s'", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
@@ -188,6 +197,7 @@ describe('Director correspondence address search controller test', () => {
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should call postcode service for validating postcode when formatting of UK postcode is valid for '%s'", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"SW1A1AA");
@@ -212,16 +222,20 @@ describe('Director correspondence address search controller test', () => {
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to '%s' page when premise is part of returned addresses", async (url, redirectUrl) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(response.text).toContain("Found. Redirecting to " + redirectUrl);
     });
 
     it.each([[PAGE_URL, CONFIRM_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CONFIRM_PAGE_URL]])("Should navigate to '%s' page when premise is part of returned addresses - case and space insensitivity", async (url, redirectUrl) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
       const response = await request(app).post(url).send({"postcode": "IM2 4NN", "premises": "flat 4 lansdowne"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"IM24NN");
