@@ -78,13 +78,13 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.ETAG: { 
             return {
-                pageHeader: STOP_PAGE_CONTENT.etag.pageHeader.replace(new RegExp(ETAG_PAGE_HEADER, 'g'), localeInfo.i18n.stopPageETAGPageHeader),
+                pageHeader: STOP_PAGE_CONTENT.etag.pageHeader.replace(new RegExp(ETAG_PAGE_HEADER, 'g'), localeInfo.i18n.stopPageEtagPageHeader),
                 pageBody: STOP_PAGE_CONTENT.etag.pageBody
-                    .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageETAGPageBody1)
-                    .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageETAGPageBody2)
-                    .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageETAGStartServiceAgainLink)
-                    .replace(new RegExp(ETAG_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageETAGContactUsLink)
-                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageETAGPageBody3)
+                    .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageEtagPageBody1)
+                    .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
+                    .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
+                    .replace(new RegExp(ETAG_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageEtagContactUsLink)
+                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageEtagPageBody3)
             }
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 
