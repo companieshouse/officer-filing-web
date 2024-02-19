@@ -120,6 +120,16 @@ describe('Director correspondence address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it.each([[PAGE_URL, "en", PAGE_HEADING], [UPDATE_PAGE_URL, "en", PAGE_HEADING], [PAGE_URL, "cy", "to be translated"], [UPDATE_PAGE_URL, "cy", "to be translated"]])(`Should navigate to '%s' page in english and welsh`, async (url, language, heading) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        directorName: "John Smith"
+      })
+      const response = await request(app).get(url + "?lang=" + language);
+
+      expect(response.text).toContain(heading);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off for '%s'", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);

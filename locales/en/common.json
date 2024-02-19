@@ -7,5 +7,6 @@
   "directorDetails": "Director details",
   "directorName": "Name",
   "dateAppointed" : "Date appointed",
-  "dateOfBirth" : "Date of birth"
+  "dateOfBirth" : "Date of birth",
+  "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'"
 }
