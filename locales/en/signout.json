@@ -1,0 +1,11 @@
+{
+    "signoutTitle": "Are you sure you want to sign out?",
+    "signoutDetailsErrorMsg": "Select yes if you want to sign out",
+    "signoutErrorSummaryTitle": "There is a problem",
+    "signoutErrorSummaryText": "Select yes if you want to sign out",
+    "signoutCH01JourneyHintText": "Your answers will not be saved. You will need to start again if you want to appoint, update or remove a company director.",
+    "signoutAP01JourneyHintText": "Your answers will not be saved. You will need to start again if you want to appoint or remove a company director.",
+    "signoutRadioLegend": "Are you sure you want to sign out?",
+    "signoutYesButtonText": "Yes",
+    "signoutNoButtonText": "No"
+}

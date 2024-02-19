@@ -4,25 +4,30 @@ import { SIGNOUT_RETURN_URL_SESSION_KEY } from "../utils/constants";
 import { Session } from "@companieshouse/node-session-handler";
 import { ACCOUNTS_SIGNOUT_PATH } from "../types/page.urls";
 import { logger } from "../utils/logger";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get: Handler = async (req, res) => {
-    const returnPage = saveReturnPageInSession(req)
+    const returnPage = saveReturnPageInSession(req);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
     res.render(Templates.SIGNOUT, {
-        backLinkUrl: returnPage,
-        optionalBackLinkUrl: returnPage,
-        templateName: Templates.SIGNOUT
+        backLinkUrl: addLangToUrl(returnPage, lang),
+        optionalBackLinkUrl: addLangToUrl(returnPage, lang),
+        templateName: Templates.SIGNOUT,
+        ...getLocaleInfo(locales, lang)
     });
 }
 
 export const post = handleError(async (req, res) => {
     const returnPage = getReturnPageFromSession(req.session as Session)
+    const lang = selectLang(req.query.lang);
 
     switch (req.body.signout) {
     case "yes":
-        return res.redirect(ACCOUNTS_SIGNOUT_PATH);
+        return res.redirect(addLangToUrl(ACCOUNTS_SIGNOUT_PATH, lang));
     case "no":
-        return res.redirect(returnPage);
+        return res.redirect(addLangToUrl(returnPage, lang));
     default:
         return showMustSelectButtonError(res, returnPage);
     }
