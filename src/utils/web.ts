@@ -47,10 +47,12 @@ export const setRedirectLink = async (req: Request, checkYourAnswersLink: string
       checkYourAnswersLink: ""
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    const regexAppointCYACheck = new RegExp(`${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END}(\\?.*)?`);
+    const regexUpdateCYACheck = new RegExp(`${UPDATE_DIRECTOR_CHECK_ANSWERS_END}(\\?.*)?`);
 
-    if (checkYourAnswersLink.endsWith(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END)) {
+    if (regexAppointCYACheck.test(checkYourAnswersLink)) {
       return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
-    } else if (checkYourAnswersLink.endsWith(UPDATE_DIRECTOR_CHECK_ANSWERS_END)) {
+    } else if (regexUpdateCYACheck.test(checkYourAnswersLink)) {
       return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req);
     }
   }
