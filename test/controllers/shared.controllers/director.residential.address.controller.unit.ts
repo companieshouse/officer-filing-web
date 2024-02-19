@@ -26,7 +26,7 @@ import {
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
 } from '../../../src/types/page.urls';
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { Request } from "express";
+import e, { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
@@ -493,16 +493,31 @@ describe("Director name controller tests", () => {
           checkYourAnswersLink: "/check-your-answer"
         }
       });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
+      
       const response = (await request(app).post(url).send({
         director_address: "director_registered_office_address",
       }));
 
+      const mappedAddress = {
+        "addressLine1": "Line1",
+        "addressLine2": "Line2",
+        "careOf": "careOf",
+        "country": "England",
+        "locality": "locality",
+        "poBox": "123",
+        "postalCode": "UB7 0GB",
+        "premises": "premises",
+      };
+
+      expect(mockMapCompanyProfileToOfficerFilingAddress).toHaveBeenCalled();
       expect(mockPatchOfficerFiling).toHaveBeenCalled();
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
         "directorResidentialAddressChoice": "director_registered_office_address",
-        "isHomeAddressSameAsServiceAddress": false
-      })
-
+        "isHomeAddressSameAsServiceAddress": false,
+        "residentialAddressHasBeenUpdated": (url === UPDATE_PAGE_URL) ? true : undefined,
+        "residentialAddress": mappedAddress
+      });
       expect(response.text).toContain("Found. Redirecting to " + nextPage);
     });
 
