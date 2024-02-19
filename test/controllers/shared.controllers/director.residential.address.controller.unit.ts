@@ -26,7 +26,7 @@ import {
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
 } from '../../../src/types/page.urls';
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import e, { Request } from "express";
+import { Request } from "express";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../../src/services/company.profile.service";
