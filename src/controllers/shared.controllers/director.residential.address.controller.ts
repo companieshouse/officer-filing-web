@@ -12,8 +12,7 @@ import { DIRECTOR_PROTECTED_DETAILS_PATH,
       } from '../../types/page.urls';
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
-import { whereDirectorLiveResidentialErrorMessageKey } from '../../utils/api.enumerations.keys';
-import { createValidationError, createValidationErrorBasic, formatValidationErrors } from '../../validation/validation';
+import { createValidationError, formatValidationErrors } from '../../validation/validation';
 import { ValidationError } from "../../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
