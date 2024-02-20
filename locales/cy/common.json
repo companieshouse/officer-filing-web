@@ -12,6 +12,7 @@
   "dateOfBirth" : "to be translated",
   "nationality" : "to be translated",
   "occupation" : "to be translated",
+  "noneString": "to be translated",
   "backToCorrespondenceAddress": "to be translated",
-  "noneString": "to be translated"
+  "backToFindHomeAddressText": "to be translated"
 }

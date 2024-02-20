@@ -37,7 +37,7 @@ export const setBackLink = (req: Request, checkYourAnswersLink: string | undefin
  * Checks whether the user came from the check your answers page and if so,
  *  sets the redirect link to the check your answers page instead.
  */
-export const setRedirectLink = async (req: Request, checkYourAnswersLink: string | undefined, redirectLink: string): Promise<string> => {
+export const setRedirectLink = async (req: Request, checkYourAnswersLink: string | undefined, redirectLink: string, lang?: string): Promise<string> => {
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
   const session: Session = req.session as Session;
@@ -47,11 +47,13 @@ export const setRedirectLink = async (req: Request, checkYourAnswersLink: string
       checkYourAnswersLink: ""
     };
     await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    const regexAppointCYACheck = new RegExp(`${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END}(\\?.*)?`);
+    const regexUpdateCYACheck = new RegExp(`${UPDATE_DIRECTOR_CHECK_ANSWERS_END}(\\?.*)?`);
 
-    if (checkYourAnswersLink.endsWith(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH_END)) {
-      return urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req);
-    } else if (checkYourAnswersLink.endsWith(UPDATE_DIRECTOR_CHECK_ANSWERS_END)) {
-      return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req);
+    if (regexAppointCYACheck.test(checkYourAnswersLink)) {
+      return addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
+    } else if (regexUpdateCYACheck.test(checkYourAnswersLink)) {
+      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
     }
   }
   return redirectLink;

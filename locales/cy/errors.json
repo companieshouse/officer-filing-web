@@ -55,6 +55,7 @@
   "error-postal-code-full-invalid": "to be translated",
   "error-premises-characters": "to be translated",
   "error-premises-length": "to be translated",
+  "error-correspondence-address-blank": "to be translated",
   "error-dob-date-missing-day": "to be translated",
   "error-dob-date-missing-month": "to be translated",
   "error-dob-date-missing-year": "to be translated",
@@ -79,5 +80,6 @@
   "error-appointment-date-underage" : "to be translated",
   "error-appointment-date-missing" : "to be translated",
   "error-no-protected-details-radio-button-selected" : "to be translated",
-  "error-consent-to-act-as-director" : "to be translated"
+  "error-consent-to-act-as-director" : "to be translated",
+  "error-residential-address-blank": "to be translated"
 }

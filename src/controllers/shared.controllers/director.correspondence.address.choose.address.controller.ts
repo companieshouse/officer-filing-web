@@ -16,7 +16,10 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { RenderArrayPageParams } from "../../utils/render.page.params";
-
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 export const getCorrespondenceAddressChooseAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try{
@@ -50,9 +53,10 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
   const session: Session = req.session as Session;
   const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+  const lang = selectLang(req.query.lang);
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  const confirmAddressUrl = urlUtils.getUrlToPath(nextPagePath, req);
+  const confirmAddressUrl = addLangToUrl(urlUtils.getUrlToPath(nextPagePath, req), lang);
   const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
   const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
@@ -82,6 +86,17 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
       postalCode: selectedAddress.postcode
     }
   };
+
+  if (isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    patchFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: patchFiling.serviceAddress }, 
+      companyAppointment
+    );
+  }
+  
   await patchOfficerFiling(session, transactionId, submissionId, patchFiling);
 
   return res.redirect(confirmAddressUrl);
@@ -94,14 +109,18 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
 const renderPage = async (req: Request, res: Response, params: RenderArrayPageParams) => {
   const manualAddressPath = params.isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH;
   const addressOptions = getAddressOptions(params.ukAddresses);
+  const locales = getLocalesService();
+  const lang = selectLang(req.query.lang);
 
   return res.render(params.templateName, {
     templateName: params.templateName,
-    backLinkUrl: setBackLink(req, params.officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(params.backUrlPath, req)),
-    enterAddressManuallyUrl: urlUtils.getUrlToPath(manualAddressPath, req),
+    backLinkUrl: setBackLink(req, params.officerFiling.checkYourAnswersLink, addLangToUrl(urlUtils.getUrlToPath(params.backUrlPath, req), lang)),
+    enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualAddressPath, req), lang),
     directorName: formatTitleCase(params.directorName),
     addresses: addressOptions,
     currentPremises: params.officerFiling.serviceAddress?.premises,
-    errors: formatValidationErrors(params.validationErrors)
+    errors: formatValidationErrors(params.validationErrors, lang),
+    ...getLocaleInfo(locales, lang),
+    currentUrl : req.originalUrl
   });
 }

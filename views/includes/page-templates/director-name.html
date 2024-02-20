@@ -35,10 +35,10 @@
           spellcheck: false,
           classes: "govuk-!-width-two-thirds",
           hint: {
-            text: "If the director has more than one previous name, separate each name with a comma."
+            text: i18n.directorPreviousNameHint
           },
           label: {
-            text: "Previous names"
+            text: i18n.directorPreviousNameLabel
           }
         }) }}
         {% endset -%}
@@ -51,14 +51,14 @@
             value: previous_names_radio,
             fieldset: {
               legend: {
-                text: "Has the director used a different name for business purposes in the last 20 years?"
+                text: i18n.directorNamePreviousNameText
               }
             },
             items: [
               {
                 id: "Yes",
                 value: "Yes",
-                text: "Yes",
+                text: i18n.yes,
                 conditional: {
                   html: enterPreviousNamesHtml
                 },
@@ -69,7 +69,7 @@
               {
                 id: "No",
                 value: "No",
-                text: "No",
+                text: i18n.no,
                 attributes: {
                   "data-event-id": "no-previous-names"
                 }
@@ -81,7 +81,7 @@
         {% if isUpdate %}
           {% set insetText = i18n.directorNamePublicRegisterInformation %}
         {% else %}
-          {% set insetText = "We will show the director’s full name on the public Companies House register. We will also show the director’s title and previous names, if relevant." %}
+          {% set insetText = i18n.directorNameInsetText %}
         {% endif %}
         <div class="govuk-inset-text">
           <h2 class="govuk-heading-m">{{ i18n.directorNamePublicRegisterInformationHeading }}</h2>

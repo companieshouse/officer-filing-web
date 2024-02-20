@@ -28,6 +28,9 @@ import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/we
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 export const getCorrespondenceAddressLookUp = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, manualAddressPath: string, isUpdate: boolean) => {
@@ -108,6 +111,9 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
               "postalCode": ukAddress.postcode,
               "country" : getCountryFromKey(ukAddress.country)}
           };
+
+          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
@@ -122,6 +128,17 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
   catch (e) {
     return next(e);
+  }
+};
+
+const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isServiceAddressSameAsRegisteredOfficeAddress: boolean | undefined) => {
+  if (isUpdate) {
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      { isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
+      companyAppointment);
   }
 };
 

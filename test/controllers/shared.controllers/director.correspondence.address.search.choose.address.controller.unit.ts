@@ -34,30 +34,37 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Choose an address";
+const PAGE_HEADING_WELSH = "to be translated";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+const SELECT_ADDRESS_ERROR = "Select the director’s correspondence address";
+const SELECT_ADDRESS_ERROR_WELSH = "to be translated";
 const APPOINT_PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const APPOINT_PAGE_URL_WELSH = APPOINT_PAGE_URL + "?lang=cy";
 const APPOINT_NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const APPOINT_NEXT_PAGE_URL_WELSH = APPOINT_NEXT_PAGE_URL + "?lang=cy";
 const UPDATE_PAGE_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_PAGE_URL_WELSH = UPDATE_PAGE_URL + "?lang=cy";
 const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_NEXT_PAGE_URL_WELSH = UPDATE_NEXT_PAGE_URL + "?lang=cy";
 
 describe("Director correspondence address array page controller tests", () => {
 
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
-        mockPatchOfficerFiling.mockClear();
-        mockGetCompanyAppointmentFullRecord.mockClear();
+      mockPatchOfficerFiling.mockClear();
+      mockGetCompanyAppointmentFullRecord.mockClear();
       mockGetOfficerFiling.mockClear();
     });
   
@@ -250,7 +257,8 @@ describe("Director correspondence address array page controller tests", () => {
               locality: "Test Town",
               country: "England",
               postalCode: "TE6 6ST"
-            }
+            },
+            correspondenceAddressHasBeenUpdated: url === UPDATE_PAGE_URL? true: undefined
           }
         );
       });
@@ -277,7 +285,7 @@ describe("Director correspondence address array page controller tests", () => {
           .post(url)
           .send({ "address_array": "" })
 
-        expect(response.text).toContain("Select the director’s correspondence address");
+        expect(response.text).toContain(SELECT_ADDRESS_ERROR);
       });
 
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])
@@ -286,8 +294,80 @@ describe("Director correspondence address array page controller tests", () => {
         mockGetUKAddressesFromPostcode.mockResolvedValueOnce([]);
         const response = await request(app).post(url);
 
-        expect(response.text).toContain("Select the director’s correspondence address");
+        expect(response.text).toContain(SELECT_ADDRESS_ERROR);
       });
       
+    });
+
+    describe("Welsh language tests for correspondence address array page", () => {
+
+      //get test
+      it.each([[APPOINT_PAGE_URL_WELSH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END + "?lang=cy"], [UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END + "?lang=cy"]])
+      ("Should navigate to director choose address page with lang=cy ", async (url, backLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          serviceAddress: {
+            postalCode: "TE6 6ST"
+          }
+        });
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce([]);
+
+        const response = await request(app).get(url);
+
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+        expect(response.text).toContain(backLink);
+      });
+
+      //post tests
+      it.each([[APPOINT_PAGE_URL_WELSH,APPOINT_NEXT_PAGE_URL_WELSH], [UPDATE_PAGE_URL_WELSH, UPDATE_NEXT_PAGE_URL_WELSH]])
+      ("Should redirect to confirmation page with lang=cy", async (url, nextPageUrl) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          serviceAddress: {
+            postalCode: "TE6 6ST"
+          }
+        });
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce([
+          {
+            premise: "1",
+            addressLine1: "Test Street",
+            addressLine2: "Test Avenue",
+            postTown: "Test Town",
+            country: "GB-ENG",
+            postcode: "TE6 6ST"
+          }
+        ]);
+
+        const response = await request(app)
+          .post(url)
+          .send({ "address_array": "1" })
+
+        expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it.each([APPOINT_PAGE_URL_WELSH, UPDATE_PAGE_URL_WELSH])
+      ("Should show welsh error if no address is selected when lang=cy", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          serviceAddress: {
+            postalCode: "TE6 6ST"
+          }
+        });
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce([
+          {
+            premise: "1",
+            addressLine1: "Test Street",
+            addressLine2: "Test Avenue",
+            postTown: "Test Town",
+            country: "GB-ENG",
+            postcode: "TE6 6ST"
+          }
+        ]);
+
+        const response = await request(app)
+          .post(url)
+          .send({ "address_array": "" })
+
+        expect(response.text).toContain(SELECT_ADDRESS_ERROR_WELSH);
+      });
     });
 });

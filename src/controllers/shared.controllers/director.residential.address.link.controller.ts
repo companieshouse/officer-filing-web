@@ -56,14 +56,15 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
       isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress
     };
 
-    if(isUpdate){
+    if (isUpdate) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
       officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-        { ...officerFilingBody,
-        residentialAddress: officerFiling.residentialAddress }, companyAppointment);
+        { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress }, 
+        companyAppointment
+      );
     }
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);

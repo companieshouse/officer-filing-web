@@ -12,6 +12,7 @@
   "dateOfBirth" : "Date of birth",
   "nationality" : "Nationality",
   "occupation" : "Occupation",
+  "noneString": "None",
   "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'",
-  "noneString": "None"
+  "backToFindHomeAddressText": "Go back to 'Find the director's home address"
 }

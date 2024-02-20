@@ -128,7 +128,6 @@ describe("Director name controller tests", () => {
   });
 
   describe("get tests", () => {
-
     it("Should navigate to director address page", async () => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
@@ -315,7 +314,6 @@ describe("Director name controller tests", () => {
   });
 
   describe("post tests", () => {
-
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`Should render where director lives page if no radio button is selected`, async (url) => {
       const mockPatchOfficerFilingResponse = {
         data: {
@@ -483,25 +481,44 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain("Found. Redirecting to " + redirectLink);
     });
 
-    it.each([PAGE_URL, UPDATE_PAGE_URL])(`should patch the isHomeAddressSameAsServiceAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async (url) => {
+    it.each([[PAGE_URL,APPOINT_DIRECTOR_CYA_PAGE_URL], [UPDATE_PAGE_URL,UPDATE_DIRECTOR_CYA_PAGE_URL]])(`should patch the isHomeAddressSameAsServiceAddress to false (void previous link) if user uses change path from CYA, modifies the ROA as residential address `, async (url, nextPage) => {
       mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
       mockGetOfficerFiling.mockResolvedValueOnce({
         ...directorNameMock,
         isHomeAddressSameAsServiceAddress: true,
         checkYourAnswersLink: "/check-your-answer"
       });
-
+      mockPatchOfficerFiling.mockResolvedValueOnce({
+        data: {
+          checkYourAnswersLink: "/check-your-answer"
+        }
+      });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
+      
       const response = (await request(app).post(url).send({
         director_address: "director_registered_office_address",
       }));
 
+      const mappedAddress = {
+        "addressLine1": "Line1",
+        "addressLine2": "Line2",
+        "careOf": "careOf",
+        "country": "England",
+        "locality": "locality",
+        "poBox": "123",
+        "postalCode": "UB7 0GB",
+        "premises": "premises",
+      };
+
+      expect(mockMapCompanyProfileToOfficerFilingAddress).toHaveBeenCalled();
       expect(mockPatchOfficerFiling).toHaveBeenCalled();
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
         "directorResidentialAddressChoice": "director_registered_office_address",
-        "isHomeAddressSameAsServiceAddress": false
-      })
-
-      //expect(response.text).toContain("Found. Redirecting to " + APPOINT_DIRECTOR_CYA_PAGE_URL);
+        "isHomeAddressSameAsServiceAddress": false,
+        "residentialAddressHasBeenUpdated": (url === UPDATE_PAGE_URL) ? true : undefined,
+        "residentialAddress": mappedAddress
+      });
+      expect(response.text).toContain("Found. Redirecting to " + nextPage);
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should redirect to ${APPOINT_DIRECTOR_CHECK_ANSWERS_PATH} page if correspondence address is selected and CYA link established`, async (url) => {

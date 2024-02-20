@@ -6,7 +6,7 @@ import { getField, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
@@ -58,6 +58,7 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
 
     const officerFiling: OfficerFiling = {
       title: getField(req, DirectorField.TITLE)?.trim(),
@@ -74,8 +75,9 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
       const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
       if (currentOfficerFiling.referenceEtag !== companyAppointment.etag) {
+        const stopPage = addLangToUrl(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), lang);
         return res.redirect(
-          urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
+          urlUtils.setQueryParam(stopPage, 
           URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
       }
       
@@ -88,8 +90,8 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
 
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
 
-    const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
-    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPage));
+    const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
+    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPage, lang));
 
   } catch(e) {
     return next(e);

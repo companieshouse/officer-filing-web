@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Choose a home address" %}
+{% set title = i18n.chooseHomeAddress %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -22,14 +22,14 @@
         {% include "includes/list/address-array.html" %}
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-residential-address-manual-link">Enter address manually</a>
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-residential-address-manual-link">{{ i18n.enterAddressManually }}</a>
         </div>
 
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>
