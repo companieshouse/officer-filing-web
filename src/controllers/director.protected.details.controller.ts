@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+  urlParams,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
@@ -26,6 +27,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
+
+    if(req.query.cya_backlink === "true") {
+      officerFiling.checkYourAnswersLink = "";
+           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    }
 
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,

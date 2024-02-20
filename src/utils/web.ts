@@ -99,3 +99,8 @@ export const getAddressOptions = (ukAddresses: UKAddress[]) => {
     };
   });
 }
+
+export const addCheckYourAnswersParamToLink = (url: string): string => {
+  const separator = url.includes('?') ? '&' : '?';
+  return url + separator + "cya_backlink=true";
+};

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_DATE_DETAILS_PATH } from "../types/page.urls";
+import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_DATE_DETAILS_PATH, urlParams } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -11,7 +11,7 @@ import { toReadableFormat } from "../utils/date";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { CONSENT_TO_ACT_AS_DIRECTOR, STOP_TYPE } from "../utils/constants";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../utils/web";
+import { addCheckYourAnswersParamToLink, getField } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { FormattedValidationErrors } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
@@ -82,7 +82,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   
   return res.render(Templates.APPOINT_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
+    backLinkUrl: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req)),
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,
@@ -115,3 +115,4 @@ const createDirectorAppliedToProtectDetailsString = (directorAppliedToProtectDet
     return "No"
   }
 }
+
