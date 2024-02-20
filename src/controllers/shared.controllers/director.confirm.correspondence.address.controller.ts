@@ -24,6 +24,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
 
+console.log('adding to see if it kicks off the build');
     if(isUpdate){
       enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req)
     } else {
