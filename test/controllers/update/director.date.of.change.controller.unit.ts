@@ -10,7 +10,7 @@ import app from "../../../src/app";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
 import { validCompanyEstablishedAfter2009Profile } from "../../mocks/company.profile.mock";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
@@ -30,6 +30,7 @@ const PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const PAGE_URL_FROM_CYA = DIRECTOR_DATE_OF_CHANGE_PATH + "?cya_backlink=true";
 const NEXT_PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -195,3 +196,30 @@ describe("Director date of change controller tests", () => {
       });
     });
 });
+
+it("Should wipe flag if ?cya_backlink exists in url", async () => {
+  const mockOfficerFiling = {
+    checkYourAnswersLink: "check-your-answers-link"
+
+  };
+  mockGetOfficerFiling.mockResolvedValueOnce(mockOfficerFiling);
+  
+  const response = await request(app).get(PAGE_URL_FROM_CYA);
+  expect(response.text).toContain(PAGE_HEADING);
+  expect(mockOfficerFiling.checkYourAnswersLink).toBe("");
+
+});
+
+it("Should not wipe flag if ?cya_backlink does not exist in url", async () => {
+  const mockOfficerFiling = {
+    checkYourAnswersLink: "check-your-answers-link"
+
+  };
+  mockGetOfficerFiling.mockResolvedValueOnce(mockOfficerFiling);
+  
+  const response = await request(app).get(PAGE_URL);
+  expect(response.text).toContain(PAGE_HEADING);
+  expect(mockOfficerFiling.checkYourAnswersLink).toBe("check-your-answers-link");
+
+});
+
