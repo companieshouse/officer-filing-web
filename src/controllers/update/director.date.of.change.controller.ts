@@ -25,10 +25,9 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-
     const officerFiling : OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const dateOfChangeFields = officerFiling.directorsDetailsChangedDate ? officerFiling.directorsDetailsChangedDate.split('-').reverse() : [];
-
+    
     return renderPage(resp, req, officerFiling, [], dateOfChangeFields, companyNumber);
   } catch(e) {
     return next(e);
@@ -78,6 +77,11 @@ const renderPage = async (res: Response, req: Request, officerFiling: OfficerFil
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
   const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
+
+       if (req.query.cya_backlink === 'true') {
+        officerFiling.checkYourAnswersLink = "";    
+   }
+
   const date = {
     date_of_change: {
       "date_of_change-day": dateOfChangeFields[0],
@@ -85,7 +89,7 @@ const renderPage = async (res: Response, req: Request, officerFiling: OfficerFil
       "date_of_change-year": dateOfChangeFields[2]
     }
   };
-
+  
   return res.render(Templates.DIRECTOR_DATE_OF_CHANGE, {
     templateName: Templates.DIRECTOR_DATE_OF_CHANGE,
     backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang),

@@ -11,7 +11,7 @@ import { toReadableFormat } from "../utils/date";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { CONSENT_TO_ACT_AS_DIRECTOR, STOP_TYPE } from "../utils/constants";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../utils/web";
+import { addCheckYourAnswersParamToLink, getField } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { FormattedValidationErrors } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
@@ -93,13 +93,13 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     dateOfBirth: toReadableFormat(officerFiling.dateOfBirth),
     appointedOn: toReadableFormat(officerFiling.appointedOn),
     protectedDetails: createDirectorAppliedToProtectDetailsString(officerFiling.directorAppliedToProtectDetails),
-    nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
-    dateOfBirthLink: urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req),
-    dateAppointedLink: urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req),
-    nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
-    occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
-    protectedDetailsLink: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
-    correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+    nameLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)),
+    dateOfBirthLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
+    dateAppointedLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
+    nationalityLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
+    occupationLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)),
+    protectedDetailsLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req)),
+    correspondenceAddressChangeLink: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)), 
     errors: errors
   });
 }

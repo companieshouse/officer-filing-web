@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from "express";
 import { urlUtils } from '../../utils/url';
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getField, getFromCheckYourAnswers, setBackLink, setRedirectLink } from "../../utils/web";
 import { TITLE_LIST } from "../../utils/properties";
 import { DirectorField } from "../../model/director.model";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
@@ -23,6 +23,8 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
     const locales = getLocalesService();
     let currentUrl;
     let directorName;
+
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
 
     if(isUpdate){
       const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
@@ -66,6 +68,8 @@ export const postDirectorName = async (req: Request, res: Response, next: NextFu
       lastName: getField(req, DirectorField.LAST_NAME)?.trim(),
       formerNames: getPreviousNamesForFiling(req)?.trim()
     };
+
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
 
     if (isUpdate) {
       const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);

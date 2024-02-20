@@ -3,7 +3,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField, getFromCheckYourAnswers, setBackLink, setRedirectLink } from "../../utils/web";
 import { NATIONALITY_LIST } from "../../utils/properties";
 import { formatTitleCase } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
@@ -22,7 +22,7 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     let currentUrl: string;
-
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
     if (isUpdate) {
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req)
     } else {

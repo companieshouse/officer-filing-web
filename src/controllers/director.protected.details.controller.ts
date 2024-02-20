@@ -11,7 +11,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { DirectorField } from "../model/director.model";
-import { getField, setRedirectLink } from "../utils/web";
+import { getField, getFromCheckYourAnswers, setBackLink, setRedirectLink } from "../utils/web";
 import { buildValidationErrors } from "../validation/protected.details.validation";
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
 
@@ -26,10 +26,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
 
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-      backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req)), lang),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       protected_details: calculateProtectedDetailsRadioFromFiling(officerFiling.directorAppliedToProtectDetails),
       ...getLocaleInfo(locales, lang),
@@ -48,7 +49,8 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-
+    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
       directorAppliedToProtectDetails: directorAppliedToProtectDetailsValue(req),
@@ -60,7 +62,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const formattedErrors = formatValidationErrors(validationErrors, lang);
       return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
         templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
-        backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),
+        backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req)), lang),
         directorName: formatTitleCase(retrieveDirectorNameFromFiling(patchFiling.data)),
         errors: formattedErrors,
         director_address: directorAppliedToProtectDetailsValue(req),

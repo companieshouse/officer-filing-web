@@ -18,12 +18,9 @@ import { DirectorField } from "../../src/model/director.model";
 import {
   DIRECTOR_PROTECTED_DETAILS_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   urlParams,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 
@@ -64,6 +61,8 @@ describe("Director protected details controller tests", () => {
     beforeEach(() => {
       mocks.mockSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
+      mockPatchOfficerFiling.mockClear();
+      mockBuildValidationErrors.mockClear();
     });
   
     describe("get tests", () => {
@@ -131,11 +130,11 @@ describe("Director protected details controller tests", () => {
 
     describe("post tests", () => {
       it("should redirect to appoint director check answers page when there are no errors", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockGetOfficerFiling.mockResolvedValue({
           directorName: "Test Director"
         })
-        mockBuildValidationErrors.mockReturnValueOnce([]);
-        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        mockBuildValidationErrors.mockReturnValue([]);
+        mockPatchOfficerFiling.mockResolvedValue({data:{
         }});
 
         const response = await request(app).post(PAGE_URL);
@@ -145,7 +144,7 @@ describe("Director protected details controller tests", () => {
       });
 
       it("should display an error when no radio button is selected", async () => {
-        mockGetOfficerFiling.mockResolvedValueOnce({
+        mockGetOfficerFiling.mockResolvedValue({
           directorName: "Test Director"
         })
         
@@ -156,8 +155,8 @@ describe("Director protected details controller tests", () => {
             link: 'protected_details'
           }
         ];
-        mockBuildValidationErrors.mockReturnValueOnce(validationErrorsResponse);
-        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        mockBuildValidationErrors.mockReturnValue(validationErrorsResponse);
+        mockPatchOfficerFiling.mockResolvedValue({data:{
         }});
 
         const response = await request(app).post(PAGE_URL);
@@ -168,7 +167,7 @@ describe("Director protected details controller tests", () => {
       it("should catch error if patch officer filing failed", async () => {
         const mockPatchOfficerFilingResponse = {
         };
-        mockPatchOfficerFiling.mockResolvedValueOnce(mockPatchOfficerFilingResponse);
+        mockPatchOfficerFiling.mockResolvedValue(mockPatchOfficerFilingResponse);
         const response = (await request(app).post(PAGE_URL).send({}));
         expect(response.text).not.toContain(protectedDetailsErrorMessageKey.NO_PROTECTED_DETAILS_RADIO_BUTTON_SELECTED);
         expect(response.text).not.toContain(PAGE_HEADING);

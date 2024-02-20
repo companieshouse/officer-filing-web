@@ -26,6 +26,7 @@ import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../.
 import { STOP_TYPE } from "../../utils/constants";
 import { getCurrentOrFutureDissolved } from "../../services/stop.page.validation.service";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { addCheckYourAnswersParamToLink } from "../../utils/web";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -92,7 +93,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   return res.render(Templates.UPDATE_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.UPDATE_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req),
+    backLinkUrl: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req)),
     cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
     company: companyProfile,
     officerFiling: officerFiling,

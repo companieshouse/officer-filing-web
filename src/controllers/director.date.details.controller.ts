@@ -12,7 +12,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { retrieveDirectorNameFromFiling } from "../utils/format";
-import { setBackLink, setRedirectLink } from "../utils/web";
+import { getFromCheckYourAnswers, setBackLink, setRedirectLink } from "../utils/web";
 import { buildDateString } from "../utils/date";
 import { AppointmentDateValidation } from "../validation/appointment.date.validation.config";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -27,7 +27,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     var dateOfBirthFields = officerFiling.dateOfBirth ? officerFiling.dateOfBirth.split('-').reverse() : [];
     var dateOfAppointmentFields = officerFiling.appointedOn ? officerFiling.appointedOn.split('-').reverse() : [];
-
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
+    
     return renderPage(res, req, officerFiling, [], dateOfBirthFields, dateOfAppointmentFields);
 
   } catch (e) {

@@ -7,7 +7,7 @@ import { OCCUPATION_LIST } from "../../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameBasedOnJourney, getField, getFromCheckYourAnswers, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
 import { formatSentenceCase, formatTitleCase } from "../../utils/format";
@@ -33,7 +33,8 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-
+    officerFiling.checkYourAnswersLink = getFromCheckYourAnswers(req, officerFiling);
+    
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
@@ -59,7 +60,6 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   const occupation = getField(req, DirectorField.OCCUPATION);
   const frontendValidationErrors = validateOccupation(occupation, OccupationValidation);
-
   // render validation errors
   if(frontendValidationErrors) {
     return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate));

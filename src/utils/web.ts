@@ -99,3 +99,27 @@ export const getAddressOptions = (ukAddresses: UKAddress[]) => {
     };
   });
 }
+
+/**
+ * Adds cya_baclink parameter to a link - for checking if the user has come from the check your answers page.
+ * @param url 
+ */
+export const addCheckYourAnswersParamToLink = (url: string): string => {
+  const separator = url.includes('?') ? '&' : '?';
+  return url + separator + "cya_backlink=true";
+};
+
+
+/**
+ * Checks if user has come from url with cya_backlink parameter, and sets officerFiling.checkYourAnswersLink to empty string if not.
+ * @param req 
+ * @param officerFiling 
+ * @returns 
+ */
+export function getFromCheckYourAnswers(req, officerFiling) {
+    if (req.query.cya_backlink !== "true") {
+     officerFiling.checkYourAnswersLink = "";
+    } 
+    return officerFiling.checkYourAnswersLink;
+}
+

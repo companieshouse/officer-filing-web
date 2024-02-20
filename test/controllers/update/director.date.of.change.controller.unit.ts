@@ -65,7 +65,7 @@ describe("Director date of change controller tests", () => {
 
       });
 
-      it("Should populate backlink as check your answers path if flag is true", async () => {
+      it("Should populate backlink as udpate director details path if flag is false", async () => {
         mockGetCompanyAppointmentFullRecord.mockResolvedValue({
           etag: "etag",
           forename: "John",
@@ -74,13 +74,13 @@ describe("Director date of change controller tests", () => {
            });
     
         mockGetOfficerFiling.mockResolvedValueOnce({
-          checkYourAnswersLink: "update-director-check-answers"
+          checkYourAnswersLink: ""
         })
   
         const response = await request(app).get(PAGE_URL);
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain("John Mid Smith");
-        expect(response.text).toContain("update-director-check-answers");
+        expect(response.text).toContain("update-director-details");
       });
 
       it("Should catch error if error occurred", async () => {
