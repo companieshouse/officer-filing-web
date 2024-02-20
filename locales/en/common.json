@@ -8,5 +8,6 @@
   "directorName": "Name",
   "dateAppointed" : "Date appointed",
   "dateOfBirth" : "Date of birth",
-  "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'"
+  "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'",
+  "backToFindHomeAddressText": "Go back to 'Find the director's home address"
 }

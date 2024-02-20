@@ -8,9 +8,13 @@ import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
+import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
+import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
@@ -19,10 +23,12 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
   
     return res.render(templateName, {
       templateName: templateName,
-      backLinkUrl: urlUtils.getUrlToPath(backUrlPath, req),
+      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(directorName),
-      enterAddressManuallyUrl: urlUtils.getUrlToPath(manualEntryUrl, req),
-      ...officerFiling.residentialAddress
+      enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrl, req), lang),
+      ...officerFiling.residentialAddress,
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(req, isUpdate, lang),
     });
   } catch (e) {
     return next(e);
@@ -35,6 +41,7 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
 
     const officerFilingBody: OfficerFiling = {
       isHomeAddressSameAsServiceAddress: false
@@ -53,10 +60,18 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     if (officerFiling.checkYourAnswersLink) {
-      return res.redirect(urlUtils.getUrlToPath(checkYourAnswersLink, req));
+      return res.redirect(addLangToUrl(urlUtils.getUrlToPath(checkYourAnswersLink, req), lang));
     }
-    return res.redirect(urlUtils.getUrlToPath(nextPageurl, req));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageurl, req), lang));
   } catch (e) {
     return next(e);
   }
 };
+
+const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
+  if(isUpdate){
+      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
+    } else {
+      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
+  }
+}
