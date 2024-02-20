@@ -88,7 +88,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),
     currentUrl: urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req),
-    backLinkUrl: addCheckYourAnswersParamToLink( addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req)), lang),
+    backLinkUrl: addCheckYourAnswersParamToLink(addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang)),
     cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
     company: companyProfile,
     officerFiling: officerFiling,
