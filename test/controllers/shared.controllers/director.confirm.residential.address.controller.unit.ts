@@ -137,6 +137,17 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).toContain(backLink);
       });
 
+      it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async (url, backLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "John Smith",
+          residentialAddressBackLink: backLink
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+        const response = await request(app).get(url+"?lang=cy");
+
+        expect(response.text).toContain("to be translated");
+      });
+
       it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END", async (url, backLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
@@ -250,7 +261,7 @@ describe("Director confirm residential address controller tests", () => {
         mockPatchOfficerFiling.mockRejectedValue(new Error())       
         const response = await request(app).post(url);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
-      });  
+      }); 
   
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("should set home address same as service address to false", async (url) => {
         mockGetOfficerFiling.mockReturnValueOnce({referenceAppointmentId: "123"});
