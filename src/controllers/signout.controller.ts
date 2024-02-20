@@ -12,9 +12,9 @@ export const get: Handler = async (req, res) => {
     const locales = getLocalesService();
 
     res.render(Templates.SIGNOUT, {
-        backLinkUrl: addLangToUrl(returnPage, lang),
-        optionalBackLinkUrl: addLangToUrl(returnPage, lang),
+        backLinkUrl: returnPage,
         templateName: Templates.SIGNOUT,
+        currentUrl: req.originalUrl,
         ...getLocaleInfo(locales, lang)
     });
 }
@@ -27,11 +27,24 @@ export const post = handleError(async (req, res) => {
     case "yes":
         return res.redirect(addLangToUrl(ACCOUNTS_SIGNOUT_PATH, lang));
     case "no":
-        return res.redirect(addLangToUrl(returnPage, lang));
+        return res.redirect(returnPage);
     default:
-        return showMustSelectButtonError(res, returnPage);
+        return renderPage(res, req, returnPage);
     }
 })
+
+export const renderPage = (res: Response, req: Request, returnPage: string) => {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
+    res.render(Templates.SIGNOUT, {
+        backLinkUrl: returnPage,
+        noInputSelectedError: true,
+        templateName: Templates.SIGNOUT,
+        currentUrl: req.originalUrl,
+        ...getLocaleInfo(locales, lang)
+    });
+}
 
 // Async version of express handler so that static analysers don't complain that an await statement 
 // isn't needed when it is.
@@ -48,19 +61,25 @@ function handleError(handler: AsyncHandler): AsyncHandler {
     }
 }
 
-function showMustSelectButtonError(res: Response, returnPage: string) {
+function showMustSelectButtonError(res: Response, req: Request, returnPage: string) {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
     res.status(400);
     return res.render(Templates.SIGNOUT, {
         backLinkUrl: returnPage,
         noInputSelectedError: true,
-        templateName: Templates.SIGNOUT
+        templateName: Templates.SIGNOUT,
+        currentUrl: req.originalUrl,
+        ...getLocaleInfo(locales, lang)
     });
 }
 
 function saveReturnPageInSession(req: Request): string {
-    const returnPageUrl = req.headers.referer!
-    req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, returnPageUrl)
-    return returnPageUrl
+    const lang = selectLang(req.query.lang);
+    const returnPageUrl = req.headers.referer!;
+    req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(returnPageUrl, lang));
+    return addLangToUrl(returnPageUrl, lang);
 }
 
 function getReturnPageFromSession(session: Session): string {

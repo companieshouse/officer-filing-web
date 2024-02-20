@@ -77,6 +77,17 @@ describe("Signout controller tests", () => {
           expect(response.get('Location')).toBe(previousLocation)
     });
 
+    it('should return the user to their previous location if they select "no"2 ', async () => {
+      const previousLocation = 'http://example.com?lang=cy'
+      session.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, previousLocation)
+      const response = await request(app)
+        .post(SIGNOUT_LOCATION)
+        .query({lang: 'cy'})
+        .send({signout: 'no'})
+      expect(response.status).toBe(302)
+      expect(response.get('Location')).toBe(previousLocation)
+    });
+
     it('should direct to account signout if they select "yes"', async () => {
         const response = await request(app)
           .post(SIGNOUT_LOCATION)

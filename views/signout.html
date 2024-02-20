@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 
+{% set title = i18n.signoutTitle %}
+
 {% block pageTitle %}
-    {% if noInputSelectedError %}Error: {% endif %}
-    {% set title = i18n.signoutTitle %}
+    {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block header %}
@@ -23,7 +24,7 @@
 {% block content %}
     {% if noInputSelectedError %}
         {% set detailsErrorMsg = {
-            text: "Select yes if you want to sign out"
+            text: i18n.signoutNoInputError
         } %}
 
         {{ govukErrorSummary({

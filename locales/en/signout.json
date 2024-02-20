@@ -7,5 +7,6 @@
     "signoutAP01JourneyHintText": "Your answers will not be saved. You will need to start again if you want to appoint or remove a company director.",
     "signoutRadioLegend": "Are you sure you want to sign out?",
     "signoutYesButtonText": "Yes",
-    "signoutNoButtonText": "No"
+    "signoutNoButtonText": "No",
+    "signoutNoInputError": "Select yes if you want to sign out"
 }
