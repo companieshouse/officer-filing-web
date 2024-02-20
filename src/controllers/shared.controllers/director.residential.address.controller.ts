@@ -24,6 +24,9 @@ import { validateManualAddress } from "../../validation/manual.address.validatio
 import { logger } from "../../utils/logger";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
 import { RenderAddressRadioParams } from "../../utils/render.page.params";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 
 const directorResidentialChoiceHtmlField: string = "director_address";
 
@@ -69,6 +72,8 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
         formattedErrors: formattedErrors});
     }
 
+    const appointmentId = officerFiling.referenceAppointmentId as string;
+    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
     const officerFilingBody: OfficerFiling = {
       directorResidentialAddressChoice: selectedSraAddressChoice
     };
@@ -76,14 +81,30 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     if (selectedSraAddressChoice === "director_registered_office_address") {
       officerFilingBody.isHomeAddressSameAsServiceAddress = false;
       officerFilingBody.residentialAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+     
+      if (isUpdate) {
+        const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+        officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+          { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFilingBody.residentialAddress },
+          companyAppointment
+        );
+      }
 
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       setRedirectROASelected(isUpdate, res, req, patchFiling.data);
 
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
-      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       
+      if (isUpdate) {
+        const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+        officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+          { isHomeAddressSameAsServiceAddress: officerFiling.isHomeAddressSameAsServiceAddress, residentialAddress: officerFilingBody.residentialAddress },
+          companyAppointment
+        );
+      }
+
+      await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
       setRedirectCorrespondanceAddressSelected(isUpdate, res, req, officerFiling);
 
     } else {
