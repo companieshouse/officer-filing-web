@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import {
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  urlParams,
 } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
