@@ -10,7 +10,8 @@ import {
   getCountryFromKey,
   getDirectorNameBasedOnJourney,
   getField,
-  setRedirectLink
+  setRedirectLink,
+  addCheckYourAnswersParamToLink
 } from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -18,6 +19,12 @@ import { getCompanyAppointmentFullRecord } from "../../src/services/company.appo
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
+const mockSession: any = {
+  data: {},
+  get: () => { },
+  getExtraData: () => { },
+  setExtraData: () => { }
+};
 
 beforeEach(() => {
   mocks.mockSessionMiddleware.mockClear();
@@ -167,14 +174,13 @@ describe('setRedirectLink', () => {
 
   describe('getDirectorNameBasedOnJourney', () => {
     it('should retrieve director name from appointment if isUpdate is true', async () => {
-      const mockSession = { transactionId: '123', submissionId: '456' };
-      const mockReq: Request = {}  as Request;
+      const mockReq: Request = {} as Request;
       mockReq.params = { PARAM_COMPANY_NUMBER: "12345678" };
 
-      const mockOfficerFiling = { 
+      const mockOfficerFiling = {
         referenceAppointmentId: '123',
         firstName: "Peter",
-        lastName: "Parker" 
+        lastName: "Parker"
       };
 
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
@@ -190,10 +196,9 @@ describe('setRedirectLink', () => {
   
 
     it('should retrieve director name from filing if isUpdate is false', async () => {
-      const mockReq : Request = { body: {} } as Request;
-      const mockSession = {};
-      const mockOfficerFiling = { 
-        referenceAppointmentId: '123', 
+      const mockReq: Request = {} as Request;
+      const mockOfficerFiling = {
+        referenceAppointmentId: '123',
         firstName: "John",
         lastName: "Doe"
       };
@@ -238,5 +243,19 @@ describe('getAddressOptions', () => {
     const result = getAddressOptions(ukAddresses);
 
     expect(result).toEqual(expectedOptions);
+  });
+});
+
+describe('addCheckYourAnswersParamToLink', () => {
+  it('should add cya_backlink parameter with ? if URL does not contain ?', () => {
+    const url = 'http://example.com';
+    const result = addCheckYourAnswersParamToLink(url);
+    expect(result).toBe('http://example.com?cya_backlink=true');
+  });
+
+  it('should add cya_backlink parameter with & if URL already contains ?', () => {
+    const url = 'http://example.com?param=value';
+    const result = addCheckYourAnswersParamToLink(url);
+    expect(result).toBe('http://example.com?param=value&cya_backlink=true');
   });
 });
