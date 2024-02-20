@@ -57,7 +57,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     return res.render(Templates.REMOVE_DIRECTOR_CHECK_ANSWERS, {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
-      backLinkUrl: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
+      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req), lang),
       company: companyProfile,
       directorTitle: formatTitleCase(appointment.title),
       name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),

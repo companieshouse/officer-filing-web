@@ -92,8 +92,8 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   return res.render(Templates.UPDATE_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.UPDATE_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),
-    backLinkUrl: urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req),
-    cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+    backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req), lang),
+    cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
     company: companyProfile,
     officerFiling: officerFiling,
     directorTitle: formatTitleCase(officerFiling.title),
