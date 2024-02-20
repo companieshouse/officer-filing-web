@@ -66,9 +66,8 @@ describe("Director details tests", () => {
 
     it("Should display the update director details page in Welsh", async () => {
       const response = await request(app).get(PAGE_URL_WELSH);
-      expect(response.text).toContain("TO BE TRANSLATED");
-      expect(response.text).toContain("TO BE TRANSLATED");
-      expect(response.text).toContain("TO BE TRANSLATED");
+      expect(response.text).toContain("to be translated");
+
     });
 
     it("Should display the details for the active director", async () => {

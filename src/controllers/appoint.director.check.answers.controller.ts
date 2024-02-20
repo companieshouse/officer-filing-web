@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_DATE_DETAILS_PATH, urlParams } from "../types/page.urls";
+import { DIRECTOR_PROTECTED_DETAILS_PATH, APPOINT_DIRECTOR_SUBMITTED_PATH, CURRENT_DIRECTORS_PATH, URL_QUERY_PARAM, BASIC_STOP_PAGE_PATH, DIRECTOR_NAME_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_DATE_DETAILS_PATH, urlParams, APPOINT_DIRECTOR_CHECK_ANSWERS_PATH } from "../types/page.urls";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -9,7 +9,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { toReadableFormat } from "../utils/date";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
-import { CONSENT_TO_ACT_AS_DIRECTOR, STOP_TYPE } from "../utils/constants";
+import { STOP_TYPE } from "../utils/constants";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { addCheckYourAnswersParamToLink, getField } from "../utils/web";
 import { DirectorField } from "../model/director.model";
@@ -17,6 +17,7 @@ import { FormattedValidationErrors } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
 import { getValidationStatus } from "../services/validation.status.service";
 import { closeTransaction } from "../services/transaction.service";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -43,17 +44,18 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
 
     // Check if consentToAct checkbox has been ticked
     if (getField(req, DirectorField.DIRECTOR_CONSENT) !== DirectorField.DIRECTOR_CONSENT) {
-      const consentError = createValidationErrorBasic(CONSENT_TO_ACT_AS_DIRECTOR, DirectorField.DIRECTOR_CONSENT);
+      const consentError = createValidationErrorBasic("consent-to-act-as-director", DirectorField.DIRECTOR_CONSENT);
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      return renderPage(req, res, companyNumber, officerFiling, formatValidationErrors([consentError]));
+      return renderPage(req, res, companyNumber, officerFiling, formatValidationErrors([consentError], lang));
     }
 
     // Check if company has been dissolved
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED));
+      return res.redirect(addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED), lang));
     }
 
     // Patch consentToAct boolean
@@ -65,12 +67,12 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     // Run full api validation
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     if (!validationStatus.isValid) {
-      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG));
+      return res.redirect(addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG), lang));
     }
 
     // Close transaction and go to submitted page
     await closeTransaction(session, companyNumber, submissionId, transactionId);
-    return res.redirect(urlUtils.getUrlToPath(APPOINT_DIRECTOR_SUBMITTED_PATH, req));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_SUBMITTED_PATH, req), lang));
 
   } catch (e) {
     return next(e);
@@ -79,40 +81,45 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
 const renderPage = async (req: Request, res: Response, companyNumber: string, officerFiling: OfficerFiling, errors?: FormattedValidationErrors) => {
   const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
   
   return res.render(Templates.APPOINT_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
-    backLinkUrl: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req)),
-    cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+    ...getLocaleInfo(locales, lang),
+    currentUrl: urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req),
+    backLinkUrl: addCheckYourAnswersParamToLink( addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req)), lang),
+    cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
     company: companyProfile,
     officerFiling: officerFiling,
     directorTitle: formatTitleCase(officerFiling.title),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     formerNames:  formatTitleCase(officerFiling.formerNames),
     occupation:  formatTitleCase(officerFiling.occupation),
-    dateOfBirth: toReadableFormat(officerFiling.dateOfBirth),
-    appointedOn: toReadableFormat(officerFiling.appointedOn),
-    protectedDetails: createDirectorAppliedToProtectDetailsString(officerFiling.directorAppliedToProtectDetails),
-    nameLink: urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req),
-    dateOfBirthLink: urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req),
-    dateAppointedLink: urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req),
-    nationalityLink: urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req),
-    occupationLink: urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req),
-    protectedDetailsLink: urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req),
-    correspondenceAddressChangeLink: urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+    dateOfBirth: toReadableFormat(officerFiling.dateOfBirth, lang),
+    appointedOn: toReadableFormat(officerFiling.appointedOn, lang),
+    protectedDetails: createDirectorAppliedToProtectDetailsString(officerFiling.directorAppliedToProtectDetails, req),
+    nameLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req), lang),
+    dateOfBirthLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req), lang),
+    dateAppointedLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req), lang),
+    nationalityLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req), lang),
+    occupationLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req), lang),
+    protectedDetailsLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang),
+    correspondenceAddressChangeLink: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang),
     errors: errors
   });
 }
 
-const createDirectorAppliedToProtectDetailsString = (directorAppliedToProtectDetails: boolean | undefined) : string => {
+const createDirectorAppliedToProtectDetailsString = (directorAppliedToProtectDetails: boolean | undefined, req: Request) : string => {
+  const localeInfo = getLocaleInfo(getLocalesService(), selectLang(req.query.lang));
   if(directorAppliedToProtectDetails === undefined){
     return ""
   }
   if(directorAppliedToProtectDetails === true){
-    return "Yes"
+    return localeInfo.i18n.yes
   }
   else{
-    return "No"
+    return localeInfo.i18n.no
   }
 }
 

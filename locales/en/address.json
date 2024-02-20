@@ -3,6 +3,8 @@
   "enterAddressManually": "Enter address manually",
   "ukPostcode": "UK Postcode",
   "premisesInput": "Property name or number",
-  "premisesHint": "For example, 'The Mill', '116' or 'Flat 37a'"
-
+  "premisesHint": "For example, 'The Mill', '116' or 'Flat 37a'",
+  "chooseCorrespondenceAddress": "Choose a correspondence address",
+  "chooseHomeAddress": "Choose a home address",
+  "chooseAnAddress": "Choose an address"
 }
