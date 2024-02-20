@@ -197,7 +197,9 @@ describe('Director correspondence address search controller test', () => {
     it.each([PAGE_URL, UPDATE_PAGE_URL])("should call postcode service for validating postcode when formatting of UK postcode is valid for '%s'", async (url) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      if (url == PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      }
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"SW1A1AA");
@@ -207,7 +209,11 @@ describe('Director correspondence address search controller test', () => {
     // redirect tests
     it.each([[PAGE_URL, CHOOSE_ADDRESS_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CHOOSE_ADDRESS_PAGE_URL]])("Should navigate to '%s' page when premises is null", async (url, redirectUrl) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
-      mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses)
+      mockGetOfficerFiling.mockResolvedValueOnce({});
+      if (url == PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      }
       const response = await request(app).post(url).send({"postcode": "SW1A1AA"});
 
       expect(response.text).toContain("Found. Redirecting to " + redirectUrl);
@@ -216,6 +222,10 @@ describe('Director correspondence address search controller test', () => {
     it.each([[PAGE_URL, CHOOSE_ADDRESS_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_CHOOSE_ADDRESS_PAGE_URL]])("Should navigate to '%s' page when premise is not part of returned addresses", async (url, redirectUrl) => {
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
+      mockGetOfficerFiling.mockResolvedValueOnce({});
+      if (url == PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      }
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "121"});
 
       expect(response.text).toContain("Found. Redirecting to " + redirectUrl);
@@ -225,7 +235,9 @@ describe('Director correspondence address search controller test', () => {
       mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      if (url == PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      }
       const response = await request(app).post(url).send({"postcode": "SW1A1AA", "premises": "123"});
 
       expect(response.text).toContain("Found. Redirecting to " + redirectUrl);
@@ -235,7 +247,9 @@ describe('Director correspondence address search controller test', () => {
       mockGetOfficerFiling.mockResolvedValueOnce({});
       mockGetIsValidUKPostcode.mockReturnValue(true);
       mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      if (url == PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
+      }
       const response = await request(app).post(url).send({"postcode": "IM2 4NN", "premises": "flat 4 lansdowne"});
 
       expect(getIsValidUKPostcode).toHaveBeenCalledWith(expect.anything(),"IM24NN");

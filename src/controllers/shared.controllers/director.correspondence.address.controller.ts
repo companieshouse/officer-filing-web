@@ -27,6 +27,9 @@ import { logger } from "../../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
 import { DirectorField } from "../../model/director.model";
 import { CorrespondenceAddressValidation } from "../../validation/director.correspondence.address.config";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 const directorChoiceHtmlField: string = DirectorField.CORRESPONDENCE_ADDRESS_RADIO;
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -91,7 +94,17 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     };
 
     const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
-    
+    if (canUseRegisteredOfficeAddress && isUpdate) {
+
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+      officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+        { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFilingBody.serviceAddress }, 
+        companyAppointment);
+    }
+
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
     let path: string;
 
@@ -110,7 +123,6 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
       return redirectToPath(path, req, res, lang);
     }
 
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
     path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
     return redirectToPath(path, req, res, lang);
   } catch(e) {

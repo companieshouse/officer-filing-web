@@ -93,6 +93,16 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, isUpdate, directorName);
     }
 
+    let companyAppointment: CompanyAppointment | undefined = undefined;
+    if (isUpdate) {
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+      const appointmentId = originalOfficerFiling.referenceAppointmentId as string;
+      companyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      prepareOfficerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+        { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: prepareOfficerFiling.serviceAddress },
+        companyAppointment);
+    }
+
     // Patch the filing with updated information
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
@@ -112,7 +122,11 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
               "country" : getCountryFromKey(ukAddress.country)}
           };
 
-          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress);
+          if (isUpdate && companyAppointment !== undefined) {
+            officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+              { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
+              companyAppointment);
+          }
 
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
@@ -128,17 +142,6 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
   }
   catch (e) {
     return next(e);
-  }
-};
-
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isServiceAddressSameAsRegisteredOfficeAddress: boolean | undefined) => {
-  if (isUpdate) {
-    const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-      { isServiceAddressSameAsRegisteredOfficeAddress: isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
-      companyAppointment);
   }
 };
 

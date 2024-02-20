@@ -72,7 +72,6 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
                            "locality": "",
                            "postalCode": residentialPostalCode,
                            "country" : ""},
-      residentialAddressHasBeenUpdated: false
       };
 
     // Validate formatting errors for fields, render errors if found.
@@ -84,6 +83,16 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
     const jsUKPostcodeValidationErrors = await validateUKPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''), PostcodeValidation, jsValidationErrors) ;
     if(jsUKPostcodeValidationErrors.length > 0) {
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, pageLinks, isUpdate);
+    }
+
+    let companyAppointment: CompanyAppointment | undefined = undefined;
+    if (isUpdate) {
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+      const appointmentId = originalOfficerFiling.referenceAppointmentId as string;
+      companyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      prepareOfficerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+        { isHomeAddressSameAsServiceAddress: originalOfficerFiling.isHomeAddressSameAsServiceAddress, residentialAddress: prepareOfficerFiling.residentialAddress },
+        companyAppointment);
     }
 
     // Patch the filing with updated information
@@ -104,7 +113,12 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
               "country" : getCountryFromKey(ukAddress.country)}
           };
           
-          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isHomeAddressSameAsServiceAddress);
+          if (isUpdate && companyAppointment !== undefined) {
+            officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+              { isHomeAddressSameAsServiceAddress: originalOfficerFiling.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
+              companyAppointment);
+          }
+
           // Patch filing with updated information
           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
           return res.redirect(getConfirmAddressPath(req, isUpdate));
@@ -120,17 +134,6 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
     return next(e);
   }
 };
-
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isHomeAddressSameAsServiceAddress: boolean | undefined) => {
-  if (isUpdate) {
-    const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-      { isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
-      companyAppointment);
-  }
-}
 
 const getConfirmAddressPath = (req: Request, isUpdate: boolean) => {
   if(isUpdate) {
