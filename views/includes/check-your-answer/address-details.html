@@ -1,6 +1,6 @@
 {% set displayCorrespondenceAddress %}
   {% if officerFiling.isServiceAddressSameAsRegisteredOfficeAddress %}
-  {{ i18n.updateDirectorDetailsCorrespondenceAddressSameAsROA if isUpdate else "The correspondence address is the same as the registered office address" }}
+  {{ i18n.updateDirectorDetailsCorrespondenceAddressSameAsROA }}
   {% else %}
     <ul class="govuk-list" id="service-address">
         {% if officerFiling.serviceAddress.premises %}
@@ -26,7 +26,7 @@
 
 {% set displayResidentialAddress %}
   {% if officerFiling.isHomeAddressSameAsServiceAddress %}
-  {{ i18n.updateDirectorDetailsHomeAddressSameAsCorrespondence if isUpdate else "The home address is the same as the correspondence address" }}
+  {{ i18n.updateDirectorDetailsHomeAddressSameAsCorrespondence }}
   {% elif officerFiling.residentialAddress %}
     <ul class="govuk-list" id="residential-address">
       {% if officerFiling.residentialAddress.premises %}
@@ -62,17 +62,17 @@
 <dl class="govuk-summary-list" style="width:100%">
   <div class="govuk-summary-list__row" id="address-details-div">
     <h2 class="govuk-summary-list__key govuk-heading-m" id="address-details">
-     {{ i18n.updateDirectorCheckAnswersAddressDetails if isUpdate else "Address details" }}
+     {{ i18n.updateDirectorCheckAnswersAddressDetails }}
     </h2>
     <dd class="govuk-summary-list__value">
     </dd>
     <dd class="govuk-summary-list__actions">
-      <a class="govuk-link" id="address-change-link" href="{{correspondenceAddressChangeLink}}" data-event-id="address-change-link">Change<span class="govuk-visually-hidden">Director's address details</span></a>
+      <a class="govuk-link" id="address-change-link" href="{{correspondenceAddressChangeLink}}" data-event-id="address-change-link">{{i18n.change}}<span class="govuk-visually-hidden">Director's address details</span></a>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key" id="correspondence-address">
-      {{ i18n.updateDirectorDetailsCorrespondenceAddress if isUpdate else "Correspondence address" }}
+      {{ i18n.updateDirectorDetailsCorrespondenceAddress }}
     </dt>
     <dd class="govuk-summary-list__value">
       {{displayCorrespondenceAddress | safe}}
@@ -82,7 +82,7 @@
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key" id="home-address">
-      {{ i18n.updateDirectorDetailsHomeAddress if isUpdate else "Home address" }}
+      {{ i18n.updateDirectorDetailsHomeAddress }}
     </dt>
     <dd class="govuk-summary-list__value">
       {{displayResidentialAddress | safe}}
