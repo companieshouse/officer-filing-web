@@ -48,7 +48,6 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Check if consentToAct checkbox has been ticked
     if (getField(req, DirectorField.DIRECTOR_CONSENT) !== DirectorField.DIRECTOR_CONSENT) {
-      const localeInfo = getLocaleInfo(getLocalesService(), lang);
       const consentError = createValidationErrorBasic("consent-to-act-as-director", DirectorField.DIRECTOR_CONSENT);
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       return renderPage(req, res, companyNumber, officerFiling, formatValidationErrors([consentError], lang));
