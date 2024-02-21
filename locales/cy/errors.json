@@ -82,5 +82,5 @@
   "error-no-protected-details-radio-button-selected" : "to be translated",
   "error-consent-to-act-as-director" : "to be translated",
   "error-residential-address-blank": "to be translated",
-  "error-no-residential-address-to-correspondence-address-link-radio-selected" : "to be translated"
+  "error-residential-address-to-correspondence-address-link-no-radio-selected" : "to be translated"
 }

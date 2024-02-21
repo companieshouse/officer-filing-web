@@ -80,7 +80,7 @@
   "error-appointment-date-underage" : "You can only appoint a person as a director if they are at least 16 years old",
   "error-appointment-date-missing" : "Enter the date the director was appointed",
   "error-no-protected-details-radio-button-selected" : "Select whether the director has applied to protect their details at Companies House",
-  "error-no-residential-address-to-correspondence-address-link-radio-selected" : "errrrrrrrrrrror",
+  "error-residential-address-to-correspondence-address-link-no-radio-selected" : "Select yes if the correspondence address changes in the future and you want this to apply to the home address",
   "error-consent-to-act-as-director" : "Select if you confirm that by submitting this information, the person named has consented to act as director",
   "error-residential-address-blank": "Select the address where the director lives"
 }

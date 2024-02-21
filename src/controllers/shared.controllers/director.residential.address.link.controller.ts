@@ -14,7 +14,6 @@ import { formatTitleCase } from "../../services/confirm.company.service";
 import { DirectorField } from "../../model/director.model";
 import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
-import { HA_TO_SA_ERROR } from "../../utils/constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
@@ -54,14 +53,14 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
     const localeInfo = getLocaleInfo(locales, lang)
 
     if (isHomeAddressSameAsServiceAddress === undefined) {
-      const linkError = createValidationErrorBasic(HA_TO_SA_ERROR, DirectorField.HA_TO_SA_RADIO);
+      const linkError = createValidationErrorBasic("residential-address-to-correspondence-address-link-no-radio-selected", DirectorField.HA_TO_SA_RADIO);
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
       return res.render(templateName, {
         templateName: templateName,
         backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
         directorName: formatTitleCase(directorName),
-        errors: formatValidationErrors([linkError]),
+        errors: formatValidationErrors([linkError], lang),
         ...localeInfo,
         currentUrl: getCurrentUrl(isUpdate, req)
       });

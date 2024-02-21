@@ -75,11 +75,12 @@ const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH
 const PAGE_URL_WELSH = PAGE_URL + "?lang=cy";
 const UPDATE_PAGE_URL_WELSH = UPDATE_PAGE_URL + "?lang=cy";
 const NEXT_PAGE_URL_WELSH = NEXT_PAGE_URL + "?lang=cy";
+const UPDATE_NEXT_PAGE_URL_WELSH = UPDATE_NEXT_PAGE_URL + "?lang=cy";
 const APPOINT_DIRECTORS_CYA_URL_WELSH = APPOINT_DIRECTORS_CYA_URL + "?lang=cy";
 const UPDATE_DIRECTORS_CYA_URL_WELSH = UPDATE_DIRECTORS_CYA_URL + "?lang=cy";
 const BACK_LINK_URL_WELSH = BACK_LINK_URL + "?lang=cy";
 const UPDATE_BACK_LINK_URL_WELSH = UPDATE_BACK_LINK_URL + "?lang=cy";
-const HA_TO_SA_ERROR_WELSH = "error test"
+const HA_TO_SA_ERROR_WELSH = "to be translated"
 
 describe("Director residential address link controller tests", () => {
 
@@ -90,186 +91,186 @@ describe("Director residential address link controller tests", () => {
       mockCompareAddress.mockClear();
     });
   
-    // describe("get tests", () => {
+    describe("get tests", () => {
   
-    //   it.each([[PAGE_URL, BACK_LINK_URL],[UPDATE_PAGE_URL, UPDATE_BACK_LINK_URL]])("Should navigate to residential address link page with no radio buttons selected", async (url, backLink) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       title: "testTitle",
-    //       firstName: "testFirst",
-    //       middleNames: "testMiddle",
-    //       lastName: "testLast",
-    //       formerNames: "testFormer"
-    //     })
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-    //     const response = await request(app).get(url);
+      it.each([[PAGE_URL, BACK_LINK_URL],[UPDATE_PAGE_URL, UPDATE_BACK_LINK_URL]])("Should navigate to residential address link page with no radio buttons selected", async (url, backLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer"
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).get(url);
   
-    //     expect(response.text).toContain(PAGE_HEADING);
-    //     expect(response.text).toContain(backLink);
-    //     if(url === PAGE_URL){
-    //       expect(response.text).toContain("Testfirst Testmiddle Testlast");
-    //     } else {
-    //       expect(response.text).toContain("John Elizabeth Doe");
-    //     }
-    //     expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
-    //     expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
-    //     expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-    //   });
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain(backLink);
+        if(url === PAGE_URL){
+          expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        } else {
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
+        expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
+        expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
 
-    //   it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to residential address link page with yes radio selected", async (url) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       title: "testTitle",
-    //       firstName: "testFirst",
-    //       middleNames: "testMiddle",
-    //       lastName: "testLast",
-    //       formerNames: "testFormer",
-    //       isHomeAddressSameAsServiceAddress: true
-    //     })
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to residential address link page with yes radio selected", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer",
+          isHomeAddressSameAsServiceAddress: true
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
         
-    //     const response = await request(app).get(url);
+        const response = await request(app).get(url);
   
-    //     expect(response.text).toContain('value="ha_to_sa_yes" checked');
-    //   });
+        expect(response.text).toContain('value="ha_to_sa_yes" checked');
+      });
 
-    //   it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to residential address link page with no radio selected", async (url) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       title: "testTitle",
-    //       firstName: "testFirst",
-    //       middleNames: "testMiddle",
-    //       lastName: "testLast",
-    //       formerNames: "testFormer",
-    //       isHomeAddressSameAsServiceAddress: false
-    //     })
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to residential address link page with no radio selected", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer",
+          isHomeAddressSameAsServiceAddress: false
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
         
-    //     const response = await request(app).get(url);
+        const response = await request(app).get(url);
   
-    //     expect(response.text).toContain('value="ha_to_sa_no" checked');
-    //   });
+        expect(response.text).toContain('value="ha_to_sa_no" checked');
+      });
 
-    //   it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
-    //     mockIsActiveFeature.mockReturnValueOnce(false);
-    //     const response = await request(app).get(url);
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
+        mockIsActiveFeature.mockReturnValueOnce(false);
+        const response = await request(app).get(url);
   
-    //     expect(response.text).toContain(ERROR_PAGE_HEADING);
-    //   });
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
 
-    //   it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should catch error when officer filing returned error ", async (url) => {
-    //     mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should catch error when officer filing returned error ", async (url) => {
+        mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
         
-    //     const response = await request(app).get(url);
-    //     expect(response.text).toContain(ERROR_PAGE_HEADING);
-    //   });
+        const response = await request(app).get(url);
+        expect(response.text).toContain(ERROR_PAGE_HEADING);
+      });
 
-    // });
+    });
 
-    // describe("post tests", () => {
-      // it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should display an error when no radio button is selected", async (url) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     title: "testTitle",
-      //     firstName: "testFirst",
-      //     middleNames: "testMiddle",
-      //     lastName: "testLast",
-      //     formerNames: "testFormer"
-      //   })
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+    describe("post tests", () => {
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should display an error when no radio button is selected", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer"
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
         
-      //   const response = await request(app).post(url);
-      //   expect(response.text).toContain(HA_TO_SA_ERROR);
-      //   if(url === PAGE_URL){
-      //     expect(response.text).toContain("Testfirst Testmiddle Testlast");
-      //   } else {
-      //     expect(response.text).toContain("John Elizabeth Doe");
-      //   }
-      // });
+        const response = await request(app).post(url);
+        expect(response.text).toContain(HA_TO_SA_ERROR);
+        if(url === PAGE_URL){
+          expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        } else {
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
+      });
 
-    //   it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
-    //     const response = await request(app).post(url);
-    //     expect(response.text).toContain(ERROR_PAGE_HEADING)
-    //   });
-    //   it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when yes radio selected", async (url, redirectLink) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       directorName: "Test Director",
-    //       checkYourAnswersLink: undefined,
-    //       referenceAppointmentId: "123456"
-    //     })
-    //     mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-    //     }});
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-    //     const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
+      it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
+        const response = await request(app).post(url);
+        expect(response.text).toContain(ERROR_PAGE_HEADING)
+      });
+      it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when yes radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: undefined,
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
 
-    //     expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-    //     expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-    //   });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
 
-    //   it.each([[PAGE_URL, APPOINT_DIRECTORS_CYA_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTORS_CYA_URL]])("should redirect to appoint directors check your answers page if CYA link is present", async (url, redirectLink) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       directorName: "Test Director",
-    //       checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-    //       referenceAppointmentId: "123456"
-    //     })
-    //     mockPatchOfficerFiling.mockResolvedValueOnce({data:{ checkYourAnswersLink: "testLink"
-    //     }});
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-    //     const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
+      it.each([[PAGE_URL, APPOINT_DIRECTORS_CYA_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTORS_CYA_URL]])("should redirect to appoint directors check your answers page if CYA link is present", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{ checkYourAnswersLink: "testLink"
+        }});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
 
-    //     expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-    //   });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+      });
 
-    //   it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when no radio selected", async (url, redirectLink) => {
-    //     mockGetOfficerFiling.mockResolvedValueOnce({
-    //       directorName: "Test Director",
-    //       referenceAppointmentId: "123456"
-    //     })
-    //     mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-    //     }});
-    //     mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-    //     const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_no"});
+      it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when no radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_no"});
 
-    //     expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-    //   });
-    // });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+      });
+    });
 
     describe("Welsh language tests", () => {
       // get tests
-      // it.each([[PAGE_URL_WELSH, BACK_LINK_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_BACK_LINK_URL_WELSH]])("Should navigate to residential address link page with no radio buttons selected", async (url, backLink) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     title: "testTitle",
-      //     firstName: "testFirst",
-      //     middleNames: "testMiddle",
-      //     lastName: "testLast",
-      //     formerNames: "testFormer"
-      //   })
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-      //   const response = await request(app).get(url);
+      it.each([[PAGE_URL_WELSH, BACK_LINK_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_BACK_LINK_URL_WELSH]])("Should navigate to residential address link page with no radio buttons selected", async (url, backLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer"
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).get(url);
 
-      //   expect(response.text).toContain(PAGE_HEADING_WELSH);
-      //   expect(response.text).toContain(backLink);
-      //   if(url === PAGE_URL_WELSH){
-      //     expect(response.text).toContain("Testfirst Testmiddle Testlast");
-      //   } else {
-      //     expect(response.text).toContain("John Elizabeth Doe");
-      //   }
-      //   expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
-      //   expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
-      //   expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-      // });
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(response.text).toContain(backLink);
+        if(url === PAGE_URL_WELSH){
+          expect(response.text).toContain("Testfirst Testmiddle Testlast");
+        } else {
+          expect(response.text).toContain("John Elizabeth Doe");
+        }
+        expect(response.text).toContain('value="ha_to_sa_yes" aria-describedby');
+        expect(response.text).toContain('value="ha_to_sa_no" aria-describedby');
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
 
-      // it.each([[PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH]])("Should navigate to residential address link page with yes radio selected", async (url) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     title: "testTitle",
-      //     firstName: "testFirst",
-      //     middleNames: "testMiddle",
-      //     lastName: "testLast",
-      //     formerNames: "testFormer",
-      //     isHomeAddressSameAsServiceAddress: true
-      //   })
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      it.each([[PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH]])("Should navigate to residential address link page with yes radio selected", async (url) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          title: "testTitle",
+          firstName: "testFirst",
+          middleNames: "testMiddle",
+          lastName: "testLast",
+          formerNames: "testFormer",
+          isHomeAddressSameAsServiceAddress: true
+        })
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
 
-      //   const response = await request(app).get(url);
+        const response = await request(app).get(url);
 
-      //   expect(response.text).toContain('value="ha_to_sa_yes" checked');
-      // });
+        expect(response.text).toContain('value="ha_to_sa_yes" checked');
+      });
 
       //post tests
       it.each([[PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH]])("should display an error when no radio button is selected", async (url) => {
@@ -290,49 +291,44 @@ describe("Director residential address link controller tests", () => {
           expect(response.text).toContain("John Elizabeth Doe");
         }
       });
-
-      // it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("should catch error", async (url) => {
-      //   const response = await request(app).post(url);
-      //   expect(response.text).toContain(ERROR_PAGE_HEADING)
-      // });
       
-      // it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when yes radio selected", async (url, redirectLink) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     directorName: "Test Director",
-      //     checkYourAnswersLink: undefined,
-      //     referenceAppointmentId: "123456"
-      //   })
-      //   mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-      //   const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
+      it.each([[PAGE_URL_WELSH, NEXT_PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_NEXT_PAGE_URL_WELSH]])("should redirect to director protected details or director details page when yes radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: undefined,
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
 
-      //   expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-      //   expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-      // });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
 
-      // it.each([[PAGE_URL, APPOINT_DIRECTORS_CYA_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTORS_CYA_URL]])("should redirect to appoint directors check your answers page if CYA link is present", async (url, redirectLink) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     directorName: "Test Director",
-      //     checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-      //     referenceAppointmentId: "123456"
-      //   })
-      //   mockPatchOfficerFiling.mockResolvedValueOnce({data:{ checkYourAnswersLink: "testLink" }});
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-      //   const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
+      it.each([[PAGE_URL_WELSH, APPOINT_DIRECTORS_CYA_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTORS_CYA_URL_WELSH]])("should redirect to appoint directors check your answers page if CYA link is present", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{ checkYourAnswersLink: "testLink" }});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_yes"});
 
-      //   expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-      // });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+      });
 
-      // it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("should redirect to director protected details or director details page when no radio selected", async (url, redirectLink) => {
-      //   mockGetOfficerFiling.mockResolvedValueOnce({
-      //     directorName: "Test Director",
-      //     referenceAppointmentId: "123456"
-      //   })
-      //   mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
-      //   mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
-      //   const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_no"});
+      it.each([[PAGE_URL_WELSH, NEXT_PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_NEXT_PAGE_URL_WELSH]])("should redirect to director protected details or director details page when no radio selected", async (url, redirectLink) => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          directorName: "Test Director",
+          referenceAppointmentId: "123456"
+        })
+        mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+        const response = await request(app).post(url).send({"ha_to_sa": "ha_to_sa_no"});
 
-      //   expect(response.text).toContain("Found. Redirecting to " + redirectLink);
-      // });
+        expect(response.text).toContain("Found. Redirecting to " + redirectLink);
+      });
     })
 });
