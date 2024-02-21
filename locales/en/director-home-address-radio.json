@@ -1,0 +1,9 @@
+{
+  "directorHomeAddressRadioTitle": "Where does the director live?",
+  "directorHomeAddressRadioTitleHint": "Tell us the director's home address. Only give a business address if they also live there.",
+  "directorHomeAddressCorrespondenceAddressHint": "This is the director's correspondence address",
+  "directorHomeAddressRegisteredOfficeaddressRadioHint": "This is the company's registered office address",
+  "directorHomeAddressDifferentAddressRadioLabel": "A different address",
+  "directorHomeAddressRadioInsetText": "We will show the country the director lives in on the public Companies House register. We will not show the whole address, unless it's also used for the company's registered office address or the director's correspondence address.",
+  "directorResidentialAddressBackLinkText": "Go back to 'What is the director's correspondence address?"
+}

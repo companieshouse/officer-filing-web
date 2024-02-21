@@ -200,6 +200,24 @@ describe('Director residential address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it.each([
+      [PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],
+      [UPDATE_PAGE_URL,UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]
+    ])("Should navigate to director residential address search page in welsh", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
+      const response = await request(app).get(url + "?lang=cy");
+
+      expect(response.text).toContain("to be translated");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it.each([[PAGE_URL],[UPDATE_PAGE_URL]])("Should navigate to error page when feature flag is off", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(url);

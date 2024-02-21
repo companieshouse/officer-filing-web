@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% set title = "Where does the director live?" %}
+{% set title = i18n.directorHomeAddressRadioTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
-  {% set backLinkText = "Go back to 'What is the director's correspondence address?'" %}
+  {% set backLinkText = i18n.directorResidentialAddressBackLinkText %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -23,21 +23,23 @@
 
       {% if manualAddress and 'undefined' not in manualAddress %}
         {% set manualAddressDisplay = {
+            id: "director_correspondence_address",
             value: "director_correspondence_address",
-              text: manualAddress,
-              checked: director_address === "director_correspondence_address",
-              attributes: {
-                "data-event-id": "director_correspondence_address"
-              },
-              hint: {
-                text: "This is the director's correspondence address"              
-              }
+            text: manualAddress,
+            checked: director_address === "director_correspondence_address",
+            attributes: {
+              "data-event-id": "director_correspondence_address"
+            },
+            hint: {
+              text: i18n.directorHomeAddressCorrespondenceAddressHint              
+            }
           }
         %}
       {% endif %}
       
       {% if canUseRegisteredOfficeAddress and directorServiceAddressChoice !== 'director_registered_office_address' %}
         {% set registeredOfficeAddressDisplay = {
+          id: "director_registered_office_address",
           value: "director_registered_office_address",
           text: directorRegisteredAddressValue,
           checked: director_address === "director_registered_office_address",
@@ -45,7 +47,7 @@
             "data-event-id": "director_registered_office_address"
           },
           hint: {
-            text: "This is the company's registered office address"              
+            text: i18n.directorHomeAddressRegisteredOfficeaddressRadioHint              
           }
         }
         %}
@@ -59,20 +61,21 @@
           name: "director_address",
           fieldset: {
             legend: {
-              text: "Where does the director live?",
+              text: i18n.directorHomeAddressRadioTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--l"
             }
           },
           hint: {
-              text: "Tell us the director's home address. Only give a business address if they also live there."
+              text: i18n.directorHomeAddressRadioTitleHint
           },
           items: [
             registeredOfficeAddressDisplay,
             manualAddressDisplay,
             {
+              id: "director_different_address",
               value: "director_different_address",
-              text: "A different address",
+              text: i18n.directorHomeAddressDifferentAddressRadioLabel,
               checked: director_address === "director_different_address",
               attributes: {
                 "data-event-id": "director-different-address"
@@ -81,18 +84,25 @@
           ]
         }) }}
 
+        <!-- Tracking for displayed radio for handling error message link -->
+        {% if registeredOfficeAddressDisplay %}
+          <input type="hidden" name="corresponse_address_display" value="director_registered_office_address" />
+        {% elif manualAddressDisplay %}
+          <input type="hidden" name="corresponse_address_display" value="director_correspondence_address" />
+        {% else %}
+          <input type="hidden" name="corresponse_address_display" value="director_different_address" />
+        {% endif %}
+        
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will show the country the director lives in on the public Companies House register.
-               We will not show the whole address, unless it's also used for the company's registered office address or the director's correspondence address.
-            </p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.directorHomeAddressRadioInsetText }}</p>
         </div>
 
         {{ govukButton({
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

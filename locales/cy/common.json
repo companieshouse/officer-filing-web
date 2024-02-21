@@ -1,13 +1,18 @@
 {
-  "whatInformationShownInOnlineRegisterInset": "to be translate",
-  "whatInformationShownInOnlineRegisterInsetHint": "to be translate",
+  "whatInformationShownInOnlineRegisterInset": "to be translated",
+  "whatInformationShownInOnlineRegisterInsetHint": "to be translated",
   "companyDetails" : "to be translated",
   "companyName": "to be translated",
   "companyNumber": "to be translated",
   "directorDetails": "to be translated",
   "directorName": "to be translated",
+  "directorPreviousNames": "to be translated",
   "dateAppointed" : "to be translated",
+  "appointedOnDate" : "to be translated",
   "dateOfBirth" : "to be translated",
+  "nationality" : "to be translated",
+  "occupation" : "to be translated",
+  "noneString": "to be translated",
   "backToCorrespondenceAddress": "to be translated",
   "backToFindHomeAddressText": "to be translated"
 }

@@ -21,7 +21,7 @@ export interface RenderArrayPageParams {
  */
 export interface RenderManualEntryParams {
   officerFiling: OfficerFiling;
-  serviceAddress: Address;
+  address: Address;
   validationErrors: ValidationError[];
   templateName: string;
   backUrlPath: string;
@@ -37,5 +37,6 @@ export interface RenderAddressRadioParams {
   templateName: string,
   backUrlPath: string,
   directorName: string,
-  formattedErrors?: FormattedValidationErrors
+  formattedErrors?: FormattedValidationErrors,
+  currentUrl?: string
 }

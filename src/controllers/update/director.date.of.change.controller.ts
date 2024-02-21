@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, } from "../../types/page.urls";
+import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -25,10 +25,15 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
     const session: Session = req.session as Session;
-
     const officerFiling : OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const dateOfChangeFields = officerFiling.directorsDetailsChangedDate ? officerFiling.directorsDetailsChangedDate.split('-').reverse() : [];
-
+    
+    //patch officer filing with checkYourAnswersLink as empty if cya_backlink in url
+    if(req.query.cya_backlink === "true") {
+       officerFiling.checkYourAnswersLink = "";
+            await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+  }
+  
     return renderPage(resp, req, officerFiling, [], dateOfChangeFields, companyNumber);
   } catch(e) {
     return next(e);
@@ -59,7 +64,7 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
       changeOfDateValidationErrors.push(docValidateError);
       return renderPage(resp, req, officerFiling, changeOfDateValidationErrors, [docDay, docMonth, docYear], companyNumber)
     }
-
+    
     //Patch the officer filing
     const updatedFiling: OfficerFiling = {
       directorsDetailsChangedDate: dateOfChangeString,
