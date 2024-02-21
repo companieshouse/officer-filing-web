@@ -97,7 +97,6 @@ describe("Director protected details controller tests", () => {
       it(`should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           protectedDetailsBackLink: "/director-home-address",
-          checkYourAnswersLink: ""
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -107,7 +106,6 @@ describe("Director protected details controller tests", () => {
       it("should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink is undefined", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           protectedDetailsBackLink: undefined,
-          checkYourAnswersLink: ""
         })
         const response = await request(app).get(PAGE_URL);
 
