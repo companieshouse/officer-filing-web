@@ -65,9 +65,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const correspondencePostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
     const correspondencePremise : string = (req.body[DirectorField.PREMISES])?.trim();
-    const nextPageConfirmUrl = isUpdate ? UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
-    const nextPage = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH;
-
+   
     let jsValidationErrors = validatePostcode(correspondencePostalCode, PostcodeValidation);
     if(correspondencePremise) {
       jsValidationErrors = validatePremise(correspondencePremise, PremiseValidation, jsValidationErrors);
@@ -106,43 +104,49 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
     // Patch the filing with updated information
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
-    // Look up the addresses, as by now validated postcode is valid and exist
-    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''));
-    // If premises is entered by user, loop through addresses to find user entered premise
-    const lang = selectLang(req.query.lang);
-    if(correspondencePremise) {
-      for(const ukAddress of ukAddresses) {
-        if(ukAddress.premise.toUpperCase() === correspondencePremise.toUpperCase()) {
-          const officerFiling: OfficerFiling = {
-            serviceAddress: {"premises": ukAddress.premise,
-              "addressLine1": ukAddress.addressLine1,
-              "addressLine2": ukAddress.addressLine2,
-              "locality": ukAddress.postTown,
-              "postalCode": ukAddress.postcode,
-              "country" : getCountryFromKey(ukAddress.country)}
-          };
-
-          if (isUpdate && companyAppointment !== undefined) {
-            officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-              { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
-              companyAppointment);
-          }
-
-          // Patch filing with updated information
-          await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-          const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
-          return res.redirect(addLangToUrl(nextPageUrlForConfirm,lang));
-        }
-      }
-    }
-    // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
-    return res.redirect(addLangToUrl(nextPageUrl, lang));
-
+    return await matchAddress(req, res, isUpdate, { correspondencePremise, correspondencePostalCode }, companyAppointment, originalOfficerFiling, { session, transactionId, submissionId });
   }
   catch (e) {
     return next(e);
   }
+};
+
+const matchAddress = async (req, res, isUpdate, { correspondencePremise, correspondencePostalCode }, companyAppointment, originalOfficerFiling, { session, transactionId, submissionId }) => {
+  const nextPageConfirmUrl = isUpdate ? UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH : DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH;
+  const nextPage = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH;
+
+  // Look up the addresses, as by now validated postcode is valid and exist
+  const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, correspondencePostalCode.replace(/\s/g,''));
+  // If premises is entered by user, loop through addresses to find user entered premise
+  const lang = selectLang(req.query.lang);
+  if (correspondencePremise) {
+    for (const ukAddress of ukAddresses) {
+      if (ukAddress.premise.toUpperCase() === correspondencePremise.toUpperCase()) {
+        const officerFiling: OfficerFiling = {
+          serviceAddress: {"premises": ukAddress.premise,
+            "addressLine1": ukAddress.addressLine1,
+            "addressLine2": ukAddress.addressLine2,
+            "locality": ukAddress.postTown,
+            "postalCode": ukAddress.postcode,
+            "country" : getCountryFromKey(ukAddress.country)}
+        };
+
+        if (isUpdate && companyAppointment !== undefined) {
+          officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+            { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
+            companyAppointment);
+        }
+
+        // Patch filing with updated information
+        await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+        const nextPageUrlForConfirm = urlUtils.getUrlToPath(nextPageConfirmUrl, req);
+        return res.redirect(addLangToUrl(nextPageUrlForConfirm,lang));
+      }
+    }
+  }
+  // Redirect user to choose addresses if premises not supplied or not found in addresses array
+  const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
+  return res.redirect(addLangToUrl(nextPageUrl, lang));
 };
 
 const renderPage = (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], isUpdate: boolean, directorName: string) => {
