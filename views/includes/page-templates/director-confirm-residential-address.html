@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block backLink %}
-  {% set backLinkText = "Go back to 'Find the director's home address' " %}
+  {% set backLinkText = i18n.backToFindHomeAddressText %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -18,24 +18,24 @@
       {% include "includes/list/errors.html" %}
       <form action="" method="post">
         <span class="govuk-caption-l">{{ directorName }}</span>
-        <h1 class="govuk-heading-l">Confirm where the director lives</h1>
+        <h1 class="govuk-heading-l">{{ i18n.directorConfirmResidentialAddressTitle }}</h1>
         
         {% include "includes/list/address-details.html" %}
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}?backLink=confirm-residential-address" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
+          <a href="{{enterAddressManuallyUrl}}?backLink=confirm-residential-address" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">{{ i18n.directorConfirmResidentialAddressEditText }}</a>
         </div>
         
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will not show this address on the public Companies House register, unless it's also used for the company's registered office address or the director's correspondence address.</p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.directorConfirmResidentialAddressInsetText }}</p>
         </div>
         
         {{ govukButton({
           attributes: {
             "data-event-id": "confirm-and-continue-button"
           },
-          text: "Confirm and continue"
+          text: i18n.confirmAndContinue
         }) }}
       </form>
     </div>

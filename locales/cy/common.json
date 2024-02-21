@@ -6,7 +6,13 @@
   "companyNumber": "to be translated",
   "directorDetails": "to be translated",
   "directorName": "to be translated",
+  "directorPreviousNames": "to be translated",
   "dateAppointed" : "to be translated",
+  "appointedOnDate" : "to be translated",
   "dateOfBirth" : "to be translated",
-  "backToCorrespondenceAddress": "to be translated"
+  "nationality" : "to be translated",
+  "occupation" : "to be translated",
+  "noneString": "to be translated",
+  "backToCorrespondenceAddress": "to be translated",
+  "backToFindHomeAddressText": "to be translated"
 }

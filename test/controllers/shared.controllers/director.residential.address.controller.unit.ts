@@ -147,6 +147,24 @@ describe("Director name controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
+    it("Should navigate to director address page with welsh language", async () => {
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock
+      });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
+      const response = await request(app).get(PAGE_URL+"?lang=cy");
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
+      expect(response.text).toContain("Locality");
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
+      expect(response.text).toContain(directorNameMock.firstName);
+      expect(response.text).toContain("to be translated");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
     it.each([PAGE_URL, UPDATE_PAGE_URL])("Should navigate to error page when feature flag is off", async (url) => {
       mockIsActiveFeature.mockReturnValueOnce(false);
       const response = await request(app).get(url);

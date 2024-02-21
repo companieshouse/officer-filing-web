@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { urlParams } from "../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -41,6 +41,7 @@ const setContent = async (req: Request, stopType: string) => {
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     const localeInfo = getLocaleInfo(locales, lang);
+    const currentBaseUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
@@ -78,13 +79,15 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.ETAG: { 
             return {
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG),
                 pageHeader: STOP_PAGE_CONTENT.etag.pageHeader.replace(new RegExp(ETAG_PAGE_HEADER, 'g'), localeInfo.i18n.stopPageEtagPageHeader),
                 pageBody: STOP_PAGE_CONTENT.etag.pageBody
                     .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageEtagPageBody1)
                     .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
                     .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
                     .replace(new RegExp(ETAG_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageEtagContactUsLink)
-                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageEtagPageBody3)
+                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageEtagPageBody3),
             }
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 

@@ -46,7 +46,7 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
       directorName: formatTitleCase(directorName),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate),
+      currentUrl: getCurrentUrl(req, isUpdate, lang),
     });
   } catch (e) {
     return next(e);
@@ -81,7 +81,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
         directorName: formatTitleCase(directorName),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
         ...getLocaleInfo(locales, lang),
-        currentUrl: getCurrentUrl(req, isUpdate),
+        currentUrl: getCurrentUrl(req, isUpdate, lang),
       });
     }
 
@@ -158,10 +158,10 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
 
- const getCurrentUrl = (req: Request, isUpdate: boolean): string => {
+ const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
   if(isUpdate){
-      return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
     } else {
-      return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
   }
 }

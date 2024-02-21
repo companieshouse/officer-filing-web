@@ -22,7 +22,7 @@ import { occupationErrorMessageKey } from "../../utils/api.enumerations.keys";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { STOP_TYPE } from "../../utils/constants";
-import { selectLang, getLocalesService, getLocaleInfo } from "../../utils/localise";
+import { selectLang, getLocalesService, getLocaleInfo, addLangToUrl } from '../../utils/localise';
 
 
 export const getDirectorOccupation = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
@@ -37,7 +37,7 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate),
+      currentUrl: getCurrentUrl(req, isUpdate, lang),
       backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
@@ -56,13 +56,14 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
   const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
   const session: Session = req.session as Session;
   const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+  const lang = selectLang(req.query.lang);
 
   const occupation = getField(req, DirectorField.OCCUPATION);
   const frontendValidationErrors = validateOccupation(occupation, OccupationValidation);
 
   // render validation errors
   if(frontendValidationErrors) {
-    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate));
+    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate, lang));
   }
 
   // patch the filing with occupation when no front end validation errors encountered.
@@ -78,7 +79,7 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
     if (officerFiling.referenceEtag !== companyAppointment.etag) {
       return res.redirect(
-        urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), 
+        urlUtils.setQueryParam(addLangToUrl(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), lang), 
         URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
     }
 
@@ -92,8 +93,8 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
   }
   const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, patchedOccupationFiling);
 
-  const nextPage = urlUtils.getUrlToPath(nextPageUrl, req);
-  return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
+  const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
+  return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage, lang));
   } catch (e) {
     return next(e);
   }
@@ -108,7 +109,7 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
     templateName: Templates.DIRECTOR_OCCUPATION,
     ...getLocaleInfo(locales, lang),
     currentUrl: currentUrl,
-    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req), lang),
     typeahead_array: OCCUPATION_LIST,
     typeahead_value: formatSentenceCase(occupation),
     errors: formattedErrors,
@@ -123,12 +124,12 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
  * @param isUpdate 
  * @returns 
  */
-const getCurrentUrl = (req: Request, isUpdate: boolean) => {
+const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
   if(isUpdate){
-    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req);
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang);
     }
     else{
-    return urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req)
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req), lang)
     }
 }
 
