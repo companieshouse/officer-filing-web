@@ -79,5 +79,6 @@
   "error-appointment-date-after-incorporation-date" : "to be translated",
   "error-appointment-date-underage" : "to be translated",
   "error-appointment-date-missing" : "to be translated",
-  "error-no-protected-details-radio-button-selected" : "to be translated"
+  "error-no-protected-details-radio-button-selected" : "to be translated",
+  "error-no-residential-address-to-correspondence-address-link-radio-selected" : "to be translated"
 }
