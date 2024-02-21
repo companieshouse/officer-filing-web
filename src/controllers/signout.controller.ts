@@ -6,6 +6,8 @@ import { ACCOUNTS_SIGNOUT_PATH } from "../types/page.urls";
 import { logger } from "../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
+const SIGNOUT = "signout";
+
 export const get: Handler = async (req, res) => {
     const returnPage = saveReturnPageInSession(req);
     const lang = selectLang(req.query.lang);
@@ -29,22 +31,9 @@ export const post = handleError(async (req, res) => {
     case "no":
         return res.redirect(returnPage);
     default:
-        return renderPage(res, req, returnPage);
+        return showMustSelectButtonError(res, req, returnPage);
     }
 })
-
-export const renderPage = (res: Response, req: Request, returnPage: string) => {
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-
-    res.render(Templates.SIGNOUT, {
-        backLinkUrl: returnPage,
-        noInputSelectedError: true,
-        templateName: Templates.SIGNOUT,
-        currentUrl: req.originalUrl,
-        ...getLocaleInfo(locales, lang)
-    });
-}
 
 // Async version of express handler so that static analysers don't complain that an await statement 
 // isn't needed when it is.
@@ -78,7 +67,12 @@ function showMustSelectButtonError(res: Response, req: Request, returnPage: stri
 function saveReturnPageInSession(req: Request): string {
     const lang = selectLang(req.query.lang);
     const returnPageUrl = req.headers.referer!;
-    req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(returnPageUrl, lang));
+    if (!returnPageUrl.includes(SIGNOUT)) {
+        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(returnPageUrl, lang));
+    } else {
+        const originalPage = getReturnPageFromSession(req.session as Session);
+        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(originalPage, lang));
+    }
     return addLangToUrl(returnPageUrl, lang);
 }
 
