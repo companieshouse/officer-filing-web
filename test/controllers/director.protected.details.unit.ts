@@ -26,6 +26,7 @@ import {
   DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
+import { check } from "yargs";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -67,7 +68,7 @@ describe("Director protected details controller tests", () => {
     });
   
     describe("get tests", () => {
-  
+
       it("Should navigate to director protected details page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({})
         
@@ -95,7 +96,8 @@ describe("Director protected details controller tests", () => {
 
       it(`should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink includes ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END}`, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          protectedDetailsBackLink: "/director-home-address"
+          protectedDetailsBackLink: "/director-home-address",
+          checkYourAnswersLink: ""
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -104,7 +106,8 @@ describe("Director protected details controller tests", () => {
 
       it("should navigate back button to residential address home page if officerFiling.protectedDetailsBackLink is undefined", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
-          protectedDetailsBackLink: undefined
+          protectedDetailsBackLink: undefined,
+          checkYourAnswersLink: ""
         })
         const response = await request(app).get(PAGE_URL);
 
@@ -124,7 +127,17 @@ describe("Director protected details controller tests", () => {
        const response = await request(app).get(PAGE_URL+ "?lang=cy").set({"referer": "protected-details"});
 
        expect(response.text).toContain("to be translated");
+      });
 
+      it('should set checkYourAnswersLink to empty string if ?cya_backlink=true', async () => {
+        mockGetOfficerFiling.mockResolvedValue({});
+        mockPatchOfficerFiling.mockResolvedValue({data:{
+          firstName: "John",
+          lastName: "Doe",
+          checkYourAnswersLink: ""
+        }});
+        const response = await request(app).get(PAGE_URL + "?cya_backlink=true");
+        expect(patchOfficerFiling).toHaveBeenCalled();
       });
 
     });

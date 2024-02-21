@@ -89,6 +89,19 @@ describe("Director date of change controller tests", () => {
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
+
+      it('should set checkYourAnswersLink to empty string if ?cya_backlink=true', async () => {
+        mockGetOfficerFiling.mockResolvedValue({});
+        mockPatchOfficerFiling.mockResolvedValue({data:{
+          firstName: "John",
+          lastName: "Doe",
+          checkYourAnswersLink: ""
+        }});
+        const response = await request(app).get(PAGE_URL + "?cya_backlink=true");
+        expect(patchOfficerFiling).toHaveBeenCalled();
+      });
+
+
     });
 
     describe("POST tests", () => {
