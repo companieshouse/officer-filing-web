@@ -18,15 +18,11 @@ import { DirectorField } from "../../src/model/director.model";
 import {
   DIRECTOR_PROTECTED_DETAILS_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   urlParams,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
-import { check } from "yargs";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
