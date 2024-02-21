@@ -11,7 +11,7 @@ import { toReadableFormat } from "../utils/date";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
 import { STOP_TYPE } from "../utils/constants";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../utils/web";
+import { addCheckYourAnswersParamToLink, getField } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { FormattedValidationErrors } from "../model/validation.model";
 import { createValidationErrorBasic, formatValidationErrors } from "../validation/validation";
@@ -88,7 +88,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     templateName: Templates.APPOINT_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),
     currentUrl: urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req),
-    backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang),
+    backLinkUrl: addCheckYourAnswersParamToLink(addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang)),
     cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
     company: companyProfile,
     officerFiling: officerFiling,
@@ -122,3 +122,4 @@ const createDirectorAppliedToProtectDetailsString = (directorAppliedToProtectDet
     return localeInfo.i18n.no
   }
 }
+

@@ -10,7 +10,7 @@ import app from "../../../src/app";
 import { getCompanyProfile } from "../../../src/services/company.profile.service";
 import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
-import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_END, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
+import { DIRECTOR_DATE_OF_CHANGE_PATH, UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams } from "../../../src/types/page.urls";
 import { validCompanyEstablishedAfter2009Profile } from "../../mocks/company.profile.mock";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 
@@ -89,6 +89,19 @@ describe("Director date of change controller tests", () => {
         expect(response.text).not.toContain(PAGE_HEADING);
         expect(response.text).toContain(ERROR_PAGE_HEADING)
       });
+
+      it('should set checkYourAnswersLink to empty string if ?cya_backlink=true', async () => {
+        mockGetOfficerFiling.mockResolvedValue({});
+        mockPatchOfficerFiling.mockResolvedValue({data:{
+          firstName: "John",
+          lastName: "Doe",
+          checkYourAnswersLink: ""
+        }});
+        const response = await request(app).get(PAGE_URL + "?cya_backlink=true");
+        expect(patchOfficerFiling).toHaveBeenCalled();
+      });
+
+
     });
 
     describe("POST tests", () => {
