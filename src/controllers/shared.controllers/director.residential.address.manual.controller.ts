@@ -9,7 +9,6 @@ import {
 import { getField } from "../../utils/web";
 import { DirectorField } from "../../model/director.model";
 import { formatValidationErrors } from "../../validation/validation";
-import { ValidationError } from "../../model/validation.model";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { COUNTRY_LIST } from "../../utils/properties";
 import { validateManualAddress } from "../../validation/manual.address.validation";
