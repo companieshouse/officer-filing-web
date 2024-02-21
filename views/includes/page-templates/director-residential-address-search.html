@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Find the director's home address" %}
+{% set title = i18n.directorResidentialSearchTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -19,11 +19,11 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Find the director's home address</h1>
+        <h1 class="govuk-heading-l">{{i18n.directorResidentialSearchTitle}}</h1>
         <!-- This is the search page for the residential address -->
         {% from "govuk/components/input/macro.njk" import govukInput %}
         <div id="typeahead-hint" class="govuk-hint">
-          Tell us the director's home address. Only give a business address if they also live there.
+          {{i18n.directorResidentialSearchHint}}
         </div>
         {% include "includes/inputs/fields/postcode-input.html" %}
         {% include "includes/inputs/fields/postcode-premises-input.html" %}
@@ -32,12 +32,12 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Find address"
+          text: i18n.findAddress
         }) }}
 
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-residential-address-manual-link">Enter address manually</a>
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" data-event-id="director-residential-address-manual-link">{{i18n.enterAddressManually}}</a>
         </div>
 
       </form>
