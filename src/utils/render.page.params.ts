@@ -21,7 +21,7 @@ export interface RenderArrayPageParams {
  */
 export interface RenderManualEntryParams {
   officerFiling: OfficerFiling;
-  serviceAddress: Address;
+  address: Address;
   validationErrors: ValidationError[];
   templateName: string;
   backUrlPath: string;

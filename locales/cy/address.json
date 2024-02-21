@@ -4,7 +4,22 @@
   "ukPostcode": "to be translated",
   "premisesInput": "to be translated",
   "premisesHint": "to be translated",
+  "addressLine1Input": "to be translated",
+  "addressLine2Input": "to be translated",
+  "cityOrTownInput": "to be translated",
+  "countyStateProvinceOrRegionInput": "to be translated",
+  "countryInput": "to be translated",
+  "countryInputDefaultText": "to be translated",
+  "countryInputHint": "to be translated",
+  "postcodeOrZipInput": "to be translated",
   "chooseCorrespondenceAddress": "to be translated",
   "chooseHomeAddress": "to be translated",
-  "chooseAnAddress": "to be translated"
+  "chooseAnAddress": "to be translated",
+  "directorCorrespondenceAddressHint": "to be translated.",
+  "directorCorrespondenceAddressInsetHint": "to be translated",
+  "directorCorrespondenceAddressAccordionTitle" :"to be translated",
+  "directorCorrespondenceAddressAccordionText": "to be translated",
+  "directorCorrespondenceAddressAgentAccordionText": "to be translated",
+  "directorCorrespondenceAddressAgentAccordionLinkText": "to be translated",
+  "directorCorrespondenceAddressAgentOtherAgentAccordionText": "to be translated"
 }
