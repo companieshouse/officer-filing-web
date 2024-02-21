@@ -174,6 +174,10 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
     occupationHasBeenUpdated: false,
     correspondenceAddressHasBeenUpdated: false,
     residentialAddressHasBeenUpdated: false,
+    isServiceAddressSameAsRegisteredOfficeAddress: appointment.serviceAddressIsSameAsRegisteredOfficeAddress,
+    isHomeAddressSameAsServiceAddress: appointment.residentialAddressIsSameAsServiceAddress,
+    directorServiceAddressChoice: appointment.serviceAddressIsSameAsRegisteredOfficeAddress ? "director_registered_office_address": "director_different_address",
+    directorResidentialAddressChoice: appointment.residentialAddressIsSameAsServiceAddress ? "director_correspondence_address": "director_different_address"
   };
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;

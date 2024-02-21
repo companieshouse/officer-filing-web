@@ -291,6 +291,10 @@ describe("Active directors controller tests", () => {
         occupationHasBeenUpdated: false,
         correspondenceAddressHasBeenUpdated: false,
         residentialAddressHasBeenUpdated: false,
+        isServiceAddressSameAsRegisteredOfficeAddress: true,
+        directorServiceAddressChoice: "director_registered_office_address",
+        isHomeAddressSameAsServiceAddress: undefined,
+        directorResidentialAddressChoice: "director_different_address",
       }));
     });
 
