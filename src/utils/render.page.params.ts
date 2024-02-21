@@ -37,5 +37,6 @@ export interface RenderAddressRadioParams {
   templateName: string,
   backUrlPath: string,
   directorName: string,
-  formattedErrors?: FormattedValidationErrors
+  formattedErrors?: FormattedValidationErrors,
+  currentUrl?: string
 }

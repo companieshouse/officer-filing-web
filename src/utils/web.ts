@@ -99,3 +99,14 @@ export const getAddressOptions = (ukAddresses: UKAddress[]) => {
     };
   });
 }
+
+/**
+ * Adds the check your answers backlink parameter to the link
+ * @param url 
+ * @returns 
+ */
+
+export const addCheckYourAnswersParamToLink = (url: string): string => {
+  const separator = url.includes('?') ? '&' : '?';
+  return url + separator + "cya_backlink=true";
+};
