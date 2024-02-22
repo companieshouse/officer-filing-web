@@ -15,11 +15,11 @@
   "appTitle": "Penodi a dileu cyfarwyddwr cwmni",
   "appTitleJustRemove": "to be translated",
   "confirmAndContinue": "Cadarnhau a pharhau",
-  "confirmAndSubmit": "to be translated",
+  "confirmAndSubmit": "Cadarnhau a chyflwyno",
   "continue": "to be translated",
-  "cancel": "to be translated",
+  "cancel": "Canslo",
   "signOut": "Cofrestrwch allan",
-  "change": "to be translated",
+  "change": "Newid",
   "back": "Cefn",
   "policies": "Polisïau",
   "cookies": "Cwcis",
@@ -32,7 +32,5 @@
   "year": "to be translated",
   "govUK": "to be translated",
   "yes": "to be translated",
-  "no": "to be translated",
-  "companyName": "to be translated",
-  "companyNumber": "to be translated"
+  "no": "to be translated"
 }
