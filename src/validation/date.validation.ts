@@ -222,7 +222,10 @@ const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidat
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateUnderageAtAppointmentRule = (dateOfBirth: Date, dateOfAppointment: Date,dateValidationType: DateValidationType): ValidationError | undefined => {
-  if(getAge(dateOfBirth) - getAge(dateOfAppointment) < 16){
+  const doaTime = dateOfAppointment.getTime();
+  const dobTime = dateOfBirth.getTime();
+
+  if( ((doaTime - dobTime) / (1000 * 3600 * 24 * 365.25)) < 16){
     return dateValidationType.RuleBased?.Underage;
   }
   return undefined;
