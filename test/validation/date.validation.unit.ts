@@ -1,6 +1,8 @@
-import { RemovalDateErrorMessageKey } from '../../src/utils/api.enumerations.keys';
-import { validateDate } from '../../src/validation/date.validation';
+import { RemovalDateErrorMessageKey, appointmentDateErrorMessageKey } from '../../src/utils/api.enumerations.keys';
+import { validateDate , validateDateOfAppointment } from '../../src/validation/date.validation';
 import { RemovalDateValidation} from "../../src/validation/remove.date.validation.config";
+import { AppointmentDateValidation} from "../../src/validation/appointment.date.validation.config";
+import { validCompanyProfile } from "../mocks/company.profile.mock";
 
 
 describe("Missing input validation tests", () => {
@@ -125,5 +127,17 @@ describe("Invalid date input validation tests", () => {
         expect(validateDate("32","12","2013",RemovalDateValidation)?.messageKey).toEqual(RemovalDateErrorMessageKey.INVALID_DATE);
         expect(validateDate("0","12","2013",RemovalDateValidation)?.messageKey).toEqual(RemovalDateErrorMessageKey.INVALID_DATE);
     });
+
+
+    test("Error if appointmnet date is less than 16 years after DOB", async () => {
+        const dateOfBirth = new Date("2000", "01", "21");
+        expect(validateDateOfAppointment("01","01","2016",AppointmentDateValidation,dateOfBirth,validCompanyProfile)?.messageKey).toEqual(appointmentDateErrorMessageKey.APPOINTMENT_DATE_UNDERAGE);
+    });
+
+    test("Don't error if appointmnet date is more than 16 years after DOB", async () => {
+        const dateOfBirth = new Date("2000", "01", "01");
+        expect(validateDateOfAppointment("01","01","2023",AppointmentDateValidation,dateOfBirth,validCompanyProfile)?.messageKey).toReturn;
+    });
+
 });
 

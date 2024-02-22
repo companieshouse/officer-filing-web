@@ -50,14 +50,14 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const dobMonth = req.body[DobDateField.MONTH];
     const dobYear = req.body[DobDateField.YEAR];
     // Get date of appointment
-    const appointementDay = req.body[AppointmentDateField.DAY];
-    const appointementMonth = req.body[AppointmentDateField.MONTH];
-    const appointementYear = req.body[AppointmentDateField.YEAR];
+    const appointmentDay = req.body[AppointmentDateField.DAY];
+    const appointmentMonth = req.body[AppointmentDateField.MONTH];
+    const appointmentYear = req.body[AppointmentDateField.YEAR];
 
     // Validate the date fields (JS)
     let dobValidationError = validateDateOfBirth(dobDay, dobMonth, dobYear, DobDateValidation);
     const dateOfBirth = new Date(parseInt(dobYear), parseInt(dobMonth) - 1, parseInt(dobDay));
-    let appointmentValidationError = validateDateOfAppointment(appointementDay, appointementMonth, appointementYear, AppointmentDateValidation, dateOfBirth, companyProfile);
+    let appointmentValidationError = validateDateOfAppointment(appointmentDay, appointmentMonth, appointmentYear, AppointmentDateValidation, dateOfBirth, companyProfile);
     
     const dateValidationErrors:ValidationError[] = [];
     if (dobValidationError || appointmentValidationError) {
@@ -68,11 +68,11 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       if(appointmentValidationError){
         dateValidationErrors.push(appointmentValidationError);
       }
-      return renderPage(res, req, officerFiling, dateValidationErrors, [dobDay, dobMonth, dobYear], [appointementDay, appointementMonth, appointementYear]);
+      return renderPage(res, req, officerFiling, dateValidationErrors, [dobDay, dobMonth, dobYear], [appointmentDay, appointmentMonth, appointmentYear]);
     }
 
     const dateOfBirthString = buildDateString(dobDay, dobMonth, dobYear);
-    const dateOfAppointmentString = buildDateString(appointementDay, appointementMonth, appointementYear);
+    const dateOfAppointmentString = buildDateString(appointmentDay, appointmentMonth, appointmentYear);
     
     // Patch filing
     const updateFiling: OfficerFiling = {
