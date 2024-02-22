@@ -51,23 +51,28 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Enter the director&#39;s correspondence address";
+const PAGE_HEADING_WELSH = "to be translated";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const UPDATE_PAGE_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
+const PAGE_URL_WELSH = PAGE_URL + "?lang=cy";
+const UPDATE_PAGE_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_PAGE_URL_WELSH = UPDATE_PAGE_URL + "?lang=cy";
 const NEXT_PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
+const NEXT_PAGE_URL_WELSH = NEXT_PAGE_URL + "?lang=cy";
+const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_NEXT_PAGE_URL_WELSH = UPDATE_NEXT_PAGE_URL + "?lang=cy";
 
 const validData = {
   "correspondence_address_premises": "The Big House",
@@ -273,7 +278,8 @@ describe("Director correspondence address controller tests", () => {
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
 
-      it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL]])("Should patch officer filing with updated information", async (url, nextPageUrl) => {
+      it.each([[PAGE_URL, NEXT_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL], [PAGE_URL_WELSH, NEXT_PAGE_URL_WELSH],[UPDATE_PAGE_URL_WELSH, UPDATE_NEXT_PAGE_URL_WELSH]])
+      ("Should patch officer filing with updated information", async (url, nextPageUrl) => {
         mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
         mockGetOfficerFiling.mockResolvedValue({
           referenceAppointmentId: "ref_id",
@@ -450,6 +456,37 @@ describe("Director correspondence address controller tests", () => {
         const validationErrors = buildValidationErrors(mockValidationStatusResponse);
 
         expect(validationErrors).toHaveLength(0);
+      });
+    });
+
+    describe("Welsh language tests", () => {
+
+      //get test
+      it.each([[PAGE_URL_WELSH, DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END + "?lang=cy"],[UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH_END + "?lang=cy"]])
+      ("Should navigate to director correspondence address manual page in welsh with backlink containing lang param.", async (url, backLinkUrl) => {
+        mockGetOfficerFiling.mockResolvedValue({});
+
+        const response = await request(app).get(url);
+
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+        expect(response.text).toContain(backLinkUrl);
+      });
+
+      //post test
+      it.each([[PAGE_URL_WELSH], [UPDATE_PAGE_URL_WELSH]])
+      ("Should render validation error in welsh with null values passed", async (url) => {
+        mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
+        mockGetOfficerFiling.mockResolvedValue({
+          data: {
+            firstName: "John",
+            lastName: "Smith",
+          }
+        });
+
+        const response = await request(app).post(url).send({});
+
+        expect(response.text).toContain("to be translated");
       });
     });
 });

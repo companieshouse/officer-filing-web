@@ -1,9 +1,9 @@
 <div id="typeahead-form-group-0" class="govuk-form-group">
   <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
 
-  {% set typeaheadTitle = "<label for='typeahead_input_0' class='govuk-label' >Country</label>" | safe %}
-  {% set dropdownDefaultText = "Select country" %}
-  {% set typeaheadHint = "Start typing a country, then choose from the list." %}
+  {% set typeaheadTitle = ["<label for='typeahead_input_0' class='govuk-label' >"+i18n.countryInput+"</label>"] | join | safe %}
+  {% set dropdownDefaultText = i18n.countryInputDefaultText %}
+  {% set typeaheadHint = i18n.countryInputHint %}
   {% set errorMessage = errors.typeahead_input_0 %}
   {% set inputClass = "govuk-!-width-one-quarter" %}
  

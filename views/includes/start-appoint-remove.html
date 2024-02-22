@@ -1,0 +1,60 @@
+<h1 class="govuk-heading-xl">
+    {{ i18n.appTitleAppointRemove }}
+</h1>
+<p class="govuk-body">{{ i18n.startUseThisServiceInfo1AppointRemove }}</p>
+<p class="govuk-body">{{ i18n.startUseThisServiceInfo2 }}</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>{{ i18n.startUseThisServiceInfo3 }}</li>
+    <li>{{ i18n.startUseThisServiceInfo4 }}</li>
+</ul>
+<p class="govuk-body">{{ i18n.startUseThisServiceInfo5 }}
+    <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1" data-event-id="web-filing-link-clicked" class="govuk-link">{{ i18n.startUseThisServiceInfo6 }}</a> {{ i18n.startUseThisServiceInfo7 }}
+    <a href="https://www.gov.uk/government/collections/companies-house-forms-for-limited-companies#directors-and-secretaries" data-event-id="companies-house-form-link-clicked" class="govuk-link">{{ i18n.startUseThisServiceInfo8 }}</a>.
+</p>
+
+{% set summaryHtml %}
+    <div>{{ i18n.startWhatIsACorporateDirectorTitle }}</div>
+{% endset %}
+{% set corporateDetails %}
+    <p>{{ i18n.startWhatIsACorporateDirectorInfo1 }}</p>
+    <p>{{ i18n.startWhatIsACorporateDirectorInfo2 }}</p>
+{% endset %}
+
+{{ govukDetails({
+    summaryHtml: summaryHtml ,
+    html: corporateDetails,
+    attributes: {
+    "data-event-id": "what-is-a-corporate-director-accordion"
+    }
+}) }}
+
+<h2 class="govuk-heading-m">{{ i18n.startBeforeYouStartTitle }}</h2>
+<p class="govuk-body">{{ i18n.startBeforeYouStartYoullNeedTitle }}</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo1 }}</li>
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo2 }}</li>
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
+</ul>
+
+<br>
+<p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedTitle }}</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedName }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedPreviousName }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedDOB }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedNationality }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedOccupationAppointRemove }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedAddresses }}</li>
+    <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedDOA }}</li>
+</ul>
+<p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo1AppointRemove }}
+    <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register" class="govuk-link" data-event-id="protect-personal-information-link-clicked">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo2 }}</a>
+</p>
+
+<br>
+<a href="/appoint-update-remove-company-officer/company-number" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+    {{ i18n.startStartNowButton }}
+    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
+    <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+    </svg>
+</a>

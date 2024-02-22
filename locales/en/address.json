@@ -4,7 +4,22 @@
   "ukPostcode": "UK Postcode",
   "premisesInput": "Property name or number",
   "premisesHint": "For example, 'The Mill', '116' or 'Flat 37a'",
+  "addressLine1Input": "Address line 1",
+  "addressLine2Input": "Address line 2 (optional)",
+  "cityOrTownInput": "City or town",
+  "countyStateProvinceOrRegionInput": "County, state, province or region (optional)",
+  "countryInput": "Country",
+  "countryInputDefaultText": "Select country",
+  "countryInputHint": "Start typing a country, then choose from the list.",
+  "postcodeOrZipInput": "Postcode or ZIP",
   "chooseCorrespondenceAddress": "Choose a correspondence address",
   "chooseHomeAddress": "Choose a home address",
-  "chooseAnAddress": "Choose an address"
+  "chooseAnAddress": "Choose an address",
+  "directorCorrespondenceAddressHint": "We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.",
+  "directorCorrespondenceAddressInsetHint": "We will show this address on the public Companies House register.",
+  "directorCorrespondenceAddressAccordionTitle" :"My correspondence address is the same as my home address",
+  "directorCorrespondenceAddressAccordionText": "We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register.",
+  "directorCorrespondenceAddressAgentAccordionText": "If you run your company from home and do not want your home address available to the public, there is a",
+  "directorCorrespondenceAddressAgentAccordionLinkText": "list of agents who can provide registered office services (opens in new tab).",
+  "directorCorrespondenceAddressAgentOtherAgentAccordionText": "A quick online search will show other agents who offer similar services. All providers will charge a fee."
 }

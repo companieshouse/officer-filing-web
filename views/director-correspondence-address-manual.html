@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Enter the director's correspondence address" %}
+{% set title = i18n.enterDirectorsCorrespondenceAddress %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -8,9 +8,9 @@
 
 {% block backLink %}
   {% if correspondence_address_back_param === "confirm-correspondence-address" %}
-    {% set backLinkText = "Go back to 'Confirm the director's correspondence address'" %}
+    {% set backLinkText = i18n.enterDirectorsCorrespondenceAddress %}
   {%else%}
-    {% set backLinkText = "Go back to 'Find the director's correspondence address'" %}
+    {% set backLinkText = i18n.goBackToFindDirectorsCorrespondenceAddress %}
   {%endif%}
   {% include "includes/back-link.html" %}
 {% endblock %}
@@ -20,23 +20,23 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Enter the director's correspondence address</h1>
+        <h1 class="govuk-heading-l">{{ i18n.enterDirectorsCorrespondenceAddress }}</h1>
 
         <div id="correspondence-property-address-hint" class="govuk-hint">
-          We'll use this address to send Companies House mail to the director. You can use a business or home address and it does not have to be in the UK.
+          {{ i18n.directorCorrespondenceAddressHint }}
         </div>
 
         {{ govukInput({
           errorMessage: errors.correspondence_address_premises if errors,
           label: {
-            html: 'Property name or number'
+            html: i18n.premisesInput
           },
           hint: {
-            text: "For example, 'The Mill', '116' or 'Flat 37a'"
+            text: i18n.premisesHint
           },
           id: "correspondence_address_premises",
           name: "correspondence_address_premises",
@@ -46,7 +46,7 @@
         {{ govukInput({
           errorMessage: errors.correspondence_address_line_1 if errors,
           label: {
-            text: "Address line 1"
+            text: i18n.addressLine1Input
           },
           id: "correspondence_address_line_1",
           name: "correspondence_address_line_1",
@@ -56,7 +56,7 @@
         {{ govukInput({
           errorMessage: errors.correspondence_address_line_2 if errors,
           label: {
-            text: "Address line 2 (optional)"
+            text: i18n.addressLine2Input
           },
           id: "correspondence_address_line_2",
           name: "correspondence_address_line_2",
@@ -66,7 +66,7 @@
         {{ govukInput({
           errorMessage: errors.correspondence_address_city if errors,
           label: {
-            text: "City or town"
+            text: i18n.cityOrTownInput
           },
           id: "correspondence_address_city",
           name: "correspondence_address_city",
@@ -76,7 +76,7 @@
         {{ govukInput({
           errorMessage: errors.correspondence_address_county if errors,
           label: {
-            text: "County, state, province or region (optional)"
+            text: i18n.countyStateProvinceOrRegionInput
           },
           id: "correspondence_address_county",
           name: "correspondence_address_county",
@@ -88,7 +88,7 @@
         {{ govukInput({
           errorMessage: errors.correspondence_address_postcode if errors,
           label: {
-            text: "Postcode or ZIP"
+            text: i18n.postcodeOrZipInput
           },
           classes: "govuk-input govuk-input--width-10",
           id: "correspondence_address_postcode",
@@ -97,18 +97,19 @@
         }) }}
 
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will show this address on the public Companies House register.</p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.directorCorrespondenceAddressInsetHint }}</p>
         </div>
 
 
         {% set correspondenceAddressSameAsHomeAddress %}
-        <p>We will not show your home address on the public register. However, if you use your home address as your correspondence address, we will show this on the public register. </p>
-        <p>If you run your company from home and do not want your home address available to the public, there is a  <a href="https://www.gov.uk/government/publications/formation-and-company-secretarial-agents/company-formation-agents-and-secretarial-agents" data-event-id="list-of-agents-link" class="govuk-link" target="_blank" rel="noopener noreferrer"> list of agents who can provide registered office services (opens in new tab).</a> </p> 
-        <p>A quick online search will show other agents who offer similar services. All providers will charge a fee. </p>
+        <p>{{ i18n.directorCorrespondenceAddressAccordionText }} </p>
+        <p>{{ i18n.directorCorrespondenceAddressRadioAgentAccordionText }}  <a href="https://www.gov.uk/government/publications/formation-and-company-secretarial-agents/company-formation-agents-and-secretarial-agents" data-event-id="list-of-agents-link" class="govuk-link" target="_blank" rel="noopener noreferrer">
+          {{ i18n.directorCorrespondenceAddressAgentAccordionLinkText }}</a> </p>
+        <p>{{ i18n.directorCorrespondenceAddressAgentOtherAgentAccordionText }}</p>
         {% endset %}
         {{ govukDetails({
-          summaryHtml: '<div> My correspondence address is the same as my home address </div>',
+          summaryHtml: '<div>'~i18n.directorCorrespondenceAddressAccordionTitle~ '</div>',
           html: correspondenceAddressSameAsHomeAddress,
           attributes: {
             "data-event-id": "my-correspondance-address-is-my-home-address-accordion"
@@ -120,7 +121,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

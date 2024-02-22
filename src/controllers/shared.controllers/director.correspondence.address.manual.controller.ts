@@ -28,20 +28,27 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 import { RenderManualEntryParams } from "../../utils/render.page.params";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import {
+  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH
+} from "../../types/page.urls";
 
 export const getDirectorCorrespondenceAddressManual = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPaths, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const locales = getLocalesService();
+    const lang = selectLang(req.query.lang);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
-    let backLink = urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req);
+    let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
     if(correspondenceAddressBackParam && correspondenceAddressBackParam.includes("confirm-correspondence-address")) {
-      backLink = urlUtils.getUrlToPath(backUrlPaths.confirmCorrespondenceAddressPath, req)
+      backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.confirmCorrespondenceAddressPath, req), lang)
     }
 
     return res.render(templateName, {
@@ -56,7 +63,9 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
       correspondence_address_county: officerFiling.serviceAddress?.region,
       typeahead_value: officerFiling.serviceAddress?.country,
       correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
-      correspondence_address_back_param: correspondenceAddressBackParam
+      correspondence_address_back_param: correspondenceAddressBackParam,
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(req, isUpdate, lang)
     });
   } catch (e) {
     return next(e);
@@ -69,6 +78,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
 
     const serviceAddress : Address =  {
       premises: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES),
@@ -86,7 +96,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     if(jsValidationErrors.length > 0) {
       return renderPage(req, res, session, { 
         officerFiling: originalFiling,
-        serviceAddress,
+        address: serviceAddress,
         validationErrors: jsValidationErrors,
         templateName,
         backUrlPath,
@@ -117,7 +127,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     if (validationErrors.length > 0) {
       return renderPage(req, res, session, { 
         officerFiling: originalFiling,
-        serviceAddress,
+        address: serviceAddress,
         validationErrors,
         templateName,
         backUrlPath,
@@ -125,7 +135,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
       })
     }
   
-    const nextPageUrl = urlUtils.getUrlToPath(nextPage, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(nextPage, req), lang);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
@@ -188,21 +198,33 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 }
 
 export const renderPage = async (req: Request, res: Response, session: Session, params: RenderManualEntryParams) => {
-  const formattedErrors = formatValidationErrors(params.validationErrors);
+  const locales = getLocalesService();
+  const lang = selectLang(req.query.lang);
+  const formattedErrors = formatValidationErrors(params.validationErrors, lang);
   const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
   return res.render(params.templateName, {
     templateName: params.templateName,
-    backLinkUrl: urlUtils.getUrlToPath(params.backUrlPath, req),
+    backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(params.backUrlPath, req), lang),
     directorName: formatTitleCase(directorName),
     typeahead_array: COUNTRY_LIST,
-    correspondence_address_premises: params.serviceAddress.premises,
-    correspondence_address_line_1: params.serviceAddress.addressLine1,
-    correspondence_address_line_2: params.serviceAddress.addressLine2,
-    correspondence_address_city: params.serviceAddress.locality,
-    correspondence_address_county: params.serviceAddress.region,
-    typeahead_value: params.serviceAddress.country,
-    correspondence_address_postcode: params.serviceAddress.postalCode,
+    correspondence_address_premises: params.address.premises,
+    correspondence_address_line_1: params.address.addressLine1,
+    correspondence_address_line_2: params.address.addressLine2,
+    correspondence_address_city: params.address.locality,
+    correspondence_address_county: params.address.region,
+    typeahead_value: params.address.country,
+    correspondence_address_postcode: params.address.postalCode,
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
+    ...getLocaleInfo(locales, lang),
+    currentUrl : getCurrentUrl(req, params.isUpdate, lang)
   });
 };
+
+const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
+  if (isUpdate) {
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+  } else {
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+  }
+}

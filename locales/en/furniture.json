@@ -1,5 +1,6 @@
 {
-  "appTitle": "Appoint and remove a company director",
+  "appTitle": "Appoint, update and remove a company director",
+  "appTitleAppointRemove": "Appoint and remove a company director",
   "appTitleJustRemove": "Remove a company director",
   "cookiesHeader": "Cookies on Companies House services",
   "cookiesBanner1": "We use some essential cookies to make our services work.",
@@ -34,6 +35,8 @@
   "yes": "Yes",
   "no": "No",
   "companyName": "Company name",
-  "companyNumber": "Company number"
+  "companyNumber": "Company number",
+  "next" : "Next",
+  "previous" : "Previous"
 
 }

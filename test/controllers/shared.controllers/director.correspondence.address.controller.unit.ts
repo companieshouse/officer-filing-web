@@ -101,7 +101,6 @@ describe("Director correspondence address controller tests", () => {
     });
 
     describe("get tests", () => {
-  
       it.each([[PAGE_URL,DIRECTOR_OCCUPATION_PATH_END],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_DETAILS_END,]])(`Should render ${DIRECTOR_CORRESPONDENCE_ADDRESS} and ${UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS} page`, async (url, backLink) => {
         mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
         mockGetOfficerFiling.mockResolvedValueOnce({
@@ -223,9 +222,21 @@ describe("Director correspondence address controller tests", () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
           isHomeAddressSameAsServiceAddress: undefined
         }});
+        if (url === UPDATE_PAGE_URL) {
+          mockGetOfficerFiling.mockResolvedValueOnce({
+          });
+        }
         const response = (await request(app).post(url).send({
           director_correspondence_address: "director_registered_office_address"
         }));
+        if (url === UPDATE_PAGE_URL) {
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
+            expect.objectContaining({}),
+            TRANSACTION_ID,
+            SUBMISSION_ID,
+            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+          );
+        }
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
       });
 
@@ -257,13 +268,21 @@ describe("Director correspondence address controller tests", () => {
       });
 
       it.each([[PAGE_URL,DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL],[UPDATE_PAGE_URL,UPDATE_DIRECTOR_CORRESPONDENCE_LINK_PAGE_URL]])(`should patch the service address with no registered office address if selected`, async (url, redirectLink) => {
-        mockGetCompanyProfile.mockResolvedValue({});
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
           isHomeAddressSameAsServiceAddress: false
         }});
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockMapCompanyProfileToOfficerFilingAddressMock.mockReturnValueOnce(validAddress);
+        if (url === UPDATE_PAGE_URL) {
+          mockGetOfficerFiling.mockResolvedValueOnce({ referenceAppointmentId: "1234" });
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          });
+        }
+
         const response = (await request(app).post(url).send({
           director_correspondence_address: "director_registered_office_address"
         }));
+       
         expect(response.status).toEqual(302);
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
       });
@@ -274,6 +293,11 @@ describe("Director correspondence address controller tests", () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data: {
           isHomeAddressSameAsServiceAddress: true
         }});
+        if (url === UPDATE_PAGE_URL) {
+          mockGetOfficerFiling.mockResolvedValueOnce({ referenceAppointmentId: "1234" });
+          mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          });
+        }
         const response = (await request(app).post(url).send({
           director_correspondence_address: "director_registered_office_address"
         }));
