@@ -1,0 +1,5 @@
+{
+    "directorResidentialAddressLinkTitle" : "If the director's correspondence address changes in the future, do you want this to apply to their home address too?",
+    "directorResidentialAddressLinkYesHint" : "The director's home address will be recorded as the 'same as the correspondence address'. This means future changes will also apply to the director's home address.",
+    "directorResidentialAddressLinkNoHint" : "You’ll have to update the director's home address manually if it changes."
+}
