@@ -35,6 +35,8 @@
   "yes": "Yes",
   "no": "No",
   "companyName": "Company name",
-  "companyNumber": "Company number"
+  "companyNumber": "Company number",
+  "next" : "Next",
+  "previous" : "Previous"
 
 }

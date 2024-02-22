@@ -56,7 +56,9 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       paginationElement = buildPaginationElement(
         pageNumber,
         numOfPages,
-        urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+        urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+        lang,
+        locales
       );
     }
 
@@ -94,7 +96,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   
   const removeAppointmentId = req.body.removeAppointmentId;
   if (removeAppointmentId) {
-    return beginTerminationJourney(req, res, session, companyNumber, transactionId, removeAppointmentId);
+    return beginTerminationJourney(req, res, session, companyNumber, transactionId, removeAppointmentId, lang);
   }
 
   const updateAppointmentId = req.body.updateAppointmentId;
@@ -108,7 +110,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Post an officer filing and redirect to the first page in the TM01 journey.
 */
-async function beginTerminationJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any) {
+async function beginTerminationJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any, lang: string) {
   logger.debug(`Creating a termination filing for appointment ${appointmentId}`);
 
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
@@ -120,7 +122,7 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
   const filingResponse = await postOfficerFiling(session, transactionId, officerFiling);
   req.params[urlParams.PARAM_SUBMISSION_ID] = filingResponse.id;
   
-  const nextPageUrl = urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req);
+  const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req), lang);
   return res.redirect(nextPageUrl);
 }
 
