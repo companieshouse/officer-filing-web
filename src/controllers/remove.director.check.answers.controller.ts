@@ -19,6 +19,8 @@ import { getCompanyAppointmentFullRecord } from "../services/company.appointment
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
+//BUILD FIX
+
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
