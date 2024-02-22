@@ -2,7 +2,7 @@ import middlewareMocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-const EXPECTED_TEXT = "Remove a company director";
+const EXPECTED_TEXT = "Before you start";
 
 describe("start controller tests", () => {
 
@@ -31,5 +31,6 @@ describe("start controller tests", () => {
               .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
         expect(response.text).toContain("to be translated");
+  });
 
 });
