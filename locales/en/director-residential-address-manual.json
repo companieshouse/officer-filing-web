@@ -1,0 +1,7 @@
+{
+  "enterDirectorsHomeAddress": "Enter the director's home address",
+  "goBackToConfirmDirectorsHomeAddress": "Go back to 'Confirm where the director lives'",
+  "goBackToFindDirectorsHomeAddress": "Go back to 'Find the director's home address'",
+  "manualHomeAddressHint" : "Tell us the director's home address. Only give a business address if they also live there.",
+  "manualHomeAddressPublicRegisterInformation" : "We will not show this address on the public Companies House register, unless it’s also used for the company's registered office address or the director’s correspondence address."
+}

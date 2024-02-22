@@ -9,7 +9,6 @@ import {
 import { getField } from "../../utils/web";
 import { DirectorField } from "../../model/director.model";
 import { formatValidationErrors } from "../../validation/validation";
-import { ValidationError } from "../../model/validation.model";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../../utils/format";
 import { COUNTRY_LIST } from "../../utils/properties";
 import { validateManualAddress } from "../../validation/manual.address.validation";
@@ -17,18 +16,26 @@ import { ResidentialManualAddressValidation } from "../../validation/address.val
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import {
+  DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
+  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
+} from "../../types/page.urls";
+import { RenderManualEntryParams } from "../../utils/render.page.params";
 
-export const getResidentialAddressManualEntry = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, confirmResidentialAddress: string) => {
+export const getResidentialAddressManualEntry = async (req: Request, res: Response, next: NextFunction, templateName: string, backLink: string, confirmResidentialAddress: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const locales = getLocalesService();
+    const lang = selectLang(req.query.lang);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
     const residentialAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
-    let backLinkPath = urlUtils.getUrlToPath(backLink, req);
+    let backLinkPath = addLangToUrl(urlUtils.getUrlToPath(backLink, req), lang);
     if(residentialAddressBackParam && residentialAddressBackParam.includes("confirm-residential-address")) {
-      backLinkPath = urlUtils.getUrlToPath(confirmResidentialAddress, req)
+      backLinkPath = addLangToUrl(urlUtils.getUrlToPath(confirmResidentialAddress, req), lang);
     }
     
     return res.render(templateName, {
@@ -43,7 +50,9 @@ export const getResidentialAddressManualEntry = async (req: Request, res: Respon
       residential_address_county: officerFiling.residentialAddress?.region,
       typeahead_value: officerFiling.residentialAddress?.country,
       residential_address_postcode: officerFiling.residentialAddress?.postalCode,
-      residential_address_back_param: residentialAddressBackParam
+      residential_address_back_param: residentialAddressBackParam,
+      ...getLocaleInfo(locales, lang),
+      currentUrl: getCurrentUrl(req, isUpdate, lang)
     });
   } catch (e) {
     return next(e);
@@ -56,6 +65,7 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalFiling = await getOfficerFiling(session, transactionId, submissionId);
+    const lang = selectLang(req.query.lang);
 
     const residentialAddress: Address = {
       premises: getField(req, DirectorField.RESIDENTIAL_ADDRESS_PREMISES),
@@ -71,7 +81,13 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
     const jsValidationErrors = validateManualAddress(residentialAddress, ResidentialManualAddressValidation);
 
     if(jsValidationErrors.length > 0) {
-      return renderPage(req, res, residentialAddress, originalFiling, jsValidationErrors, templateName, backLink);
+      return renderPage(req, res, {
+        officerFiling: originalFiling,
+        address: residentialAddress,
+        validationErrors: jsValidationErrors,
+        templateName : templateName,
+        backUrlPath: backLink,
+        isUpdate: isUpdate});
     }
     // Patch filing with updated information
     const officerFilingBody: OfficerFiling = {
@@ -90,28 +106,40 @@ export const postResidentialAddressManualEntry = async (req: Request, res: Respo
 
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
   
-    const nextPageUrl = urlUtils.getUrlToPath(nextPagePath, req);
+    const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(nextPagePath, req), lang);
     return res.redirect(nextPageUrl);
   } catch (e) {
     return next(e);
   }
 };
 
-export const renderPage = (req: Request, res: Response, residentialAddress: Address, officerFiling: OfficerFiling, validationErrors: ValidationError[], templateName: string, backLink: string) => {
-  const formattedErrors = formatValidationErrors(validationErrors);
-  return res.render(templateName, {
-    templateName: templateName,
-    backLinkUrl: urlUtils.getUrlToPath(backLink, req),
-    directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+export const renderPage = (req: Request, res: Response, params: RenderManualEntryParams) => {
+  const locales = getLocalesService();
+  const lang = selectLang(req.query.lang);
+  const formattedErrors = formatValidationErrors(params.validationErrors, lang);
+  return res.render(params.templateName, {
+    templateName: params.templateName,
+    backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(params.backUrlPath, req), lang),
+    directorName: formatTitleCase(retrieveDirectorNameFromFiling(params.officerFiling)),
     typeahead_array: COUNTRY_LIST,
-    residential_address_premises: residentialAddress.premises,
-    residential_address_line_1: residentialAddress.addressLine1,
-    residential_address_line_2: residentialAddress.addressLine2,
-    residential_address_city: residentialAddress.locality,
-    residential_address_county: residentialAddress.region,
-    typeahead_value: residentialAddress.country,
-    residential_address_postcode: residentialAddress.postalCode,
+    residential_address_premises: params.address.premises,
+    residential_address_line_1: params.address.addressLine1,
+    residential_address_line_2: params.address.addressLine2,
+    residential_address_city: params.address.locality,
+    residential_address_county: params.address.region,
+    typeahead_value: params.address.country,
+    residential_address_postcode: params.address.postalCode,
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
+    ...getLocaleInfo(locales, lang),
+    currentUrl : getCurrentUrl(req, params.isUpdate, lang)
   });
+}
+
+const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
+  if (isUpdate) {
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
+  } else {
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
+  }
 }

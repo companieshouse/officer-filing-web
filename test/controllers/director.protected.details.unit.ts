@@ -18,12 +18,9 @@ import { DirectorField } from "../../src/model/director.model";
 import {
   DIRECTOR_PROTECTED_DETAILS_PATH,
   APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END,
   urlParams,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH_END
 } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 
@@ -67,7 +64,6 @@ describe("Director protected details controller tests", () => {
     });
   
     describe("get tests", () => {
-  
       it("Should navigate to director protected details page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({})
         
@@ -124,7 +120,17 @@ describe("Director protected details controller tests", () => {
        const response = await request(app).get(PAGE_URL+ "?lang=cy").set({"referer": "protected-details"});
 
        expect(response.text).toContain("to be translated");
+      });
 
+      it('should set checkYourAnswersLink to empty string if ?cya_backlink=true', async () => {
+        mockGetOfficerFiling.mockResolvedValue({});
+        mockPatchOfficerFiling.mockResolvedValue({data:{
+          firstName: "John",
+          lastName: "Doe",
+          checkYourAnswersLink: ""
+        }});
+        const response = await request(app).get(PAGE_URL + "?cya_backlink=true");
+        expect(patchOfficerFiling).toHaveBeenCalled();
       });
 
     });

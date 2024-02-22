@@ -27,6 +27,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
 
+    if(req.query.cya_backlink === "true") {
+      officerFiling.checkYourAnswersLink = "";
+           await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+    }
+
     return res.render(Templates.DIRECTOR_PROTECTED_DETAILS, {
       templateName: Templates.DIRECTOR_PROTECTED_DETAILS,
       backLinkUrl:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang),

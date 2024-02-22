@@ -51,9 +51,11 @@
 {% endblock %}
 
 {% block header %}
-{% if AP01_ACTIVE === "true" %}
-  {% if i18n.appTitle %}
-    {% set serviceName = i18n.appTitle %}
+{% if CH01_ACTIVE === "true" %}
+  {% set serviceName = i18n.appTitle %}
+{% elif AP01_ACTIVE === "true" %}
+  {% if i18n.appTitleAppointRemove %}
+    {% set serviceName = i18n.appTitleAppointRemove %}
   {% else %}
     {% set serviceName = SERVICE_NAME %}
   {% endif %}

@@ -27,6 +27,9 @@ import { logger } from "../../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
 import { DirectorField } from "../../model/director.model";
 import { CorrespondenceAddressValidation } from "../../validation/director.correspondence.address.config";
+import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
+import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 
 const directorChoiceHtmlField: string = DirectorField.CORRESPONDENCE_ADDRESS_RADIO;
 const registeredOfficerAddressValue: string = "director_registered_office_address";
@@ -46,7 +49,7 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
       directorName: formatTitleCase(directorName),
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate),
+      currentUrl: getCurrentUrl(req, isUpdate, lang),
     });
   } catch (e) {
     return next(e);
@@ -81,7 +84,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
         directorName: formatTitleCase(directorName),
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
         ...getLocaleInfo(locales, lang),
-        currentUrl: getCurrentUrl(req, isUpdate),
+        currentUrl: getCurrentUrl(req, isUpdate, lang),
       });
     }
 
@@ -91,31 +94,46 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
     };
 
     const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
-    
+    if (canUseRegisteredOfficeAddress && isUpdate) {
+
+      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+      const appointmentId = officerFiling.referenceAppointmentId as string;
+      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+      officerFilingBody.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+        { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFilingBody.serviceAddress }, 
+        companyAppointment);
+    }
+
     const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    let path: string;
-
-    if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
-      return redirectToPath(path, req, res, lang);
-    }
-
-    if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
-      return redirectToPath(path, req, res, lang);
-    }
-
-    if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-      path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
-      return redirectToPath(path, req, res, lang);
-    }
-
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
-    return redirectToPath(path, req, res, lang);
+   
+    return getRedirectPath(canUseRegisteredOfficeAddress, selectedSraAddressChoice, isUpdate, patchFiling, req, res, lang);
+   
   } catch(e) {
     next(e);
   }
+};
+
+const getRedirectPath = (canUseRegisteredOfficeAddress, selectedSraAddressChoice, isUpdate, patchFiling, req, res, lang) => {
+  let path: string;
+
+  if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
+    return redirectToPath(path, req, res, lang);
+  }
+
+  if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
+    return redirectToPath(path, req, res, lang);
+  }
+
+  if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
+    return redirectToPath(path, req, res, lang);
+  }
+
+  path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
+  return redirectToPath(path, req, res, lang);
 };
 
 const redirectToPath = (path: string, req: Request, res: Response, lang: string) => {
@@ -158,10 +176,10 @@ const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
 
- const getCurrentUrl = (req: Request, isUpdate: boolean): string => {
+ const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
   if(isUpdate){
-      return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
     } else {
-      return urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req)
+      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
   }
 }

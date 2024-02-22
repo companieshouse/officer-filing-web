@@ -1,0 +1,7 @@
+{
+  "appointDirectorCheckYourAnswersTitle" : "Check your answers before submitting the appointment",
+  "appointDirectorCheckYourAnswersProtectedDetails" : "Has the director applied to protect their details at Companies House?",
+  "appointDirectorCheckYourAnswersProtectedDetailsHidden" : "Protected details",
+  "appointDirectorCheckYourAnswersConsentToAct" : "Consent to act as a director",
+  "appointDirectorCheckYourAnswersConsentToActSubmit" : "By submitting this information, you are confirming that the person named has consented to act as a director."
+}

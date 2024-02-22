@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "Enter the director's home address " %}
+{% set title = i18n.enterDirectorsHomeAddress %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -8,9 +8,9 @@
 
 {% block backLink %}
   {% if residential_address_back_param === "confirm-residential-address" %}
-    {% set backLinkText = "Go back to 'Confirm where the director lives'" %}
+    {% set backLinkText = i18n.goBackToConfirmDirectorsHomeAddress %}
   {%else%}
-    {% set backLinkText = "Go back to 'Find the director's home address'" %}
+    {% set backLinkText = i18n.goBackToFindDirectorsHomeAddress %}
   {%endif%}
   {% include "includes/back-link.html" %}
 {% endblock %}
@@ -24,19 +24,19 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{directorName}}</span>
-        <h1 class="govuk-heading-l">Enter the director's home address</h1>
+        <h1 class="govuk-heading-l">{{ i18n.enterDirectorsHomeAddress }}</h1>
 
         <div id="residential-property-address-hint" class="govuk-hint">
-          Tell us the director's home address. Only give a business address if they also live there.
+          {{ i18n.manualHomeAddressHint }}
         </div>
 
         {{ govukInput({
           errorMessage: errors.residential_address_premises if errors,
           label: {
-            html: 'Property name or number'
+            html: i18n.premisesInput
           },
           hint: {
-            text: "For example, 'The Mill', '116' or 'Flat 37a'"
+            text: i18n.premisesHint
           },
           id: "residential_address_premises",
           name: "residential_address_premises",
@@ -46,7 +46,7 @@
         {{ govukInput({
           errorMessage: errors.residential_address_line_1 if errors,
           label: {
-            text: "Address line 1"
+            text: i18n.addressLine1Input
           },
           id: "residential_address_line_1",
           name: "residential_address_line_1",
@@ -56,7 +56,7 @@
         {{ govukInput({
           errorMessage: errors.residential_address_line_2 if errors,
           label: {
-            text: "Address line 2 (optional)"
+            text: i18n.addressLine2Input
           },
           id: "residential_address_line_2",
           name: "residential_address_line_2",
@@ -66,7 +66,7 @@
         {{ govukInput({
           errorMessage: errors.residential_address_city if errors,
           label: {
-            text: "City or town"
+            text: i18n.cityOrTownInput
           },
           id: "residential_address_city",
           name: "residential_address_city",
@@ -76,7 +76,7 @@
         {{ govukInput({
           errorMessage: errors.residential_address_county if errors,
           label: {
-            text: "County, state, province or region (optional)"
+            text: i18n.countyStateProvinceOrRegionInput
           },
           id: "residential_address_county",
           name: "residential_address_county",
@@ -88,7 +88,7 @@
         {{ govukInput({
           errorMessage: errors.residential_address_postcode if errors,
           label: {
-            text: "Postcode or ZIP"
+            text: i18n.postcodeOrZipInput
           },
           classes: "govuk-input govuk-input--width-10",
           id: "residential_address_postcode",
@@ -97,8 +97,8 @@
         }) }}
 
         <div class="govuk-inset-text">
-          <h2 class="govuk-heading-m">{{ publicRegisterInformation }}</h2>
-            <p>We will not show this address on the public Companies House register, unless it’s also used for the company's registered office address or the director’s correspondence address.</p>
+          <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
+            <p>{{ i18n.manualHomeAddressPublicRegisterInformation }}</p>
         </div>
 
 
@@ -106,7 +106,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>

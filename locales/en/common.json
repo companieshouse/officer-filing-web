@@ -6,7 +6,13 @@
   "companyNumber": "Company number",
   "directorDetails": "Director details",
   "directorName": "Name",
+  "directorPreviousNames": "Previous names",
   "dateAppointed" : "Date appointed",
+  "appointedOnDate" : "Appointed on date",
   "dateOfBirth" : "Date of birth",
-  "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'"
+  "nationality" : "Nationality",
+  "occupation" : "Occupation",
+  "noneString": "None",
+  "backToCorrespondenceAddress": "Go back to 'What is the director's correspondence address'",
+  "backToFindHomeAddressText": "Go back to 'Find the director's home address"
 }
