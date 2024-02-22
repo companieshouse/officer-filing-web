@@ -3,6 +3,7 @@ import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import {
   DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH,
+  DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH,
   UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
   UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
 } from "../../types/page.urls";
@@ -26,6 +27,7 @@ import { getCompanyAppointmentFullRecord } from "../../services/company.appointm
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { validateManualAddress } from "../../validation/manual.address.validation";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
 const incompleteROABackLinkText = "Go back to 'What is the directors correspondence address?'";
 const completeROABackLinkText = "Back";
@@ -38,11 +40,14 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
+    const lang = selectLang(req.query.lang);
 
     return res.render(templateName, {
       templateName: templateName,
-      enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
-      backLinkUrl:  backLinkInfo.backLinkUrl,
+      ...getLocaleInfo(getLocalesService(), lang),
+      currentUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
+      enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(pageLinks.manualEntryLink, req), lang),
+      backLinkUrl:  addLangToUrl(backLinkInfo.backLinkUrl, lang),
       backLinkText: backLinkInfo.backLinkText,
       directorName: formatTitleCase(directorName),
       postcode: officerFiling.residentialAddress?.postalCode,
@@ -58,6 +63,7 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
     const originalOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const residentialPostalCode : string = (req.body[DirectorField.POSTCODE])?.trim().toUpperCase();
     const residentialPremise : string = (req.body[DirectorField.PREMISES])?.trim();
@@ -72,7 +78,6 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
                            "locality": "",
                            "postalCode": residentialPostalCode,
                            "country" : ""},
-      residentialAddressHasBeenUpdated: false
       };
 
     // Validate formatting errors for fields, render errors if found.
@@ -86,51 +91,58 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
       return renderPage(res, req, prepareOfficerFiling, jsValidationErrors, templateName, pageLinks, isUpdate);
     }
 
+    let companyAppointment: CompanyAppointment | undefined = undefined;
+    if (isUpdate) {
+      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+      const appointmentId = originalOfficerFiling.referenceAppointmentId as string;
+      companyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+      prepareOfficerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+        { isHomeAddressSameAsServiceAddress: originalOfficerFiling.isHomeAddressSameAsServiceAddress, residentialAddress: prepareOfficerFiling.residentialAddress },
+        companyAppointment);
+    }
+
     // Patch the filing with updated information
     await patchOfficerFiling(session, transactionId, submissionId, prepareOfficerFiling);
 
-    // Look up the addresses, as by now validated postcode is valid and exist
-    const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''));
-    // If premises is entered by user, loop through addresses to find user entered premise
-    if(residentialPremise) {
-      for(const ukAddress of ukAddresses) {
-        if(ukAddress.premise.toUpperCase() === residentialPremise.toUpperCase()) {
-          const officerFiling: OfficerFiling = {
-            residentialAddress: {"premises": ukAddress.premise,
-              "addressLine1": ukAddress.addressLine1,
-              "addressLine2": ukAddress.addressLine2,
-              "locality": ukAddress.postTown,
-              "postalCode": ukAddress.postcode,
-              "country" : getCountryFromKey(ukAddress.country)}
-          };
-          
-          setUpdateBoolean(req, isUpdate, session, officerFiling, originalOfficerFiling.isHomeAddressSameAsServiceAddress);
-          // Patch filing with updated information
-          await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-          return res.redirect(getConfirmAddressPath(req, isUpdate));
-        }
-      }
-    }
-
-    // Redirect user to choose addresses if premises not supplied or not found in addresses array
-    return res.redirect(getAddressSearchPath(req, isUpdate));
-
+    return await matchAddress({ req, res }, isUpdate, { residentialPostalCode, residentialPremise }, companyAppointment, originalOfficerFiling, { session, transactionId, submissionId }, lang);
   }
   catch (e) {
     return next(e);
   }
 };
 
-const setUpdateBoolean = async (req: Request, isUpdate: boolean, session: Session, officerFiling : OfficerFiling, isHomeAddressSameAsServiceAddress: boolean | undefined) => {
-  if (isUpdate) {
-    const appointmentId = officerFiling.referenceAppointmentId as string;
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-    officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-      { isHomeAddressSameAsServiceAddress: isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
-      companyAppointment);
-  }
-}
+const matchAddress = async ({ req, res }, isUpdate, { residentialPostalCode, residentialPremise }, companyAppointment, originalOfficerFiling, { session, transactionId, submissionId }, lang) => {
+   // Look up the addresses, as by now validated postcode is valid and exist
+   const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, residentialPostalCode.replace(/\s/g,''));
+   // If premises is entered by user, loop through addresses to find user entered premise
+   if (residentialPremise) {
+     for (const ukAddress of ukAddresses) {
+       if (ukAddress.premise.toUpperCase() === residentialPremise.toUpperCase()) {
+         const officerFiling: OfficerFiling = {
+           residentialAddress: {"premises": ukAddress.premise,
+             "addressLine1": ukAddress.addressLine1,
+             "addressLine2": ukAddress.addressLine2,
+             "locality": ukAddress.postTown,
+             "postalCode": ukAddress.postcode,
+             "country" : getCountryFromKey(ukAddress.country)}
+         };
+       
+         if (isUpdate && companyAppointment !== undefined) {
+           officerFiling.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+             { isHomeAddressSameAsServiceAddress: originalOfficerFiling.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
+             companyAppointment);
+         }
+
+         // Patch filing with updated information
+         await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
+         return res.redirect(addLangToUrl(getConfirmAddressPath(req, isUpdate), lang));
+       }
+     }
+   }
+
+   // Redirect user to choose addresses if premises not supplied or not found in addresses array
+   return res.redirect(addLangToUrl(getAddressSearchPath(req, isUpdate), lang));
+};
 
 const getConfirmAddressPath = (req: Request, isUpdate: boolean) => {
   if(isUpdate) {
@@ -154,15 +166,18 @@ const renderPage = async (res: Response, req: Request, officerFiling : OfficerFi
   const session: Session = req.session as Session;
   const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
   const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
+  const lang = selectLang(req.query.lang);
   return res.render(templateName, {
     templateName: templateName,
+    ...getLocaleInfo(getLocalesService(), lang),
+    currentUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
     enterAddressManuallyUrl: urlUtils.getUrlToPath(pageLinks.manualEntryLink, req),
     backLinkUrl: backLinkInfo.backLinkUrl,
     backLinkText: backLinkInfo.backLinkText,
     directorName: formatTitleCase(directorName),
     postcode: officerFiling.residentialAddress?.postalCode,
     premises: officerFiling.residentialAddress?.premises,
-    errors: formatValidationErrors(validationErrors),
+    errors: formatValidationErrors(validationErrors, lang),
   });
 }
 

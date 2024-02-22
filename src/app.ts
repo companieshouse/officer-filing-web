@@ -10,7 +10,7 @@ import { sessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
-import { AP01_ACTIVE } from "./utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE } from "./utils/properties";
 
 const app = express();
 app.disable("x-powered-by");
@@ -31,6 +31,7 @@ nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 nunjucksEnv.addGlobal("SERVICE_NAME", process.env.SERVICE_NAME);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
+nunjucksEnv.addGlobal("CH01_ACTIVE", CH01_ACTIVE);
 nunjucksEnv.addGlobal('publicRegisterInformation', "What information we'll show on the public online register");
 
 app.enable("trust proxy");

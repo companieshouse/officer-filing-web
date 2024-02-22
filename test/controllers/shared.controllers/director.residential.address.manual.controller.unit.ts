@@ -8,7 +8,8 @@ import request from "supertest";
 import app from "../../../src/app";
 
 import {
-  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
+  DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH_END,
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
   DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END,
   UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH,
@@ -31,23 +32,28 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Enter the director&#39;s home address";
+const PAGE_HEADING_WELSH = "to be translated";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const APPOINT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const APPOINT_PAGE_URL_WELSH = APPOINT_PAGE_URL + "?lang=cy";
 const UPDATE_PAGE_URL = UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_PAGE_URL_WELSH = UPDATE_PAGE_URL + "?lang=cy";
 const APPOINT_NEXT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const APPOINT_NEXT_PAGE_URL_WELSH = APPOINT_NEXT_PAGE_URL + "?lang=cy";
 const UPDATE_NEXT_PAGE_URL = UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_NEXT_PAGE_URL_WELSH = UPDATE_NEXT_PAGE_URL + "?lang=cy";
 const validData = {
   "residential_address_premises": "The Big House",
   "residential_address_line_1": "One Street",
@@ -215,14 +221,16 @@ describe("Director residential address manual controller tests", () => {
           expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       });
 
-      it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should patch officer filing with filing information", async (url) => {
+      it.each([[APPOINT_PAGE_URL, APPOINT_NEXT_PAGE_URL], [UPDATE_PAGE_URL, UPDATE_NEXT_PAGE_URL],
+        [APPOINT_PAGE_URL_WELSH, APPOINT_NEXT_PAGE_URL_WELSH], [UPDATE_PAGE_URL_WELSH, UPDATE_NEXT_PAGE_URL_WELSH]])
+      ("Should patch officer filing with filing information", async (url, nextPageUrl) => {
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
             firstName: "John",
             lastName: "Smith"
           }
         });
-        if (url === UPDATE_PAGE_URL) {
+        if (url === UPDATE_PAGE_URL || url === UPDATE_PAGE_URL_WELSH) {
           mockGetOfficerFiling.mockResolvedValueOnce({
             referenceAppointmentId: "123"
           });
@@ -231,7 +239,7 @@ describe("Director residential address manual controller tests", () => {
     
         const response = await request(app).post(url).send(validData);
 
-        if (url === UPDATE_PAGE_URL) {
+        if (url === UPDATE_PAGE_URL || url === UPDATE_PAGE_URL_WELSH) {
           expect(mockGetCompanyAppointmentFullRecord).toBeCalledWith(expect.any(Object), COMPANY_NUMBER, "123");
         } else {
           expect(mockGetCompanyAppointmentFullRecord).not.toBeCalled();
@@ -252,6 +260,7 @@ describe("Director residential address manual controller tests", () => {
             }
           })
         );
+        expect(response.text).toContain(nextPageUrl);
       });
 
       it.each([APPOINT_PAGE_URL, UPDATE_PAGE_URL])("Should redirect to error page when patch officer filing throws an error", async (url) => {
@@ -269,4 +278,34 @@ describe("Director residential address manual controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
     });
+
+  describe("Welsh language tests", () => {
+
+    //get test
+    it.each([[APPOINT_NEXT_PAGE_URL_WELSH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"],[UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"]])
+    ("Should navigate to director residential address manual page in welsh with backlink containing lang param.", async (url, backLinkUrl) => {
+      mockGetOfficerFiling.mockResolvedValue({});
+
+      const response = await request(app).get(url);
+
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      expect(response.text).toContain(backLinkUrl);
+    });
+
+    //post test
+    it.each([[APPOINT_PAGE_URL_WELSH], [UPDATE_PAGE_URL_WELSH]])
+    ("Should render validation error in welsh with null values passed", async (url) => {
+      mockGetOfficerFiling.mockResolvedValue({
+        data: {
+          firstName: "John",
+          lastName: "Smith",
+        }
+      });
+
+      const response = await request(app).post(url).send({});
+
+      expect(response.text).toContain("to be translated");
+    });
+  });
 });
