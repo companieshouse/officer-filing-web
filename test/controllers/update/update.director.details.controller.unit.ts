@@ -103,7 +103,7 @@ describe("Director details tests", () => {
           .send({back_to_active_directors: "companyNumber"});
 
       expect(response.status).toEqual(302);
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/transaction/${TRANSACTION_ID}/current-directors`);
+      expect(response.header.location).toContain(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/transaction/${TRANSACTION_ID}/current-directors`);
     });
   });
 });

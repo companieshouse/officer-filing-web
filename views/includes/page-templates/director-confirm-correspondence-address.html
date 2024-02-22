@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% set title = "Confirm the director's correspondence address" %}
+{% set title = i18n.directorConfirmCorrespondenceAddressTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block backLink %}
-  {% set backLinkText = "Go back to 'Find the director's correspondence address'" %}
+  {% set backLinkText = i18n.directorConfirmCorrespondenceAddressBackLinkText %}
   {% include "includes/back-link.html" %}
 {% endblock %}
 
@@ -19,12 +19,12 @@
       <form action="" method="post">
 
         <span class="govuk-caption-l">{{ directorName }}</span>
-        <h1 class="govuk-heading-l">Confirm the director's correspondence address</h1>
+        <h1 class="govuk-heading-l">{{ i18n.directorConfirmCorrespondenceAddressTitle }} </h1>
 
         {% include "includes/list/address-details.html" %}
 
         <div class="govuk-body">
-          <a href="{{enterAddressManuallyUrl}}?backLink=confirm-correspondence-address" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">Edit address</a>
+          <a href="{{enterAddressManuallyUrl}}" class="govuk-link" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="director-edit-address">{{ i18n.directorConfirmCorrespondenceAddressEditAddressLink }}</a>
         </div>
 
         {% include "includes/inset-text/correspondence-inset-text.html" %}
@@ -33,7 +33,7 @@
           attributes: {
             "data-event-id": "confirm-and-continue-button"
           },
-          text: "Confirm and continue"
+          text: i18n.confirmAndContinue
         }) }}
 
       </form>

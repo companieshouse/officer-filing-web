@@ -51,9 +51,11 @@
 {% endblock %}
 
 {% block header %}
-{% if AP01_ACTIVE === "true" %}
-  {% if i18n.appTitle %}
-    {% set serviceName = i18n.appTitle %}
+{% if CH01_ACTIVE === "true" %}
+  {% set serviceName = i18n.appTitle %}
+{% elif AP01_ACTIVE === "true" %}
+  {% if i18n.appTitleAppointRemove %}
+    {% set serviceName = i18n.appTitleAppointRemove %}
   {% else %}
     {% set serviceName = SERVICE_NAME %}
   {% endif %}
@@ -76,12 +78,12 @@
     },
     html: 'This is a new service - Help us improve it by providing <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-banner-link" target="_blank" rel="noopener noreferrer">feedback <span class="govuk-visually-hidden">(This link opens in a new window)</span></a>'
   }) }}
- 
-  {% include "locales-banner.njk" %}
 
   {% block signoutBar %}
     {% include "includes/signout-bar.html" %}
   {% endblock %}
+
+  {% include "locales-banner.njk" %}
 
   {% block backLink %}
   {% endblock %}

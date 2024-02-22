@@ -52,7 +52,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.REMOVE_DIRECTOR, {
       directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
       templateName: Templates.REMOVE_DIRECTOR,
-      backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
     });
