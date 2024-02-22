@@ -7,9 +7,9 @@ const ellipsis = "...";
 const lang = "en";
 const localService = getLocalesService();
 const NEXT = "Next";
-const NEXT_WELSH = "to be translated";
+const NEXT_WELSH = "Nesaf";
 const PREVIOUS = "Previous";
-const PREVIOUS_WELSH = "to be translated";
+const PREVIOUS_WELSH = "Blaenorol";
 
 describe('Pagination element test suite', () => {
 
