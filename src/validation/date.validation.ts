@@ -47,7 +47,6 @@ export const validateDateOfBirth = (dayStr: string, monthStr: string, yearStr: s
  * @returns A ValidationError object if one occurred, else undefined
  */
 export const validateDateOfAppointment = (dayStr: string, monthStr: string, yearStr: string, dateValidationType: DateValidationType, dateOfBirth: Date, companyProfile: CompanyProfile): ValidationError | undefined => {
- console.log(" RJW - Inside validate Date of Appointment ");
   const dateError = validateDate(dayStr, monthStr, yearStr, dateValidationType);
   if(dateError){
     return dateError;
@@ -164,7 +163,6 @@ const validateDateOfBirthRules = (dateOfBirth: Date, dateValidationType: DateVal
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateDateOfAppointmentRules = (dateOfBirth: Date, dateOfAppointment: Date, dateValidationType: DateValidationType, companyProfile: CompanyProfile): ValidationError | undefined => {
- console.log(" RJW - Inside validateDateOfAppointmentRules ");
   const futureDateValidation = validateFutureDateRule(dateOfAppointment, dateValidationType);
   if(futureDateValidation){
     return futureDateValidation;
