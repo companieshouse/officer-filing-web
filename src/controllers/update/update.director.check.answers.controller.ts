@@ -8,7 +8,8 @@ import {
   URL_QUERY_PARAM,
   BASIC_STOP_PAGE_PATH,
   UPDATE_DIRECTOR_DETAILS_PATH,
-  UPDATE_DIRECTOR_OCCUPATION_PATH
+  UPDATE_DIRECTOR_OCCUPATION_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
   
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
@@ -108,7 +109,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
     dateUpdatedLink:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req), lang),
-    correspondenceAddressChangeLink: urlUtils.getUrlToPath("", req),
+    correspondenceAddressChangeLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang),
     currentUrl: req.originalUrl,
   });
 }
