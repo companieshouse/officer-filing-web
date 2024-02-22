@@ -9,7 +9,7 @@ import {
   BASIC_STOP_PAGE_PATH,
   UPDATE_DIRECTOR_DETAILS_PATH,
   UPDATE_DIRECTOR_OCCUPATION_PATH
-  
+
 } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
@@ -90,13 +90,14 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
   const companyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
-  
+
+  let backLinkUrlWithCya = addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req))
   return res.render(Templates.UPDATE_DIRECTOR_CHECK_ANSWERS, {
     templateName: Templates.UPDATE_DIRECTOR_CHECK_ANSWERS,
     ...getLocaleInfo(locales, lang),
-    
-    backLinkUrl: addCheckYourAnswersParamToLink(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req)),
-    cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+
+    backLinkUrl: addLangToUrl(backLinkUrlWithCya, lang),
+    cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
     company: companyProfile,
     officerFiling: officerFiling,
     directorTitle: formatTitleCase(officerFiling.title),

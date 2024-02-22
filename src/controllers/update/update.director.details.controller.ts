@@ -34,19 +34,19 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 
     return resp.render(Templates.UPDATE_DIRECTOR_DETAILS, {
       templateName: Templates.UPDATE_DIRECTOR_DETAILS,
-      backLinkUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
-      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
+      cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
       officerFiling: officerFiling,
       directorTitle: formatTitleCase(officerFiling.title),
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       ...officerFiling,
       ...companyProfile,
       ...getLocaleInfo(locales, lang),
-      currentUrl: urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req),
-      nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
+      currentUrl: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang),
+      nameLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req), lang),
       nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
-      occupationLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req),
-      correspondenceAddressChangeLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req),
+      occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
+      correspondenceAddressChangeLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang),
       isUpdate: true,
       updatedData: updatedData,
     })
@@ -56,8 +56,9 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
 };
 
 export const post = (req: Request, resp: Response, next: NextFunction) => {
+    const lang = selectLang(req.query.lang);
   if (req.body.back_to_active_directors) {
-    return resp.redirect(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req));
+    return resp.redirect(addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang));
   }
-  return resp.redirect(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req));
+  return resp.redirect(addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req), lang));
 };
