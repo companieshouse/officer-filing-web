@@ -222,9 +222,6 @@ const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidat
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateUnderageAtAppointmentRule = (dateOfBirth: Date, dateOfAppointment: Date,dateValidationType: DateValidationType): ValidationError | undefined => {
-  const ageDob = getAge(dateOfBirth);
-  const ageDoa = getAge(dateOfAppointment);
-
   const doaTime = dateOfAppointment.getTime();
   const dobTime = dateOfBirth.getTime();
 
