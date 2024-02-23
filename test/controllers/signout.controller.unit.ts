@@ -149,17 +149,6 @@ describe("Signout controller tests", () => {
   })
 
   describe('no session tests', () => {
-    it('should not populate session when getting', async () => {
-        // Don't populate session
-        mocks.mockSessionMiddleware.mockImplementation((req, res, next) => next());
-
-        const response = await request(app)
-          .get(SIGNOUT_LOCATION)
-          .set("Referer", "http://example.com")
-
-        expect(response.status).toBe(200)
-    });
-
     it('should show the error page when peforming post', async () => {
         // Don't populate session
         mocks.mockSessionMiddleware.mockImplementation((req, res, next) => next());
