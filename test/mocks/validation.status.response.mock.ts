@@ -35,6 +35,11 @@ export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     isValid: true
 }
 
+// @ts-ignore
+export const mockValidationStatusResponseUndefined: ValidationStatusResponse = {
+    isValid: true
+}
+
 export const mockValidationStatusResponse: ValidationStatusResponse = {
     errors: [mockValidationStatusError],
     isValid: false

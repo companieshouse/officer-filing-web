@@ -1,4 +1,13 @@
-import { mockValidValidationStatusResponse, mockValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponseList2, mockValidationStatusResponseList3, mockValidationStatusResponseList4, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
+import {
+  mockValidValidationStatusResponse,
+  mockValidationStatusResponse,
+  mockValidationStatusResponseList,
+  mockValidationStatusResponseList2,
+  mockValidationStatusResponseList3,
+  mockValidationStatusResponseList4,
+  mockValidationStatusResponsePreOct2009,
+  mockValidationStatusResponseUndefined
+} from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import {RemovalDateValidation} from "../../src/validation/remove.date.validation.config";
 
@@ -33,6 +42,11 @@ describe("Test remove director date service", () => {
     
     it("Should return empty string if web error message is not found", async () => {
       const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponse, RemovalDateValidation);
+      expect(newMessage).toEqual(undefined);
+    });
+
+    it("Should return empty string if web error message is not found", async () => {
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseUndefined, RemovalDateValidation);
       expect(newMessage).toEqual(undefined);
     });
     
