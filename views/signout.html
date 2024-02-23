@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 
+{% set title = i18n.signoutTitle %}
+
 {% block pageTitle %}
-    {% if noInputSelectedError %}Error: {% endif %}
-    Are you sure you want to sign out? - Remove a Company Director - GOV.UK
+    {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block header %}
@@ -23,14 +24,14 @@
 {% block content %}
     {% if noInputSelectedError %}
         {% set detailsErrorMsg = {
-            text: "Select yes if you want to sign out"
+            text: i18n.signoutNoInputError
         } %}
 
         {{ govukErrorSummary({
-            titleText: "There is a problem",
+            titleText: i18n.signoutErrorSummaryTitle,
             errorList: [
                 {
-                text: "Select yes if you want to sign out",
+                text: i18n.signoutErrorSummaryText,
                 href: "#yes"
                 }
             ]
@@ -39,13 +40,13 @@
         {% set detailsErrorMsg = false %}
     {% endif %}
 
-    {% if AP01_ACTIVE === "true" %}
-        {% set hintText = "Your answers will not be saved. You will need to start again if you want to appoint or remove a company director." %}
+    {% if CH01_ACTIVE === "true" %}
+        {% set hintText = i18n.signoutCH01JourneyHintText %}
     {% else %}
-        {% set hintText = "Your answers will not be saved. You will need to start again if you want to remove a company director." %}    
+        {% set hintText = i18n.signoutAP01JourneyHintText %}
     {% endif %}
 
-    <form action="/appoint-update-remove-company-officer/signout" method="POST">
+    <form action="" method="POST">
         {{ govukRadios({
             classes: "govuk-radios--inline",
             idPrefix: "signout",
@@ -53,7 +54,7 @@
             errorMessage: detailsErrorMsg,
             fieldset: {
                 legend: {
-                    html: "Are you sure you want to sign out?",
+                    html: i18n.signoutRadioLegend,
                     classes: "govuk-fieldset__legend--l"
                 }
             },
@@ -63,14 +64,14 @@
             items: [
                 {
                     value: "yes",
-                    text: "Yes",
+                    text: i18n.signoutYesButtonText,
                     attributes: {
                         "data-event-id": "signout-yes"
                     }
                 },
                 {
                     value: "no",
-                    text: "No",
+                    text: i18n.signoutNoButtonText,
                     attributes: {
                         "data-event-id": "signout-no"
                     }

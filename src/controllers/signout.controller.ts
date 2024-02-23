@@ -4,27 +4,34 @@ import { SIGNOUT_RETURN_URL_SESSION_KEY } from "../utils/constants";
 import { Session } from "@companieshouse/node-session-handler";
 import { ACCOUNTS_SIGNOUT_PATH } from "../types/page.urls";
 import { logger } from "../utils/logger";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+
+const SIGNOUT = "signout";
 
 export const get: Handler = async (req, res) => {
-    const returnPage = saveReturnPageInSession(req)
+    const returnPage = saveReturnPageInSession(req);
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
     res.render(Templates.SIGNOUT, {
         backLinkUrl: returnPage,
-        optionalBackLinkUrl: returnPage,
-        templateName: Templates.SIGNOUT
+        templateName: Templates.SIGNOUT,
+        currentUrl: req.originalUrl,
+        ...getLocaleInfo(locales, lang)
     });
 }
 
 export const post = handleError(async (req, res) => {
     const returnPage = getReturnPageFromSession(req.session as Session)
+    const lang = selectLang(req.query.lang);
 
     switch (req.body.signout) {
     case "yes":
-        return res.redirect(ACCOUNTS_SIGNOUT_PATH);
+        return res.redirect(addLangToUrl(ACCOUNTS_SIGNOUT_PATH, lang));
     case "no":
         return res.redirect(returnPage);
     default:
-        return showMustSelectButtonError(res, returnPage);
+        return showMustSelectButtonError(res, req, returnPage);
     }
 })
 
@@ -43,19 +50,30 @@ function handleError(handler: AsyncHandler): AsyncHandler {
     }
 }
 
-function showMustSelectButtonError(res: Response, returnPage: string) {
+function showMustSelectButtonError(res: Response, req: Request, returnPage: string) {
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
     res.status(400);
     return res.render(Templates.SIGNOUT, {
         backLinkUrl: returnPage,
         noInputSelectedError: true,
-        templateName: Templates.SIGNOUT
+        templateName: Templates.SIGNOUT,
+        currentUrl: req.originalUrl,
+        ...getLocaleInfo(locales, lang)
     });
 }
 
 function saveReturnPageInSession(req: Request): string {
-    const returnPageUrl = req.headers.referer!
-    req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, returnPageUrl)
-    return returnPageUrl
+    const lang = selectLang(req.query.lang);
+    const returnPageUrl = req.headers.referer!;
+    if (!returnPageUrl.includes(SIGNOUT)) {
+        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(returnPageUrl, lang));
+    } else {
+        const originalPage = getReturnPageFromSession(req.session as Session);
+        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(originalPage, lang));
+    }
+    return addLangToUrl(returnPageUrl, lang);
 }
 
 function getReturnPageFromSession(session: Session): string {
