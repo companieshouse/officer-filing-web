@@ -152,10 +152,10 @@ describe("Invalid date input validation tests", () => {
         expect(validateDateOfBirth(dateOfBirth.getDate().toString(), (dateOfBirth.getMonth() + 1).toString(), dateOfBirth.getFullYear().toString(), DobDateValidation)?.messageKey).toEqual(dobDateErrorMessageKey.DIRECTOR_OVERAGE);
     });
 
-    test("Don't error if birth date is 110 years ago", async () => {
+    test("Error if birth date is 110 years ago", async () => {
         const dateOfBirth = new Date();
         dateOfBirth.setFullYear(dateOfBirth.getFullYear() - 110);
-        expect(validateDateOfBirth(dateOfBirth.getDate().toString(), (dateOfBirth.getMonth() + 1).toString(), dateOfBirth.getFullYear().toString(), DobDateValidation)?.messageKey).toBeUndefined();
+        expect(validateDateOfBirth(dateOfBirth.getDate().toString(), (dateOfBirth.getMonth() + 1).toString(), dateOfBirth.getFullYear().toString(), DobDateValidation)?.messageKey).toEqual(dobDateErrorMessageKey.DIRECTOR_OVERAGE);
     });
 
     test("Don't error if birth date is less than 110 years ago", async () => {

@@ -158,7 +158,7 @@ const checkNotOverage = (dateOfBirth: Date): boolean => {
   today.setHours(0, 0, 0, 0);
   const dateOfBirthPlus110 = new Date(dateOfBirth);
   dateOfBirthPlus110.setFullYear(dateOfBirthPlus110.getFullYear() + 110);
-  return dateOfBirthPlus110 < today;
+  return dateOfBirthPlus110 <= today;
 }
 
 /**
@@ -216,7 +216,6 @@ const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidat
   if(dateOfBirth > today){
     return dateValidationType.RuleBased?.Underage;
   }
-
   const dateOfBirthPlus16 = new Date(dateOfBirth);
   dateOfBirthPlus16.setFullYear(dateOfBirthPlus16.getFullYear() + 16);
   if(dateOfBirthPlus16 > today){
