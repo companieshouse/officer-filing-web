@@ -9,7 +9,8 @@ import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../u
 const SIGNOUT = "signout";
 
 export const get: Handler = async (req, res) => {
-    const returnPage = saveReturnPageInSession(req);
+    saveReturnPageInSession(req);
+    const returnPage = getReturnPageFromSession(req.session as Session)
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
 
