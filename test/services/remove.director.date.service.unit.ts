@@ -69,6 +69,11 @@ describe("Test remove director date service", () => {
       expect(stopType).toEqual("");
     });
 
+    it("Should return empty string if stop type message is not defined", async () => {
+      const stopType = retrieveStopPageTypeToDisplay(mockValidationStatusResponseUndefined);
+      expect(stopType).toEqual("");
+    });
+
   });
 
 });

@@ -1,5 +1,5 @@
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api.enumerations";
+import { convertAPIMessageToKey } from "../utils/api.enumerations";
 import { STOP_TYPE } from "../utils/constants";
 import { ErrorMessageKey, RemovalDateErrorMessageKey } from "../utils/api.enumerations.keys";
 import { DateValidationType, ValidationError } from "../model/validation.model";
@@ -45,7 +45,7 @@ export const retrieveErrorMessageToKey = (validationStatusResponse: ValidationSt
         return "";
     }
 
-    validationStatusResponse.errors?.forEach(element => {
+    validationStatusResponse.errors.forEach(element => {
         listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
 
