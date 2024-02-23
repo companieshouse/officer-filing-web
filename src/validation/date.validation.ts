@@ -138,11 +138,6 @@ const checkIsValidYear = (numStr: string) => {
   return numStr.match("^[0-9]{4}$");
 }
 
-const getAge = (dateOfBirth: Date) => {
-  const diffMs = Date.now() - dateOfBirth.getTime();
-  return Math.abs(new Date(diffMs).getUTCFullYear() - 1970);
-}
-
 /**
  * Validate rules relating to date of birth
  * @returns A ValidationError object if one occurred, else undefined
@@ -152,10 +147,18 @@ const validateDateOfBirthRules = (dateOfBirth: Date, dateValidationType: DateVal
   if(underageValidation){
     return underageValidation;
   }
-  if(getAge(dateOfBirth) > 110){
+  if(checkNotOverage(dateOfBirth)){
     return dateValidationType.RuleBased?.Overage;
   }
   return undefined;
+}
+
+const checkNotOverage = (dateOfBirth: Date): boolean => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dateOfBirthPlus110 = new Date(dateOfBirth);
+  dateOfBirthPlus110.setFullYear(dateOfBirthPlus110.getFullYear() + 110);
+  return dateOfBirthPlus110 <= today;
 }
 
 /**
@@ -208,10 +211,14 @@ const validateDateOfChangeRules = (dateOfChange: Date, dateValidationType: DateV
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidationType): ValidationError | undefined => {
-  if(dateOfBirth > new Date()){
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if(dateOfBirth > today){
     return dateValidationType.RuleBased?.Underage;
   }
-  if(getAge(dateOfBirth) < 16){
+  const dateOfBirthPlus16 = new Date(dateOfBirth);
+  dateOfBirthPlus16.setFullYear(dateOfBirthPlus16.getFullYear() + 16);
+  if(dateOfBirthPlus16 > today){
     return dateValidationType.RuleBased?.Underage;
   }
   return undefined;
@@ -222,10 +229,10 @@ const validateUnderageRule = (dateOfBirth: Date, dateValidationType: DateValidat
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateUnderageAtAppointmentRule = (dateOfBirth: Date, dateOfAppointment: Date,dateValidationType: DateValidationType): ValidationError | undefined => {
-  const doaTime = dateOfAppointment.getTime();
-  const dobTime = dateOfBirth.getTime();
+  const dateOfBirthPlus16 = new Date(dateOfBirth);
+  dateOfBirthPlus16.setFullYear(dateOfBirthPlus16.getFullYear() + 16);
 
-  if( ((doaTime - dobTime) / (1000 * 3600 * 24 * 365.25)) < 16){
+  if(dateOfBirthPlus16 > dateOfAppointment){
     return dateValidationType.RuleBased?.Underage;
   }
   return undefined;
@@ -275,4 +282,3 @@ const validateDateBefore2009Oct01 = (date: Date, dateValidationType: DateValidat
     return dateValidationType.RuleBased?.Before2009;
   }
 }
-
