@@ -15,6 +15,10 @@ import { getOfficerFiling } from "../../../src/services/officer.filing.service";
 import { isActiveFeature } from "../../../src/utils/feature.flag";
 import {
   UPDATE_DIRECTOR_CHECK_ANSWERS_PATH,
+  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
+  UPDATE_DIRECTOR_NAME_PATH,
+  UPDATE_DIRECTOR_NATIONALITY_PATH,
+  UPDATE_DIRECTOR_OCCUPATION_PATH,
   UPDATE_DIRECTOR_SUBMITTED_PATH,
   urlParams
 } from "../../../src/types/page.urls";
@@ -22,6 +26,7 @@ import { getValidationStatus } from "../../../src/services/validation.status.ser
 import { mockValidValidationStatusResponse, mockValidationStatusResponse } from "../../mocks/validation.status.response.mock";
 import { getCurrentOrFutureDissolved } from "../../../src/services/stop.page.validation.service";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
+import { mockAddress1 } from "../../mocks/remove.director.check.answers.mock";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -42,7 +47,22 @@ const NEXT_PAGE_URL = UPDATE_DIRECTOR_SUBMITTED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+  const OCCUPATION_PAGE_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const NATIONALITY_PAGE_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const NAME_PAGE_URL = UPDATE_DIRECTOR_NAME_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  const CORRESPONDENCE_ADDRESS_PAGE_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const PAGE_HEADING = "Check your answers before submitting the update";
 
 describe("Director check your answers controller tests", () => {
@@ -107,14 +127,29 @@ describe("Director check your answers controller tests", () => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
       });
-      mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff"})
+      mockGetOfficerFiling.mockResolvedValue({occupationHasBeenUpdated: true, occupation: "Director Of Stuff",
+      nameHasBeenUpdated: true,
+      firstName: "John",
+      lastName: "Doe",
+      title: "Mr",
+      nationalityHasBeenUpdated: true,
+      nationality: "English",
+      residentialAddressHasBeenUpdated: true,
+      residentialAddress: mockAddress1,
+      serviceAddressHasBeenUpdated: true,
+      serviceAddress: mockAddress1})
       const response = await request(app).get(PAGE_URL);
       
       expect(response.text).toContain("Occupation");
       expect(response.text).toContain("Director Of Stuff");
-      expect(response.text).not.toContain("name-change-link");
-      expect(response.text).not.toContain("nationality-change-link");
-      expect(response.text).not.toContain("address-change-link");
+      expect(response.text).toContain("occupation-change-link");
+      expect(response.text).toContain(OCCUPATION_PAGE_URL);
+      expect(response.text).toContain("name-change-link");
+      expect(response.text).toContain(NAME_PAGE_URL);
+      expect(response.text).toContain("nationality-change-link");
+      expect(response.text).toContain(NATIONALITY_PAGE_URL);
+      expect(response.text).toContain("address-change-link");
+      expect(response.text).toContain(CORRESPONDENCE_ADDRESS_PAGE_URL);
     });
   });
 
