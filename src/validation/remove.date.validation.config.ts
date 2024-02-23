@@ -77,5 +77,22 @@ export const RemovalDateValidation: DateValidationType = {
             source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
             link: RemovalDateField.DAY
         },
+    },
+    RuleBased: {
+        IncorporationDate: {
+            messageKey: RemovalDateErrorMessageKey.AFTER_INCORPORATION_DATE,
+            source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+            link: RemovalDateField.DAY
+        },
+        FutureDate: {
+            messageKey: RemovalDateErrorMessageKey.IN_PAST,
+            source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+            link: RemovalDateField.DAY
+        },
+        DateOfChangeBeforeAppointment :{
+            messageKey: RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE,
+            source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
+            link: RemovalDateField.DAY
+        }
     }
 }
