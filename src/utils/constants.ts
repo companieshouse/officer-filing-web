@@ -46,6 +46,8 @@ export const PRE_OCTOBER_2009_288B_LINK_TEXT2 = "PRE_OCTOBER_2009_288B_LINK_TEXT
 export const PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT = "PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT";
 export const PRE_OCTOBER_2009_REMOVED_DATE_TEXT1 = "PRE_OCTOBER_2009_REMOVED_DATE_TEXT1";
 export const PRE_OCTOBER_2009_REMOVED_DATE_TEXT2 = "PRE_OCTOBER_2009_REMOVED_DATE_TEXT2";
+export const PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1 = "PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1";
+export const PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2 = "PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",
@@ -148,7 +150,8 @@ export const STOP_PAGE_CONTENT =
     pre_october_2009:{
       pageHeader: PRE_OCTOBER_2009_HEADER,
       pageBody: `<p>` + PRE_OCTOBER_2009_HEADER1 + `</p>
-      <p>` + PRE_OCTOBER_2009_288B_LINK_TEXT1 + `<a href="https://webarchive.nationalarchives.gov.uk/ukgwa/20140103090023/http://www.companieshouse.gov.uk/forms/formsOnline1985.shtml" data-event-id="288b-form-link">288b` + PRE_OCTOBER_2009_288B_LINK_TEXT2 + `</a>` + PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT + `</p>
+      <p>` + PRE_OCTOBER_2009_288B_LINK_TEXT1 + `<a href="https://webarchive.nationalarchives.gov.uk/ukgwa/20140103090023/http://www.companieshouse.gov.uk/forms/formsOnline1985.shtml" data-event-id="288b-form-link">` + PRE_OCTOBER_2009_288B_LINK_TEXT2 + `</a>` + PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT + `</p>
+      <p>` + PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1 + " enquiries@companieshouse.gov.uk " + PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2 + `</p>
       <p>` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT1+ `<a href="` + DATE_DIRECTOR_REMOVED_PATH + `" data-event-id="enter-a-different-date-link">` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT2 + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `

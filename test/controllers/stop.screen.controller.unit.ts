@@ -19,8 +19,10 @@ const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being 
 const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
 const NON_LIMITED_UNLIMITED_PAGE_HEADING = "Only limited and unlimited companies can use this service";
 const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for Test Company using this service if it's a:";
-const PRE_OCTOBER_2009_PAGE_HEADING = "You cannot use this service";
+const PRE_OCTOBER_2009_PAGE_HEADING = "Directors removed before 1 October 2009 must file on paper instead";
+const PRE_OCTOBER_2009_PAGE_HEADING_WELSH = "Rhaid i gyfarwyddwyr a chafodd ei ddileu cyn 1 Hydref 2009 ffeilio ar bapur yn lle hynny";
 const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009."
+const PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH = "Mae'r dyddiad y cafodd y cyfarwyddwr ei ddileu cyn 1 Hydref 2009."
 const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
 const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details."
 const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
@@ -84,6 +86,17 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
+  it("Should navigate to pre-october-2009 stop screen in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+    
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 + "&lang=cy");
+
+    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING_WELSH);
+    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -164,7 +177,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
 
-    expect(response.text).toContain("To be translated");
+    expect(response.text).toContain("to be translated");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });

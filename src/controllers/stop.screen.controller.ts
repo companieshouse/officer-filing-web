@@ -20,7 +20,9 @@ import {
     PRE_OCTOBER_2009_288B_LINK_TEXT2,
     PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT,
     PRE_OCTOBER_2009_REMOVED_DATE_TEXT1,
-    PRE_OCTOBER_2009_REMOVED_DATE_TEXT2
+    PRE_OCTOBER_2009_REMOVED_DATE_TEXT2,
+    PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1,
+    PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -80,18 +82,20 @@ const setContent = async (req: Request, stopType: string) => {
                 currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.PRE_OCTOBER_2009),
                 pageHeader: STOP_PAGE_CONTENT.pre_october_2009.pageHeader.replace(new RegExp(PRE_OCTOBER_2009_HEADER, 'g'), localeInfo.i18n.stopPagePre2009CannotUseText),
                 pageBody: STOP_PAGE_CONTENT.pre_october_2009.pageBody
-                    .replace(new RegExp(PRE_OCTOBER_2009_HEADER1, 'g'), localeInfo.i18n.stopPagePre2009Header1)
-                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText1)
-                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText2)
-                    .replace(new RegExp(PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT, 'g'), localeInfo.i18n.stopPagePre2009Form288bParagraphText)
-                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex1)
-                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex2)
-                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
-                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
                     .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber)
                     .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, transactionId)
                     .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId)
                     .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, submissionId)
+                    .replace(new RegExp(PRE_OCTOBER_2009_HEADER1, 'g'), localeInfo.i18n.stopPagePre2009Header1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText2)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT, 'g'), localeInfo.i18n.stopPagePre2009Form288bParagraphText)
+                    .replace(new RegExp(PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009WhereToContactUsText1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009WhereToContactUsText2)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex2)
+                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
             }
         }
         case STOP_TYPE.ETAG: { 
