@@ -65,8 +65,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),
       corporateDirector: corporateDirector,
-      changeLink: urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),
-      cancelLink:  urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req),
+      changeLink: addLangToUrl(urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req),lang),
+      cancelLink:  addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl
     });
