@@ -29,9 +29,6 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../.
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 
-const incompleteROABackLinkText = "Go back to 'What is the directors correspondence address?'";
-const completeROABackLinkText = "Back";
-
 export const getDirectorResidentialAddressSearch = async (req: Request, res: Response, next: NextFunction, templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
@@ -188,14 +185,15 @@ export interface PageLinks {
 }
 
 const getBackLinkInfo = async (req: Request, companyNumber: string, pageLinks: PageLinks) => {
+  const localeInfo = getLocaleInfo(getLocalesService(), selectLang(req.query.lang));
   const companyProfile = await getCompanyProfile(companyNumber);
   const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
   if (registeredOfficeAddress === undefined) {
-    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: incompleteROABackLinkText};
+    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: localeInfo.i18n.directorResidentialSearchIncompleteROABack};
   }
   const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, ResidentialManualAddressValidation);
   if (registeredOfficeAddressAsCorrespondenceAddressErrors.length !== 0) {
-    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: incompleteROABackLinkText };
+    return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenIncompleteROA, req), backLinkText: localeInfo.i18n.directorResidentialSearchIncompleteROABack};
   }
-  return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenCompleteROA, req), backLinkText: completeROABackLinkText };
+  return { backLinkUrl: urlUtils.getUrlToPath(pageLinks.backLinkWhenCompleteROA, req), backLinkText: localeInfo.i18n.back };
 };
