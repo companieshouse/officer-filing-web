@@ -13,7 +13,7 @@ import {
   RemovalDateField,
   RemovalDateKey
 } from "../model/date.model";
-import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
+import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
 import { patchOfficerFiling, getOfficerFiling } from "../services/officer.filing.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
@@ -68,7 +68,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const lang = selectLang(req.query.lang);
-    
+
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = officerFiling.referenceAppointmentId;
     if (appointmentId === undefined) {
@@ -101,14 +101,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     // Validate the filing (API)
     const validationStatus: ValidationStatusResponse = await getValidationStatus(session, transactionId, submissionId);
     if (validationStatus.errors) {
-      const errorMessage = retrieveErrorMessageToDisplay(validationStatus);
-      if (errorMessage) {
-        const validationResult: ValidationError = {
-          messageKey: errorMessage,
-          source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
-          link: RemovalDateField.DAY
-        }
-        removeDateValidationErrors.push(validationResult);
+      const errorMessageKey = retrieveErrorMessageToKey(validationStatus, RemovalDateValidation);
+      if (errorMessageKey) {
+        removeDateValidationErrors.push(errorMessageKey);
         return displayErrorMessage(removeDateValidationErrors, appointment, req, res);
       }
 
@@ -138,7 +133,7 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
   const dates = {
     [RemovalDateKey]: Object.values(RemovalDateField).reduce((o, key) => Object.assign(o as string, { [key as string]: req.body[key as string] }), {})
   };
-  const backLink = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
+  const backLink = addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
     directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),

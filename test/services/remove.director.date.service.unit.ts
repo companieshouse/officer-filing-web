@@ -1,38 +1,53 @@
-import { mockValidValidationStatusResponse, mockValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponseList2, mockValidationStatusResponseList3, mockValidationStatusResponseList4, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
+import {
+  mockValidValidationStatusResponse,
+  mockValidationStatusResponse,
+  mockValidationStatusResponseList,
+  mockValidationStatusResponseList2,
+  mockValidationStatusResponseList3,
+  mockValidationStatusResponseList4,
+  mockValidationStatusResponsePreOct2009,
+  mockValidationStatusResponseUndefined
+} from "../mocks/validation.status.response.mock";
+import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
+import {RemovalDateValidation} from "../../src/validation/remove.date.validation.config";
 
 describe("Test remove director date service", () => {
 
   describe("Test retrieve error message to display", () => {
 
     it("Should return first web error message that matches priority order", async () => {
-      const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList);
-      expect(newMessage).toEqual("Date the director was removed must be a real date");
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseList, RemovalDateValidation);
+      expect(newMessage).toEqual(expect.objectContaining({"messageKey": "removal-date-invalid"}));
     });
     
     it("Should return next web error message that matches priority order", async () => {
-      const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList2);
-      expect(newMessage).toEqual("Enter a date that is today or in the past");
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseList2, RemovalDateValidation);
+      expect(newMessage).toEqual(expect.objectContaining({"messageKey": "removal-date-in-past"}));
     });
     
     it("Should return next web error message that matches priority order", async () => {
-      const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList3);
-      expect(newMessage).toEqual("Enter a date that is on or after the company's incorporation date");
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseList3, RemovalDateValidation);
+      expect(newMessage).toEqual(expect.objectContaining({"messageKey": "removal-date-after-incorporation-date"}));
     });
     
     it("Should return next web error message that matches priority order", async () => {
-      const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponseList4);
-      expect(newMessage).toEqual("Enter a date that is on or after the date the director was appointed");
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseList4, RemovalDateValidation);
+      expect(newMessage).toEqual(expect.objectContaining({"messageKey": "removal-date-after-appointment-date"}));
     });
 
     it("Should return empty string if response contains no errors", async () => {
-      const stopType = retrieveErrorMessageToDisplay(mockValidValidationStatusResponse);
-      expect(stopType).toEqual("");
+      const stopType = retrieveErrorMessageToKey(mockValidValidationStatusResponse, RemovalDateValidation);
+      expect(stopType).toEqual(undefined);
     });
     
-    it("Should return empty string if web erreor message is not found", async () => {
-      const newMessage = retrieveErrorMessageToDisplay(mockValidationStatusResponse);
-      expect(newMessage).toEqual("");
+    it("Should return empty string if web error message is not found", async () => {
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponse, RemovalDateValidation);
+      expect(newMessage).toEqual(undefined);
+    });
+
+    it("Should return empty string if web error message is not found", async () => {
+      const newMessage = retrieveErrorMessageToKey(mockValidationStatusResponseUndefined, RemovalDateValidation);
+      expect(newMessage).toEqual(undefined);
     });
     
   });
@@ -51,6 +66,11 @@ describe("Test remove director date service", () => {
 
     it("Should return empty string if stop type message is not found", async () => {
       const stopType = retrieveStopPageTypeToDisplay(mockValidationStatusResponse);
+      expect(stopType).toEqual("");
+    });
+
+    it("Should return empty string if stop type message is not defined", async () => {
+      const stopType = retrieveStopPageTypeToDisplay(mockValidationStatusResponseUndefined);
       expect(stopType).toEqual("");
     });
 

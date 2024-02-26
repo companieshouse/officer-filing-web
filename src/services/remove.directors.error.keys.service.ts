@@ -1,14 +1,15 @@
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { convertAPIMessageToKey, lookupWebValidationMessage } from "../utils/api.enumerations";
+import { convertAPIMessageToKey } from "../utils/api.enumerations";
 import { STOP_TYPE } from "../utils/constants";
 import { ErrorMessageKey, RemovalDateErrorMessageKey } from "../utils/api.enumerations.keys";
+import { DateValidationType, ValidationError } from "../model/validation.model";
 
-export const retrieveErrorMessageToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
+export const retrieveErrorMessageToKey = (validationStatusResponse: ValidationStatusResponse, dateValidationType: DateValidationType): ValidationError | undefined => {
 
     var listOfValidationKeys = new Array();
 
     if (!validationStatusResponse.errors) {
-        return "";
+        return undefined;
     }
 
     validationStatusResponse.errors.forEach(element => {
@@ -16,19 +17,19 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
     });
 
     if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.INVALID_DATE)) {
-        return lookupWebValidationMessage(RemovalDateErrorMessageKey.INVALID_DATE);
+      return dateValidationType.InvalidValue.DayMonthYear;
     }
     else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.IN_PAST)) {
-        return lookupWebValidationMessage(RemovalDateErrorMessageKey.IN_PAST);
+      return dateValidationType.RuleBased?.FutureDate;
     }
     else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.AFTER_INCORPORATION_DATE)) {
-        return lookupWebValidationMessage(RemovalDateErrorMessageKey.AFTER_INCORPORATION_DATE);
+      return dateValidationType.RuleBased?.IncorporationDate;
     }
     else if (listOfValidationKeys.includes(RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE)) {
-        return lookupWebValidationMessage(RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE);
+      return dateValidationType.RuleBased?.DateOfChangeBeforeAppointment;
     }
 
-    return "";
+    return undefined;
   };
 
   /**
@@ -44,7 +45,7 @@ export const retrieveErrorMessageToDisplay = (validationStatusResponse: Validati
         return "";
     }
 
-    validationStatusResponse.errors?.forEach(element => {
+    validationStatusResponse.errors.forEach(element => {
         listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
 

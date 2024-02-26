@@ -10,7 +10,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls";
+import { DATE_DIRECTOR_REMOVED_PATH, REMOVE_DIRECTOR_CHECK_ANSWERS_PATH, urlParams} from "../../src/types/page.urls";
 import { companyAuthenticationMiddleware } from "../../src/middleware/company.authentication.middleware";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
@@ -19,7 +19,7 @@ import { getCompanyAppointmentFullRecord } from "../../src/services/company.appo
 import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
-import { retrieveErrorMessageToDisplay, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
+import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
 import { lookupWebValidationMessage } from "../../src/utils/api.enumerations";
 import { Response } from "superagent";
 
@@ -32,7 +32,7 @@ mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
-const mockRetrieveErrorMessageToDisplay = retrieveErrorMessageToDisplay as jest.Mock;
+const mockRetrieveErrorMessageToDisplay = retrieveErrorMessageToKey as jest.Mock;
 const mockRetrieveStopPageTypeToDisplayy = retrieveStopPageTypeToDisplay as jest.Mock;
 const mockLookupWebValidationMessage = lookupWebValidationMessage as jest.Mock;
 
@@ -42,7 +42,12 @@ const APPOINTMENT_ID = "987654321";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "When was the director removed from the company?";
+const PAGE_HEADING_WELSH = "Pryd cafodd y cyfarwyddwr ei ddileu o&#39;r cwmni?";
 const REMOVE_DIRECTOR_URL = DATE_DIRECTOR_REMOVED_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const TM01_CHECK_YOUR_ANSWERS_URL = REMOVE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -73,6 +78,19 @@ describe("Remove director date controller tests", () => {
         .get(REMOVE_DIRECTOR_URL);
 
       expect(response.text).toContain(PAGE_HEADING);
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+
+    it("Should navigate to date of removal page in welsh", async () => {
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+
+      const response = await request(app)
+        .get(REMOVE_DIRECTOR_URL+"?lang=cy");
+
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
@@ -143,6 +161,26 @@ describe("Remove director date controller tests", () => {
           resignedOn: "2010-08-07"
         });
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+    it("Should redirect to next page if no errors with welsh language param", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+
+      const response = await request(app)
+        .post(REMOVE_DIRECTOR_URL + "?lang=cy")
+        .send({ "removal_date-day": "7",
+          "removal_date-month": "08",
+          "removal_date-year": "2010" });
+
+      expect(response.text).toContain("Found. Redirecting to " + TM01_CHECK_YOUR_ANSWERS_URL + "?lang=cy");
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, {
+        resignedOn: "2010-08-07"
+      });
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
     
     it("Should redirect to next page if no errors - day and month are larger than 10", async () => {
@@ -223,8 +261,7 @@ describe("Remove director date controller tests", () => {
 
     it("Should display error if get validation status returns errors", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
-      mockRetrieveErrorMessageToDisplay.mockReturnValue("removal-date-after-incorporation-date");
-      mockLookupWebValidationMessage.mockReturnValue("Enter a date that is on or after the company's incorporation date");
+      mockRetrieveErrorMessageToDisplay.mockReturnValue({messageKey: "removal-date-after-incorporation-date", source: ["removal_date-day", "removal_date-month", "removal_date-year"]});
       mockGetOfficerFiling.mockReturnValueOnce({
         referenceAppointmentId: APPOINTMENT_ID
       });
@@ -239,6 +276,26 @@ describe("Remove director date controller tests", () => {
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).toHaveBeenCalled();
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
+    });
+
+
+    it("Should display error in welsh if get validation status returns errors", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
+      mockRetrieveErrorMessageToDisplay.mockReturnValue({messageKey: "removal-date-after-incorporation-date", source: ["removal_date-day", "removal_date-month", "removal_date-year"]});
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+
+      const response = await request(app)
+        .post(REMOVE_DIRECTOR_URL + "?lang=cy")
+        .send({ "removal_date-day": "7",
+          "removal_date-month": "8",
+          "removal_date-year": "2010" });
+
+      expect(response.text).toContain("Cofnodwch ddyddiad sydd ar neu ar ôl dyddiad corffori’r cwmni");
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockGetValidationStatus).toHaveBeenCalled();
+      expect(mockPatchOfficerFiling).toHaveBeenCalled();
     });
 
     it("Should display stop page if validation status returns pre-2009 error", async () => {
