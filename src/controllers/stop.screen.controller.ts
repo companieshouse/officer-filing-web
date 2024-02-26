@@ -92,8 +92,8 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(new RegExp(PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT, 'g'), localeInfo.i18n.stopPagePre2009Form288bParagraphText)
                     .replace(new RegExp(PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009WhereToContactUsText1)
                     .replace(new RegExp(PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009WhereToContactUsText2)
-                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex1)
-                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex2)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateText1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateText2)
                     .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
                     .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
             }
