@@ -99,7 +99,18 @@ describe("Remove director check answers controller tests", () => {
       const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
 
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Enw&#39;r cwmni");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("Rhif y cwmni");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("Enw");
+      expect(response.text).toContain("Mr John Middlename Doe");
+      expect(response.text).toContain("Dyddiad geni");
+      expect(response.text).toContain("5 Tachwedd 2002");
+      expect(response.text).toContain("Dyddiad penodi");
+      expect(response.text).toContain("1 Rhagfyr 2022");
+      expect(response.text).toContain("Dyddiad cafodd y cyfarwyddwr ei ddileu o&#39;r cwmni");
+      expect(response.text).toContain("4 Rhagfyr 2022");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
@@ -124,7 +135,17 @@ describe("Remove director check answers controller tests", () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCorporateCompanyOfficer);
       const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Enw&#39;r cwmni");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("Rhif y cwmni");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("Enw");
+      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text.includes("Date of birth")).toEqual(false);
+      expect(response.text).toContain("Dyddiad penodi");
+      expect(response.text).toContain("1 Rhagfyr 2022");
+      expect(response.text).toContain("Dyddiad cafodd y cyfarwyddwr ei ddileu o&#39;r cwmni");
+      expect(response.text).toContain("4 Rhagfyr 2022");
     });
 
     it("Should display summary for the corporate-nominee directors, missing date of birth", async () => {
@@ -166,7 +187,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Test Company");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("John Middlename Doe");
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Dyddiad cafodd y cyfarwyddwr ei ddileu o&#39;r cwmni");
       expect(response.text).toContain("1 Rhagfyr 2022");
       expect(response.text).toContain("4 Rhagfyr 2022");
     });
@@ -187,7 +208,7 @@ describe("Remove director check answers controller tests", () => {
     it("Should display date of birth without day if day field is missing in welsh", async () => {
       mockGetDirectorAndTerminationDate.mockResolvedValue(mockCompanyOfficerMissingDateOfBirthDay);
       const response = await request(app).get(CHECK_ANSWERS_URL + "?lang=cy");
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Dyddiad geni");
       expect(response.text).toContain("Tachwedd 2002");
     });
 
