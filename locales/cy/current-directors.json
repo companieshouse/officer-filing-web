@@ -10,6 +10,6 @@
   "CurrentDirectorsRemoveDirectorButton": "Dileu cyfarwyddwr",
   "currentDirectorTitlefor": "am",
   "currentDirectorAppointedBefore": "Cyn",
-  "currentDirectorPrivateWarningError": "tbd",
-  "currentDirectorPublicWarningError": "tbd"
+  "currentDirectorPublicWarningError": "Nid oes unrhyw gyfarwyddwyr, neu ddim digon o gyfarwyddwyr gan y cwmni hwn. Mae hyn yn golygu nad yw'n cydymffurfio ac mewn perygl o weithred gorfodi. Rhaid i'r cwmni benodi o leiaf 2 gyfarwyddwr, a rhaid i o leiaf un bod yn berson. Rhaid i'r cwmni ddweud wrth Dŷ'r Cwmnïau pwy maen nhw wedi'i benodi o fewn 14 diwrnod, neu fentro erlyniad.",
+  "currentDirectorPrivateWarningError": "Nid oes unrhyw gyfarwyddwyr gan y cwmni hwn. Mae hyn yn golygu nad yw'n cydymffurfio ac mewn perygl o weithred gorfodi. Rhaid i'r cwmni benodi o leiaf un cyfarwyddwr sy'n berson a dweud wrth Dŷ'r Cwmnïau o fewn 14 diwrnod, neu fentro erlyniad."
 }
