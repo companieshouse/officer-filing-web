@@ -74,9 +74,9 @@
 {% block beforeContent %}
   {{ govukPhaseBanner({
     tag: {
-      text: "beta"
+      text: i18n.phase
     },
-    html: 'This is a new service - Help us improve it by providing <a class="govuk-link" href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-banner-link" target="_blank" rel="noopener noreferrer">feedback <span class="govuk-visually-hidden">(This link opens in a new window)</span></a>'
+    html: i18n.phaseContent1 + '<a class="govuk-link" href="https://www.smartsurvey.co.uk/s/directors-feedback/" data-event-id="feedback-banner-link" target="_blank" rel="noopener noreferrer">' + i18n.phaseLink + '<span class="govuk-visually-hidden">(This link opens in a new window)</span></a>' + i18n.phaseContent2
   }) }}
 
   {% block signoutBar %}
