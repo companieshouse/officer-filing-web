@@ -157,7 +157,7 @@ function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointm
       "removal_date-year" : dateFields[0]
     }
   };
-  const backLink = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
+  const backLink = addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
     directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
