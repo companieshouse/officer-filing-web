@@ -308,13 +308,59 @@ describe("Active directors controller tests", () => {
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
         correspondenceAddressHasBeenUpdated: false,
-        residentialAddressHasBeenUpdated: false,
+        residentialAddressHasBeenUpdated: false
+      }));
+    });
+
+    it("Should post filing and set initial isServiceAddressSameAsRegisteredOfficeAddress", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointment);
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
+      });
+
+      const response = await request(app)
+        .post(CURRENT_DIRECTORS_URL)
+        .send({"updateAppointmentId": APPOINTMENT_ID});
+
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+        isServiceAddressSameAsRegisteredOfficeAddress: true,
+        directorServiceAddressChoice: "director_registered_office_address",
+        isHomeAddressSameAsServiceAddress: undefined,
+        directorResidentialAddressChoice: "director_different_address"
+      }));
+    })
+
+    it("Should post filing and set initial isHomeAddressSameAsServiceAddress", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({ 
+        ...validCompanyAppointment, 
+        serviceAddressIsSameAsRegisteredOfficeAddress: false,
+        residentialAddressIsSameAsServiceAddress: true
+      });
+      mockPostOfficerFiling.mockReturnValueOnce({
+        id: SUBMISSION_ID
+      });
+
+      const response = await request(app)
+        .post(CURRENT_DIRECTORS_URL)
+        .send({"updateAppointmentId": APPOINTMENT_ID});
+
+      expect(response.text).toContain("Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/transaction/11223344/submission/55555555/update-director-details");
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockPostOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, expect.objectContaining({
+        isServiceAddressSameAsRegisteredOfficeAddress: false,
+        directorServiceAddressChoice: "director_different_address",
+        isHomeAddressSameAsServiceAddress: true,
+        directorResidentialAddressChoice: "director_correspondence_address"
       }));
     });
 
     it("Should post filing and redirect to next page CH01 with blank value for occupation", async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({...validCompanyAppointment,
-                                                                occupation: "None"});
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({ 
+        ...validCompanyAppointment,
+        occupation: "None"
+      });
       mockPostOfficerFiling.mockReturnValueOnce({
         id: SUBMISSION_ID
       });
@@ -332,8 +378,5 @@ describe("Active directors controller tests", () => {
         occupation: "",
       }));
     });
-
-    
-
   });
 });
