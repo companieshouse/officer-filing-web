@@ -3,6 +3,13 @@
     "stopPageEtagPageBody1": "Since you started using this service, someone else has submitted an update to this director's details.",
     "stopPageEtagPageBody2": "If you still need to submit this update, you'll need to ",
     "stopPageEtagStartServiceAgainLink": "start the service again",
-    "stopPageEtagContactUsLink": "Contact us",
-    "stopPageEtagPageBody3": " if you have any questions."
+    "stopPageContactUsLink": "Contact us",
+    "stopPageContactUsText": " if you have any questions.",
+    "stopPagePre2009CannotUseText": "You cannot use this service",
+    "stopPagePre2009Header1": "The date the director was removed is before 1 October 2009.",
+    "stopPagePre2009Form288bLinkText1": "You'll need to file the",
+    "stopPagePre2009Form288bLinkText2": "form 'Terminating appointment as director or secretary",
+    "stopPagePre2009Form288bParagraphText": "on paper for directors removed before this date",
+    "stopPagePre2009RemovedDateTex1": "If the date entered is not correct, you can ",
+    "stopPagePre2009RemovedDateTex2": "enter a different date"
 }

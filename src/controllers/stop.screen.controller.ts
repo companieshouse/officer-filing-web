@@ -12,8 +12,15 @@ import {
     ETAG_PAGE_BODY_1,
     ETAG_PAGE_BODY_2,
     ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK,
-    ETAG_PAGE_BODY_CONTACT_US_LINK,
-    ETAG_PAGE_BODY_3
+    STOP_PAGE_BODY_CONTACT_US_LINK,
+    STOP_PAGE_CONTACT_US_TEXT,
+    PRE_OCTOBER_2009_HEADER,
+    PRE_OCTOBER_2009_HEADER1,
+    PRE_OCTOBER_2009_288B_LINK_TEXT1,
+    PRE_OCTOBER_2009_288B_LINK_TEXT2,
+    PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT,
+    PRE_OCTOBER_2009_REMOVED_DATE_TEXT1,
+    PRE_OCTOBER_2009_REMOVED_DATE_TEXT2
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -69,8 +76,18 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.PRE_OCTOBER_2009: {
             return {
-                pageHeader: STOP_PAGE_CONTENT.pre_october_2009.pageHeader,
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.PRE_OCTOBER_2009),
+                pageHeader: STOP_PAGE_CONTENT.pre_october_2009.pageHeader.replace(new RegExp(PRE_OCTOBER_2009_HEADER, 'g'), localeInfo.i18n.stopPagePre2009CannotUseText),
                 pageBody: STOP_PAGE_CONTENT.pre_october_2009.pageBody
+                    .replace(new RegExp(PRE_OCTOBER_2009_HEADER1, 'g'), localeInfo.i18n.stopPagePre2009Header1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText2)
+                    .replace(new RegExp(PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT, 'g'), localeInfo.i18n.stopPagePre2009Form288bParagraphText)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex1)
+                    .replace(new RegExp(PRE_OCTOBER_2009_REMOVED_DATE_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009RemovedDateTex2)
+                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
                     .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber)
                     .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, transactionId)
                     .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId)
@@ -86,8 +103,8 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageEtagPageBody1)
                     .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
                     .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
-                    .replace(new RegExp(ETAG_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageEtagContactUsLink)
-                    .replace(new RegExp(ETAG_PAGE_BODY_3, 'g'), localeInfo.i18n.stopPageEtagPageBody3),
+                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText),
             }
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 
