@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set title = "If the director's correspondence address changes in the future, do you want this to apply to their home address too?" %}
+{% set title = i18n.directorResidentialAddressLinkTitle %}
 
 {% block pageTitle %}
   {% include "includes/page-title.html" %}
@@ -31,9 +31,9 @@
           items: [
             {
               value: "ha_to_sa_yes",
-              text: "Yes",
+              text: i18n.yes,
               hint: {
-                text: "The director's home address will be recorded as the 'same as the correspondence address'. This means future changes will also apply to the director's home address."
+                text: i18n.directorResidentialAddressLinkYesHint
               },
               checked: ha_to_sa === "ha_to_sa_yes",
               attributes: {
@@ -42,9 +42,9 @@
             },
             {
               value: "ha_to_sa_no",
-              text: "No",
+              text: i18n.no,
               hint: {
-                text: "You’ll have to update the director's home address manually if it changes."
+                text: i18n.directorResidentialAddressLinkNoHint
               },
               checked: ha_to_sa === "ha_to_sa_no",
               attributes: {
@@ -60,7 +60,7 @@
           attributes: {
             "data-event-id": "continue-button"
           },
-          text: "Continue"
+          text: i18n.continue
         }) }}
 
       </form>
