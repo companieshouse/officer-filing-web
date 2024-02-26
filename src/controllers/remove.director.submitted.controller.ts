@@ -12,7 +12,7 @@ import { formatTitleCase } from "../services/confirm.company.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
 import { retrieveDirectorNameFromAppointment } from "../utils/format";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -43,7 +43,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorTitle: formatTitleCase(companyOfficer.title),
       name: formatTitleCase(retrieveDirectorNameFromAppointment(companyOfficer)),
       resignedOn: toReadableFormat(officerFiling.resignedOn),
-      removeLink: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
+      removeLink: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
       currentUrl : req.originalUrl,
     });
