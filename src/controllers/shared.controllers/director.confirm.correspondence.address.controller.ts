@@ -50,7 +50,9 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
-    
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+
     const officerFilingBody: OfficerFiling = {
       isServiceAddressSameAsRegisteredOfficeAddress: false
     };
@@ -68,7 +70,7 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
     
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
-    return res.redirect(urlUtils.getUrlToPath(nextPageUrl, req));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
   }catch(e){
     return next(e);
   }

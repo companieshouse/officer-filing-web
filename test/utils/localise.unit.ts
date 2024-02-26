@@ -40,4 +40,13 @@ describe("localise tests", () => {
   ])("should conditionally add lang to url", (expected, url, lang) => {
     expect(addLangToUrl(url, lang)).toEqual(expected);
   });
+
+  it.each([
+    ["/test?lang=cy", "en", "/test?lang=en"],
+    ["/test?lang=en", "cy", "/test?lang=cy"],
+    ["/test?a=b&lang=cy", "en", "/test?a=b&lang=en"],
+    ["/test?lang=en&a=b", "cy", "/test?lang=cy&a=b"]] )
+    ("should override the lang and not amend if exist in url" , (url, lang, expected) => {
+    expect(addLangToUrl(url, lang)).toEqual(expected);
+  });
 });

@@ -14,6 +14,9 @@ export const addLangToUrl = (url: string, lang: string | undefined): string => {
     return url;
   }
   if (url.includes("?")) {
+    if (url.includes("lang=")) {
+      return url.replace(/lang=[^&]+/, "lang=" + lang);
+    }
     return url + "&lang=" + lang;
   } else {
     return url + "?lang=" + lang;
