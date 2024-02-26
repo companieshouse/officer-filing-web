@@ -95,22 +95,6 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("11 May 2019");
     });
-
-    it("Should show warning for insufficient number of directors for a private company in welsh", async () => {
-      mockGetCompanyOfficers.mockResolvedValue([]);
-      mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
-      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
-
-      expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING_WELSH);
-    });
-
-    it("Should show warning for insufficient number of directors for a public company in welsh", async () => {
-      mockGetCompanyOfficers.mockResolvedValue([]);
-      mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
-      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
-
-      expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING_WELSH);
-    });
   });
 
   describe("get tests", () => {
@@ -212,12 +196,28 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING);
     });
 
+    it("Should show warning for insufficient number of directors for a private company in welsh", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
+
+      expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING_WELSH);
+    });
+
     it("Should show warning for insufficient number of directors for a public company", async () => {
       mockGetCompanyOfficers.mockResolvedValue([]);
       mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
 
       expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING);
+    });
+
+    it("Should show warning for insufficient number of directors for a public company in welsh", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
+
+      expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING_WELSH);
     });
   });
 
