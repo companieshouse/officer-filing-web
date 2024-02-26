@@ -38,7 +38,9 @@ const SUBMISSION_ID = "55555555";
 const TRANSACTION_ID = "11223344";
 const PAGE_HEADING = "Test Company";
 const NO_DIRECTORS_PRIVATE_WARNING = "This company has no directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least one director who is a person and tell Companies House within 14 days, or risk prosecution."
+const NO_DIRECTORS_PRIVATE_WARNING_WELSH = "Nid oes unrhyw gyfarwyddwyr gan y cwmni hwn. Mae hyn yn golygu nad yw&#39;n cydymffurfio ac mewn perygl o weithred gorfodi. Rhaid i&#39;r cwmni benodi o leiaf un cyfarwyddwr sy&#39;n berson a dweud wrth Dŷ&#39;r Cwmnïau o fewn 14 diwrnod, neu fentro erlyniad."
 const NO_DIRECTORS_PUBLIC_WARNING = "This company has no directors, or not enough directors. This means it is not compliant and at risk of enforcement action. The company must appoint at least 2 directors, and at least one must be a person. The company must tell Companies House who they&#39;ve appointed within 14 days, or risk prosecution."
+const NO_DIRECTORS_PUBLIC_WARNING_WELSH = "Nid oes unrhyw gyfarwyddwyr, neu ddim digon o gyfarwyddwyr gan y cwmni hwn. Mae hyn yn golygu nad yw&#39;n cydymffurfio ac mewn perygl o weithred gorfodi. Rhaid i&#39;r cwmni benodi o leiaf 2 gyfarwyddwr, a rhaid i o leiaf un bod yn berson. Rhaid i&#39;r cwmni ddweud wrth Dŷ&#39;r Cwmnïau pwy maen nhw wedi&#39;i benodi o fewn 14 diwrnod, neu fentro erlyniad."
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
 const ACTIVE_DIRECTOR_DETAILS_URL = CURRENT_DIRECTORS_PATH.replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER).replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID);
@@ -92,6 +94,22 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain("December 2001");
       expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("11 May 2019");
+    });
+
+    it("Should show warning for insufficient number of directors for a private company in welsh", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
+
+      expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING_WELSH);
+    });
+
+    it("Should show warning for insufficient number of directors for a public company in welsh", async () => {
+      mockGetCompanyOfficers.mockResolvedValue([]);
+      mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
+      const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL + "?lang=cy");
+
+      expect(response.text).toContain(NO_DIRECTORS_PUBLIC_WARNING_WELSH);
     });
   });
 
@@ -194,7 +212,7 @@ describe("Active directors controller tests", () => {
       expect(response.text).toContain(NO_DIRECTORS_PRIVATE_WARNING);
     });
 
-    it("Should show warning for insufficient number of directors for a private company", async () => {
+    it("Should show warning for insufficient number of directors for a public company", async () => {
       mockGetCompanyOfficers.mockResolvedValue([]);
       mockGetCompanyProfile.mockResolvedValue(validPublicCompanyProfile);
       const response = await request(app).get(ACTIVE_DIRECTOR_DETAILS_URL);
