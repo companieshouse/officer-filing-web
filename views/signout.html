@@ -22,63 +22,67 @@
 {% endblock %}
 
 {% block content %}
-    {% if noInputSelectedError %}
-        {% set detailsErrorMsg = {
-            text: i18n.signoutNoInputError
-        } %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if noInputSelectedError %}
+            {% set detailsErrorMsg = {
+                text: i18n.signoutNoInputError
+            } %}
 
-        {{ govukErrorSummary({
-            titleText: i18n.signoutErrorSummaryTitle,
-            errorList: [
-                {
-                text: i18n.signoutErrorSummaryText,
-                href: "#yes"
-                }
-            ]
-        }) }}
-    {% else %}
-        {% set detailsErrorMsg = false %}
-    {% endif %}
+            {{ govukErrorSummary({
+                titleText: i18n.signoutErrorSummaryTitle,
+                errorList: [
+                    {
+                    text: i18n.signoutErrorSummaryText,
+                    href: "#yes"
+                    }
+                ]
+            }) }}
+        {% else %}
+            {% set detailsErrorMsg = false %}
+        {% endif %}
 
-    {% if CH01_ACTIVE === "true" %}
-        {% set hintText = i18n.signoutCH01JourneyHintText %}
-    {% else %}
-        {% set hintText = i18n.signoutAP01JourneyHintText %}
-    {% endif %}
+        {% if CH01_ACTIVE === "true" %}
+            {% set hintText = i18n.signoutCH01JourneyHintText %}
+        {% else %}
+            {% set hintText = i18n.signoutAP01JourneyHintText %}
+        {% endif %}
 
-    <form action="" method="POST">
-        {{ govukRadios({
-            classes: "govuk-radios--inline",
-            idPrefix: "signout",
-            name: "signout",
-            errorMessage: detailsErrorMsg,
-            fieldset: {
-                legend: {
-                    html: i18n.signoutRadioLegend,
-                    classes: "govuk-fieldset__legend--l"
-                }
-            },
-            hint: {
-                text: hintText
-            },
-            items: [
-                {
-                    value: "yes",
-                    text: i18n.signoutYesButtonText,
-                    attributes: {
-                        "data-event-id": "signout-yes"
+        <form action="" method="POST">
+            {{ govukRadios({
+                classes: "govuk-radios--inline",
+                idPrefix: "signout",
+                name: "signout",
+                errorMessage: detailsErrorMsg,
+                fieldset: {
+                    legend: {
+                        html: i18n.signoutRadioLegend,
+                        classes: "govuk-fieldset__legend--l"
                     }
                 },
-                {
-                    value: "no",
-                    text: i18n.signoutNoButtonText,
-                    attributes: {
-                        "data-event-id": "signout-no"
+                hint: {
+                    text: hintText
+                },
+                items: [
+                    {
+                        value: "yes",
+                        text: i18n.signoutYesButtonText,
+                        attributes: {
+                            "data-event-id": "signout-yes"
+                        }
+                    },
+                    {
+                        value: "no",
+                        text: i18n.signoutNoButtonText,
+                        attributes: {
+                            "data-event-id": "signout-no"
+                        }
                     }
-                }
-            ]
-            }) 
-        }} 
-    {% include "includes/continue-button.html" %}
-    </form>
+                ]
+                }) 
+            }} 
+        {% include "includes/continue-button.html" %}
+        </form>
+    </div>
+</div>
 {% endblock %}
