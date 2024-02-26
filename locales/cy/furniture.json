@@ -16,11 +16,11 @@
   "cookieNoJS": "Rydym yn defnyddio cwcis i wneud i'n gwasanaethau weithio a chasglu gwybodaeth ddadansoddol. I dderbyn neu wrthod cwcis dadansoddeg, trowch JavaScript ymlaen yn gosodiadau eich porwr ac ail-lwytho'r dudalen hon.",
   "cookieHide": "Cuddio'r neges hon",
   "confirmAndContinue": "Cadarnhau a pharhau",
-  "confirmAndSubmit": "to be translated",
+  "confirmAndSubmit": "Cadarnhau a chyflwyno",
   "continue": "to be translated",
-  "cancel": "to be translated",
+  "cancel": "Canslo",
   "signOut": "Cofrestrwch allan",
-  "change": "to be translated",
+  "change": "Newid",
   "back": "Cefn",
   "policies": "Polisïau",
   "cookies": "Cwcis",
@@ -34,8 +34,6 @@
   "govUK": "to be translated",
   "yes": "to be translated",
   "no": "to be translated",
-  "companyName": "to be translated",
-  "companyNumber": "to be translated",
   "next" : "Nesaf",
   "previous" : "Blaenorol"
 }
