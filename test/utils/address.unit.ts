@@ -61,43 +61,19 @@ describe("compareAddress", () => {
   });
 
   it("should return false if locality is undefined in second address", () => {
-    const addressTwo: Address = {
-      premises: "123",
-      addressLine1: "Main St",
-      addressLine2: "Apt 4",
-      country: "UK",
-      locality: undefined,
-      postalCode: "SW1A 1AA",
-      region: "Greater London"
-    } as any as Address;
+    const addressTwo: Address = { ...addressOne, locality: undefined } as any as Address;
     const result = compareAddress(addressOne, addressTwo);
     expect(result).toBe(false);
   });
 
   it("should return false if country is undefined in second address", () => {
-    const addressTwo: Address = {
-      premises: "123",
-      addressLine1: "Main St",
-      addressLine2: "Apt 4",
-      country: undefined,
-      locality: "London",
-      postalCode: "SW1A 1AA",
-      region: "Greater London"
-    } as any as Address;
+    const addressTwo: Address = { ...addressOne, country: undefined } as any as Address;
     const result = compareAddress(addressOne, addressTwo);
     expect(result).toBe(false);
   });
 
   it("should return false if address line 1 is undefined in second address", () => {
-    const addressTwo: Address = {
-      premises: "123",
-      addressLine1: undefined,
-      addressLine2: "Apt 4",
-      country: "UK",
-      locality: "London",
-      postalCode: "SW1A 1AA",
-      region: "Greater London"
-    } as any as Address;
+    const addressTwo: Address = { ...addressOne, addressLine1: undefined } as any as Address;
     const result = compareAddress(addressOne, addressTwo);
     expect(result).toBe(false);
   });
