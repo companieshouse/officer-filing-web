@@ -74,14 +74,14 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       PIWIK_APPOINT_DIRECTOR_START_GOAL_ID,
       PIWIK_UPDATE_DIRECTOR_START_GOAL_ID,
       templateName: Templates.ACTIVE_DIRECTORS,
-      backLinkUrl: getConfirmCompanyUrl(companyNumber),
+      backLinkUrl: addLangToUrl(getConfirmCompanyUrl(companyNumber), lang),
       directorsList: paginatedDirectorsList,
       company: companyProfile,
       pagination: paginationElement,
       updateEnabled: updateEnabled,
       publicCompany: allowedPublicCompanyTypes.includes(companyProfile.type),
       ...getLocaleInfo(locales, lang),
-      currentUrl: urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+      currentUrl: req.originalUrl
     });
   } catch (e) {
     return next(e);
