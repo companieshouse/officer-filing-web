@@ -1,7 +1,7 @@
 {
-  "removeDirectorConfirmationConfirmationTitle" : "to be translated",
-  "removeDirectorConfirmationNameOfDirector" : "to be translated",
-  "removeDirectorConfirmationDateRemoved" : "to be translated",
-  "removeDirectorConfirmationSameCompanyLink": "to be translated",
-  "removeDirectorConfirmationDifferentCompanyLink": "to be translated"
+  "removeDirectorConfirmationConfirmationTitle" : "Dileu’r cyfarwyddwr wedi ei gyflwyno",
+  "removeDirectorConfirmationNameOfDirector" : "Enw’r cyfarwyddwr",
+  "removeDirectorConfirmationDateRemoved" : "Dyddiad dileu",
+  "removeDirectorConfirmationSameCompanyLink": "Dileu cyfarwyddwr arall o'r un cwmni",
+  "removeDirectorConfirmationDifferentCompanyLink": "Dileu cyfarwyddwr arall o gwmni gwahanol"
 }
