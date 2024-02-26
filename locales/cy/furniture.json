@@ -35,5 +35,9 @@
   "yes": "to be translated",
   "no": "to be translated",
   "next" : "Nesaf",
-  "previous" : "Blaenorol"
+  "previous" : "Blaenorol",
+  "phase": "Beta",
+  "phaseContent1": "Mae hwn yn wasanaeth newydd - bydd eich ",
+  "phaseLink": "adborth",
+  "phaseContent2": " yn ein helpu i'w wella."
 }
