@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, DATE_DIRECTOR_REMOVED_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
 
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { getCompanyProfile } from "../services/company.profile.service";
@@ -22,10 +22,11 @@ import {
     PRE_OCTOBER_2009_REMOVED_DATE_TEXT1,
     PRE_OCTOBER_2009_REMOVED_DATE_TEXT2,
     PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1,
-    PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2
+    PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2,
+    DATE_DIRECTOR_REMOVED_LINK
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -77,6 +78,10 @@ const setContent = async (req: Request, stopType: string) => {
             }
         }
         case STOP_TYPE.PRE_OCTOBER_2009: {
+            const DATE_REMOVED_URL = DATE_DIRECTOR_REMOVED_PATH
+                .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber)
+                .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, transactionId)
+                .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, submissionId);
             return {
                 ...localeInfo,
                 currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.PRE_OCTOBER_2009),
@@ -86,6 +91,7 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, transactionId)
                     .replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId)
                     .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, submissionId)
+                    .replace(new RegExp(DATE_DIRECTOR_REMOVED_LINK, 'g'), addLangToUrl(DATE_REMOVED_URL, lang))
                     .replace(new RegExp(PRE_OCTOBER_2009_HEADER1, 'g'), localeInfo.i18n.stopPagePre2009Header1)
                     .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT1, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText1)
                     .replace(new RegExp(PRE_OCTOBER_2009_288B_LINK_TEXT2, 'g'), localeInfo.i18n.stopPagePre2009Form288bLinkText2)
