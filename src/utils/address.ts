@@ -9,16 +9,16 @@ export const compareAddress = (addressOne: Address | undefined, addressTwo: Addr
   if (addressOne?.premises?.toLowerCase().trim() !== addressTwo?.premises?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.addressLine1.toLowerCase().trim() !== addressTwo?.addressLine1.toLowerCase().trim()){
+  if (addressOne?.addressLine1.toLowerCase().trim() !== addressTwo?.addressLine1?.toLowerCase().trim()){
     return false;
   }
   if (addressOne?.addressLine2?.toLowerCase().trim() !== addressTwo?.addressLine2?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.country.toLowerCase().trim() !== addressTwo?.country.toLowerCase().trim()){
+  if (addressOne?.country.toLowerCase().trim() !== addressTwo?.country?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.locality.toLowerCase().trim() !== addressTwo?.locality.toLowerCase().trim()){
+  if (addressOne?.locality.toLowerCase().trim() !== addressTwo?.locality?.toLowerCase().trim()){
     return false;
   }
   if (addressOne?.postalCode?.toLowerCase().trim() !== addressTwo?.postalCode?.toLowerCase().trim()){
