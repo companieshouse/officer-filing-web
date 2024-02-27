@@ -5,9 +5,19 @@ import request from "supertest";
 import app from "../../src/app";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { dissolvedCompanyProfile, dissolvedMissingNameCompanyProfile, overseaCompanyCompanyProfile, overseaCompanyMissingNameCompanyProfile, validCompanyProfile } from "../mocks/company.profile.mock";
-import { BASIC_STOP_PAGE_PATH } from "../../src/types/page.urls";
+import { BASIC_STOP_PAGE_PATH, DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
+
+const COMPANY_NUMBER = "12345678";
+const TRANSACTION_ID = "11223344";
+const SUBMISSION_ID = "55555555";
+
+const DATE_DIRECTOR_REMOVED_URL = DATE_DIRECTOR_REMOVED_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 const SHOW_STOP_PAGE_PATH_URL = "/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=";
 const SHOW_STOP_PAGE_PATH_URL_DISSOLVED = SHOW_STOP_PAGE_PATH_URL + "dissolved";
@@ -86,6 +96,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
+    expect(response.text).not.toContain("date-director-removed?lang=cy")
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -97,6 +108,7 @@ describe("Stop screen controller tests", () => {
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING_WELSH);
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH);
+    expect(response.text).toContain("date-director-removed?lang=cy")
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
