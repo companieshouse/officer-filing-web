@@ -27,14 +27,35 @@ import {
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { Session } from "@companieshouse/node-session-handler";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        saveReturnPageInSession(req);
         const stopType = req.query.stopType as string;
         const content = setContent(req, stopType);
         return displayStopPage(res, await content);
     } catch (e) {
         return next(e);
+    }
+}
+
+const saveReturnPageInSession = (req: Request) => {
+    const transactionId: string = urlUtils.getTransactionIdFromRequestParams(req);
+    const appointmentId: string = urlUtils.getAppointmentIdFromRequestParams(req);
+    const submissionId: string = urlUtils.getSubmissionIdFromRequestParams(req);
+    if (transactionId && submissionId && appointmentId) {
+        req.session?.setExtraData("TRANSACTION_ID", transactionId);
+        req.session?.setExtraData("SUBMISSION_ID", submissionId);
+        req.session?.setExtraData("APPOINTMENT_ID", appointmentId);
+    }
+}
+
+const getReturnPageFromSession = (session: Session) => {
+    return {
+        transactionId: session?.getExtraData("TRANSACTION_ID") as string,
+        submissionId: session?.getExtraData("SUBMISSION_ID") as string,
+        appointmentId: session?.getExtraData("APPOINTMENT_ID") as string
     }
 }
 
@@ -44,10 +65,8 @@ const displayStopPage = (res: Response, content: {pageHeader: string, pageBody: 
 
 const setContent = async (req: Request, stopType: string) => {
     // Some of these query parameters are not guaranteed - multiple url paths are possible
+    const {transactionId, submissionId, appointmentId} = getReturnPageFromSession(req.session as Session);
     const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const appointmentId = urlUtils.getAppointmentIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     const localeInfo = getLocaleInfo(locales, lang);
