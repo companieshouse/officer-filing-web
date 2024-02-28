@@ -1,6 +1,0 @@
-app_name: officer-filing-web
-group: web
-
-weight: 100
-routes:
-  1: ^/appoint-update-remove-company-officer/*

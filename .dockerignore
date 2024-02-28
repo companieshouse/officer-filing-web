@@ -1,9 +1,9 @@
 !api-enumerations
 !dist
 !docker_start.sh
-!routes.yaml
-!src
-!views
+!node_modules
 !package-lock.json
 !package.json
+!src
 !tsconfig.json
+!views
