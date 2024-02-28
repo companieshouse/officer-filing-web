@@ -101,12 +101,29 @@ const checkNationality2 = (officerFiling: OfficerFiling) => {
     return officerFiling.nationality2Link
   }}
 
+/**
+ * Check if the officerFiling and companyAppointment contains identical nationalities.
+ * @param currentOfficerFiling
+ * @param companyAppointment
+ * returns false if size of companyAppointment's nationalities is greater than currentOfficerFiling's nationalities, (which indicates that the one more nationality have been removed)
+ * returns true if companyAppointment's nationalities are identical to currentOfficerFiling's nationalities, false otherwise.
+ */
+
 const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
-  const nationality = companyAppointment.nationality?.split(",")!;
+  const chipsNationalities = companyAppointment.nationality?.split(",")!;
   let sameNationality: boolean = false;
-  if (currentOfficerFiling.nationality1 === nationality[0]) {
-    if (!(((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
-        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3)))) 
+  // Count the number of non-empty nationalities in currentOfficerFiling
+   const officerFilingNationalitiesCount = ['nationality1', 'nationality2', 'nationality3']
+   .reduce((count, nationalityKey) => currentOfficerFiling[nationalityKey] ? count + 1 : count, 0);
+
+  // Check if companyAppointment has more nationalities than currentOfficerFiling
+  if (chipsNationalities.length > officerFilingNationalitiesCount) {
+    return sameNationality;
+  }
+
+  if (currentOfficerFiling.nationality1 === chipsNationalities[0]) {
+    if (!(((currentOfficerFiling.nationality2) && (chipsNationalities[1] !== currentOfficerFiling.nationality2))
+        || ((currentOfficerFiling.nationality3) &&(chipsNationalities[2] !== currentOfficerFiling.nationality3))))
         {
           sameNationality = true;
     } 
