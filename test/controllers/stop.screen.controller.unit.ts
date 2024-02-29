@@ -5,18 +5,9 @@ import request from "supertest";
 import app from "../../src/app";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { dissolvedCompanyProfile, dissolvedMissingNameCompanyProfile, overseaCompanyCompanyProfile, overseaCompanyMissingNameCompanyProfile, validCompanyProfile } from "../mocks/company.profile.mock";
-import { BASIC_STOP_PAGE_PATH, DATE_DIRECTOR_REMOVED_PATH, urlParams } from "../../src/types/page.urls";
+import { BASIC_STOP_PAGE_PATH } from "../../src/types/page.urls";
 
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
-
-const COMPANY_NUMBER = "12345678";
-const TRANSACTION_ID = "11223344";
-const SUBMISSION_ID = "55555555";
-
-const DATE_DIRECTOR_REMOVED_URL = DATE_DIRECTOR_REMOVED_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 const SHOW_STOP_PAGE_PATH_URL = "/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=";
@@ -25,18 +16,21 @@ const SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED = SHOW_STOP_PAGE_PATH_URL + 
 const SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 = SHOW_STOP_PAGE_PATH_URL + "pre-october-2009";
 const SHOW_STOP_PAGE_PATH_URL_ETAG = SHOW_STOP_PAGE_PATH_URL + "etag";
 const SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG = SHOW_STOP_PAGE_PATH_URL + "something-went-wrong";
+const SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER = SHOW_STOP_PAGE_PATH_URL + "secure-officer";
 const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being dissolved";
 const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
 const NON_LIMITED_UNLIMITED_PAGE_HEADING = "Only limited and unlimited companies can use this service";
 const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for Test Company using this service if it's a:";
 const PRE_OCTOBER_2009_PAGE_HEADING = "Directors removed before 1 October 2009 must file on paper instead";
 const PRE_OCTOBER_2009_PAGE_HEADING_WELSH = "Rhaid i gyfarwyddwyr a chafodd ei ddileu cyn 1 Hydref 2009 ffeilio ar bapur yn lle hynny";
-const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009."
-const PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH = "Mae'r dyddiad y cafodd y cyfarwyddwr ei ddileu cyn 1 Hydref 2009."
+const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009.";
+const PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH = "Mae'r dyddiad y cafodd y cyfarwyddwr ei ddileu cyn 1 Hydref 2009.";
 const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
-const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details."
+const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details.";
 const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
 const SOMETHING_WENT_WRONG_BODY_TEXT= "<p>You need to <a href=\"/appoint-update-remove-company-officer\" data-event-id=\"start-the-service-again-link\">start the service again</a>.</p>";
+const SECURE_OFFICER_HEADING = "Update this director's details using WebFiling or a paper form";
+const SECURE_OFFICER_HEADING_WELSH = "Diweddaru manylion y cyfarwyddwr hwn gan ddefnyddio WebFiling neu ffurflen bapur";
 
 describe("Stop screen controller tests", () => {
   beforeEach(() => {
@@ -206,4 +200,25 @@ describe("Stop screen controller tests", () => {
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
 
+  it("Should navigate to secure officer stop screen", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER);
+
+    expect(response.text).toContain(SECURE_OFFICER_HEADING);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
+  });
+
+  it("Should navigate to secure officer stop screen in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER +"&lang=cy");
+
+    expect(response.text).toContain(SECURE_OFFICER_HEADING_WELSH);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
+  });
 });

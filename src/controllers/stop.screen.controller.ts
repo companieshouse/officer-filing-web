@@ -26,7 +26,11 @@ import {
     DATE_DIRECTOR_REMOVED_LINK,
     SECURE_OFFICER_HEADER,
     SECURE_OFFICER_BODY_1,
-    SECURE_OFFICER_BODY_2
+    SECURE_OFFICER_BODY_2,
+    SECURE_OFFICER_WEBFILING_LINK,
+    SECURE_OFFICER_BODY_3,
+    SECURE_OFFICER_PAPER_FORM_LINK,
+    SECURE_OFFICER_BODY_4
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -135,6 +139,12 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(new RegExp(SECURE_OFFICER_BODY_1, 'g'), localeInfo.i18n.stopPageSecureOfficerBody1)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2Link2)
+                    .replace(new RegExp(SECURE_OFFICER_WEBFILING_LINK, 'g'), localeInfo.i18n.stopPageSecureOfficerWebFilingLink)
+                    .replace(new RegExp(SECURE_OFFICER_BODY_3, 'g'), localeInfo.i18n.stopPageSecureOfficerFilePaperForm)
+                    .replace(new RegExp(SECURE_OFFICER_PAPER_FORM_LINK, 'g'), localeInfo.i18n.stopPageSecureOfficerPaperFormLink)
+                    .replace(new RegExp(SECURE_OFFICER_BODY_4, 'g'), localeInfo.i18n.stopPageSecureOfficerBody4)
+                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
             }
         }
         default: { 

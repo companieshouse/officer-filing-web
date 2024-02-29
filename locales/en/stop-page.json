@@ -15,10 +15,10 @@
     "stopPagePre2009RemovedDateText1": "If the date entered is not correct, you can ",
     "stopPagePre2009RemovedDateText2": " enter a different date",
     "stopPageSecureOfficerPageHeader": "Update this director's details using WebFiling or a paper form",
-    "stopPageSecureOfficerBody1": "You cannot update this director's details in this service",
-    "stopPageSecureOfficerBody2": "You can use",
+    "stopPageSecureOfficerBody1": "You cannot update this director's details in this service.",
+    "stopPageSecureOfficerBody2": "You can use ",
     "stopPageSecureOfficerWebFilingLink": "WebFiling",
-    "stopPageSecureOfficerPaperFormLink": "Change of director's details paper form instead",
-    "stopPageSecureOfficerFilePaperForm": "or file a",
-    "stopPageSecureOfficerBody3": "instead"
+    "stopPageSecureOfficerPaperFormLink": "Change of director's details paper form ",
+    "stopPageSecureOfficerFilePaperForm": " or file a ",
+    "stopPageSecureOfficerBody4": "instead."
 }
