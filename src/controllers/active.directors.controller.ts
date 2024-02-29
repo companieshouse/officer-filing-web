@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
 import { CURRENT_DIRECTORS_PATH, CONFIRM_COMPANY_PATH, DATE_DIRECTOR_REMOVED_PATH,
-        urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
+        urlParams, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH, 
+        BASIC_STOP_PAGE_PATH,
+        URL_QUERY_PARAM} from "../types/page.urls";
 import { urlUtils } from "../utils/url";
 import {
   FILING_DESCRIPTION,
   OFFICER_ROLE,
+  STOP_TYPE,
   allowedPublicCompanyTypes} from "../utils/constants";
   import {
     equalsIgnoreCase,
@@ -132,11 +135,20 @@ async function beginTerminationJourney(req: Request, res: Response, session: Ses
 async function beginUpdateJourney(req: Request, res: Response, session: Session, companyNumber: string, transactionId: string, appointmentId: any, lang: string | undefined) {
   logger.debug(`Creating an update filing for appointment ${appointmentId}`);
   const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+  
+  if (appointment.isSecureOfficer) {
+    const stopPage = addLangToUrl(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), lang);
+    return res.redirect(
+      urlUtils.setQueryParam(stopPage, 
+      URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SECURE_OFFICER));
+  }
+
   const nationalities = appointment.nationality?.split(",");
   let occupation = appointment.occupation;
   if(occupation === "None"){
     occupation = "";
   }
+
 
   const officerFiling: OfficerFiling = {
     description: FILING_DESCRIPTION.UPDATE_DIRECTOR,

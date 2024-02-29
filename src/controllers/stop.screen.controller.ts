@@ -23,7 +23,10 @@ import {
     PRE_OCTOBER_2009_REMOVED_DATE_TEXT2,
     PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1,
     PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2,
-    DATE_DIRECTOR_REMOVED_LINK
+    DATE_DIRECTOR_REMOVED_LINK,
+    SECURE_OFFICER_HEADER,
+    SECURE_OFFICER_BODY_1,
+    SECURE_OFFICER_BODY_2
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -121,6 +124,17 @@ const setContent = async (req: Request, stopType: string) => {
             return {
                 pageHeader: STOP_PAGE_CONTENT.somethingWentWrong.pageHeader,
                 pageBody: STOP_PAGE_CONTENT.somethingWentWrong.pageBody
+            }
+        }
+        case STOP_TYPE.SECURE_OFFICER:  {
+            return {
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SECURE_OFFICER),
+                pageHeader: STOP_PAGE_CONTENT.secure_officer.pageHeader.replace(new RegExp(SECURE_OFFICER_HEADER, 'g'), localeInfo.i18n.stopPageSecureOfficerPageHeader),
+                pageBody: STOP_PAGE_CONTENT.secure_officer.pageBody
+                    .replace(new RegExp(SECURE_OFFICER_BODY_1, 'g'), localeInfo.i18n.stopPageSecureOfficerBody1)
+                    .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2)
+                    .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2Link2)
             }
         }
         default: { 
