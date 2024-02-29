@@ -23,7 +23,6 @@ export default () => {
   process.env.SHOW_SERVICE_OFFLINE_PAGE = "false";
   process.env.URL_LOG_MAX_LENGTH = "400";
   process.env.URL_PARAM_MAX_LENGTH = "50";
-  process.env.SERVICE_NAME = 'Appoint and remove a company director';
   process.env.AP01_ACTIVE = 'true';
   process.env.FEATURE_FLAG_CH01_WEB = 'true';
   process.env.TITLE_LIST = 'DR';
