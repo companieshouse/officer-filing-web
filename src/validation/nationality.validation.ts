@@ -5,7 +5,7 @@ import { NATIONALITY_LIST } from "../utils/properties";
 import { getField, setBackLink } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { NationalityValidation } from "./nationality.validation.config";
-import { formatValidationErrors } from "./validation";
+import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { urlUtils } from "../utils/url";
@@ -85,8 +85,8 @@ export const validateNationality2 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[1]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_2)) {
-      if (!nationality[1].trim().length || !isNationalityInList(nationality[1], nationalityList)) {
-          validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
+      if (!nationality[1].trim().length || invalidPattern(nationality[1], REGEX_FOR_VALID_CHARACTERS)) {
+        validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
       } else if ((nationality[1].length > 50)) {
           validationError.push(nationalityValidationType.Nationality2LengthValidator.ErrorField);
       }  else if (nationality[1] && nationality[2] && (`${nationality[1]},${nationality[2]}`.length > 49)) {
@@ -111,8 +111,8 @@ export const validateNationality3 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[2]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_3)) {
-      if (!nationality[2].trim().length || !isNationalityInList(nationality[2], nationalityList)) {
-            validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
+      if (!nationality[2].trim().length || invalidPattern(nationality[2], REGEX_FOR_VALID_CHARACTERS)) {
+        validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
       } else if ((nationality[2].length > 50)) {
             validationError.push(nationalityValidationType.Nationality3LengthValidator.ErrorField);  
       } 
@@ -128,8 +128,8 @@ const validateCommonNationality = (
       validationError: ValidationError[], 
       nationalityValidationType: GenericValidationType, 
       nationalityList: string[]) => {
-  if (!nationality[0].trim().length || !isNationalityInList(nationality[0], nationalityList)) {
-    //character
+  if (!nationality[0].trim().length || invalidPattern(nationality[0], REGEX_FOR_VALID_CHARACTERS)) {
+          //character
     validationError.push(nationalityValidationType.Nationality1InvalidCharacter.ErrorField);
   } else if ((nationality[0].length > 50)) {
     //length
@@ -168,8 +168,10 @@ const validateCommonNationality = (
   }
 }
 
-const isNationalityInList = (nationality: string, nationalityList: string[]): boolean => {
-  if (nationalityList.includes(nationality)) {
-    return true;
-  } return false;
+const invalidPattern = (input: string, regex: RegExp): boolean => {
+  const matchResult = input.match(regex);
+  if (matchResult == null || matchResult == undefined){
+    return true
+  }
+  return false;
 }
