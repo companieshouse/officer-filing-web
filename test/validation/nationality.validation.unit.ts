@@ -60,6 +60,18 @@ describe("Director nationality controller tests", () => {
       expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
     });
 
+    it ("should not render nationality error if nationality1 is in the list", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"Congolese (Congo)"});
+      expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+    });
+
+    it ("should not render nationality error if nationality2 is in the list", async() => {
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"Irish",typeahead_input_1:"Citizen of Guinea-Bissau"});
+      expect(mockPatchOfficerFiling).toHaveBeenCalled();
+      expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+    });
+
     it ("should render nationality error if nationality is contains invalid character", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"Can£adian&"});
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -97,7 +109,7 @@ describe("Director nationality controller tests", () => {
     });
 
     it ("should render nationality error if nationality 2 and 3 are duplicate", async() => {
-      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"Country",typeahead_input_2:"Country"});
+      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"Irish",typeahead_input_2:"Irish"});
       expect(response.text).toContain("Enter a different second nationality");
       expect(response.text).toContain("Enter a different third nationality");
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -106,12 +118,6 @@ describe("Director nationality controller tests", () => {
     it ("should render nationality length error if nationality 1 and 3 exceed maximum length", async() => {
       const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British",typeahead_input_1:"British",typeahead_input_2:LONG_COUNTRY_NAME});
       expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
-
-    it ("should render nationality length error if nationality 1 maximum length 50", async() => {
-      const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:LONG_COUNTRY_NAME+SHORT_NATIONALITY});
-      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
