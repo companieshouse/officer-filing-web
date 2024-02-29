@@ -84,7 +84,7 @@ const setContent = async (req: Request, stopType: string) => {
                 .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, submissionId);
             return {
                 ...localeInfo,
-                currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.PRE_OCTOBER_2009),
+                currentUrl: urlUtils.setQueryParam(req.originalUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.PRE_OCTOBER_2009),
                 pageHeader: STOP_PAGE_CONTENT.pre_october_2009.pageHeader.replace(new RegExp(PRE_OCTOBER_2009_HEADER, 'g'), localeInfo.i18n.stopPagePre2009CannotUseText),
                 pageBody: STOP_PAGE_CONTENT.pre_october_2009.pageBody
                     .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, companyNumber)
