@@ -140,8 +140,8 @@ const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string 
           ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2+"," : ""}
           ${officerFiling.serviceAddress?.locality},
           ${officerFiling.serviceAddress?.region ? officerFiling.serviceAddress.region+"," : ""}
-          `) + (officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country : "")
-          + officerFiling.serviceAddress?.postalCode
+          ${officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country+"," : ""}
+          `) + officerFiling.serviceAddress?.postalCode
 };
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
@@ -151,7 +151,7 @@ const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): 
           ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
           ${companyProfile.registeredOfficeAddress?.locality},
           ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
-          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
+          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country+","  : ""}
         `) + companyProfile.registeredOfficeAddress?.postalCode
  }
 const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res: Response<any, Record<string, any>>, req: Request, lang: string) => {
