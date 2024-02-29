@@ -171,5 +171,5 @@ const validateCommonNationality = (
 const isNationalityInList = (nationality: string, nationalityList: string[]): boolean => {
   if (nationalityList.includes(nationality)) {
     return true;
-  }return false;
+  } return false;
 }
