@@ -140,7 +140,7 @@ const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string 
           ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2+"," : ""}
           ${officerFiling.serviceAddress?.locality},
           ${officerFiling.serviceAddress?.region ? officerFiling.serviceAddress.region+"," : ""}
-          `) + (officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country : "")
+          `) + (officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country+", " : "")
           + officerFiling.serviceAddress?.postalCode
 };
 
