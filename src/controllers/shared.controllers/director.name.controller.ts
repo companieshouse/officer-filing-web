@@ -36,7 +36,7 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
       ...getLocaleInfo(locales, lang),
       currentUrl: currentUrl,
       templateName: templateName,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: TITLE_LIST,
       typeahead_value: officerFiling.title,

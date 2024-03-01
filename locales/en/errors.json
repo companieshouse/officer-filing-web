@@ -26,6 +26,7 @@
   "error-change-date-in-future" : "Enter a date that is today or in the past",
   "error-change-date-before-incorporation-date": "Enter a date that is on or after the company's incorporation date",
   "error-change-date-before-2009": "Date the director’s details changed must be on or after 1 October 2009",
+  "error-invalid-nationality-character": "Start typing, then choose the director’s nationality from the list",
   "error-invalid-nationality": "Select a nationality from the list",
   "error-nationality-blank": "Enter the director’s nationality",
   "error-nationality-length": "Nationality must be 50 characters or less",

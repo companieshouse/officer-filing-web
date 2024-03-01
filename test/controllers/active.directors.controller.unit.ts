@@ -258,6 +258,34 @@ describe("Active directors controller tests", () => {
         }));
     });
 
+    it ("should redirect to stop page if officer is secure officer", async() => {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+          ...validCompanyAppointment,
+          isSecureOfficer: true
+        });
+        const response = await request(app).post(CURRENT_DIRECTORS_URL)
+        .send({"updateAppointmentId": APPOINTMENT_ID});
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+        expect(mockPostOfficerFiling).not.toHaveBeenCalled();
+        expect(response.text).toContain("/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=secure-officer&lang=en");
+    });
+
+    it ("should redirect to stop page if officer is secure officer in welsh", async() => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        ...validCompanyAppointment,
+        isSecureOfficer: true
+      });
+      const response = await request(app).post(CURRENT_DIRECTORS_URL+"?lang=cy")
+      .send({"updateAppointmentId": APPOINTMENT_ID});
+      expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+      expect(mockPostOfficerFiling).not.toHaveBeenCalled();
+      expect(response.text).toContain("/appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=secure-officer&lang=cy");
+  });
+
     it("Should post filing and redirect to next page CH01", async () => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointment);
       mockPostOfficerFiling.mockReturnValueOnce({

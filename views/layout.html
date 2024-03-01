@@ -54,13 +54,9 @@
 {% if CH01_ACTIVE === "true" %}
   {% set serviceName = i18n.appTitle %}
 {% elif AP01_ACTIVE === "true" %}
-  {% if i18n.appTitleAppointRemove %}
-    {% set serviceName = i18n.appTitleAppointRemove %}
-  {% else %}
-    {% set serviceName = SERVICE_NAME %}
-  {% endif %}
+  {% set serviceName = i18n.appTitleAppointRemove %}
 {% else %}
-  {% set serviceName = "Remove a company director" %}
+  {% set serviceName = i18n.appTitleJustRemove %}
 {% endif %}
 
   {{ govukHeader({

@@ -38,7 +38,7 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),

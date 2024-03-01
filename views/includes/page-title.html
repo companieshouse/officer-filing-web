@@ -1,4 +1,12 @@
 {% if errors and errors.errorList and errors.errorList.length > 0 %}
 Error:
 {% endif %}
-{{ title }} - {{ SERVICE_NAME }} - GOV.UK
+{% block pageTitle %}
+  {% set serviceName = i18n.appTitleJustRemove %}
+    {% if CH01_ACTIVE === "true" %}
+      {% set serviceName = i18n.appTitle %}
+    {% elif AP01_ACTIVE === "true" %}
+      {% set serviceName = i18n.appTitleAppointRemove %}
+  {% endif %}
+{{ title }} - {{ serviceName }} - GOV.UK
+{% endblock %}

@@ -13,5 +13,12 @@
     "stopPagePre2009WhereToContactUsText1": "Os yw'r cwmni yng Ngogledd Iwerddon, anfonwch e-bost atom trwy",
     "stopPagePre2009WhereToContactUsText2": "a gofynnwch am ffurflen 296 - 'Newid cyfarwyddwr neu ysgrifennydd neu newid manylion'.",
     "stopPagePre2009RemovedDateText1": "Os nad yw'r dyddiad a gofnodir yn gywir, gallwch",
-    "stopPagePre2009RemovedDateText2": " gofnodi dyddiad gwahanol"
+    "stopPagePre2009RemovedDateText2": " gofnodi dyddiad gwahanol",
+    "stopPageSecureOfficerPageHeader": "Diweddaru manylion y cyfarwyddwr hwn gan ddefnyddio WebFiling neu ffurflen bapur",
+    "stopPageSecureOfficerBody1": "Ni allwch ddiweddaru manylion y cyfarwyddwr hwn yn y gwasanaeth hwn.",
+    "stopPageSecureOfficerBody2": "Gallwch ddefnyddio ",
+    "stopPageSecureOfficerWebFilingLink": "WebFiling",
+    "stopPageSecureOfficerPaperFormLink": " ffeilio ffurflen bapur newid manylion y cyfarwyddwr",
+    "stopPageSecureOfficerFilePaperForm": " neu",
+    "stopPageSecureOfficerBody4": " yn lle hynny."
 }

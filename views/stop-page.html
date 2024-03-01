@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block pageTitle %}
-    {{pageHeader}} - {{ SERVICE_NAME }} - GOV.UK
+  {% set serviceName = i18n.appTitleJustRemove %}
+  {% if CH01_ACTIVE === "true" %}
+    {% set serviceName = i18n.appTitle %}
+  {% elif AP01_ACTIVE === "true" %}
+    {% set serviceName = i18n.appTitleAppointRemove %}
+  {% endif %}
+  {{pageHeader}} - {{serviceName}} - GOV.UK
 {% endblock %}
 {% block signOut %}{% endblock %}
 {% block content %}

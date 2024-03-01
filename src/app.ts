@@ -29,7 +29,6 @@ const nunjucksEnv = nunjucks.configure([
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
 nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
-nunjucksEnv.addGlobal("SERVICE_NAME", process.env.SERVICE_NAME);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
 nunjucksEnv.addGlobal("CH01_ACTIVE", CH01_ACTIVE);
 nunjucksEnv.addGlobal('publicRegisterInformation', "What information we'll show on the public online register");

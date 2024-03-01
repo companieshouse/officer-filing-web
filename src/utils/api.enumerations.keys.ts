@@ -120,7 +120,8 @@ export enum premisesErrorMessageKey {
 }
 
 export enum nationalityErrorMessageKey{
-  NATIONALITY_INVALID = "invalid-nationality"
+  NATIONALITY_INVALID = "invalid-nationality",
+  INVALID_NATIONALITY_CHARACTER = "invalid-nationality-character"
 }
 
 export enum nationalityOneErrorMessageKey {
