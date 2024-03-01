@@ -151,12 +151,6 @@ const validateCommonNationality = (
     validationError.push(
       nationalityValidationType.DualNationality1LengthValidator.ErrorField,
       nationalityValidationType.DualNationality3LengthValidator.ErrorField);
-  } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
-    //all max length 48
-    validationError.push(
-      nationalityValidationType.MultipleNationality1maxLength50Validator.ErrorField,
-      nationalityValidationType.MultipleNationality2maxLength50Validator.ErrorField,
-      nationalityValidationType.MultipleNationality3maxLength50Validator.ErrorField);
   } else if (nationality[0] == nationality[1]) {
     //duplicated
     validationError.push(nationalityValidationType.DuplicatedNationality2Validator.ErrorField);

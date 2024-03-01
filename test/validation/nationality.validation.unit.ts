@@ -203,5 +203,26 @@ describe("Director nationality controller tests", () => {
       expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality length error 50 if nationality 1 exceed 50", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_0:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality length error 50 if nationality 2 exceed 50", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_1:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality length error 50 if nationality 3 exceed 50", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_2:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
   });
 });
