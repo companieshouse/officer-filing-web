@@ -122,11 +122,10 @@ const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAp
   }
 
   if (currentOfficerFiling.nationality1 === nationality[0]) {
-    if (!(((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2))
-        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3))))
-        {
-          sameNationality = true;
-    } 
+    if ((!currentOfficerFiling.nationality2 || nationality[1] === currentOfficerFiling.nationality2) &&
+        (!currentOfficerFiling.nationality3 || nationality[2] === currentOfficerFiling.nationality3)) {
+      sameNationality = true;
+    }
   } 
   return sameNationality;
 }
