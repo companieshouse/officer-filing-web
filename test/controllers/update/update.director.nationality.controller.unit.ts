@@ -54,6 +54,42 @@ describe("Update director nationality controller tests", () => {
       expect(response.text).toContain(ERROR_PAGE_HEADING);
     });
 
+    it("Should navigate to update nationality page", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality2: "nationality2",
+        nationality3: "nationality3",
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=en");
+
+      expect(response.text).toContain(PAGE_HEADING);
+    });
+
+    it.each([[UPDATE_DIRECTOR_DETAILS_URL, "?lang=en", ""],
+             [UPDATE_DIRECTOR_DETAILS_URL, "?lang=cy", ""],
+             [UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL, "?lang=en", UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL],
+             [UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL, "?lang=cy", UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL],
+            ])
+    ("Should navigate to page with backlinkUrl containing lang param", async (backLinkUrl, langParam, cyaLink) => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        checkYourAnswersLink: cyaLink,
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + langParam);
+
+      expect(response.text).toContain(backLinkUrl + langParam);
+    });
+
     it("Should populate filing data on the page", async () => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
