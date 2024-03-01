@@ -5,7 +5,7 @@ import { NATIONALITY_LIST } from "../utils/properties";
 import { getField, setBackLink } from "../utils/web";
 import { DirectorField } from "../model/director.model";
 import { NationalityValidation } from "./nationality.validation.config";
-import { formatValidationErrors } from "./validation";
+import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { urlUtils } from "../utils/url";
@@ -13,7 +13,7 @@ import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
-const VALID_NATIONALITY_CHARACTER: RegExp = /^[a-zA-Z]+(?: [a-zA-Z]+|-?[a-zA-Z]+(?:-[a-zA-Z]+)?(?: [a-zA-Z]+)?)*$/;
+
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -86,12 +86,12 @@ export const validateNationality2 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[1]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_2)) {
-      if (!nationality[1].trim().length || invalidPattern(nationality[1], VALID_NATIONALITY_CHARACTER)) {
-          validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
+      if (!nationality[1].trim().length || !nationality[1].match(REGEX_FOR_VALID_CHARACTERS)) {
+        validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
       } else if ((nationality[1].length > 50)) {
           validationError.push(nationalityValidationType.Nationality2LengthValidator.ErrorField);
       }  else if (nationality[1] && nationality[2] && (`${nationality[1]},${nationality[2]}`.length > 49)) {
-            //dual max length 49
+          //dual max length 49
           validationError.push(
             nationalityValidationType.DualNationality2LengthValidator.ErrorField,
             nationalityValidationType.DualNationality3LengthValidator.ErrorField);
@@ -112,8 +112,8 @@ export const validateNationality3 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[2]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_3)) {
-      if (!nationality[2].trim().length || invalidPattern(nationality[2], VALID_NATIONALITY_CHARACTER)) {
-            validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
+      if (!nationality[2].trim().length || !nationality[2].match(REGEX_FOR_VALID_CHARACTERS)) {
+        validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
       } else if ((nationality[2].length > 50)) {
             validationError.push(nationalityValidationType.Nationality3LengthValidator.ErrorField);  
       } 
@@ -124,19 +124,12 @@ export const validateNationality3 = (nationality: string[], nationalityValidatio
   }
 }
 
-const invalidPattern = (input: string, regex: RegExp): boolean => {
-  const matchResult = input.match(regex);
-  if (matchResult == null || matchResult == undefined){
-    return true
-  }
-  return false;
-}
 const validateCommonNationality = (
       nationality: string[], 
       validationError: ValidationError[], 
       nationalityValidationType: GenericValidationType, 
       nationalityList: string[]) => {
-  if (!nationality[0].trim().length || invalidPattern(nationality[0], VALID_NATIONALITY_CHARACTER)) {
+  if (!nationality[0].trim().length || !nationality[0].match(REGEX_FOR_VALID_CHARACTERS)) {
     //character
     validationError.push(nationalityValidationType.Nationality1InvalidCharacter.ErrorField);
   } else if ((nationality[0].length > 50)) {
@@ -158,12 +151,6 @@ const validateCommonNationality = (
     validationError.push(
       nationalityValidationType.DualNationality1LengthValidator.ErrorField,
       nationalityValidationType.DualNationality3LengthValidator.ErrorField);
-  } else if (nationality[0] && nationality[1] && nationality[2] && (`${nationality[0]},${nationality[1]},${nationality[2]}`.length > 50)) {
-    //all max length 48
-    validationError.push(
-      nationalityValidationType.MultipleNationality1maxLength50Validator.ErrorField,
-      nationalityValidationType.MultipleNationality2maxLength50Validator.ErrorField,
-      nationalityValidationType.MultipleNationality3maxLength50Validator.ErrorField);
   } else if (nationality[0] == nationality[1]) {
     //duplicated
     validationError.push(nationalityValidationType.DuplicatedNationality2Validator.ErrorField);
@@ -175,4 +162,3 @@ const validateCommonNationality = (
     validationError.push(nationalityValidationType.Nationality1AllowedList.ErrorField);
   }
 }
-
