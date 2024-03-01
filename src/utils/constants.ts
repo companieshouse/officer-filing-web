@@ -49,6 +49,13 @@ export const PRE_OCTOBER_2009_REMOVED_DATE_TEXT2 = "PRE_OCTOBER_2009_REMOVED_DAT
 export const PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1 = "PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1";
 export const PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2 = "PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2";
 export const DATE_DIRECTOR_REMOVED_LINK = "DATE_DIRECTOR_REMOVED_LINK";
+export const SECURE_OFFICER_HEADER = "SECURE_OFFICER_HEADER";
+export const SECURE_OFFICER_BODY_1 = "SECURE_OFFICER_BODY_1";
+export const SECURE_OFFICER_BODY_2 = "SECURE_OFFICER_BODY_2";
+export const SECURE_OFFICER_WEBFILING_LINK = "SECURE_OFFICER_WEBFILING_LINK";
+export const SECURE_OFFICER_BODY_3 = "SECURE_OFFICER_BODY_3";
+export const SECURE_OFFICER_PAPER_FORM_LINK = "SECURE_OFFICER_PAPER_FORM_LINK";
+export const SECURE_OFFICER_BODY_4 = "SECURE_OFFICER_BODY_4";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",
@@ -108,7 +115,8 @@ export enum STOP_TYPE {
   LIMITED_UNLIMITED = "limited-unlimited",
   PRE_OCTOBER_2009 = "pre-october-2009",
   ETAG = "etag",
-  SOMETHING_WENT_WRONG = "something-went-wrong"
+  SOMETHING_WENT_WRONG = "something-went-wrong",
+  SECURE_OFFICER = "secure-officer"
 }
 
 export enum FILING_DESCRIPTION {
@@ -168,6 +176,13 @@ export const STOP_PAGE_CONTENT =
       pageHeader: "Something went wrong",
       pageBody: `
       <p>You need to <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
+      `
+    },
+    secure_officer: {
+      pageHeader: SECURE_OFFICER_HEADER,
+      pageBody: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+      <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
+      <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `
     }
 }
