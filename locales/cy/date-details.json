@@ -1,8 +1,8 @@
 {
-  "dateDetailsTitle": "to be translated",
-  "dateDetailsInsetText": "to be translated",
-  "dateDetailsDateOfBirth": "to be translated",
-  "dateDetailsDateOfBirthHint": "to be translated",
-  "dateDetailsDateOfAppointment": "to be translated",
-  "dateDetailsDateOfAppointmentHint": "to be translated"
+  "dateDetailsTitle": "Manylion dyddiad",
+  "dateDetailsInsetText": "Byddwn yn dangos mis a blwyddyn geni'r cyfarwyddwr a'r dyddiad y penodwyd y cyfarwyddwr ar gofrestr cyhoeddus Tŷ'r Cwmnïau.",
+  "dateDetailsDateOfBirth": "Beth yw dyddiad geni y cyfarwyddwr?",
+  "dateDetailsDateOfBirthHint": "Er enghraifft, 27 3 1995",
+  "dateDetailsDateOfAppointment": "Pryd cafodd y cyfarwyddwr ei benodi?",
+  "dateDetailsDateOfAppointmentHint": "Er enghraifft, 24 5 2023"
 }

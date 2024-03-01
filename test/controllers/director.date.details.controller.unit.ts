@@ -10,9 +10,6 @@ import app from "../../src/app";
 import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
-import { mockValidationStatusErrorAppointmentDate, mockValidationStatusErrorDob } from "../mocks/validation.status.response.mock";
-import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import * as apiEnumerations from "../../src/utils/api.enumerations";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 
@@ -66,8 +63,8 @@ describe("Director date details controller tests", () => {
         });
 
         const response = await request(app).get(DIRECTOR_DATE_DETAILS_URL + "?lang=cy");
-        expect(response.text).toContain("to be translated");
-  
+        expect(response.text).toContain("Manylion dyddiad");
+
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
