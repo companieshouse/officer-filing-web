@@ -24,6 +24,7 @@ const LENGTH_FIFTY_ERROR = "Nationality must be 50 characters or less";
 
 const ENTER_DIRECTOR_NATIONALITY_ERROR = "Enter the director’s nationality";
 const SELECT_NATIONALITY_FROM_LIST_ERROR = "Select a nationality from the list";
+const INVALID_NATIONALITY_CHARACTER_ERROR = "Start typing, then choose the director’s nationality from the list";
 
 const DIRECTOR_NATIONALITY_URL = DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -73,6 +74,13 @@ describe("Director nationality controller tests", () => {
       const response = await request(app).post(url).send({typeahead_input_0:"western"});
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
       expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality error if nationality has invalid character", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_0:"N^tion1"});
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
     });
 
     it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 

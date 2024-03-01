@@ -14,6 +14,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
+
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const lang = selectLang(req.query.lang);
