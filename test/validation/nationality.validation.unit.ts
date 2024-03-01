@@ -84,6 +84,20 @@ describe("Director nationality controller tests", () => {
     });
 
     it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality error if nationality 2 has invalid character", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_0:"British",typeahead_input_1:"N^tion1"});
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality error if nationality 2 has invalid character", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_0:"British",typeahead_input_1:"Irish",typeahead_input_2:"N^tion1"});
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
     ("should not render nationality error if nationality1 is in the list", async (url) => {
       if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
@@ -185,6 +199,13 @@ describe("Director nationality controller tests", () => {
     it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
     ("should render nationality length error if nationality 1 AND 2 exceeds maximum length 49", async(url) => {
       const response = await request(app).post(url).send({typeahead_input_0:LONG_COUNTRY_NAME,typeahead_input_1:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
+      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
+    ("should render nationality length error if nationality 2 AND 3 exceeds maximum length 49", async(url) => {
+      const response = await request(app).post(url).send({typeahead_input_0:"",typeahead_input_1:LONG_COUNTRY_NAME,typeahead_input_2:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
       expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
       expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
