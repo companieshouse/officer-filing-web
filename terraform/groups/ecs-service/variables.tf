@@ -116,9 +116,6 @@ variable "feature_flag_ch01_web" {
 variable "title_list" {
   type        = string
 }
-variable "feature_flag_remove_director_20022023" {
-  type        = string
-}
 variable "feature_flag_tm01_web" {
   type        = string
 }
