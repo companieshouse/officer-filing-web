@@ -1,7 +1,7 @@
 {
-  "enterDirectorsHomeAddress": "to be translated",
-  "goBackToConfirmDirectorsHomeAddress": "to be translated",
-  "goBackToFindDirectorsHomeAddress": "to be translated",
-  "manualHomeAddressHint" : "to be translated",
-  "manualHomeAddressPublicRegisterInformation" : "to be translated"
+  "enterDirectorsHomeAddress": "Cofnodwch gyfeiriad cartref y cyfarwyddwr",
+  "goBackToConfirmDirectorsHomeAddress": "Ewch nôl i 'Cadarnhewch ble mae'r cyfarwyddwr yn byw'",
+  "goBackToFindDirectorsHomeAddress": "Ewch nôl i 'Dod o hyd i gyfeiriad cartref y cyfarwyddwr'",
+  "manualHomeAddressHint" : "Dywedwch wrthym gyfeiriad cartref y cyfarwyddwr. Rhowch gyfeiriad busnes dim ond os ydynt yn byw yno hefyd.",
+  "manualHomeAddressPublicRegisterInformation" : "Ni fyddwn yn dangos y cyfeiriad hwn ar gofrestr cyhoeddus Tŷ'r Cwmnïau, oni bai ei fod hefyd yn cael ei ddefnyddio ar gyfer cyfeiriad swyddfa gofrestredig y cwmni neu gyfeiriad gohebiaeth y cyfarwyddwr."
 }
