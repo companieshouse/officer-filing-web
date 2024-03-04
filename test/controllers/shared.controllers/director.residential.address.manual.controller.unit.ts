@@ -32,7 +32,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Enter the director&#39;s home address";
-const PAGE_HEADING_WELSH = "to be translated";
+const PAGE_HEADING_WELSH = "Cofnodwch gyfeiriad cartref y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const APPOINT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -282,7 +282,7 @@ describe("Director residential address manual controller tests", () => {
   describe("Welsh language tests", () => {
 
     //get test
-    it.each([[APPOINT_NEXT_PAGE_URL_WELSH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"],[UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"]])
+    it.each([[APPOINT_PAGE_URL_WELSH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"],[UPDATE_PAGE_URL_WELSH, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END + "?lang=cy"]])
     ("Should navigate to director residential address manual page in welsh with backlink containing lang param.", async (url, backLinkUrl) => {
       mockGetOfficerFiling.mockResolvedValue({});
 
