@@ -7,7 +7,7 @@
   "directorNameMiddleNames": "Enwau canol",
   "directorNameMiddleNamesHint": "Cofnodwch enw neu enwau canol llawn y cyfarwyddwr.",
   "directorNameLastName": "Cyfenw",
-  "directorNameTitleLabel": "Teitl proffesiynol neu anrhydeddus (os yn berthnasol)",
+  "directorNameTitleLabel": "Teitl proffesiynol neu anrhydeddus (opsiynol)",
   "directorNameTitleDropdownHint": "Er enghraifft, Doctor neu Athro",
   "directorNameTitleDropdownDefaultText": "Dewiswch deitl",
   "directorNameTitleTypeaheadHint": "Dechreuwch deipio teitl, fel Dr neu Athro, yna dewiswch o’r rhestr.",
