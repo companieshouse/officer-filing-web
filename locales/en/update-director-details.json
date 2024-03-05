@@ -4,6 +4,8 @@
     "updateDirectorDetailsInsetText" : "Any updates you make to a director's details are pending until you’ve submitted this filing, and we’ve accepted it.",
     "updateDirectorDetailsHeading" : "Director details",
     "updateDirectorDetailsUpdate" : "Update",
+    "updateDirectorDetailsUpdatedLabel" : "DETAILS UPDATED",
+    "updateDirectorDetailsUpdatedSubText" : "Pending until submitted and accepted",
     "updateDirectorDetailsName" : "Name",
     "updateDirectorDetailsNationality" : "Nationality",
     "updateDirectorDetailsOccupation" : "Occupation",

@@ -112,7 +112,7 @@ describe("Update Director name controller tests", () => {
 
         const response = await request(app).get(DIRECTOR_NAME_URL + "?lang=cy");
   
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain("Beth yw enw’r cyfarwyddwr?");
       });
 
     });

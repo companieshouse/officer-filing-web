@@ -3,10 +3,10 @@
   "directorCorrespondenceAddressRadioTitleHint": "to be translated",
   "directorCorrespondenceAddressRadioHint": "to be translated",
   "directorCorrespondenceAddressRadioDiffAddress": "to be translated",
-  "directorCorrespondenceAddressRadioInsetHint": "to be translated",
-  "directorCorrespondenceAddressRadioAccordionTitle" :"to be translated",
-  "directorCorrespondenceAddressRadioHaCaAccordionText": "to be translated",
-  "directorCorrespondenceAddressRadioAgentAccordionText": "to be translated",
-  "directorCorrespondenceAddressRadioAgentAccordionLinkText": "to be translated",
-  "directorCorrespondenceAddressRadioAgentOtherAgentAccordionText": "to be translated"
+  "directorCorrespondenceAddressRadioInsetHint": "Byddwn yn dangos y cyfeiriad hwn ar gofrestr cyhoeddus Tŷ'r Cwmnïau.",
+  "directorCorrespondenceAddressRadioAccordionTitle" :"Mae fy nghyfeiriad gohebiaeth yr un fath â fy nghyfeiriad cartref",
+  "directorCorrespondenceAddressRadioHaCaAccordionText": "Ni fyddwn yn dangos eich cyfeiriad cartref ar y gofrestr gyhoeddus. Fodd bynnag, os ydych yn defnyddio eich cyfeiriad cartref fel eich cyfeiriad gohebiaeth, byddwn yn dangos hyn ar y gofrestr gyhoeddus.",
+  "directorCorrespondenceAddressRadioAgentAccordionText": "Os ydych chi'n rhedeg eich cwmni o gartref ac nad ydych am i'ch cyfeiriad cartref fod ar gael i'r cyhoedd, mae yna",
+  "directorCorrespondenceAddressRadioAgentAccordionLinkText": " restr o asiantau sy'n gallu darparu gwasanaethau swyddfa gofrestredig (yn agor mewn tab newydd)",
+  "directorCorrespondenceAddressRadioAgentOtherAgentAccordionText": "Bydd chwiliad cyflym ar-lein yn dangos asiantau eraill sy'n cynnig gwasanaethau tebyg. Bydd pob darparwr yn codi ffi."
 }

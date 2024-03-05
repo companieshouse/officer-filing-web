@@ -1,12 +1,12 @@
 {
-  "directorConfirmCorrespondenceAddressTitle" : "to be translated",
-  "directorConfirmCorrespondenceAddressBackLinkText" : "to be translated",
-  "directorConfirmCorrespondenceAddressEditAddressLink" : "to be translated",
-  "directorConfirmCorrespondenceAddressPublicInfoTitle" : "to be translated",
-  "directorConfirmCorrespondenceAddressPublicInfoDetail" : "to be translated",
-  "directorConfirmCorrespondenceAddressSameAsHomeTitle" : "to be translated",
-  "directorConfirmCorrespondenceAddressSameAsHomeDetail1" : "to be translated",
-  "directorConfirmCorrespondenceAddressSameAsHomeDetail2" : "to be translated",
-  "directorConfirmCorrespondenceAddressSameAsHomeDetail3" : " to be translated",
-  "directorConfirmCorrespondenceAddressSameAsHomeDetail4" : "to be translated"
+  "directorConfirmCorrespondenceAddressTitle" : "Cadernhewch gyfeiriad gohebiaeth y cyfarwyddwr",
+  "directorConfirmCorrespondenceAddressBackLinkText" : "Ewch nôl i 'Dod o hyd i gyfeiriad gohebiaeth y cyfarwyddwr'",
+  "directorConfirmCorrespondenceAddressEditAddressLink" : "Golygu'r cyfeiriad",
+  "directorConfirmCorrespondenceAddressPublicInfoTitle" : "Pa wybodaeth byddwn yn ei ddangos ar-lein ar y gofrestr gyhoeddus",
+  "directorConfirmCorrespondenceAddressPublicInfoDetail" : "Byddwn yn dangos y cyfeiriad hwn ar gofrestr cyhoeddus Tŷ'r Cwmnïau.",
+  "directorConfirmCorrespondenceAddressSameAsHomeTitle" : "Mae fy nghyfeiriad gohebiaeth yr un fath â fy nghyfeiriad cartref",
+  "directorConfirmCorrespondenceAddressSameAsHomeDetail1" : "Ni fyddwn yn dangos eich cyfeiriad cartref ar y gofrestr gyhoeddus. Fodd bynnag, os ydych yn defnyddio eich cyfeiriad cartref fel eich cyfeiriad gohebiaeth, byddwn yn dangos hyn ar y gofrestr gyhoeddus.",
+  "directorConfirmCorrespondenceAddressSameAsHomeDetail2" : "Os ydych chi'n rhedeg eich cwmni o gartref ac nad ydych am i'ch cyfeiriad cartref fod ar gael i'r cyhoedd, mae yna ",
+  "directorConfirmCorrespondenceAddressSameAsHomeDetail3" : " restr o asiantau sy'n gallu darparu gwasanaethau swyddfa gofrestredig (yn agor mewn tab newydd)",
+  "directorConfirmCorrespondenceAddressSameAsHomeDetail4" : "Bydd chwiliad cyflym ar-lein yn dangos asiantau eraill sy'n cynnig gwasanaethau tebyg. Bydd pob darparwr yn codi ffi."
 }
