@@ -35,7 +35,7 @@
   "error-duplicate-nationality2": "to be translated",
   "error-duplicate-nationality3": "to be translated",
   "error-occupation-length": "Rhaid i'r alwedigaeth fod yn 100 nod neu'n llai",
-  "error-occupation-characters": "Rhaid i’r galwedigaeth gynnwys llythrennau a i z a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig.",
+  "error-occupation-characters": "Rhaid i’r galwedigaeth gynnwys llythrennau a i z a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig",
   "error-removal-date-missing-day": "Rhaid i’r dyddiad y cafodd y cyfarwyddwr ei ddileu cynnwys dydd",
   "error-removal-date-missing-month": "Rhaid i'r dyddiad y cafodd y cyfarwyddwr ei ddileu cynnwys mis",
   "error-removal-date-missing-year": "Rhaid i'r dyddiad y cafodd y cyfarwyddwr ei ddileu cynnwys blwyddyn",
