@@ -9,9 +9,11 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
-import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, URL_QUERY_PARAM, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, DIRECTOR_NAME_PATH_END } from "../../types/page.urls";
 import { STOP_TYPE } from "../../utils/constants";
 import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../../utils/format";
+import { FormattedValidationErrors } from "model/validation.model";
+import { LocalesService } from "@companieshouse/ch-node-utils";
 
 export const getDirectorName = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -23,7 +25,6 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
     const locales = getLocalesService();
     let currentUrl;
     let directorName;
-
     if(isUpdate){
       const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
@@ -31,26 +32,49 @@ export const getDirectorName = async (req: Request, res: Response, next: NextFun
     } else {
       currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
     }
-
-    return res.render(templateName, {
-      ...getLocaleInfo(locales, lang),
-      currentUrl: currentUrl,
-      templateName: templateName,
-      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
-      typeahead_array: TITLE_LIST,
-      typeahead_value: officerFiling.title,
-      first_name: officerFiling.firstName,
-      middle_names: officerFiling.middleNames,
-      last_name: officerFiling.lastName,
-      previous_names: officerFiling.formerNames,
-      previous_names_radio: calculatePreviousNamesRadioFromFiling(officerFiling.formerNames),
-      directorName: formatTitleCase(directorName),
-      isUpdate
-    });
+    const errors = res.getErrorMessage(DIRECTOR_NAME_PATH_END, req.headers.referer!, lang);
+    const userData = res.getUserData(DIRECTOR_NAME_PATH_END, req.headers.referer!);
+    if (userData && errors) {
+      const bodyData = {
+        typeahead_value: userData["typeahead_input_0"],
+        first_name: userData["first_name"],
+        middle_names: userData["middle_names"],
+        last_name: userData["last_name"],
+        previous_names: userData["previous_names"],
+        previous_names_radio: calculatePreviousNamesRadioFromFiling(userData["previous_names_radio"]),
+        directorName: userData["directorName"] ? formatTitleCase(userData["directorName"]) : formatTitleCase(directorName),
+        isUpdate: isUpdate
+      }
+      return renderPage(req, res, templateName, bodyData, locales, backUrlPath, lang, currentUrl, officerFiling, errors);    
+    } else {
+      const offficerFilingData = {
+        typeahead_value: officerFiling.title,
+        first_name: officerFiling.firstName,
+        middle_names: officerFiling.middleNames,
+        last_name: officerFiling.lastName,
+        previous_names: officerFiling.formerNames,
+        previous_names_radio: calculatePreviousNamesRadioFromFiling(officerFiling.formerNames),
+        directorName: formatTitleCase(directorName),
+        isUpdate
+      }
+      return renderPage(req, res, templateName, offficerFilingData, locales, backUrlPath, lang, currentUrl, officerFiling);    
+    }
   } catch(e) {
     return next(e)
   }
+}
+
+const renderPage = (req: Request, res: Response, templateName: string, userData: {}, locales: LocalesService, backUrlPath: string, lang: string, currentUrl: any, officerFiling: OfficerFiling, errors?: FormattedValidationErrors) => {
+  return res.render(templateName, {
+    ...getLocaleInfo(locales, lang),
+    currentUrl: currentUrl,
+    errors: errors,
+    templateName: templateName,
+    backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
+    optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
+    ...userData,
+    typeahead_array: TITLE_LIST,
+  });
 }
 
 export const postDirectorName = async (req: Request, res: Response, next: NextFunction, nextPageUrl: string, isUpdate: boolean) => {

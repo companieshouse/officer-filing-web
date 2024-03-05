@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { AP01_ACTIVE, CH01_ACTIVE } from "./utils/properties";
+import { checkValidationToggle } from "./validation/has.toggle.clicked";
 
 const app = express();
 app.disable("x-powered-by");
@@ -52,6 +53,7 @@ app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
 app.use(userAuthRegex, authenticationMiddleware);
 
+app.use(checkValidationToggle);
 app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);

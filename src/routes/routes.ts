@@ -57,6 +57,7 @@ import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.mid
 import { nameValidator } from "../validation/name.validation";
 import { nationalityValidator } from "../validation/nationality.validation";
 import { companyAuthenticationMiddleware } from "../middleware/company.authentication.middleware";
+import { checkValidationToggle } from "../validation/has.toggle.clicked";
 
 export const router: Router = Router();
 
@@ -98,10 +99,10 @@ router.get(urls.REMOVE_DIRECTOR_SUBMITTED, companyAuthenticationMiddleware, remo
 
 router.get(urls.ACCESSIBILITY_STATEMENT, accessibilityStatementRoute.get);
 // AP01
-router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorName.get);
+router.get(urls.DIRECTOR_NAME, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), checkValidationToggle, directorName.get);
 router.post(urls.DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, directorName.post);
 
-router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateDetails.get);
+router.get(urls.DIRECTOR_DATE_DETAILS, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), checkValidationToggle, directorDateDetails.get);
 router.post(urls.DIRECTOR_DATE_DETAILS, companyAuthenticationMiddleware, directorDateDetails.post);
 
 router.get(urls.DIRECTOR_NATIONALITY, isFeatureEnabled(AP01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorNationality.get);
@@ -164,7 +165,7 @@ router.post(urls.UPDATE_DIRECTOR_DETAILS, companyAuthenticationMiddleware, updat
 router.get(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorCheckAnswers.get);
 router.post(urls.UPDATE_DIRECTOR_CHECK_ANSWERS, companyAuthenticationMiddleware, updateDirectorCheckAnswers.post);
 
-router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorName.get);
+router.get(urls.UPDATE_DIRECTOR_NAME, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), checkValidationToggle, updateDirectorName.get);
 router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameValidator, updateDirectorName.post);
 
 router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);

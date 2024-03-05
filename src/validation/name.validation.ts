@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { GenericValidationType, ValidationError } from "../model/validation.model";
+import { FormattedValidationErrors, GenericValidationType, ValidationError } from "../model/validation.model";
 import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
@@ -11,6 +11,8 @@ import { Session } from "@companieshouse/node-session-handler";
 import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { NamedIsoCode } from "@companieshouse/ch-node-utils";
 
 const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
@@ -39,12 +41,14 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         else{
         currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
         }
-
+        
         if(frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
-
+            res.setErrorMessage(frontendValidationErrors);
+            res.setUserData(req);
             return res.render(Templates.DIRECTOR_NAME, {
                 ...getLocaleInfo(locales, lang),
+                ...req.body,
                 currentUrl: currentUrl,
                 templateName: Templates.DIRECTOR_NAME,
                 backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
@@ -66,6 +70,10 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         next(error);
     }
 };
+
+
+
+    
 
 export const validateName = (req: Request, nameValidationType: GenericValidationType, isUpdate: boolean): ValidationError[] => {
     const title = getField(req, DirectorField.TITLE);
