@@ -1,11 +1,11 @@
 {
-  "directorOccupationTitle": "to be translated",
-  "directorOccupationBody": "to be translated",
-  "directorOccupation": "to be translated",
+  "directorOccupationTitle": "Beth yw galwedigaeth y cyfarwyddwr?",
+  "directorOccupationBody": "Mae hyn yn opsiynol. Os na fyddwch yn cofnodi un rhywbeth, byddwn yn dangos galwedigaeth y cyfarwyddwr fel 'dim' ar gofrestr gyhoeddus Tŷ'r Cwmnïau.",
+  "directorOccupation": "Galwedigaeth",
   "directorOccupationDropdownHint": "to be translated",
   "directorOccupationDropdownDefaultText": "to be translated",
-  "directorOccupationTypeaheadHintP1": "to be translated",
-  "directorOccupationTypeaheadHintP2": "to be translated",
-  "directorOccupationPublicRegisterInformationHeading": "to be translated",
-  "directorOccupationPublicRegisterInformation": "to be translated"
+  "directorOccupationTypeaheadHintP1": "Dechreuwch deipio galwedigaeth (er enghraifft, saer) yna dewiswch o'r rhestr.",
+  "directorOccupationTypeaheadHintP2": "Os na ddangosir eich galwedigaeth, gallwch ei chofnodi'n uniongyrchol i'r blwch.",
+  "directorOccupationPublicRegisterInformationHeading": "Pa wybodaeth byddwn yn ei ddangos ar-lein ar y gofrestr gyhoeddus",
+  "directorOccupationPublicRegisterInformation": "Byddwn yn dangos galwedigaeth y cyfarwyddwr ar gofrestr gyhoeddus Tŷ'r Cwmnïau."
 }
