@@ -50,7 +50,6 @@ describe("Error controller test", () => {
     expect(response.text).toContain("Sorry, there is a problem with this service");
   });
 
-
   it("should render the error page in welsh", async () => {
 
     const response = await request(app)
