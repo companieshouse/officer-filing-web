@@ -3,11 +3,20 @@ import { logger } from "../utils/logger";
 import { Templates } from "../types/template.paths";
 import { selectLang, getLocalesService, getLocaleInfo } from "../utils/localise";
 import { urlUtils } from "../utils/url";
-import { SERVICE_ERROR_PATH } from "../types/page.urls";
+import { PAGE_NOT_FOUND_PATH, SERVICE_ERROR_PATH } from "../types/page.urls";
 
 export const pageNotFound = (req: Request, res: Response) => {
-  return res.status(404).render(Templates.ERROR_404, { templateName: Templates.ERROR_404 });
-  };
+
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
+
+  return res.status(404).render(Templates.ERROR_404, 
+    {
+      ...getLocaleInfo(locales, lang),
+      currentUrl:  urlUtils.getUrlToPath(PAGE_NOT_FOUND_PATH, req),
+      templateName: Templates.ERROR_404 
+    });
+};
 
 /**
  * This handler catches any other error thrown within the application.

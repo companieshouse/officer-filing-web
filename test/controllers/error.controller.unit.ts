@@ -4,7 +4,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 import { logger } from "../../src/utils/logger";
-import { SERVICE_ERROR_PATH, CONFIRM_COMPANY_PATH } from "../../src/types/page.urls";
+import { SERVICE_ERROR_PATH, CONFIRM_COMPANY_PATH, PAGE_NOT_FOUND_PATH } from "../../src/types/page.urls";
 import { NextFunction } from "express";
 
 const mockLoggerErrorRequest = logger.errorRequest as jest.Mock;
@@ -24,6 +24,22 @@ describe("Error controller test", () => {
     expect(response.text).toContain(EXPECTED_TEXT);
     expect(response.status).toEqual(404);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+  });
+
+  it("should render the page-not-found page", async () => {
+
+    const response = await request(app)
+      .get(PAGE_NOT_FOUND_PATH);
+
+    expect(response.text).toContain("Page not found");
+  });
+
+  it("should render the page-not-found page in welsh", async () => {
+
+    const response = await request(app)
+      .get(PAGE_NOT_FOUND_PATH + "?lang=cy");
+
+    expect(response.text).toContain("to be translated");
   });
 
   it("should render the error page", async () => {
