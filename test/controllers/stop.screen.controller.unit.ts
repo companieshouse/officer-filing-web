@@ -184,7 +184,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain(ETAG_PAGE_HEADING_WELSH);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
