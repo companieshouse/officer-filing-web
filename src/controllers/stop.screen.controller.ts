@@ -59,6 +59,7 @@ const setContent = async (req: Request, stopType: string) => {
     const locales = getLocalesService();
     const localeInfo = getLocaleInfo(locales, lang);
     const currentBaseUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+    const pageBodyLang = lang === "cy" ? "pageBodyWelsh" : "pageBodyEnglish";
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
@@ -116,7 +117,7 @@ const setContent = async (req: Request, stopType: string) => {
                 ...localeInfo,
                 currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG),
                 pageHeader: STOP_PAGE_CONTENT.etag.pageHeader.replace(new RegExp(ETAG_PAGE_HEADER, 'g'), localeInfo.i18n.stopPageEtagPageHeader),
-                pageBody: STOP_PAGE_CONTENT.etag.pageBody
+                pageBody: STOP_PAGE_CONTENT.etag[pageBodyLang]
                     .replace(new RegExp(ETAG_PAGE_BODY_1, 'g'), localeInfo.i18n.stopPageEtagPageBody1)
                     .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
                     .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
