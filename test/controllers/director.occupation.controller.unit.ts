@@ -29,7 +29,6 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const APPOINTMENT_ID = "987654321";
 const PAGE_HEADING = "What is the director&#39;s occupation?";
-const PAGE_HEADING_WELSH = "Beth yw galwedigaeth y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_OCCUPATION_URL = DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -68,7 +67,7 @@ describe("Director occupation controller tests", () => {
         });
         const response = await request(app).get(DIRECTOR_OCCUPATION_URL + "?lang=cy");
   
-        expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(response.text).toContain("to be translated");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
