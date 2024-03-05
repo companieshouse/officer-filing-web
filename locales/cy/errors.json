@@ -6,7 +6,7 @@
   "error-first-name-characters": "Rhaid i'r enw cyntaf gynnwys llythrennau a i z a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig.",
   "error-first-name-length": "Rhaid i'r enw cyntaf fod yn 50 nod neu lai",
   "error-middle-name-characters": "Rhaid i'r enw neu enwau canol gynnwys llythrennau a i z yn a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig.",
-  "error-middle-name-length": "Rhaid i'r enw cyntaf fod yn 50 nod neu lai",
+  "error-middle-name-length": "Rhaid i’r enwau canol fod yn 50 nod neu lai",
   "error-last-name-blank": "Cofnodwch gyfenw'r cyfarwyddwr",
   "error-last-name-characters": "Rhaid i'r cyfenw gynnwys llythrennau a i z a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau",
   "error-last-name-length": "Rhaid i'r cyfenw fod yn 160 nod neu lai",
