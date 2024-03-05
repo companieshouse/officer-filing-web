@@ -30,7 +30,17 @@ import {
     SECURE_OFFICER_WEBFILING_LINK,
     SECURE_OFFICER_BODY_3,
     SECURE_OFFICER_PAPER_FORM_LINK,
-    SECURE_OFFICER_BODY_4
+    SECURE_OFFICER_BODY_4,
+    LIMITED_UNLIMITED_BODY_1,
+    LIMITED_UNLIMITED_BODY_2,
+    LIMITED_UNLIMITED_BODY_3,
+    LIMITED_UNLIMITED_LTD,
+    LIMITED_UNLIMITED_PLC,
+    LIMITED_UNLIMITED_ULC,
+    LIMITED_UNLIMITED_BODY_4,
+    LIMITED_UNLIMITED_BODY_5,
+    LIMITED_UNLIMITED_BODY_6,
+    LIMITED_UNLIMITED_BODY_7
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -80,8 +90,23 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.LIMITED_UNLIMITED: { 
             return {
-                pageHeader: STOP_PAGE_CONTENT.limitedUnlimited.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.limitedUnlimited.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(req.originalUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.LIMITED_UNLIMITED),
+                pageHeader: localeInfo.i18n.stopPageLimitedUnlimitedHeader,
+                pageBody: STOP_PAGE_CONTENT.limitedUnlimited.pageBody
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_1, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody1)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_2, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody2)
+                    .replace(new RegExp(LIMITED_UNLIMITED_LTD, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedLtd)
+                    .replace(new RegExp(LIMITED_UNLIMITED_PLC, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedPlc)
+                    .replace(new RegExp(LIMITED_UNLIMITED_ULC, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedUlc)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_3, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody3)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_4, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody4)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_5, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody5)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_6, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody6)
+                    .replace(new RegExp(LIMITED_UNLIMITED_BODY_7, 'g'), localeInfo.i18n.stopPageLimitedUnlimitedBody7)
+                    .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
+                    .replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.PRE_OCTOBER_2009: {

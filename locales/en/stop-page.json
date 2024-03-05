@@ -20,5 +20,16 @@
     "stopPageSecureOfficerWebFilingLink": "WebFiling",
     "stopPageSecureOfficerPaperFormLink": "Change of director's details paper form ",
     "stopPageSecureOfficerFilePaperForm": " or file a ",
-    "stopPageSecureOfficerBody4": "instead."
+    "stopPageSecureOfficerBody4": "instead.",
+    "stopPageLimitedUnlimitedHeader": "Only limited and unlimited companies can use this service",
+    "stopPageLimitedUnlimitedBody1": "You can only file director updates for",
+    "stopPageLimitedUnlimitedBody2": "using this service if it's a:",
+    "stopPageLimitedUnlimitedLtd": "private limited company",
+    "stopPageLimitedUnlimitedPlc": "public limited company",
+    "stopPageLimitedUnlimitedUlc": "private unlimited company",
+    "stopPageLimitedUnlimitedBody3": "To make an update for",
+    "stopPageLimitedUnlimitedBody4": "you may find the form or service you need in the",
+    "stopPageLimitedUnlimitedBody5": "list of Companies House forms",
+    "stopPageLimitedUnlimitedBody6": "If this is the wrong company",
+    "stopPageLimitedUnlimitedBody7": "go back and enter a different company number"
 }
