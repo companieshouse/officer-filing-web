@@ -40,7 +40,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Find the director&#39;s home address";
-const WELSH_PAGE_HEADING = "Dod o hyd i gyfeiriad gohebiaeth y cyfarwyddwr";
+const WELSH_PAGE_HEADING = "Dod o hyd i gyfeiriad cartref y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
