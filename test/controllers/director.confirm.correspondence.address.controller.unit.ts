@@ -54,13 +54,15 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
- it("Should display the confirm director details page in Welsh", async () => {
+
+ it("Should display the director confirm correspondence address page in Welsh", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
            directorName: "John Smith"
       })
 
       const response = await request(app).get(PAGE_URL + "?lang=cy");
       expect(response.text).toContain(PAGE_HEADING_WELSH);
+
 
     });
 
