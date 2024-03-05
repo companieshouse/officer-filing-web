@@ -31,6 +31,7 @@ const NEXT_PAGE_URL = DIRECTOR_DATE_OF_CHANGE_PATH
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_HEADING = "View and update the director&#39;s details";
+const PAGE_HEADING_WELSH = "Gweld a diweddaru manylion y cyfarwyddwr";
 
 describe("Director details tests", () => {
 
@@ -66,7 +67,7 @@ describe("Director details tests", () => {
 
     it("Should display the update director details page in Welsh", async () => {
       const response = await request(app).get(PAGE_URL_WELSH);
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
 
     });
 
