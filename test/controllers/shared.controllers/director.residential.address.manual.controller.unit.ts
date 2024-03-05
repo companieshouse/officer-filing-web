@@ -305,7 +305,7 @@ describe("Director residential address manual controller tests", () => {
 
       const response = await request(app).post(url).send({});
 
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Cofnodwch enw neu rif eiddo");
     });
   });
 });

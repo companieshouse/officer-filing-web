@@ -24,6 +24,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Confirm the director&#39;s correspondence address";
+const PAGE_HEADING_WELSH = "Cadernhewch gyfeiriad gohebiaeth y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -53,13 +54,13 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 
- it("Should display the update director details page in Welsh", async () => {
+ it("Should display the confirm director details page in Welsh", async () => {
       mockGetOfficerFiling.mockResolvedValueOnce({
            directorName: "John Smith"
       })
 
       const response = await request(app).get(PAGE_URL + "?lang=cy");
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
 
     });
 
