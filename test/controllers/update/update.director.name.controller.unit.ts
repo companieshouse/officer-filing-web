@@ -118,7 +118,6 @@ describe("Update Director name controller tests", () => {
     });
 
     describe("post tests", () => {
-      // comment to kick off build
 
       // Validate all fields change one by one in order to fix the sonar coverage issue (due to OR condition)
 
