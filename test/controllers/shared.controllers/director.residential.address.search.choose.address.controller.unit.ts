@@ -313,6 +313,7 @@ describe("Director residential address array page controller tests", () => {
         const response = await request(app).get(url);
 
         expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(response.text).not.toContain("to be translated");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain(backLink);
       });

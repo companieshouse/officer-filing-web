@@ -34,7 +34,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Choose an address";
-const PAGE_HEADING_WELSH = "to be translated";
+const PAGE_HEADING_WELSH = "Dewiswch gyfeiriad";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const SELECT_ADDRESS_ERROR = "Select the director’s correspondence address";
 const SELECT_ADDRESS_ERROR_WELSH = "to be translated";
@@ -314,6 +314,7 @@ describe("Director correspondence address array page controller tests", () => {
         const response = await request(app).get(url);
 
         expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(response.text).not.toContain("to be translated");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain(backLink);
       });
