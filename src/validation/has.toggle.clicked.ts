@@ -21,11 +21,10 @@ export const checkValidationToggle = (req: Request, res: Response, next: NextFun
   } 
  
   res.getErrorMessage = function(currentUrl: string, referrerUrl: string, lang: string) {
-    let errorMessage;
-    if (req.app.locals.errorMessage) {
-      errorMessage = req.app.locals.errorMessage;
+    if (referrerUrl && !referrerUrl.includes(currentUrl.replace('/', ""))) {
+      delete req.app.locals.errorMessage;
     }
-    return errorMessage ? formatValidationErrors(errorMessage, lang) : undefined;
+    return req.app.locals.errorMessage ? formatValidationErrors(req.app.locals.errorMessage, lang) : undefined;
   }
 
   res.setUserData =  function(req: Request) {
@@ -34,7 +33,7 @@ export const checkValidationToggle = (req: Request, res: Response, next: NextFun
 
   res.getUserData = function(currentUrl: string, referrerUrl: string) {
     if (referrerUrl && !referrerUrl.includes(currentUrl.replace('/', ""))) {
-      req.app.locals.userData = undefined;
+      delete req.app.locals.userData;
     }
     return req.app.locals.userData;
   }
