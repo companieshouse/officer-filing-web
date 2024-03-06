@@ -26,6 +26,7 @@ const PRE_OCTOBER_2009_PAGE_HEADING_WELSH = "Rhaid i gyfarwyddwyr a chafodd ei d
 const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009.";
 const PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH = "Mae'r dyddiad y cafodd y cyfarwyddwr ei ddileu cyn 1 Hydref 2009.";
 const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
+const ETAG_PAGE_HEADING_WELSH = "Mae rhywun eisoes wedi gwneud diweddariadau i'r cyfarwyddwr hwn";
 const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details.";
 const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
 const SOMETHING_WENT_WRONG_BODY_TEXT= "<p>You need to <a href=\"/appoint-update-remove-company-officer\" data-event-id=\"start-the-service-again-link\">start the service again</a>.</p>";
@@ -183,7 +184,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain(ETAG_PAGE_HEADING_WELSH);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
