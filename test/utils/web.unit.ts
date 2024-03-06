@@ -15,6 +15,7 @@ import {
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
+import { Session } from "@companieshouse/node-session-handler";
 
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
@@ -167,7 +168,7 @@ describe('setRedirectLink', () => {
 
   describe('getDirectorNameBasedOnJourney', () => {
     it('should retrieve director name from appointment if isUpdate is true', async () => {
-      const mockSession = { transactionId: '123', submissionId: '456' };
+      const mockSession = { transactionId: '123', submissionId: '456' } as any as Session;
       const mockReq: Request = {}  as Request;
       mockReq.params = { PARAM_COMPANY_NUMBER: "12345678" };
 
@@ -191,7 +192,7 @@ describe('setRedirectLink', () => {
 
     it('should retrieve director name from filing if isUpdate is false', async () => {
       const mockReq : Request = { body: {} } as Request;
-      const mockSession = {};
+      const mockSession = {} as any as Session;
       const mockOfficerFiling = { 
         referenceAppointmentId: '123', 
         firstName: "John",

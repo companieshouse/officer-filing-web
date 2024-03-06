@@ -56,6 +56,16 @@ export const SECURE_OFFICER_WEBFILING_LINK = "SECURE_OFFICER_WEBFILING_LINK";
 export const SECURE_OFFICER_BODY_3 = "SECURE_OFFICER_BODY_3";
 export const SECURE_OFFICER_PAPER_FORM_LINK = "SECURE_OFFICER_PAPER_FORM_LINK";
 export const SECURE_OFFICER_BODY_4 = "SECURE_OFFICER_BODY_4";
+export const LIMITED_UNLIMITED_BODY_1 = "LIMITED_UNLIMITED_BODY_1";
+export const LIMITED_UNLIMITED_BODY_2 = "LIMITED_UNLIMITED_BODY_2";
+export const LIMITED_UNLIMITED_LTD = "LIMITED_UNLIMITED_LTD";
+export const LIMITED_UNLIMITED_PLC = "LIMITED_UNLIMITED_PLC";
+export const LIMITED_UNLIMITED_ULC = "LIMITED_UNLIMITED_ULC";
+export const LIMITED_UNLIMITED_BODY_3 = "LIMITED_UNLIMITED_BODY_3";
+export const LIMITED_UNLIMITED_BODY_4 = "LIMITED_UNLIMITED_BODY_4";
+export const LIMITED_UNLIMITED_BODY_5 = "LIMITED_UNLIMITED_BODY_5";
+export const LIMITED_UNLIMITED_BODY_6 = "LIMITED_UNLIMITED_BODY_6";
+export const LIMITED_UNLIMITED_BODY_7 = "LIMITED_UNLIMITED_BODY_7";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",
@@ -143,17 +153,16 @@ export const STOP_PAGE_CONTENT =
         `
     },
     limitedUnlimited:{
-        pageHeader: "Only limited and unlimited companies can use this service",
-        pageBody: `<p>You can only file director updates for ` + COMPANY_NAME_PLACEHOLDER + ` using this service if it's a:</p>
+        pageBody: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
         <ul>
-            <li>private limited company</li>
-            <li>public limited company</li>
-            <li>private unlimited company</li>
+            <li>`+ LIMITED_UNLIMITED_LTD + `</li>
+            <li>`+ LIMITED_UNLIMITED_PLC +`</li>
+            <li>`+ LIMITED_UNLIMITED_ULC +`</li>
         </ul>  
 
-        <p>To make an update for ` + COMPANY_NAME_PLACEHOLDER + `, you may find the form or service you need in the <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">list of Companies House forms</a>.</p>
-        <p>If this is the wrong company, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">go back and enter a different company number</a>.</p>
-        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
+        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, `+ LIMITED_UNLIMITED_BODY_4 +` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">`+ LIMITED_UNLIMITED_BODY_5 +`</a>.</p>
+        <p>`+ LIMITED_UNLIMITED_BODY_6 +`, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 +`</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>`+ STOP_PAGE_CONTACT_US_TEXT + `</p>
         `
     },
     pre_october_2009:{

@@ -221,4 +221,14 @@ describe("Stop screen controller tests", () => {
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
+
+  it("Should navigate to prohibited company type stop screen in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
+
+    expect(response.text).toContain("to be translated");
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+  });
 });
