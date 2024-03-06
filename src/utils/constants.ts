@@ -176,10 +176,13 @@ export const STOP_PAGE_CONTENT =
     },
     etag:{
       pageHeader: ETAG_PAGE_HEADER,
-      pageBody: `<p>` + ETAG_PAGE_BODY_1 + `</p>
+      pageBodyEnglish: `<p>` + ETAG_PAGE_BODY_1 + `</p>
       <p>` + ETAG_PAGE_BODY_2 + `<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
-      `
+      `,
+      pageBodyWelsh: `<p>` + ETAG_PAGE_BODY_1 + `</p>
+      <p>` + ETAG_PAGE_BODY_2 + `<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
+      <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     somethingWentWrong:{
       pageHeader: "Something went wrong",
