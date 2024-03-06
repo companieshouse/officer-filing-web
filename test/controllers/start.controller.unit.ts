@@ -3,6 +3,7 @@ import request from "supertest";
 import app from "../../src/app";
 
 const EXPECTED_TEXT = "Before you start";
+const PAGE_HEADING_WELSH = "Penodi, diweddaru a dileu cyfarwyddwr cwmni";
 
 describe("start controller tests", () => {
 
@@ -30,7 +31,7 @@ describe("start controller tests", () => {
         const response = await request(app)
               .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
   });
 
 });

@@ -1,8 +1,8 @@
 {
-  "directorCorrespondenceAddressRadioTitle": "to be translated",
-  "directorCorrespondenceAddressRadioTitleHint": "to be translated",
-  "directorCorrespondenceAddressRadioHint": "to be translated",
-  "directorCorrespondenceAddressRadioDiffAddress": "to be translated",
+  "directorCorrespondenceAddressRadioTitle": "Beth yw cyfeiriad gohebiaeth y cyfarwyddwr?",
+  "directorCorrespondenceAddressRadioTitleHint": "Byddwn yn defnyddio'r cyfeiriad hwn i anfon post Tŷ'r Cwmnïau at y cyfarwyddwr. Gallwch ddefnyddio cyfeiriad busnes neu gyfeiriad cartref ac nid oes rhaid iddo fod yn y DU.",
+  "directorCorrespondenceAddressRadioHint": "Dyma gyfeiriad swyddfa gofrestredig y cwmni",
+  "directorCorrespondenceAddressRadioDiffAddress": "Cyfeiriad gwahanol",
   "directorCorrespondenceAddressRadioInsetHint": "Byddwn yn dangos y cyfeiriad hwn ar gofrestr cyhoeddus Tŷ'r Cwmnïau.",
   "directorCorrespondenceAddressRadioAccordionTitle" :"Mae fy nghyfeiriad gohebiaeth yr un fath â fy nghyfeiriad cartref",
   "directorCorrespondenceAddressRadioHaCaAccordionText": "Ni fyddwn yn dangos eich cyfeiriad cartref ar y gofrestr gyhoeddus. Fodd bynnag, os ydych yn defnyddio eich cyfeiriad cartref fel eich cyfeiriad gohebiaeth, byddwn yn dangos hyn ar y gofrestr gyhoeddus.",
