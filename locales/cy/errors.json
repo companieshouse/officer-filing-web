@@ -56,7 +56,7 @@
   "error-postal-code-full-invalid": "Cofnodwch god post yn y Deyrnas Unedig. Os yw'r cyfeiriad y tu allan i'r Deyrnas Unedig, cofnodwch y cyfeiriad â llaw",
   "error-premises-characters": "Rhaid i enw neu rif eiddo gynnwys llythrennau a i z a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig",
   "error-premises-length": "Rhaid i enw neu rif eiddo fod yn 200 nod neu lai",
-  "error-correspondence-address-blank": "to be translated",
+  "error-correspondence-address-blank": "Dewiswch gyfeiriad gohebiaeth y cyfarwyddwr",
   "error-dob-date-missing-day": "Rhaid i'r dyddiad geni gynnwys diwrnod",
   "error-dob-date-missing-month": "Rhaid i'r dyddiad geni gynnwys mis",
   "error-dob-date-missing-year": "Rhaid i'r dyddiad geni gynnwys blwyddyn",
