@@ -52,18 +52,17 @@ describe("Appoint director submitted controller tests", () => {
         expect(response.text).toContain(PAGE_HEADING);
       });
 
-       it("Should render the page in welsh", async () => {
-              mockGetOfficerFiling.mockReturnValueOnce({
-                 firstName: "John",
-                 middleNames: "Elizabeth",
-                 lastName: "Doe",
-                 appointedOn: "08/08/2008"
-               })
+      it("Should render the page in welsh", async () => {
+        mockGetOfficerFiling.mockReturnValueOnce({
+          firstName: "John",
+          middleNames: "Elizabeth",
+          lastName: "Doe",
+          appointedOn: "08/08/2008"
+        })
 
-              const response = await request(app).get(PAGE_URL + "?lang=cy");
-                   expect(response.text).toContain("to be translated");
-
-       });
+        const response = await request(app).get(PAGE_URL + "?lang=cy");
+        expect(response.text).toContain("Penodiad wedi ei gyflwyno");
+      });
 
       it("Should navigate to error page when feature flag is off", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
