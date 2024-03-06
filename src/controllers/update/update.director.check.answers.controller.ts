@@ -104,7 +104,7 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     directorNameCompanyAppointment: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     occupation:  formatTitleCase(officerFiling.occupation),
-    dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
+    dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate, lang),
     nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
     nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
