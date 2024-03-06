@@ -46,7 +46,7 @@ const PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
 const NEXT_PAGE_URL = UPDATE_DIRECTOR_SUBMITTED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID) + "?lang=en";
   const OCCUPATION_PAGE_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -173,7 +173,7 @@ describe("Director check your answers controller tests", () => {
       mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       const response = await request(app).post(PAGE_URL);
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=dissolved`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=dissolved&lang=en`)
     }),
 
     it("Should redirect to etag stop screen if etag does not match", async () => {
@@ -183,7 +183,7 @@ describe("Director check your answers controller tests", () => {
       mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       const response = await request(app).post(PAGE_URL);
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=etag`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=etag&lang=en`)
     });
 
     it("Should redirect to something went wrong stop screen if api validation fails", async () => {
@@ -196,7 +196,7 @@ describe("Director check your answers controller tests", () => {
       const response = await request(app).post(PAGE_URL);
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=something-went-wrong`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=something-went-wrong&lang=en`)
     });
   });
 
