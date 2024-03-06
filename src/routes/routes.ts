@@ -31,6 +31,7 @@ import * as removeDirectorCheckAnswers from "../controllers/remove.director.chec
 import * as removeDirector from "../controllers/remove.director.controller";
 import * as removeDirectorSubmitted from "../controllers/remove.director.submitted.controller";
 import * as signoutRoute from "../controllers/signout.controller";
+import * as serviceError from "../controllers/error.controller";
 import * as startRoute from "../controllers/start.controller";
 import * as stopPathRoute from "../controllers/stop.screen.controller";
 import * as updateDirectorDetail from "../controllers/update/update.director.details.controller";
@@ -80,6 +81,8 @@ router.get(urls.CREATE_TRANSACTION, companyAuthenticationMiddleware, createTrans
 
 router.get(urls.CURRENT_DIRECTORS, companyAuthenticationMiddleware, activeDirectors.get);
 router.post(urls.CURRENT_DIRECTORS, companyAuthenticationMiddleware, activeDirectors.post);
+
+router.get(urls.SERVICE_ERROR_PAGE, serviceError.get);
 
 router.get(urls.SIGNOUT_PATH, signoutRoute.get);
 router.post(urls.SIGNOUT_PATH, signoutRoute.post);
