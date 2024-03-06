@@ -1,15 +1,15 @@
 {
-  "directorProtectedDetailsTitle": "to be translated",
-  "directorProtectedDetailsBackLinkText": "to be translated",
-  "directorProtectedDetailsProtectedDetails": "to be translated",
-  "directorProtectedDetailsProtectedDetailsHint": "to be translated",
-  "directorProtectedDetailsProtectedDetailsNo": "to be translated",
-  "directorProtectedDetailsProtectedDetailsYes": "to be translated",
-  "directorProtectedDetailsProtectedDetailsYesHint": "to be translated",
-  "directorProtectedDetailsProtectedDetailsInsetText": "to be translated",
-  "directorProtectedDetailsProtectedDetailsAccordianDetails1": "to be translated",
-  "directorProtectedDetailsProtectedDetailsAccordianDetails2": "to be translated",
-  "directorProtectedDetailsProtectedDetailsAccordianDetails3": "to be translated",
-  "directorProtectedDetailsProtectedDetailsAccordianDetails4": "to be translated",
-  "directorProtectedDetailsProtectedDetailsGovUKDetails": "to be translated"
+  "directorProtectedDetailsTitle": "A yw gwybodaeth bersonol y cyfarwyddwr wedi'i diogelu yn Nhŷ'r Cwmnïau?",
+  "directorProtectedDetailsBackLinkText": "Ewch nôl i 'Ble mae'r cyfarwyddwr yn byw?'",
+  "directorProtectedDetailsProtectedDetails": "A yw gwybodaeth bersonol y cyfarwyddwr wedi'i diogelu yn Nhŷ'r Cwmnïau?",
+  "directorProtectedDetailsProtectedDetailsHint": "Mae hyn yn cynnwys os ydynt yn aros am ganlyniadau cais i ddiogelu eu gwybodaeth bersonol",
+  "directorProtectedDetailsProtectedDetailsNo": "Na",
+  "directorProtectedDetailsProtectedDetailsYes": "Ydy",
+  "directorProtectedDetailsProtectedDetailsYesHint": "Bydd angen i ni wirio bod y cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion, felly bydd eich cyflwyniad yn cymryd mwy o amser i'w brosesu.",
+  "directorProtectedDetailsProtectedDetailsInsetText": "Byddwn yn gwrthod eich ffeilio os dewiswch 'Ydy' ac nid yw'r cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion.",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails1": "Gall rhai cyfarwyddwyr wneud cais i ddiogelu gwybodaeth bersonol rhag cael ei dangos ar gofrestr ar-lein gyhoeddus Tŷ'r Cwmnïau os ydynt yn bodloni meini prawf penodol.",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails2": "Dylech ddewis 'ydy' dim ond os yw'r cyfarwyddwr wedi:",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails3": "darparu tystiolaeth eu bod yn gymwys i sicrhau bod eu manylion yn cael eu diogelu",
+  "directorProtectedDetailsProtectedDetailsAccordianDetails4": "talu'r ffi o £100",
+  "directorProtectedDetailsProtectedDetailsGovUKDetails": "Beth mae diogelu gwybodaeth bersonol yn ei olygu"
 }
