@@ -56,7 +56,7 @@ describe("Director date of change controller tests", () => {
           forename: "John",
           otherForenames: "mid",
           surname: "Smith"
-           });
+        });
     
         mockGetOfficerFiling.mockResolvedValueOnce({})
     
@@ -73,7 +73,7 @@ describe("Director date of change controller tests", () => {
           forename: "John",
           otherForenames: "mid",
           surname: "Smith"
-           });
+        });
     
         mockGetOfficerFiling.mockResolvedValueOnce({})
     
@@ -90,7 +90,7 @@ describe("Director date of change controller tests", () => {
           forename: "John",
           otherForenames: "mid",
           surname: "Smith"
-           });
+        });
     
         mockGetOfficerFiling.mockResolvedValueOnce({
           checkYourAnswersLink: "update-director-check-answers"
