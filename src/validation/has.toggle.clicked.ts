@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, application } from "express";
 import { FormattedValidationErrors, ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "./validation";
 
@@ -14,32 +14,29 @@ declare global {
   }
 }
 
-let globalError: ValidationError[] | undefined;
-let globalUserData;
-
 export const checkValidationToggle = (req: Request, res: Response, next: NextFunction) => {
-  
-  res.setErrorMessage =  function(error: ValidationError[]) {
-    globalError = error;
-  }
+
+  res.setErrorMessage = (error: ValidationError[]) => {
+    req.app.locals.errorMessage = error;
+  } 
  
   res.getErrorMessage = function(currentUrl: string, referrerUrl: string, lang: string) {
-    if (referrerUrl && !referrerUrl.includes(currentUrl.replace('/', ""))) {
-      globalError = undefined;
+    let errorMessage;
+    if (req.app.locals.errorMessage) {
+      errorMessage = req.app.locals.errorMessage;
     }
-    return globalError ? formatValidationErrors(globalError, lang) : undefined;
+    return errorMessage ? formatValidationErrors(errorMessage, lang) : undefined;
   }
 
   res.setUserData =  function(req: Request) {
-    globalUserData = req.body;
+    req.app.locals.userData = req.body;
   }
 
   res.getUserData = function(currentUrl: string, referrerUrl: string) {
     if (referrerUrl && !referrerUrl.includes(currentUrl.replace('/', ""))) {
-      globalUserData = undefined;
+      req.app.locals.userData = undefined;
     }
-    return globalUserData;
+    return req.app.locals.userData;
   }
-  
   next();
 }
