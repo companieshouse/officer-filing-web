@@ -1,13 +1,13 @@
 {
-    "signoutTitle": "to be translated",
-    "signoutDetailsErrorMsg": "to be translated",
-    "signoutErrorSummaryTitle": "to be translated",
-    "signoutErrorSummaryText": "to be translated",
-    "signoutCH01JourneyHintText": "to be translated",
-    "signoutAP01JourneyHintText": "to be translated",
-    "signoutRadioLegend": "to be translated",
-    "signoutYesButtonText": "to be translated",
-    "signoutNoButtonText": "to be translated",
-    "signoutNoInputError": "to be translated"
+    "signoutTitle": "Ydych chi'n siŵr eich bod eisiau allgofnodi?",
+    "signoutDetailsErrorMsg": "Dewiswch ydw os ydych am allgofnodi",
+    "signoutErrorSummaryTitle": "Mae yna broblem",
+    "signoutErrorSummaryText": "Dewiswch ydw os ydych am allgofnodi",
+    "signoutCH01JourneyHintText": "Ni fydd eich atebion yn cael eu cadw. Bydd angen i chi ddechrau eto os ydych am benodi, diweddaru neu ddileu cyfarwyddwr cwmni.",
+    "signoutAP01JourneyHintText": "Ni fydd eich atebion yn cael eu cadw. Bydd angen i chi ddechrau eto os ydych am benodi neu ddileu cyfarwyddwr cwmni.",
+    "signoutRadioLegend": "Ydych chi'n siŵr eich bod eisiau allgofnodi?",
+    "signoutYesButtonText": "Ydw",
+    "signoutNoButtonText": "Na",
+    "signoutNoInputError": "Dewiswch ydw os ydych am allgofnodi"
 
 }
