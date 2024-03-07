@@ -83,7 +83,7 @@
   "error-no-protected-details-radio-button-selected" : "Dewiswch a yw'r cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion yn Nhŷ'r Cwmnïau",
   "error-consent-to-act-as-director" : "to be translated",
   "error-residential-address-blank": "to be translated",
-  "error-residential-address-to-correspondence-address-link-no-radio-selected" : "to be translated",
+  "error-residential-address-to-correspondence-address-link-no-radio-selected" : "Dewiswch Ydw os bydd cyfeiriad y swyddfa gofrestredig yn newid yn y dyfodol, ac rydych am i hyn fod yn berthnasol i'ch cyfeiriad gohebiaeth hefyd",
   "error-premises-blank": "Cofnodwch enw neu rif eiddo",
   "error-address-line-one-blank": "Cofnodwch gyfeiriad",
   "error-address-line-one-characters": "Rhaid i linell cyfeiriad 1 gynnwys llythrennau a i z  a nodau arbennig cyffredin fel cysylltnodau, bylchau a chollnodau yn unig",
