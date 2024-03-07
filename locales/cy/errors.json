@@ -81,7 +81,7 @@
   "error-appointment-date-underage" : "Gallwch benodi person fel cyfarwyddwr dim ond os yw’n 16 oed o leiaf",
   "error-appointment-date-missing" : "Cofnodwch y dyddiad y penodwyd y cyfarwyddwr",
   "error-no-protected-details-radio-button-selected" : "Dewiswch a yw'r cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion yn Nhŷ'r Cwmnïau",
-  "error-consent-to-act-as-director" : "to be translated",
+  "error-consent-to-act-as-director" : "Dewiswch os ydych yn cadarnhau, drwy gyflwyno'r wybodaeth hon, bod y person a enwir wedi cydsynio i weithredu fel cyfarwyddwr",
   "error-residential-address-blank": "to be translated",
   "error-residential-address-to-correspondence-address-link-no-radio-selected" : "to be translated",
   "error-premises-blank": "Cofnodwch enw neu rif eiddo",
