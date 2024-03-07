@@ -15,8 +15,11 @@
 
     <p class="govuk-body-m">{{ i18n.serviceErrorTryAgainLater }}</p>
     <p>{{ i18n.serviceErrorNotSavedAnswers }}</p>
-
-    <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContact }}</a> {{  i18n.serviceErrorIfAnyQuestions }}
+{% if lang === "en" %}
+    <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContactLink }}</a> {{  i18n.serviceErrorIfAnyQuestionsText }}
+{% elif lang === "cy" %}
+{{  i18n.serviceErrorIfAnyQuestionsText }} <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContactLink }}</a>.
+{% endif %}
   </div>
 </div>
 {% endblock %}

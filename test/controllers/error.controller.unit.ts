@@ -55,7 +55,7 @@ describe("Error controller test", () => {
     const response = await request(app)
       .get(SERVICE_ERROR_PATH + "?lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain("Mae&#39;n ddrwg gennym, mae problem gyda&#39;r gwasanaeth");
   });
 
   it("Should render the error page on error", async () => {

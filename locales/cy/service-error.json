@@ -1,7 +1,7 @@
 {
-  "serviceErrorSorry": "to be translated",
-  "serviceErrorTryAgainLater": "to be translated",
-  "serviceErrorNotSavedAnswers": "to be translated",
-  "serviceErrorContact": "to be translated",
-  "serviceErrorIfAnyQuestions": "to be translated"
+  "serviceErrorSorry": "Mae'n ddrwg gennym, mae problem gyda'r gwasanaeth",
+  "serviceErrorTryAgainLater": "Ceisiwch eto yn nes ymlaen.",
+  "serviceErrorNotSavedAnswers": "Nid ydym wedi cadw eich atebion. Pan fydd y gwasanaeth ar gael, bydd yn rhaid i chi ddechrau eto.",
+  "serviceErrorContactLink": "cysylltwch â Thŷ'r Cwmnïau",
+  "serviceErrorIfAnyQuestionsText": "Os oes gennych unrhyw gwestiynau, "
 }
