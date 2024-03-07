@@ -1,9 +1,9 @@
 {
-  "directorHomeAddressRadioTitle": "to be translated",
-  "directorHomeAddressRadioTitleHint": "to be translated",
-  "directorHomeAddressCorrespondenceAddressHint": "to be translated",
-  "directorHomeAddressRegisteredOfficeaddressRadioHint": "to be translated",
-  "directorHomeAddressDifferentAddressRadioLabel": "to be translated",
-  "directorHomeAddressRadioInsetText": "to be translated",
-  "directorResidentialAddressBackLinkText": "to be translated"
+  "directorHomeAddressRadioTitle": "Ble mae’r cyfarwyddwr yn byw?",
+  "directorHomeAddressRadioTitleHint": "Dywedwch wrthym gyfeiriad cartref y cyfarwyddwr. Rhowch gyfeiriad busnes dim ond os ydynt yn byw yno hefyd.",
+  "directorHomeAddressCorrespondenceAddressHint": "Dyma cyfeiriad gohebiaeth y cyfarwyddwr",
+  "directorHomeAddressRegisteredOfficeaddressRadioHint": "Dyma gyfeiriad swyddfa gofrestredig y cwmni",
+  "directorHomeAddressDifferentAddressRadioLabel": "Cyfeiriad gwahanol",
+  "directorHomeAddressRadioInsetText": "Byddwn yn dangos y wlad y mae'r cyfarwyddwr yn byw ynddi ar gofrestr gyhoeddus Tŷ'r Cwmnïau. Ni fyddwn yn dangos y cyfeiriad cyfan, oni bai ei fod hefyd yn cael ei ddefnyddio ar gyfer cyfeiriad swyddfa gofrestredig y cwmni neu gyfeiriad gohebiaeth y cyfarwyddwr.",
+  "directorResidentialAddressBackLinkText": "Ewch nôl i 'Dod o hyd i gyfeiriad gohebiaeth y cyfarwyddwr'"
 }
