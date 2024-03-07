@@ -2,11 +2,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% block pageTitle %}
-  {% if CH01_ACTIVE === "true" %}
-    {{ i18n.appTitle }} - {{i18n.govUK}}
-  {% else %}
-    {{ i18n.appTitleAppointRemove }} - {{i18n.govUK}}
-  {% endif %}
+ {% include "includes/page-title.html" %}
 {% endblock %}
 
 {% block signoutBar %}

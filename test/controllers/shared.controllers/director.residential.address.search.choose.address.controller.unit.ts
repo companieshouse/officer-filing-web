@@ -33,10 +33,10 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Choose an address";
-const PAGE_HEADING_WELSH = "to be translated";
+const PAGE_HEADING_WELSH = "Dewiswch gyfeiriad cartref";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const SELECT_ADDRESS_ERROR = "Select the address where the director lives";
-const SELECT_ADDRESS_ERROR_WELSH = "to be translated";
+const SELECT_ADDRESS_ERROR_WELSH = "Dewiswch y cyfeiriad lle mae&#39;r cyfarwyddwr yn byw";
 const APPOINT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -313,6 +313,7 @@ describe("Director residential address array page controller tests", () => {
         const response = await request(app).get(url);
 
         expect(response.text).toContain(PAGE_HEADING_WELSH);
+        expect(response.text).not.toContain("to be translated");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         expect(response.text).toContain(backLink);
       });
