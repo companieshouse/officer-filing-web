@@ -41,7 +41,13 @@ import {
     LIMITED_UNLIMITED_BODY_5,
     LIMITED_UNLIMITED_BODY_6,
     LIMITED_UNLIMITED_BODY_7,
-    START_SERVICE_AGAIN_URL
+    START_SERVICE_AGAIN_URL,
+    DISSOLVED_COMPANY_BODY_LINE1_PART1,
+    DISSOLVED_COMPANY_BODY_LINE2_PART1,
+    DISSOLVED_COMPANY_BODY_LINE2_PART2,
+    DISSOLVED_COMPANY_BODY_LINE3_PART1,
+    DISSOLVED_COMPANY_BODY_LINE3_PART2,
+    DISSOLVED_COMPANY_BODY_LINE1_PART2
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -75,19 +81,30 @@ const setContent = async (req: Request, stopType: string) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
     if (companyName === "") {
-        if(stopType === STOP_TYPE.DISSOLVED){
+        if(stopType === STOP_TYPE.DISSOLVED && lang === "en"){
             // Company name is at the start of the paragraph.
-            companyName = "This company";
+            companyName = localeInfo.i18n.stopPageThisCompanyAtStartOfstatement;
         } else {
-            companyName = "this company";
+            companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
         }
     }
 
     switch(stopType) { 
-        case STOP_TYPE.DISSOLVED: { 
+        case STOP_TYPE.DISSOLVED: {
             return {
-                pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(req.originalUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED),
+                pageHeader: localeInfo.i18n.stopPageDissolvedHeader,
+                pageBody: STOP_PAGE_CONTENT.dissolved[pageBodyLang]
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE1_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine1Part1)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE1_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine1Part2)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE2_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine2Part1LinkText)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE2_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine2Part2Text)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE3_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine3Part1)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE3_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine3Part2LinkText)
+                  .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                  .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
+                  .replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.LIMITED_UNLIMITED: { 

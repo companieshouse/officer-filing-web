@@ -17,8 +17,12 @@ const SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 = SHOW_STOP_PAGE_PATH_URL + "pre-octo
 const SHOW_STOP_PAGE_PATH_URL_ETAG = SHOW_STOP_PAGE_PATH_URL + "etag";
 const SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG = SHOW_STOP_PAGE_PATH_URL + "something-went-wrong";
 const SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER = SHOW_STOP_PAGE_PATH_URL + "secure-officer";
+const THIS_COMPANY = "This company";
+const THIS_COMPANY_WELSH = "y cwmni hwn";
 const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being dissolved";
+const DISSOLVED_PAGE_HEADING_WELSH = "Mae&#39;r cwmni wedi&#39;i ddiddymu neu yn y broses o gael ei ddiddymu";
 const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
+const DISSOLVED_PAGE_BODY_TEXT_WELSH = "ddefnyddio'r gwasanaeth hwn oherwydd ei fod wedi ei ddiddymu, neu ei fod yn y broses o gael ei ddiddymu";
 const NON_LIMITED_UNLIMITED_PAGE_HEADING = "Only limited and unlimited companies can use this service";
 const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for Test Company using this service if it's a:";
 const PRE_OCTOBER_2009_PAGE_HEADING = "Directors removed before 1 October 2009 must file on paper instead";
@@ -47,6 +51,37 @@ describe("Stop screen controller tests", () => {
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
+  it("Should navigate to dissolved stop screen in welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
+    expect(response.text).toContain(DISSOLVED_PAGE_HEADING_WELSH);
+    expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT_WELSH);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
+  it("Should navigate to dissolved stop screen and replace company name with This company if not provided", async () => {
+    dissolvedCompanyProfile.companyName = "";
+    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
+    expect(response.text).toContain(THIS_COMPANY + " " + DISSOLVED_PAGE_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
+  it("Should navigate to dissolved stop screen and replace company name with This company if not provided in welsh", async () => {
+    dissolvedCompanyProfile.companyName = "";
+    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
+    expect(response.text).toContain(THIS_COMPANY_WELSH + " " + DISSOLVED_PAGE_BODY_TEXT_WELSH);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
 
   it("Should set the content to dissolved company content", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
