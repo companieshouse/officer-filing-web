@@ -40,6 +40,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Confirm where the director lives";
+const PAGE_HEADING_WELSH = "Cadarnhewch ble mae&#39;r cyfarwyddwr yn byw";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const APPOINT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -137,7 +138,8 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).toContain(backLink);
       });
 
-      it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async (url, backLink) => {
+      it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])
+      ("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async (url, backLink) => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
           residentialAddressBackLink: backLink
@@ -145,7 +147,7 @@ describe("Director confirm residential address controller tests", () => {
         mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
         const response = await request(app).get(url+"?lang=cy");
 
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
       });
 
       it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should navigate back button to choose address array page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END", async (url, backLink) => {

@@ -34,7 +34,7 @@ const PAGE_URL_WELSH = PAGE_URL + "?lang=cy";
 const NEXT_PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID) + "?lang=en";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_HEADING = "When did the director&#39;s details change?";
 const PAGE_HEADING_WELSH = "Pryd newidiodd manylion y cyfarwyddwr?"
