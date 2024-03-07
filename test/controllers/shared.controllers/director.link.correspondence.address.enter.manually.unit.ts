@@ -157,7 +157,7 @@ describe("Director link correspondence address enter manually controller tests",
           isServiceAddressSameAsRegisteredOfficeAddress: false
         })
         const response = await request(app).get(url);
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain("Os bydd cyfeiriad y swyddfa gofrestredig yn newid yn y dyfodol, a ydych chi am i hyn fod yn berthnasol i gyfeiriad gohebiaeth y cyfarwyddwr hefyd?");
       });
     });
 
