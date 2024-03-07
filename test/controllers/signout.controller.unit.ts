@@ -32,7 +32,7 @@ describe("Signout controller tests", () => {
         .set('Referer', 'http://example.com?lang=cy');
 
       expect(response.status).toBe(200);
-      expect(response.text).toContain('to be translated');
+      expect(response.text).toContain("Ydych chi'n siŵr eich bod eisiau allgofnodi?");
       expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     });
 
@@ -97,7 +97,7 @@ describe("Signout controller tests", () => {
         .post(SIGNOUT_LOCATION+"?lang=cy")
 
       expect(response.status).toBe(400)
-      expect(response.text).toContain('to be translated');
+      expect(response.text).toContain("Dewiswch ydw os ydych am allgofnodi");
       expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     });
 
