@@ -40,7 +40,8 @@ import {
     LIMITED_UNLIMITED_BODY_4,
     LIMITED_UNLIMITED_BODY_5,
     LIMITED_UNLIMITED_BODY_6,
-    LIMITED_UNLIMITED_BODY_7
+    LIMITED_UNLIMITED_BODY_7,
+    START_SERVICE_AGAIN_URL
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -147,7 +148,8 @@ const setContent = async (req: Request, stopType: string) => {
                     .replace(new RegExp(ETAG_PAGE_BODY_2, 'g'), localeInfo.i18n.stopPageEtagPageBody2)
                     .replace(new RegExp(ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK, 'g'), localeInfo.i18n.stopPageEtagStartServiceAgainLink)
                     .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
-                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText),
+                    .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
+                    .replace(new RegExp(START_SERVICE_AGAIN_URL, 'g'), `/appoint-update-remove-company-officer?lang=${lang}`)
             }
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 
