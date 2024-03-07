@@ -10,7 +10,7 @@ import { retrieveDirectorNameFromFiling } from "../utils/format";
 import { toReadableFormat } from "../utils/date";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -31,7 +31,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
       appointedOn: toReadableFormat(officerFiling.appointedOn),
       templateName: Templates.APPOINT_DIRECTOR_SUBMITTED,
-      updateDirectorSameCompany: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
+      updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
       currentUrl : req.originalUrl,
     });

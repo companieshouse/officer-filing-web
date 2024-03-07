@@ -22,6 +22,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director's nationality?";
+const PAGE_HEADING_WELSH = "Beth yw cenedligrwydd y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -125,7 +126,7 @@ describe("Update director nationality controller tests", () => {
       });
 
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=cy");
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
     });
 
     it("should catch error", async () => {

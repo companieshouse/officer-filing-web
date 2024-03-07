@@ -36,6 +36,7 @@ export const HA_TO_SA_ERROR = "Select yes if the correspondence address changes 
 export const ETAG_PAGE_HEADER = "ETAG_PAGE_HEADER";
 export const ETAG_PAGE_BODY_1 = "ETAG_PAGE_BODY_1";
 export const ETAG_PAGE_BODY_2 = "ETAG_PAGE_BODY_2";
+export const START_SERVICE_AGAIN_URL = "START_SERVICE_AGAIN_URL";
 export const ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK = "ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK";
 export const STOP_PAGE_BODY_CONTACT_US_LINK = "STOP_PAGE_CONTACT_US_LINK";
 export const STOP_PAGE_CONTACT_US_TEXT = "STOP_PAGE_CONTACT_US_TEXT";
@@ -177,11 +178,11 @@ export const STOP_PAGE_CONTENT =
     etag:{
       pageHeader: ETAG_PAGE_HEADER,
       pageBodyEnglish: `<p>` + ETAG_PAGE_BODY_1 + `</p>
-      <p>` + ETAG_PAGE_BODY_2 + `<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
+      <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + `data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `,
       pageBodyWelsh: `<p>` + ETAG_PAGE_BODY_1 + `</p>
-      <p>` + ETAG_PAGE_BODY_2 + `<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
+      <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     somethingWentWrong:{

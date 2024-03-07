@@ -1,5 +1,5 @@
 {
-  "directorCorrespondenceAddressLinkTitle" : "to be translated",
-  "directorCorrespondenceAddressLinkYesHint" : "to be translated",
-  "directorCorrespondenceAddressLinkNoHint" : "to be translated"
+  "directorCorrespondenceAddressLinkTitle" : "Os bydd cyfeiriad y swyddfa gofrestredig yn newid yn y dyfodol, a ydych chi am i hyn fod yn berthnasol i gyfeiriad gohebiaeth y cyfarwyddwr hefyd?",
+  "directorCorrespondenceAddressLinkYesHint" : "Byddwn yn cofnodi cyfeiriad gohebiaeth y cyfarwyddwr fel 'yr un fath â chyfeiriad y swyddfa gofrestredig'. Bydd y dyfodol hefyd yn berthnasol i gyfeiriad gohebiaeth y cyfarwyddwr.",
+  "directorCorrespondenceAddressLinkNoHint" : "Bydd angen i chi cofnodi'r cyfeiriad gohebiaeth â llaw ar y sgrin nesaf. Ni fydd newidiadau i gyfeiriad y swyddfa gofrestredig yn y dyfodol yn berthnasol i'r cyfeiriad gohebiaeth."
 }
