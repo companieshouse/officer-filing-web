@@ -1,7 +1,7 @@
 {
-  "appointDirectorCheckYourAnswersTitle" : "to be translated",
-  "appointDirectorCheckYourAnswersProtectedDetails" : "to be translated",
-  "appointDirectorCheckYourAnswersProtectedDetailsHidden" : "to be translated",
-  "appointDirectorCheckYourAnswersConsentToAct" : "to be translated",
-  "appointDirectorCheckYourAnswersConsentToActSubmit" : "to be translated"
+  "appointDirectorCheckYourAnswersTitle" : "Gwiriwch eich atebion cyn cyflwyno'r penodiad",
+  "appointDirectorCheckYourAnswersProtectedDetails" : "A yw'r cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion yn Nhŷ'r Cwmnïau?",
+  "appointDirectorCheckYourAnswersProtectedDetailsHidden" : "Manylion a ddiogelir",
+  "appointDirectorCheckYourAnswersConsentToAct" : "Cydsynio i weithredu fel cyfarwyddwr",
+  "appointDirectorCheckYourAnswersConsentToActSubmit" : "Trwy gyflwyno'r wybodaeth hon, rydych yn cadarnhau bod y person a enwir wedi cydsynio i weithredu fel cyfarwyddwr."
 }

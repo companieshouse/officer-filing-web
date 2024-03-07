@@ -91,9 +91,12 @@ describe("Appoint director check answers controller tests", () => {
         const response = await request(app).get(PAGE_URL + "?lang=cy");
   
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain("Gwiriwch eich atebion cyn cyflwyno&#39;r penodiad");
         expect(response.text).toContain("1 Ionawr 1990");
         expect(response.text).toContain("1 Ionawr 2020");
+        expect(response.text).toContain("A yw&#39;r cyfarwyddwr wedi gwneud cais i ddiogelu eu manylion yn Nhŷ&#39;r Cwmnïau?");
+        expect(response.text).toContain("Cydsynio i weithredu fel cyfarwyddwr");
+        expect(response.text).toContain("Trwy gyflwyno&#39;r wybodaeth hon, rydych yn cadarnhau bod y person a enwir wedi cydsynio i weithredu fel cyfarwyddwr.");
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
       });
 
