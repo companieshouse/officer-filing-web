@@ -81,9 +81,14 @@ const setContent = async (req: Request, stopType: string) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
     if (companyName === "") {
-        if(stopType === STOP_TYPE.DISSOLVED && lang === "en"){
-            // Company name is at the start of the paragraph.
-            companyName = localeInfo.i18n.stopPageThisCompanyAtStartOfstatement;
+        if (stopType === STOP_TYPE.DISSOLVED){
+            if (lang === "cy")
+            // Company name is at the middle of the paragraph.
+            companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
+            else {
+                // Company name is at the start of the paragraph.
+                companyName = localeInfo.i18n.stopPageThisCompanyAtStartOfstatement;
+            }
         } else {
             companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
         }
