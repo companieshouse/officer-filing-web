@@ -1,5 +1,6 @@
 {
-    "directorResidentialAddressLinkTitle" : "to be translated",
-    "directorResidentialAddressLinkYesHint" : "to be translated",
-    "directorResidentialAddressLinkNoHint" : "to be translated"
+    "directorResidentialAddressLinkTitle" : "Os bydd cyfeiriad gohebiaeth y cyfarwyddwr yn newid yn y dyfodol, a ydych chi am i hyn fod yn berthnasol i’w cyfeiriad cartref hefyd?",
+    "directorResidentialAddressLinkYesHint" : "Byddwn yn cofnodi cyfeiriad cartref y cyfarwyddwr fel 'yr un fath â'r cyfeiriad gohebiaeth'. Mae hyn yn golygu y bydd newidiadau yn y dyfodol hefyd yn berthnasol i gyfeiriad cartref y cyfarwyddwr.",
+    "directorResidentialAddressLinkNoHint" : "Bydd yn rhaid i chi ddiweddaru cyfeiriad cartref y cyfarwyddwr â llaw os bydd yn newid.",
+    "directorResidentialAddressLinkYes": "Ydw"
   }
