@@ -82,10 +82,10 @@ const setContent = async (req: Request, stopType: string) => {
     var companyName = companyProfile.companyName;
     if (companyName === "") {
         if (stopType === STOP_TYPE.DISSOLVED){
-            if (lang === "cy")
-            // Company name is at the middle of the paragraph.
-            companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
-            else {
+            if (lang === "cy"){
+                // Company name is at the middle of the paragraph.
+                companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
+            } else {
                 // Company name is at the start of the paragraph.
                 companyName = localeInfo.i18n.stopPageThisCompanyAtStartOfstatement;
             }
