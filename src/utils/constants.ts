@@ -204,9 +204,13 @@ export const STOP_PAGE_CONTENT =
     },
     secure_officer: {
       pageHeader: SECURE_OFFICER_HEADER,
-      pageBody: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+      pageBodyEnglish: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
       <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `
+      ,
+      pageBodyWelsh: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+      <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
+      <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     }
 }
