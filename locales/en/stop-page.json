@@ -40,5 +40,8 @@
     "stopPageDissolvedBodyLine2Part1LinkText" : "Read the Company Restoration Guide",
     "stopPageDissolvedBodyLine2Part2Text" : "to find out more about restoring a company name to the register.",
     "stopPageDissolvedBodyLine3Part1" : "If this is the wrong company, ",
-    "stopPageDissolvedBodyLine3Part2LinkText" : "start the service again"
+    "stopPageDissolvedBodyLine3Part2LinkText" : "start the service again",
+    "stopPageSomethingWentWrongHeader": "Something went wrong",
+    "stopPageSomethingWentWrongBody": "You need to ",
+    "stopPageSomethingWentWrongLink": "start the service again"
 }

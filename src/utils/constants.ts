@@ -67,6 +67,9 @@ export const LIMITED_UNLIMITED_BODY_4 = "LIMITED_UNLIMITED_BODY_4";
 export const LIMITED_UNLIMITED_BODY_5 = "LIMITED_UNLIMITED_BODY_5";
 export const LIMITED_UNLIMITED_BODY_6 = "LIMITED_UNLIMITED_BODY_6";
 export const LIMITED_UNLIMITED_BODY_7 = "LIMITED_UNLIMITED_BODY_7";
+export const SOMETHING_WENT_WRONG_HEADER = "SOMETHING_WENT_WRONG_HEADER";
+export const SOMETHING_WENT_WRONG_BODY = "SOMETHING_WENT_WRONG_BODY";
+export const SOMETHING_WENT_WRONG_LINK = "SOMETHING_WENT_WRONG_LINK";
 export const DISSOLVED_COMPANY_BODY_LINE1_PART1 = "DISSOLVED_COMPANY_BODY_LINE1_PART1";
 export const DISSOLVED_COMPANY_BODY_LINE1_PART2 = "DISSOLVED_COMPANY_BODY_LINE1_PART2";
 export const DISSOLVED_COMPANY_BODY_LINE2_PART1 = "DISSOLVED_COMPANY_BODY_LINE2_PART1";
@@ -189,7 +192,7 @@ export const STOP_PAGE_CONTENT =
     etag:{
       pageHeader: ETAG_PAGE_HEADER,
       pageBodyEnglish: `<p>` + ETAG_PAGE_BODY_1 + `</p>
-      <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + `data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
+      <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `,
       pageBodyWelsh: `<p>` + ETAG_PAGE_BODY_1 + `</p>
@@ -197,10 +200,9 @@ export const STOP_PAGE_CONTENT =
       <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     somethingWentWrong:{
-      pageHeader: "Something went wrong",
+      pageHeader: SOMETHING_WENT_WRONG_HEADER,
       pageBody: `
-      <p>You need to <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-      `
+      <p>` + SOMETHING_WENT_WRONG_BODY + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + SOMETHING_WENT_WRONG_LINK + `</a>.</p>`
     },
     secure_officer: {
       pageHeader: SECURE_OFFICER_HEADER,

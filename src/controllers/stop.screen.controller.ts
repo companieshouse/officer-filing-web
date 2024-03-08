@@ -42,6 +42,9 @@ import {
     LIMITED_UNLIMITED_BODY_6,
     LIMITED_UNLIMITED_BODY_7,
     START_SERVICE_AGAIN_URL,
+    SOMETHING_WENT_WRONG_HEADER,
+    SOMETHING_WENT_WRONG_BODY,
+    SOMETHING_WENT_WRONG_LINK,
     DISSOLVED_COMPANY_BODY_LINE1_PART1,
     DISSOLVED_COMPANY_BODY_LINE2_PART1,
     DISSOLVED_COMPANY_BODY_LINE2_PART2,
@@ -176,8 +179,13 @@ const setContent = async (req: Request, stopType: string) => {
         }
         case STOP_TYPE.SOMETHING_WENT_WRONG: { 
             return {
-                pageHeader: STOP_PAGE_CONTENT.somethingWentWrong.pageHeader,
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG),
+                pageHeader: STOP_PAGE_CONTENT.somethingWentWrong.pageHeader.replace(new RegExp(SOMETHING_WENT_WRONG_HEADER, 'g'), localeInfo.i18n.stopPageSomethingWentWrongHeader),
                 pageBody: STOP_PAGE_CONTENT.somethingWentWrong.pageBody
+                    .replace(new RegExp(SOMETHING_WENT_WRONG_BODY, 'g'), localeInfo.i18n.stopPageSomethingWentWrongBody)
+                    .replace(new RegExp(SOMETHING_WENT_WRONG_LINK, 'g'), localeInfo.i18n.stopPageSomethingWentWrongLink)
+                    .replace(new RegExp(START_SERVICE_AGAIN_URL, 'g'), `/appoint-update-remove-company-officer?lang=${lang}`)
             }
         }
         case STOP_TYPE.SECURE_OFFICER:  {
