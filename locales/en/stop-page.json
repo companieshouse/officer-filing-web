@@ -31,5 +31,8 @@
     "stopPageLimitedUnlimitedBody4": "you may find the form or service you need in the",
     "stopPageLimitedUnlimitedBody5": "list of Companies House forms",
     "stopPageLimitedUnlimitedBody6": "If this is the wrong company",
-    "stopPageLimitedUnlimitedBody7": "go back and enter a different company number"
+    "stopPageLimitedUnlimitedBody7": "go back and enter a different company number",
+    "stopPageSomethingWentWrongHeader": "Something went wrong",
+    "stopPageSomethingWentWrongBody": "You need to ",
+    "stopPageSomethingWentWrongLink": "start the service again"
 }

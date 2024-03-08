@@ -29,7 +29,8 @@ const ETAG_PAGE_HEADING = "Someone has already made updates for this director";
 const ETAG_PAGE_HEADING_WELSH = "Mae rhywun eisoes wedi gwneud diweddariadau i'r cyfarwyddwr hwn";
 const ETAG_PAGE_BODY_TEXT = "Since you started using this service, someone else has submitted an update to this director's details.";
 const SOMETHING_WENT_WRONG_HEADING = "Something went wrong";
-const SOMETHING_WENT_WRONG_BODY_TEXT= "<p>You need to <a href=\"/appoint-update-remove-company-officer\" data-event-id=\"start-the-service-again-link\">start the service again</a>.</p>";
+const SOMETHING_WENT_WRONG_BODY_TEXT = "<p>You need to <a href=/appoint-update-remove-company-officer?lang=en data-event-id=\"start-the-service-again-link\">start the service again</a>.</p>";
+const SOMETHING_WENT_WRONG_BODY_TEXT_WELSH = "<p>Bydd angen i chi <a href=/appoint-update-remove-company-officer?lang=cy data-event-id=\"start-the-service-again-link\">ddechrau'r gwasanaeth eto</a>.</p>";
 const SECURE_OFFICER_HEADING = "Update this director's details using WebFiling or a paper form";
 const SECURE_OFFICER_HEADING_WELSH = "Diweddaru manylion y cyfarwyddwr hwn gan ddefnyddio WebFiling neu ffurflen bapur";
 
@@ -193,10 +194,23 @@ describe("Stop screen controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
     const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG);
+      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=en");
 
     expect(response.text).toContain(SOMETHING_WENT_WRONG_HEADING);
     expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
+  });
+
+  it("Should display something-went-wrong stop-screen heading and content in Welsh", async () => {
+    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    console.log(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy")
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy");
+
+    expect(response.text).toContain("Aeth rhywbeth o'i le");
+    expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT_WELSH);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
