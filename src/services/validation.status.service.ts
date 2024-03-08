@@ -3,6 +3,7 @@ import { ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/res
 import { Session } from "@companieshouse/node-session-handler";
 import { createPublicOAuthApiClient } from "./api.service";
 import { ValidationStatusResponse, OfficerFilingService } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { logger } from "../utils/logger";
 
 export const getValidationStatus = async (session: Session, transactionId: string, submissionId: string): Promise<ValidationStatusResponse> => {
     const client = createPublicOAuthApiClient(session);
@@ -15,5 +16,12 @@ export const getValidationStatus = async (session: Session, transactionId: strin
       throw new Error(`Error retrieving validation status: ${JSON.stringify(errorResponse)}`);
     }
     const successfulResponse = response as Resource<ValidationStatusResponse>;
-    return successfulResponse.resource as ValidationStatusResponse;
+    return logValidationErrors(successfulResponse.resource as ValidationStatusResponse);
+}
+
+const logValidationErrors = (validationStatus: ValidationStatusResponse): ValidationStatusResponse => {
+    if (!validationStatus.isValid) {
+      logger.error("Validation errors: " + JSON.stringify(validationStatus.errors.slice(0, 10)));
+    }
+    return validationStatus;
 }

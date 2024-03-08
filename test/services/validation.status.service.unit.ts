@@ -1,5 +1,6 @@
 jest.mock("@companieshouse/api-sdk-node");
 jest.mock("@companieshouse/api-sdk-node/dist/services/officer-filing");
+jest.mock("../../src/utils/logger");
 
 import { createApiClient, Resource } from "@companieshouse/api-sdk-node";
 import { getValidationStatus } from "../../src/services/validation.status.service";
@@ -8,9 +9,11 @@ import { ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/res
 import ApiClient from "@companieshouse/api-sdk-node/dist/client";
 import { ValidationStatusResponse, OfficerFilingService } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { mockValidationStatusResponse } from "../mocks/validation.status.response.mock";
+import { logger } from "../../src/utils/logger";
 
 const mockGetValidationStatus = OfficerFilingService.prototype.getValidationStatus as jest.Mock;
 const mockCreatePrivateApiClient = createApiClient as jest.Mock;
+const mockLoggerError = logger.error as jest.Mock;
 
 mockCreatePrivateApiClient.mockReturnValue({
   officerFiling: OfficerFilingService.prototype
@@ -37,10 +40,12 @@ describe("Test validation status service", () => {
     };
 
     mockGetValidationStatus.mockReturnValueOnce(resource);
+    mockLoggerError.mockReturnValueOnce(undefined);
     const session =  getSessionRequest();
     const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
 
     expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockLoggerError).toBeCalledTimes(1);
     expect(response).toEqual(mockValidationStatusResponse);
   });
 
@@ -63,6 +68,7 @@ describe("Test validation status service", () => {
       actualMessage = err.message;
     }
 
+    expect(mockLoggerError).not.toBeCalled();
     expect(actualMessage).toBeTruthy();
     expect(actualMessage).toEqual(expectedMessage);
   });
