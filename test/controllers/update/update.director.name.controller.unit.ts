@@ -25,11 +25,18 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director&#39;s name?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+
 const DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 const UPDATE_DIRECTOR_DETAILS_URL = UPDATE_DIRECTOR_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -249,7 +256,7 @@ describe("Update Director name controller tests", () => {
         }));
       });
 
-      it("Should redirect to udpate page when nothing has been updated", async () => {
+      it("Should redirect to update page when nothing has been updated", async () => {
         mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
           etag: "etag",
           title: "Dr",
@@ -296,6 +303,14 @@ describe("Update Director name controller tests", () => {
           });
         expect(response.text).toContain(ERROR_PAGE_HEADING);
         expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_NAME_URL);
+      });
+
+      it("should set back link correctly if there are errors", async () => {
+        const response = await request(app)
+        .post(DIRECTOR_NAME_URL)
+        .send({});
+
+        expect(response.text).toContain(UPDATE_BACK_LINK_URL);
       });
 
       it("Should redirect to stop page if the etag fails validation", async () => {

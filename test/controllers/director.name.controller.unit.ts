@@ -30,11 +30,6 @@ const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-const UPDATE_DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-
 const DIRECTOR_NAME_WELSH_URL = DIRECTOR_NAME_URL + "?lang=cy";
 
 const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
@@ -43,11 +38,6 @@ const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 const BACK_LINK_URL = CURRENT_DIRECTORS_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-
-const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -172,12 +162,12 @@ describe("Director name controller tests", () => {
         expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
       });
 
-      it.each([[DIRECTOR_NAME_URL, BACK_LINK_URL],[UPDATE_DIRECTOR_NAME_URL, UPDATE_BACK_LINK_URL]])("should set back link correctly if there are errors for appoint", async (url, backLinkUrl) => {
+      it("should set back link correctly if there are errors", async () => {
         const response = await request(app)
-        .post(url)
+        .post(DIRECTOR_NAME_URL)
         .send({});
 
-        expect(response.text).toContain(backLinkUrl);
+        expect(response.text).toContain(BACK_LINK_URL);
       });
 
       it("Should redirect to date of birth page if there are no errors and former name is yes", async () => {

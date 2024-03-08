@@ -139,7 +139,7 @@ describe("Director name validation tests", () => {
         expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
     });
     
-    it ("should render error is previous name radio is yes and previous names is blank", async() => {
+    it ("should render error if previous name radio is yes and previous names is blank", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({
             previous_names_radio:"Yes", 
             previous_names:""});
