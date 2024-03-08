@@ -195,12 +195,15 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
       expect(response.text).toContain("Premises");
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.premises);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine1);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.addressLine2);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.region);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.country);
-      expect(response.text).toContain(serviceAddressMock.serviceAddress.postalCode);
+      expect(response.text).toContain(
+        serviceAddressMock.serviceAddress.premises + ", " 
+        + serviceAddressMock.serviceAddress.addressLine1 + ", " 
+        + serviceAddressMock.serviceAddress.addressLine2 + ", " 
+        + serviceAddressMock.serviceAddress.locality + ", " 
+        + serviceAddressMock.serviceAddress.region + ", " 
+        + serviceAddressMock.serviceAddress.country + ", " 
+        + serviceAddressMock.serviceAddress.postalCode
+      );
     });
 
     it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render ${DIRECTOR_RESIDENTIAL_ADDRESS_PATH} page with without director registered office address when that address is incomplete`, async (url) => {
@@ -330,6 +333,29 @@ describe("Director name controller tests", () => {
       const response = await request(app).get(url);
       mockGetOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
       expect(response.text).toContain(ERROR_PAGE_HEADING);
+    });
+
+    it.each([PAGE_URL, UPDATE_PAGE_URL])(`should render address with correct capitalisations on page %p`, async (url) => {
+      const mockAddress = {
+        serviceAddress: {
+          premises: "the big house",
+          addressLine1: "one street",
+          addressLine2: "two",
+          locality: "THREE",
+          region: "FouR",
+          country: "FIVe",
+          postalCode: "te6 3st"
+        },
+      }
+      mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        ...directorNameMock,
+        ...mockAddress
+      });
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
+      const response = await request(app).get(url);
+      expect(response.text).toContain(PAGE_HEADING);
+      expect(response.text).toContain("The Big House, One Street, Two, Three, Four, Five, TE6 3ST");
     });
   });
 
