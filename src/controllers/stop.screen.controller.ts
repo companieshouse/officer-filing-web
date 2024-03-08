@@ -44,7 +44,13 @@ import {
     START_SERVICE_AGAIN_URL,
     SOMETHING_WENT_WRONG_HEADER,
     SOMETHING_WENT_WRONG_BODY,
-    SOMETHING_WENT_WRONG_LINK
+    SOMETHING_WENT_WRONG_LINK,
+    DISSOLVED_COMPANY_BODY_LINE1_PART1,
+    DISSOLVED_COMPANY_BODY_LINE2_PART1,
+    DISSOLVED_COMPANY_BODY_LINE2_PART2,
+    DISSOLVED_COMPANY_BODY_LINE3_PART1,
+    DISSOLVED_COMPANY_BODY_LINE3_PART2,
+    DISSOLVED_COMPANY_BODY_LINE1_PART2
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -78,19 +84,35 @@ const setContent = async (req: Request, stopType: string) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     var companyName = companyProfile.companyName;
     if (companyName === "") {
-        if(stopType === STOP_TYPE.DISSOLVED){
-            // Company name is at the start of the paragraph.
-            companyName = "This company";
+        if (stopType === STOP_TYPE.DISSOLVED){
+            if (lang === "cy"){
+                // Company name is at the middle of the paragraph.
+                companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
+            } else {
+                // Company name is at the start of the paragraph.
+                companyName = localeInfo.i18n.stopPageThisCompanyAtStartOfstatement;
+            }
         } else {
-            companyName = "this company";
+            companyName = localeInfo.i18n.stopPageThisCompanyAtMiddleOfstatement;
         }
     }
 
     switch(stopType) { 
-        case STOP_TYPE.DISSOLVED: { 
+        case STOP_TYPE.DISSOLVED: {
             return {
-                pageHeader: STOP_PAGE_CONTENT.dissolved.pageHeader,
-                pageBody: STOP_PAGE_CONTENT.dissolved.pageBody.replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
+                ...localeInfo,
+                currentUrl: urlUtils.setQueryParam(req.originalUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED),
+                pageHeader: localeInfo.i18n.stopPageDissolvedHeader,
+                pageBody: STOP_PAGE_CONTENT.dissolved[pageBodyLang]
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE1_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine1Part1)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE1_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine1Part2)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE2_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine2Part1LinkText)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE2_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine2Part2Text)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE3_PART1, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine3Part1)
+                  .replace(new RegExp(DISSOLVED_COMPANY_BODY_LINE3_PART2, 'g'), localeInfo.i18n.stopPageDissolvedBodyLine3Part2LinkText)
+                  .replace(new RegExp(STOP_PAGE_BODY_CONTACT_US_LINK, 'g'), localeInfo.i18n.stopPageContactUsLink)
+                  .replace(new RegExp(STOP_PAGE_CONTACT_US_TEXT, 'g'), localeInfo.i18n.stopPageContactUsText)
+                  .replace(new RegExp(COMPANY_NAME_PLACEHOLDER, 'g'), companyName)
             }
         }
         case STOP_TYPE.LIMITED_UNLIMITED: { 
@@ -171,7 +193,7 @@ const setContent = async (req: Request, stopType: string) => {
                 ...localeInfo,
                 currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SECURE_OFFICER),
                 pageHeader: STOP_PAGE_CONTENT.secure_officer.pageHeader.replace(new RegExp(SECURE_OFFICER_HEADER, 'g'), localeInfo.i18n.stopPageSecureOfficerPageHeader),
-                pageBody: STOP_PAGE_CONTENT.secure_officer.pageBody
+                pageBody: STOP_PAGE_CONTENT.secure_officer[pageBodyLang]
                     .replace(new RegExp(SECURE_OFFICER_BODY_1, 'g'), localeInfo.i18n.stopPageSecureOfficerBody1)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2Link2)

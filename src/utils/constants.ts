@@ -70,6 +70,12 @@ export const LIMITED_UNLIMITED_BODY_7 = "LIMITED_UNLIMITED_BODY_7";
 export const SOMETHING_WENT_WRONG_HEADER = "SOMETHING_WENT_WRONG_HEADER";
 export const SOMETHING_WENT_WRONG_BODY = "SOMETHING_WENT_WRONG_BODY";
 export const SOMETHING_WENT_WRONG_LINK = "SOMETHING_WENT_WRONG_LINK";
+export const DISSOLVED_COMPANY_BODY_LINE1_PART1 = "DISSOLVED_COMPANY_BODY_LINE1_PART1";
+export const DISSOLVED_COMPANY_BODY_LINE1_PART2 = "DISSOLVED_COMPANY_BODY_LINE1_PART2";
+export const DISSOLVED_COMPANY_BODY_LINE2_PART1 = "DISSOLVED_COMPANY_BODY_LINE2_PART1";
+export const DISSOLVED_COMPANY_BODY_LINE2_PART2 = "DISSOLVED_COMPANY_BODY_LINE2_PART2";
+export const DISSOLVED_COMPANY_BODY_LINE3_PART1 = "DISSOLVED_COMPANY_BODY_LINE3_PART1";
+export const DISSOLVED_COMPANY_BODY_LINE3_PART2 = "DISSOLVED_COMPANY_BODY_LINE3_PART2";
 
 export enum RADIO_BUTTON_VALUE {
   NO = "no",
@@ -148,13 +154,18 @@ export const allowedCompanyTypes = allowedPublicCompanyTypes.concat(allowedPriva
 export const STOP_PAGE_CONTENT = 
 {
     dissolved:{
-        pageHeader: "Company is dissolved or in the process of being dissolved",
-        pageBody: `<p>` + COMPANY_NAME_PLACEHOLDER + ` cannot use this service because it has been dissolved, or it's in the process of being dissolved.</p>
+        pageBodyEnglish: `<p>` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
 
-        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link">Read the Company Restoration Guide</a> to find out more about restoring a company name to the register.</p>
-        <p>If this is the wrong company, <a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">start the service again</a>.</p>
-        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">Contact us</a> if you have any questions.</p>
-        `
+        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
+        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a> `+ STOP_PAGE_CONTACT_US_TEXT + `</p>
+        `,
+        
+        pageBodyWelsh: `<p>` + DISSOLVED_COMPANY_BODY_LINE1_PART1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
+
+        <p><a href="https://www.gov.uk/government/publications/company-strike-off-dissolution-and-restoration.cy" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
+        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p>` + STOP_PAGE_CONTACT_US_TEXT + ` <a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     limitedUnlimited:{
         pageBody: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
@@ -195,9 +206,13 @@ export const STOP_PAGE_CONTENT =
     },
     secure_officer: {
       pageHeader: SECURE_OFFICER_HEADER,
-      pageBody: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+      pageBodyEnglish: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
       <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `
+      ,
+      pageBodyWelsh: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+      <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
+      <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     }
 }

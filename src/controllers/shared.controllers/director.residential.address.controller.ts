@@ -133,27 +133,39 @@ export const buildValidationErrors = (req: Request): ValidationError[] => {
   return validationErrors;
 };
 
-const formatDirectorResidentialAddress = (officerFiling: OfficerFiling): string => {
-  return formatTitleCase(`
-          ${officerFiling.serviceAddress?.premises ? officerFiling.serviceAddress.premises+',' : ""}
-          ${officerFiling.serviceAddress?.addressLine1},
-          ${officerFiling.serviceAddress?.addressLine2 ? officerFiling.serviceAddress.addressLine2+"," : ""}
-          ${officerFiling.serviceAddress?.locality},
-          ${officerFiling.serviceAddress?.region ? officerFiling.serviceAddress.region+"," : ""}
-          `) + (officerFiling.serviceAddress?.country ? officerFiling.serviceAddress.country+", " : "")
-          + officerFiling.serviceAddress?.postalCode
+const formatDirectorServiceAddress = (officerFiling: OfficerFiling): string => {
+  const address = officerFiling.serviceAddress;
+  return formatAddress([
+    formatTitleCase(address?.premises),
+    formatTitleCase(address?.addressLine1),
+    formatTitleCase(address?.addressLine2),
+    formatTitleCase(address?.locality),
+    formatTitleCase(address?.region),
+    formatTitleCase(address?.country),
+    address?.postalCode?.toUpperCase()
+  ]);
 };
 
 const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
-  return formatTitleCase(`
-          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises+',' : ""}
-          ${companyProfile.registeredOfficeAddress?.addressLineOne},
-          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
-          ${companyProfile.registeredOfficeAddress?.locality},
-          ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
-          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
-        `) + companyProfile.registeredOfficeAddress?.postalCode
- }
+  const address = companyProfile.registeredOfficeAddress;
+  return formatAddress([
+    formatTitleCase(address?.premises),
+    formatTitleCase(address?.addressLineOne),
+    formatTitleCase(address?.addressLineTwo),
+    formatTitleCase(address?.locality),
+    formatTitleCase(address?.region),
+    formatTitleCase(address?.country),
+    address?.postalCode?.toUpperCase()
+  ]);
+};
+
+const formatAddress = (addressFields: (string | undefined)[]): string => {
+  return addressFields
+    .filter(Boolean)
+    .map(s => s?.trim())
+    .join(', ');
+};
+
 const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res: Response<any, Record<string, any>>, req: Request, lang: string) => {
   return officerFiling.checkYourAnswersLink && officerFiling.isServiceAddressSameAsRegisteredOfficeAddress
     ? res.redirect(addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang))
@@ -180,7 +192,7 @@ const renderPage = (req: Request, res: Response, params: RenderAddressRadioParam
     director_address: params.officerFiling.directorResidentialAddressChoice,
     directorName: formatTitleCase(params.directorName),
     directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(params.companyProfile),
-    manualAddress: formatDirectorResidentialAddress(params.officerFiling),
+    manualAddress: formatDirectorServiceAddress(params.officerFiling),
     directorServiceAddressChoice: params.officerFiling.directorServiceAddressChoice,
     canUseRegisteredOfficeAddress,
     ...getLocaleInfo(locales, lang),

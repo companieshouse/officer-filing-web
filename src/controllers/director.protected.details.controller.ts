@@ -75,7 +75,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const nextPageUrl = addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang);
-    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl));
+    return res.redirect(await setRedirectLink(req, patchFiling.data.checkYourAnswersLink, nextPageUrl, lang));
   } catch (e) {
     next(e);
   }

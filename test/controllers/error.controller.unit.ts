@@ -39,7 +39,8 @@ describe("Error controller test", () => {
     const response = await request(app)
       .get(PAGE_NOT_FOUND_PATH + "?lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain("Ni ddarganfuwyd y dudalen");
+    expect(response.text).toContain("gwiriwch ei fod yn gywir");
   });
 
   it("should render the error page", async () => {
@@ -55,7 +56,7 @@ describe("Error controller test", () => {
     const response = await request(app)
       .get(SERVICE_ERROR_PATH + "?lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain("Mae&#39;n ddrwg gennym, mae problem gyda&#39;r gwasanaeth");
   });
 
   it("Should render the error page on error", async () => {
