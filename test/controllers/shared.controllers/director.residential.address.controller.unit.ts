@@ -161,7 +161,9 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(directorNameMock.firstName);
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain("Ble mae’r cyfarwyddwr yn byw?");
+      expect(response.text).toContain("Dyma gyfeiriad swyddfa gofrestredig y cwmni");
+      expect(response.text).toContain("Cyfeiriad gwahanol");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
