@@ -46,6 +46,7 @@ describe("Test validation status service", () => {
 
     expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
     expect(mockLoggerError).toBeCalledTimes(1);
+    expect(mockLoggerError).toBeCalledWith("Validation errors: " + JSON.stringify(mockValidationStatusResponse.errors));
     expect(response).toEqual(mockValidationStatusResponse);
   });
 
