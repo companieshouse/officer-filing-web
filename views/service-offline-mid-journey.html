@@ -14,12 +14,8 @@
     </h1>
 
     <p class="govuk-body-m">{{ i18n.serviceErrorTryAgainLater }}</p>
-    <p>{{ i18n.serviceErrorNotSavedAnswers }}</p>
-{% if lang === "en" %}
-    <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContactLink }}</a> {{ i18n.serviceErrorIfAnyQuestionsText }}
-{% elif lang === "cy" %}
-    {{ i18n.serviceErrorIfAnyQuestionsText }} <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContactLink }}</a>.
-{% endif %}
+    <p>{{ i18n.serviceErrorNotSavedAnswers }}</p> 
+    {{ i18n.serviceErrorContactText1 }} <a href="https://www.gov.uk/contact-companies-house" data-event-id="500-error-page-contact-us">{{ i18n.serviceErrorContactLink }}</a>{{ i18n.serviceErrorContactText2 }}
   </div>
 </div>
 {% endblock %}

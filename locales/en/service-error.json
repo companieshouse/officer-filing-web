@@ -2,6 +2,7 @@
   "serviceErrorSorry": "Sorry, there is a problem with this service",
   "serviceErrorTryAgainLater": "Try again later.",
   "serviceErrorNotSavedAnswers": "We have not saved your answers. When the service is available, you will have to start again.",
+  "serviceErrorContactText1": "",
   "serviceErrorContactLink": "Contact Companies House",
-  "serviceErrorIfAnyQuestionsText": "if you have any questions."
+  "serviceErrorContactText2": " if you have any questions"
 }
