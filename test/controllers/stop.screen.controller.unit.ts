@@ -18,6 +18,7 @@ const SHOW_STOP_PAGE_PATH_URL_ETAG = SHOW_STOP_PAGE_PATH_URL + "etag";
 const SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG = SHOW_STOP_PAGE_PATH_URL + "something-went-wrong";
 const SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER = SHOW_STOP_PAGE_PATH_URL + "secure-officer";
 const THIS_COMPANY = "This company";
+const THIS_COMPANY_LOWERCASE = "this company";
 const THIS_COMPANY_WELSH = "y cwmni hwn";
 const DISSOLVED_PAGE_HEADING = "Company is dissolved or in the process of being dissolved";
 const DISSOLVED_PAGE_HEADING_WELSH = "Mae&#39;r cwmni wedi&#39;i ddiddymu neu yn y broses o gael ei ddiddymu";
@@ -118,6 +119,29 @@ describe("Stop screen controller tests", () => {
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
   });
+
+
+  it("Should navigate to non limited-unlimited stop screen in english with empty company", async () => {
+    overseaCompanyCompanyProfile.companyName = "";
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
+
+    expect(response.text).toContain(THIS_COMPANY_LOWERCASE);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+
+  it("Should navigate to non limited-unlimited stop screen in welsh company", async () => {
+    overseaCompanyCompanyProfile.companyName = "";
+    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+
+    const response = await request(app)
+      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
+
+    expect(response.text).toContain(THIS_COMPANY_WELSH);
+    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
   it("Should navigate to pre-october-2009 stop screen", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
