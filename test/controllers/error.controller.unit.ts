@@ -40,6 +40,7 @@ describe("Error controller test", () => {
       .get(PAGE_NOT_FOUND_PATH + "?lang=cy");
 
     expect(response.text).toContain("Ni ddarganfuwyd y dudalen");
+    expect(response.text).toContain("gwiriwch ei fod yn gywir");
   });
 
   it("should render the error page", async () => {
