@@ -7,7 +7,7 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, CURRENT_DIRECTORS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -24,12 +24,30 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director&#39;s name?";
 const PAGE_HEADING_WELSH = "Beth yw enw’r cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+
 const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const UPDATE_DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 const DIRECTOR_NAME_WELSH_URL = DIRECTOR_NAME_URL + "?lang=cy";
+
 const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const BACK_LINK_URL = CURRENT_DIRECTORS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -152,6 +170,14 @@ describe("Director name controller tests", () => {
           });
         expect(response.text).toContain(ERROR_PAGE_HEADING);
         expect(response.text).not.toContain("Found. Redirecting to " + DIRECTOR_DATE_DETAILS_URL);
+      });
+
+      it.each([[DIRECTOR_NAME_URL, BACK_LINK_URL],[UPDATE_DIRECTOR_NAME_URL, UPDATE_BACK_LINK_URL]])("should set back link correctly if there are errors for appoint", async (url, backLinkUrl) => {
+        const response = await request(app)
+        .post(url)
+        .send({});
+
+        expect(response.text).toContain(backLinkUrl);
       });
 
       it("Should redirect to date of birth page if there are no errors and former name is yes", async () => {
