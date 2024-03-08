@@ -8,7 +8,7 @@ import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
-import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH } from "../types/page.urls";
+import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
@@ -33,11 +33,14 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const isUpdate = req.path.includes("update-director-name");
         const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
         let currentUrl;
+        let backLinkUrl: string;
         if(isUpdate){
-        currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
+        currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req)
+        backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
         }
         else{
         currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
+        backLinkUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
         }
 
         if(frontendValidationErrors.length > 0) {
@@ -47,7 +50,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
                 ...getLocaleInfo(locales, lang),
                 currentUrl: currentUrl,
                 templateName: Templates.DIRECTOR_NAME,
-                backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)),
+                backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, backLinkUrl),
                 typeahead_array: TITLE_LIST,
                 errors: formattedErrors,
                 typeahead_errors: JSON.stringify(formattedErrors),

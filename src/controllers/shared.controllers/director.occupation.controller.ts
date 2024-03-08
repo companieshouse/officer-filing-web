@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_OCCUPATION_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
+import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_OCCUPATION_PATH, UPDATE_DIRECTOR_DETAILS_PATH, URL_QUERY_PARAM } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
 import { urlUtils } from "../../utils/url";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
@@ -105,11 +105,21 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
   const formattedErrors = formatValidationErrors(validationErrors, lang);
   const locales = getLocalesService();
   const session: Session = req.session as Session;
+
+  const isUpdateJourney = req.path.includes("update-director-occupation");
+
+  let backLinkUrl: string;
+  if (isUpdateJourney){
+    backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
+  } else {
+    backLinkUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)
+  }
+
   return res.render(Templates.DIRECTOR_OCCUPATION, {
     templateName: Templates.DIRECTOR_OCCUPATION,
     ...getLocaleInfo(locales, lang),
     currentUrl: currentUrl,
-    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req), lang),
+    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, backLinkUrl, lang),
     typeahead_array: OCCUPATION_LIST,
     typeahead_value: formatSentenceCase(occupation),
     errors: formattedErrors,
