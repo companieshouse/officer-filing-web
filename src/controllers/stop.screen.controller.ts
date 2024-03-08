@@ -163,7 +163,7 @@ const setContent = async (req: Request, stopType: string) => {
                 ...localeInfo,
                 currentUrl: urlUtils.setQueryParam(currentBaseUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SECURE_OFFICER),
                 pageHeader: STOP_PAGE_CONTENT.secure_officer.pageHeader.replace(new RegExp(SECURE_OFFICER_HEADER, 'g'), localeInfo.i18n.stopPageSecureOfficerPageHeader),
-                pageBody: STOP_PAGE_CONTENT.secure_officer.pageBody
+                pageBody: STOP_PAGE_CONTENT.secure_officer[pageBodyLang]
                     .replace(new RegExp(SECURE_OFFICER_BODY_1, 'g'), localeInfo.i18n.stopPageSecureOfficerBody1)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2)
                     .replace(new RegExp(SECURE_OFFICER_BODY_2, 'g'), localeInfo.i18n.stopPageSecureOfficerBody2Link2)
