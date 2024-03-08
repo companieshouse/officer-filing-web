@@ -31,5 +31,14 @@
     "stopPageLimitedUnlimitedBody4": "to be translated",
     "stopPageLimitedUnlimitedBody5": "to be translated",
     "stopPageLimitedUnlimitedBody6": "to be translated",
-    "stopPageLimitedUnlimitedBody7": "to be translated"
+    "stopPageLimitedUnlimitedBody7": "to be translated",
+    "stopPageThisCompanyAtStartOfstatement": "y cwmni hwn",
+    "stopPageThisCompanyAtMiddleOfstatement": "y cwmni hwn",
+    "stopPageDissolvedHeader" : "Mae'r cwmni wedi'i ddiddymu neu yn y broses o gael ei ddiddymu",
+    "stopPageDissolvedBodyLine1Part1" : "Ni all ",
+    "stopPageDissolvedBodyLine1Part2" : "ddefnyddio'r gwasanaeth hwn oherwydd ei fod wedi ei ddiddymu, neu ei fod yn y broses o gael ei ddiddymu",
+    "stopPageDissolvedBodyLine2Part1LinkText" : "Darllenwch y Canllaw Adfer Cwmni",
+    "stopPageDissolvedBodyLine2Part2Text" : "i ddarganfod mwy am adfer enw cwmni i'r gofrestr",
+    "stopPageDissolvedBodyLine3Part1" : "Os mai hwn yw'r cwmni anghywir,",
+    "stopPageDissolvedBodyLine3Part2LinkText" : "dechreuwch y gwasanaeth eto."
 }

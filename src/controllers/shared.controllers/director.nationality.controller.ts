@@ -79,7 +79,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
 
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
-    return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
+    return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage, lang));
   } catch (e) {
     return next(e);
   }
