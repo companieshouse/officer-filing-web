@@ -79,7 +79,7 @@ const APPOINT_DIRECTORS_CYA_URL_WELSH = APPOINT_DIRECTORS_CYA_URL + "?lang=cy";
 const UPDATE_DIRECTORS_CYA_URL_WELSH = UPDATE_DIRECTORS_CYA_URL + "?lang=cy";
 const BACK_LINK_URL_WELSH = BACK_LINK_URL + "?lang=cy";
 const UPDATE_BACK_LINK_URL_WELSH = UPDATE_BACK_LINK_URL + "?lang=cy";
-const HA_TO_SA_ERROR_WELSH = "Dewiswch Ydw os bydd cyfeiriad y swyddfa gofrestredig yn newid yn y dyfodol, ac rydych am i hyn fod yn berthnasol i&#39;ch cyfeiriad gohebiaeth hefyd"
+const HA_TO_SA_ERROR_WELSH = "Dewiswch ydw os bydd y cyfeiriad gohebiaeth yn newid yn y dyfodol a&#39;ch bod am i hyn fod yn berthnasol i&#39;r cyfeiriad cartref"
 
 describe("Director residential address link controller tests", () => {
 
