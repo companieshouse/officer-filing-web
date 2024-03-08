@@ -39,7 +39,7 @@ describe("Error controller test", () => {
     const response = await request(app)
       .get(PAGE_NOT_FOUND_PATH + "?lang=cy");
 
-    expect(response.text).toContain("to be translated");
+    expect(response.text).toContain("Ni ddarganfuwyd y dudalen");
   });
 
   it("should render the error page", async () => {
