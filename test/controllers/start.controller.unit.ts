@@ -17,6 +17,7 @@ describe("start controller tests", () => {
 
     expect(response.text).toContain(EXPECTED_TEXT);
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+    expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=en');
   });
 
   it("should return start page when url has trailing slash", async () => {
@@ -31,7 +32,8 @@ describe("start controller tests", () => {
         const response = await request(app)
               .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
-        expect(response.text).toContain(EXPECTED_WELSH);
+    expect(response.text).toContain(EXPECTED_WELSH);
+    expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=cy');
   });
 
 });
