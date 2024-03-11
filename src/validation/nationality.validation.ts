@@ -27,7 +27,7 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
     const nationality1 = getField(req, DirectorField.NATIONALITY_1);
     const nationality2 = getField(req, DirectorField.NATIONALITY_2);
     const nationality3 = getField(req, DirectorField.NATIONALITY_3);
-    const isUpdate = req.path.includes("update-director-name") || req.path.includes("update-director-nationality");
+    const isUpdate = req.path.includes("update-director-nationality");
     let currentUrl: string;
     let backLinkUrl: string;
     if (isUpdate) {
