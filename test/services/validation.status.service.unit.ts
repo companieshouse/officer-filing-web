@@ -50,6 +50,22 @@ describe("Test validation status service", () => {
     expect(response).toEqual(mockValidationStatusResponse);
   });
 
+  it("Should call the sdk and get the validation status response without logging", async () => {
+
+    const resource: Resource<ValidationStatusResponse> = {
+      httpStatusCode: 200,
+      resource: mockValidationStatusResponse
+    };
+
+    mockGetValidationStatus.mockReturnValueOnce(resource);
+    const session =  getSessionRequest();
+    const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID, false);
+
+    expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockLoggerError).not.toBeCalled();
+    expect(response).toEqual(mockValidationStatusResponse);
+  });
+
   it("should throw error when http error code is returned", async () => {
 
     const errorMessage = "Oops! Someone stepped on the wire.";
