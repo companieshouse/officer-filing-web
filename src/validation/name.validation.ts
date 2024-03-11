@@ -35,12 +35,12 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         let currentUrl;
         let backLinkUrl: string;
         if(isUpdate){
-        currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req)
-        backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
+          currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req)
+          backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
         }
         else{
-        currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
-        backLinkUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+          currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
+          backLinkUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
         }
 
         if(frontendValidationErrors.length > 0) {

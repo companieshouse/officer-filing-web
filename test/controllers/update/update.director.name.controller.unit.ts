@@ -308,7 +308,7 @@ describe("Update Director name controller tests", () => {
       it("should set back link correctly if there are errors", async () => {
         const response = await request(app)
         .post(DIRECTOR_NAME_URL)
-        .send({});
+        .send({"first_name": "~"});
 
         expect(response.text).toContain(UPDATE_BACK_LINK_URL);
       });

@@ -160,7 +160,7 @@ describe("Director nationality controller tests", () => {
         })
         const response = await request(app)
         .post(DIRECTOR_NATIONALITY_URL)
-        .send({});
+        .send({"nationality1": "~"});
 
         expect(response.text).toContain(BACK_LINK_URL);
       });

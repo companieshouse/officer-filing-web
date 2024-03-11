@@ -388,7 +388,7 @@ describe("Update director nationality controller tests", () => {
       })
       const response = await request(app)
       .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-      .send({});
+      .send({"nationality1": "~"});
 
       expect(response.text).toContain(UPDATE_BACK_LINK_URL);
     });
