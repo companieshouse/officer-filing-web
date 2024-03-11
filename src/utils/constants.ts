@@ -157,14 +157,14 @@ export const STOP_PAGE_CONTENT =
         pageBodyEnglish: `<p>` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
 
         <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
-        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href=` + START_SERVICE_AGAIN_URL  + ` data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
         <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a> `+ STOP_PAGE_CONTACT_US_TEXT + `</p>
         `,
         
         pageBodyWelsh: `<p>` + DISSOLVED_COMPANY_BODY_LINE1_PART1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
 
         <p><a href="https://www.gov.uk/government/publications/company-strike-off-dissolution-and-restoration.cy" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
-        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href="/appoint-update-remove-company-officer" data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
         <p>` + STOP_PAGE_CONTACT_US_TEXT + ` <a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     limitedUnlimited:{
