@@ -29,8 +29,8 @@ describe("start controller tests", () => {
   });
 
  it("Should render the page in welsh", async () => {
-        const response = await request(app)
-              .get("/appoint-update-remove-company-officer/" + "?lang=cy");
+    const response = await request(app)
+      .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
     expect(response.text).toContain(EXPECTED_WELSH);
     expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=cy');
