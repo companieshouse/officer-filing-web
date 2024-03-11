@@ -19,6 +19,7 @@ export const get = (req: Request, res: Response) => {
   return res.render(Templates.START, { CHS_URL,
     ...getLocaleInfo(locales, lang),
     currentUrl: urlUtils.getUrlToPath(OFFICER_FILING, req),
+    lang,
     PIWIK_START_GOAL_ID,
     FEATURE_FLAG_REMOVE_DIRECTOR_20022023,
     AP01_ACTIVE,

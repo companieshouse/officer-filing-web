@@ -168,7 +168,7 @@ export const STOP_PAGE_CONTENT =
         <p>` + STOP_PAGE_CONTACT_US_TEXT + ` <a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
     limitedUnlimited:{
-        pageBody: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
+        pageBodyEnglish: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
         <ul>
             <li>`+ LIMITED_UNLIMITED_LTD + `</li>
             <li>`+ LIMITED_UNLIMITED_PLC +`</li>
@@ -178,7 +178,19 @@ export const STOP_PAGE_CONTENT =
         <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, `+ LIMITED_UNLIMITED_BODY_4 +` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">`+ LIMITED_UNLIMITED_BODY_5 +`</a>.</p>
         <p>`+ LIMITED_UNLIMITED_BODY_6 +`, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 +`</a>.</p>
         <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>`+ STOP_PAGE_CONTACT_US_TEXT + `</p>
-        `
+        `,
+
+        pageBodyWelsh: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
+        <ul>
+            <li>`+ LIMITED_UNLIMITED_LTD + `</li>
+            <li>`+ LIMITED_UNLIMITED_PLC +`</li>
+            <li>`+ LIMITED_UNLIMITED_ULC +`</li>
+        </ul>  
+
+        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, `+ LIMITED_UNLIMITED_BODY_4 +` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">`+ LIMITED_UNLIMITED_BODY_5 +`</a>.</p>
+        <p>` + LIMITED_UNLIMITED_BODY_6 +`, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 +`</a>.</p>
+        <p>` + STOP_PAGE_CONTACT_US_TEXT +`<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK +`</a>` + `.` +`</p>
+        `,
     },
     pre_october_2009:{
       pageHeader: PRE_OCTOBER_2009_HEADER,
