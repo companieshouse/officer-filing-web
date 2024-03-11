@@ -38,6 +38,7 @@ const SOMETHING_WENT_WRONG_BODY_TEXT = "<p>You need to <a href=/appoint-update-r
 const SOMETHING_WENT_WRONG_BODY_TEXT_WELSH = "<p>Bydd angen i chi <a href=/appoint-update-remove-company-officer?lang=cy data-event-id=\"start-the-service-again-link\">ddechrau'r gwasanaeth eto</a>.</p>";
 const SECURE_OFFICER_HEADING = "Update this director's details using WebFiling or a paper form";
 const SECURE_OFFICER_HEADING_WELSH = "Diweddaru manylion y cyfarwyddwr hwn gan ddefnyddio WebFiling neu ffurflen bapur";
+const START_SERVICE_AGAIN_URL = "appoint-update-remove-company-officer";
 
 describe("Stop screen controller tests", () => {
   beforeEach(() => {
@@ -51,6 +52,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
+    expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=en");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -61,6 +63,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING_WELSH);
     expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT_WELSH);
+    expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=cy");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
