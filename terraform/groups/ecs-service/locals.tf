@@ -73,7 +73,6 @@ locals {
     { "name": "COOKIE_SECURE_ONLY", "value": "${var.cookie_secure_only}" },
     { "name": "DEFAULT_SESSION_EXPIRATION", "value": "${var.default_session_expiration}" },
     { "name": "EWF_URL", "value": "${var.ewf_url}" },
-    { "name": "FEATURE_FLAG_REMOVE_DIRECTOR_20022023", "value": "${var.feature_flag_remove_director_20022023}" },
     { "name": "LOGLEVEL", "value": "${var.log_level}" },
     { "name": "NODE_PORT", "value": "${local.container_port}" },
     { "name": "FEATURE_FLAG_TM01_WEB", "value": "${var.feature_flag_tm01_web}" },
