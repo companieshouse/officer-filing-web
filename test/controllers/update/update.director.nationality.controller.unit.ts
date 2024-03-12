@@ -24,15 +24,23 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director's nationality?";
 const PAGE_HEADING_WELSH = "Beth yw cenedligrwydd y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+
 const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 const UPDATE_DIRECTOR_DETAILS_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
 const UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -372,6 +380,18 @@ describe("Update director nationality controller tests", () => {
         .send({typeahead_input_0:"British"});
       expect(response.text).toContain(ERROR_PAGE_HEADING);
       expect(response.text).not.toContain("Found. Redirecting to " + UPDATE_DIRECTOR_NATIONALITY_URL);
+    });
+
+    it("should set back link correctly if there are errors", async () => {
+      mockGetOfficerFiling.mockResolvedValue({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      const response = await request(app)
+      .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+      .send({"nationality1": "~"});
+
+      expect(response.text).toContain(UPDATE_BACK_LINK_URL);
     });
 
   });
