@@ -20,7 +20,7 @@ describe("getCompanyNumberFromRequestParams", () => {
     expect(result).toBe("");
   });
 
-  it("should sanitize return the company number from the request params", () => {
+  it("should sanitize the company number from the request params", () => {
     const req = {
       params: {
         companyNumber: "1</a>45678"
@@ -48,7 +48,7 @@ describe("getCompanyNumberFromRequestParams", () => {
     expect(result).toBe("170561-250216-690427");
   });
 
-  it("should sanitize return the transaction id from the request params", () => {
+  it("should sanitize the transaction id from the request params", () => {
     const req = {
       params: {
         transactionId: "170561!%&-{250216}_-[690427]"
@@ -76,7 +76,7 @@ describe("getCompanyNumberFromRequestParams", () => {
     expect(result).toBe("633aac06d8879104bbc81acb");
   });
 
-  it("should sanitize return the submission id from the request params", () => {
+  it("should sanitize the submission id from the request params", () => {
     const req = {
       params: {
         submissionId: "633\.c06d88_-79104bb(c)81acb"
@@ -104,7 +104,7 @@ describe("getCompanyNumberFromRequestParams", () => {
     expect(result).toBe("1Kl63l-R7Kik7XkGNnQ3Z_vARCVs");
   });
 
-  it("should sanitize return the appointment id from the request params", () => {
+  it("should sanitize the appointment id from the request params", () => {
     const req = {
       params: {
         appointmentId: "1Kl63l-R7K.ik7XkG,NnQ3+ZvARCVs"
