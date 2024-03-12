@@ -1,89 +1,80 @@
-import { Handler, NextFunction, Request, Response } from "express";
+import { Handler, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { SIGNOUT_RETURN_URL_SESSION_KEY } from "../utils/constants";
-import { Session } from "@companieshouse/node-session-handler";
-import { ACCOUNTS_SIGNOUT_PATH } from "../types/page.urls";
+import { ACCOUNTS_SIGNOUT_PATH, OFFICER_FILING, SIGNOUT_PATH } from "../types/page.urls";
 import { logger } from "../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
-
-const SIGNOUT = "signout";
+import { urlUtils } from "../utils/url";
 
 export const get: Handler = async (req, res) => {
-    saveReturnPageInSession(req);
-    const returnPage = getReturnPageFromSession(req.session as Session)
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
 
-    res.render(Templates.SIGNOUT, {
-        backLinkUrl: returnPage,
-        templateName: Templates.SIGNOUT,
-        currentUrl: req.originalUrl,
-        ...getLocaleInfo(locales, lang)
-    });
-}
+  const previousPageParam = req.params["previousPage"];
+  const returnPage = previousPageParam ? previousPageParam : getPreviousPageUrl(req);
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
+  const returnPageEncoded = encodeURIComponent(returnPage);
+  
+  logger.debugRequest(req, "Signout return page is " + returnPage);
 
-export const post = handleError(async (req, res) => {
-    const returnPage = getReturnPageFromSession(req.session as Session)
-    const lang = selectLang(req.query.lang);
+  res.render(Templates.SIGNOUT, {
+    backLinkUrl: returnPage,
+    previousPage: returnPage,
+    templateName: Templates.SIGNOUT,
+    currentUrl: urlUtils.getUrlToPath(SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
+    ...getLocaleInfo(locales, lang)
+  });
+};
 
-    switch (req.body.signout) {
+export const post = (req, res) => {
+
+  const previousPage = req.body["previousPage"];
+  const lang = selectLang(req.query.lang);
+
+  logger.debugRequest(req, "Signout previous page is " + previousPage);
+
+  switch (req.body.signout) {
     case "yes":
-        return res.redirect(addLangToUrl(ACCOUNTS_SIGNOUT_PATH, lang));
+      return res.redirect(addLangToUrl(ACCOUNTS_SIGNOUT_PATH, lang));
     case "no":
-        return res.redirect(returnPage);
+      return safeRedirect(res, previousPage);
     default:
-        return showMustSelectButtonError(res, req, returnPage);
-    }
-})
+      return showMustSelectButtonError(res, req, previousPage);
+  }
+};
 
-// Async version of express handler so that static analysers don't complain that an await statement 
-// isn't needed when it is.
-type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise<unknown>
+const getPreviousPageUrl = (req: Request) => {
+  const headers = req.rawHeaders;
+  const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
+  if (!absolutePreviousPageUrl) {
+    throw new Error('Previous page URL not found');
+  }
 
-// Wraps a handler function to catch any exceptions and pass them to the next handler in the chain.
-function handleError(handler: AsyncHandler): AsyncHandler {
-    return async (req, res, next) => {
-        try {
-            await handler(req, res, next)
-        } catch (e) {
-            next(e);
-        }
-    }
-}
+  const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
+  const relativePreviousPageUrl = absolutePreviousPageUrl.substring(indexOfRelativePath);
 
-function showMustSelectButtonError(res: Response, req: Request, returnPage: string) {
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
+  logger.debugRequest(req, `Relative previous page URL is ${relativePreviousPageUrl}`);
+  return relativePreviousPageUrl;
+};
 
-    res.status(400);
-    return res.render(Templates.SIGNOUT, {
-        backLinkUrl: returnPage,
-        noInputSelectedError: true,
-        templateName: Templates.SIGNOUT,
-        currentUrl: req.originalUrl,
-        ...getLocaleInfo(locales, lang)
-    });
-}
+const safeRedirect = (res: Response, url: string): void => {
+  if (url.startsWith(OFFICER_FILING)) {
+    return res.redirect(url);
+  }
 
-function saveReturnPageInSession(req: Request): string {
-    const lang = selectLang(req.query.lang);
-    const returnPageUrl = req.headers.referer!;
-    if (!returnPageUrl.includes(SIGNOUT)) {
-        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(returnPageUrl, lang));
-    } else {
-        const originalPage = getReturnPageFromSession(req.session as Session);
-        req.session?.setExtraData(SIGNOUT_RETURN_URL_SESSION_KEY, addLangToUrl(originalPage, lang));
-    }
-    return addLangToUrl(returnPageUrl, lang);
-}
+  throw new Error('Security failure with URL ' + url);
+};
 
-function getReturnPageFromSession(session: Session): string {
-    const returnPage = session?.getExtraData(SIGNOUT_RETURN_URL_SESSION_KEY)
-    if (returnPage !== undefined && typeof returnPage === 'string') return returnPage
+const showMustSelectButtonError = (res: Response, req: Request, returnPage: string) => {
+  const lang = selectLang(req.query.lang);
+  const locales = getLocalesService();
+  const returnPageEncoded = encodeURIComponent(returnPage);
 
-    logger.error(`Unable to find page to return the user to. ` 
-        + `It should have been a string value stored in the session extra data with key ${SIGNOUT_RETURN_URL_SESSION_KEY}. ` 
-        + `However, ${JSON.stringify(returnPage)} was there instead.`)
-
-    throw new Error(`Cannot find url of page to return user to.`)
-}
+  res.status(400);
+  return res.render(Templates.SIGNOUT, {
+    backLinkUrl: returnPage,
+    previousPage: returnPage,
+    noInputSelectedError: true,
+    templateName: Templates.SIGNOUT,
+    currentUrl: urlUtils.getUrlToPath(SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
+    ...getLocaleInfo(locales, lang)
+   });
+};

@@ -81,6 +81,11 @@
                 ]
                 }) 
             }} 
+            {{ govukInput({
+                value: previousPage,
+                name: "previousPage",
+                classes: "govuk-visually-hidden"
+              }) }}
         {% include "includes/continue-button.html" %}
         </form>
     </div>
