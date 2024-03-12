@@ -45,7 +45,7 @@ const getPreviousPageUrl = (req: Request) => {
   const headers = req.rawHeaders;
   const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
   if (!absolutePreviousPageUrl) {
-    throw new Error('Previous page URL not found');
+    return absolutePreviousPageUrl;
   }
 
   const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);

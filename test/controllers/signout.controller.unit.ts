@@ -42,6 +42,7 @@ describe("Signout controller tests", () => {
 
       expect(response.status).toBe(400)
       expect(response.text).toContain('Select yes if you want to sign out');
+      expect(response.text).toContain('#signout');
       expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
     });
 

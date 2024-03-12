@@ -10,7 +10,6 @@ export default () => {
   process.env.COOKIE_SECRET = "123456789012345678901234";
   process.env.EWF_URL = "https://ewf.companieshouse.gov.uk/";
   process.env.FEATURE_FLAG_TM01_WEB = "true";
-  process.env.FEATURE_FLAG_REMOVE_DIRECTOR_20022023 = "true";
   process.env.INTERNAL_API_URL = "http://localhost:9333";
   process.env.NODE_ENV = "development";
   process.env.PIWIK_SITE_ID = "999";
@@ -29,7 +28,7 @@ export default () => {
   process.env.OCCUPATION_LIST = 'Astronaut';
   process.env.NATIONALITY_LIST = 'British;Irish;Congolese (Congo);Citizen of Guinea-Bissau;Kingdom of Sauron East of the North Gate Shires;East of the North Gate Shires';
   process.env.COUNTRY_LIST = 'England;France';
-  process.env.UK_COUNTRY_LIST="England;Scotland;Wales;Northern Ireland;United Kingdom"
+  process.env.UK_COUNTRY_LIST="England;Scotland;Wales;Northern Ireland;United Kingdom;Cymru"
   process.env.POSTCODE_VALIDATION_URL = 'http://example-postcode-lookup/postcode';
   process.env.POSTCODE_ADDRESSES_LOOKUP_URL = 'http://example-postcode-lookup/multiple-addresses';
 };
