@@ -31,15 +31,23 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director&#39;s occupation?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+
 const DIRECTOR_OCCUPATION_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const DIRECTOR_DETAILS_ADDRESS_URL = UPDATE_DIRECTOR_DETAILS_PATH
+  
+const DIRECTOR_DETAILS_ADDRESS_URL = UPDATE_DIRECTOR_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=${STOP_TYPE.ETAG}`;
+
+const UPDATE_BACK_LINK_URL = UPDATE_DIRECTOR_DETAILS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=${STOP_TYPE.ETAG}`;
 
 describe("Director occupation controller tests", () => {
 
@@ -137,6 +145,22 @@ describe("Director occupation controller tests", () => {
         {occupation: "",  occupationHasBeenUpdated : false})
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
+      });
+
+      it("should set back link correctly if there are errors", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          firstName: "John",
+          lastName: "Smith"
+        });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({
+          etag: "etag",
+          occupation: "Director"
+        });
+        const response = await request(app)
+        .post(DIRECTOR_OCCUPATION_URL)
+        .send({"typeahead_input_0" : "~"});
+
+        expect(response.text).toContain(UPDATE_BACK_LINK_URL);
       });
 
       it("Should redirect to stop page if the etag fails validation", async () => {

@@ -9,7 +9,7 @@ import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation
 import { Templates } from "../types/template.paths";
 import { formatTitleCase, retrieveDirectorNameFromFiling } from "../utils/format";
 import { urlUtils } from "../utils/url";
-import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH } from "../types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
 import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -27,12 +27,15 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
     const nationality1 = getField(req, DirectorField.NATIONALITY_1);
     const nationality2 = getField(req, DirectorField.NATIONALITY_2);
     const nationality3 = getField(req, DirectorField.NATIONALITY_3);
-    const isUpdate = req.path.includes("update-director-name");
+    const isUpdate = req.path.includes("update-director-nationality");
     let currentUrl: string;
+    let backLinkUrl: string;
     if (isUpdate) {
       currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req)
+      backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
     } else {
       currentUrl = urlUtils.getUrlToPath(DIRECTOR_NATIONALITY_PATH, req)
+      backLinkUrl = urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)
     }
 
     const frontendValidationErrors = validateNationality([nationality1, nationality2, nationality3], NationalityValidation);
@@ -40,7 +43,7 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
       const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
       return res.render(Templates.DIRECTOR_NATIONALITY, {
         templateName: Templates.DIRECTOR_NATIONALITY,
-        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(DIRECTOR_DATE_DETAILS_PATH, req)),
+        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, backLinkUrl),
         typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
         typeahead_value: nationality1 + "|" + nationality2 + "|" + nationality3,
         errors: formattedErrors,

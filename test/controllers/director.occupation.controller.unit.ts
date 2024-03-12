@@ -6,7 +6,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_DETAILS_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
@@ -31,11 +31,18 @@ const APPOINTMENT_ID = "987654321";
 const PAGE_HEADING = "What is the director&#39;s occupation?";
 const PAGE_HEADING_WELSH = "Beth yw galwedigaeth y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+
 const DIRECTOR_OCCUPATION_URL = DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
-  const DIRECTOR_CORRESPONDENCE_ADDRESS_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
+  
+const DIRECTOR_CORRESPONDENCE_ADDRESS_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
+  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+const BACK_LINK_URL = DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
@@ -247,7 +254,18 @@ describe("Director occupation controller tests", () => {
           .post(DIRECTOR_OCCUPATION_URL);
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });
-      
+
+      it("should set back link correctly if there are errors", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          firstName: "John",
+          lastName: "Smith"
+        })
+        const response = await request(app)
+        .post(DIRECTOR_OCCUPATION_URL)
+        .send({"typeahead_input_0" : "~"});
+
+        expect(response.text).toContain(BACK_LINK_URL);
+      });
     });
 
     describe("buildValidationErrors tests", () => {
