@@ -61,7 +61,7 @@ describe("Director name validation tests", () => {
     });
 
     it ("should render error if title is too long", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts, Order of Merlin (first class), Supreme Mugwump, Chief Warlock and Grand Sorcerer"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts - Order of Merlin the first class Supreme Mugwump - Chief Warlock and Grand Sorcerer"});
         expect(response.text).toContain(TITLE_LENGTH);
     });
 
@@ -76,6 +76,11 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(FIRST_NAME_CHARACTERS);
     });
 
+    it ("should render error if first name contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:"F1rst"});
+        expect(response.text).toContain(FIRST_NAME_CHARACTERS);
+    });
+
     it ("should render error if first name is too long", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:FIFTY_ONE_CHARACTERS});
         expect(response.text).toContain(FIRST_NAME_LENGTH);
@@ -84,6 +89,11 @@ describe("Director name validation tests", () => {
     // middle name validation
     it ("should render error if middle names has invalid characters", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"§"});
+        expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
+    });
+
+    it ("should render error if middle names contain numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"M1ddle Nam3"});
         expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
     });
 
@@ -100,6 +110,11 @@ describe("Director name validation tests", () => {
 
     it ("should render error if last name has invalid characters", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:"§"});
+        expect(response.text).toContain(LAST_NAME_CHARACTERS);
+    });
+
+    it ("should render error if last name contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:"L4st"});
         expect(response.text).toContain(LAST_NAME_CHARACTERS);
     });
 
