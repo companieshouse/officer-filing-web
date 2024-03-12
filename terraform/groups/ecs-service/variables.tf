@@ -101,9 +101,6 @@ variable "default_session_expiration" {
   type        = string
   default     = "3600"
 }
-variable "service_name" {
-  type        = string
-}
 variable "show_service_offline_page" {
   type        = string
 }

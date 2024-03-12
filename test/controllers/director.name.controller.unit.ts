@@ -22,11 +22,13 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director&#39;s name?";
+const PAGE_HEADING_WELSH = "Beth yw enw’r cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_NAME_URL = DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const DIRECTOR_NAME_WELSH_URL = DIRECTOR_NAME_URL + "?lang=cy";
 const DIRECTOR_DATE_DETAILS_URL = DIRECTOR_DATE_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -49,6 +51,17 @@ describe("Director name controller tests", () => {
         const response = await request(app).get(DIRECTOR_NAME_URL).set({"referer": "director-name"});
   
         expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+      });
+
+      it("Should navigate to director name page in welsh", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          referenceAppointmentId: "app1",
+          referenceEtag: "ETAG"
+        });
+        const response = await request(app).get(DIRECTOR_NAME_WELSH_URL).set({"referer": "director-name"});
+  
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
 

@@ -8,7 +8,7 @@ import { getOfficerFiling } from "../../services/officer.filing.service";
 import { Templates } from "../../types/template.paths";
 import { formatTitleCase } from "../../services/confirm.company.service";
 import { retrieveDirectorNameFromAppointment } from "../../utils/format";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { CREATE_TRANSACTION_PATH } from "../../types/page.urls";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -37,7 +37,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       companyName: companyProfile.companyName,
       directorTitle: formatTitleCase(appointment.title),
       directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
-      updateDirectorSameCompany: urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req),
+      updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
       nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,
       nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
       occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,

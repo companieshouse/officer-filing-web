@@ -22,6 +22,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director's nationality?";
+const PAGE_HEADING_WELSH = "Beth yw cenedligrwydd y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -52,6 +53,42 @@ describe("Update director nationality controller tests", () => {
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL);
 
       expect(response.text).toContain(ERROR_PAGE_HEADING);
+    });
+
+    it("Should navigate to update nationality page", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        nationality2: "nationality2",
+        nationality3: "nationality3",
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=en");
+
+      expect(response.text).toContain(PAGE_HEADING);
+    });
+
+    it.each([[UPDATE_DIRECTOR_DETAILS_URL, "?lang=en", ""],
+             [UPDATE_DIRECTOR_DETAILS_URL, "?lang=cy", ""],
+             [UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL, "?lang=en", UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL],
+             [UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL, "?lang=cy", UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL],
+            ])
+    ("Should navigate to page with backlinkUrl containing lang param", async (backLinkUrl, langParam, cyaLink) => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+      });
+
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        nationality1: "nationality1",
+        checkYourAnswersLink: cyaLink,
+      });
+
+      const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + langParam);
+
+      expect(response.text).toContain(backLinkUrl + langParam);
     });
 
     it("Should populate filing data on the page", async () => {
@@ -89,7 +126,7 @@ describe("Update director nationality controller tests", () => {
       });
 
       const response = await request(app).get(UPDATE_DIRECTOR_NATIONALITY_URL + "?lang=cy");
-      expect(response.text).toContain("to be translated");
+      expect(response.text).toContain(PAGE_HEADING_WELSH);
     });
 
     it("should catch error", async () => {
@@ -178,6 +215,53 @@ describe("Update director nationality controller tests", () => {
       }))
     });
 
+    it("Should redirect to update director details page after update with nationalityHasBeenUpdated true when a new nationality is added.", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        nationality: "British"
+      });
+      mockGetOfficerFiling.mockResolvedValue({
+        referenceEtag: "etag",
+        nationality1: "British",
+        nationality2: undefined,
+        nationality3: undefined
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+
+      const response = await request(app)
+        .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+        .send({typeahead_input_0:"British", typeahead_input_1: "Irish"})
+      expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+        nationalityHasBeenUpdated: true
+      }))
+    });
+
+
+    it("Should redirect to update director details page after removing one nationality with nationalityHasBeenUpdated true", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        nationality: "British,Irish"
+      });
+      mockGetOfficerFiling.mockResolvedValue({
+        referenceEtag: "etag",
+        nationality1: "British",
+        nationality2: "Irish",
+        nationality3: undefined
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+
+      const response = await request(app)
+        .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+        .send({typeahead_input_0:"British", typeahead_input_1: ""})
+      expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+        nationalityHasBeenUpdated: true
+      }))
+    });
+
     it("Should redirect to update director details page after update with nationalityHasBeenUpdated false if same nationality1", async () => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
@@ -201,23 +285,46 @@ describe("Update director nationality controller tests", () => {
       }))
     });
 
-    it("Should redirect to update director details page after update with nationalityHasBeenUpdated false if different nationality2", async () => {
+    it("Should redirect to update director details page after update with nationalityHasBeenUpdated false if same nationality1 and nationality 2", async () => {
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
-        nationality: "British,Austrian,French"
+        nationality: "British,Irish"
       });
       mockGetOfficerFiling.mockResolvedValue({
         referenceEtag: "etag",
-        nationality1: "Nation1",
-        nationality2: "",
-        nationality3: ""
+        nationality1: "British",
+        nationality2: "Irish",
+        nationality3: undefined
       });
       mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"});
+        .send({typeahead_input_0:"British", typeahead_input_1:"Irish"});
+      expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
+      expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
+        nationalityHasBeenUpdated: false
+      }))
+    });
+
+    it("Should redirect to update director details page after update with nationalityHasBeenUpdated false if same nationality1, nationality 2 and nationality 3", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+        etag: "etag",
+        nationality: "British,Irish,Congolese (Congo)"
+      });
+      mockGetOfficerFiling.mockResolvedValue({
+        referenceEtag: "etag",
+        nationality1: "British",
+        nationality2: "Irish",
+        nationality3: "Congolese (Congo)"
+      });
+      mockPatchOfficerFiling.mockResolvedValueOnce({data:{
+        }});
+
+      const response = await request(app)
+        .post(UPDATE_DIRECTOR_NATIONALITY_URL)
+        .send({typeahead_input_0:"British", typeahead_input_1:"Irish", typeahead_input_2:"Congolese (Congo)"});
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: false

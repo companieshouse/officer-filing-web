@@ -1,6 +1,5 @@
 {
     "directorLinkCorrespondenceManuallyTitle": "If the registered office address changes in the future, do you want this to apply to the director's correspondence address too?",
     "directorLinkCorrespondenceManuallyHintTextYes": "We'll record the director's correspondence address as the 'same as the registered office address'. Future changes will also apply to the director's correspondence address.", 
-    "directorLinkCorrespondenceManuallyHintTextNo": "You’ll need to enter the correspondence address manually on the next screen. Future changes to the registered office address will not apply to the correspondence address."
-
+    "directorLinkCorrespondenceManuallyHintTextNo": "You’ll have to update the correspondence address manually if it changes."
 }

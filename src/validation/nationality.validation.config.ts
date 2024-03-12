@@ -13,21 +13,21 @@ export const NationalityValidation: GenericValidationType = {
   },
   Nationality1InvalidCharacter: {
     ErrorField: {
-      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
+      messageKey: nationalityErrorMessageKey.INVALID_NATIONALITY_CHARACTER,
       source: [DirectorField.NATIONALITY_1],
       link: DirectorField.NATIONALITY_1
     }
   },
   Nationality2InvalidCharacter: {
     ErrorField: {
-      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
+      messageKey: nationalityErrorMessageKey.INVALID_NATIONALITY_CHARACTER,
       source: [DirectorField.NATIONALITY_2],
       link: DirectorField.NATIONALITY_2
     }
   },
   Nationality3InvalidCharacter: {
     ErrorField: {
-      messageKey: nationalityErrorMessageKey.NATIONALITY_INVALID,
+      messageKey: nationalityErrorMessageKey.INVALID_NATIONALITY_CHARACTER,
       source: [DirectorField.NATIONALITY_3],
       link: DirectorField.NATIONALITY_3
     }

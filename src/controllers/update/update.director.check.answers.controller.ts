@@ -55,30 +55,31 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
+    const lang = selectLang(req.query.lang);
     const currentOfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const appointmentId = currentOfficerFiling.referenceAppointmentId as string;
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
     // Check if company has been dissolved
     if (await getCurrentOrFutureDissolved(session, companyNumber)){
-      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED));
+      return res.redirect(addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED), lang));
     }
 
     // Check if ETAG matches
     if (currentOfficerFiling.referenceEtag !== companyAppointment.etag) {
       return res.redirect(
-        urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG));
+        addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.ETAG),lang));
     }
 
     // Run full api validation
     const validationStatus = await getValidationStatus(session, transactionId, submissionId);
     if (!validationStatus.isValid) {
-      return res.redirect(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG));
+      return res.redirect(addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.SOMETHING_WENT_WRONG), lang));
     }
 
     // Close transaction and go to submitted page
     await closeTransaction(session, companyNumber, submissionId, transactionId);
-    return res.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_SUBMITTED_PATH, req));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_SUBMITTED_PATH, req), lang));
 
   } catch (e) {
     return next(e);
@@ -104,8 +105,8 @@ const renderPage = async (req: Request, res: Response, companyNumber: string, of
     directorNameCompanyAppointment: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
     name: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
     occupation:  formatTitleCase(officerFiling.occupation),
-    dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate),
-    nameLink: urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req),
+    dateUpdated: toReadableFormat(officerFiling.directorsDetailsChangedDate, lang),
+    nameLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req) ,lang),
     nationalityLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_NATIONALITY_PATH, req), lang),
     occupationLink: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang),
     dateUpdatedLink:  addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_DATE_OF_CHANGE_PATH, req), lang),

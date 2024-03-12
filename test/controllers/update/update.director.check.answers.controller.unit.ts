@@ -46,7 +46,7 @@ const PAGE_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
 const NEXT_PAGE_URL = UPDATE_DIRECTOR_SUBMITTED_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID) + "?lang=en";
   const OCCUPATION_PAGE_URL = UPDATE_DIRECTOR_OCCUPATION_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -64,6 +64,7 @@ const NEXT_PAGE_URL = UPDATE_DIRECTOR_SUBMITTED_PATH
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 const PAGE_HEADING = "Check your answers before submitting the update";
+const PAGE_HEADING_WELSH = "Gwiriwch eich atebion cyn cyflwyno&#39;r diweddariad";
 
 describe("Director check your answers controller tests", () => {
 
@@ -76,7 +77,7 @@ describe("Director check your answers controller tests", () => {
   });
 
   describe("GET tests", () => {
-    it("Should navigate to director check your answers page", async () => {
+    it.each([[PAGE_HEADING, "en"], [PAGE_HEADING_WELSH, "cy"]])("Should navigate to director check your answers page", async (heading, lang) => {
 
       mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
         etag: "etag",
@@ -87,14 +88,15 @@ describe("Director check your answers controller tests", () => {
 
       mockGetOfficerFiling.mockResolvedValue({
         nameHasBeenUpdated: true,
+        occupationHasBeenUpdated: true,
         firstName: "John",
         lastName: "Doe",
         title: "Mr",
         occupation: "Director",
       });
       
-      const response = await request(app).get(PAGE_URL);
-      expect(response.text).toContain(PAGE_HEADING);
+      const response = await request(app).get(PAGE_URL + `?lang=${lang}`);
+      expect(response.text).toContain(heading);
       expect(response.text).toContain("John Mid Smith");
       expect(response.text).toContain("John");
       expect(response.text).toContain("Doe");
@@ -171,7 +173,7 @@ describe("Director check your answers controller tests", () => {
       mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       const response = await request(app).post(PAGE_URL);
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=dissolved`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=dissolved&lang=en`)
     }),
 
     it("Should redirect to etag stop screen if etag does not match", async () => {
@@ -181,7 +183,7 @@ describe("Director check your answers controller tests", () => {
       mockGetValidationStatus.mockResolvedValue(mockValidValidationStatusResponse);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       const response = await request(app).post(PAGE_URL);
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=etag`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=etag&lang=en`)
     });
 
     it("Should redirect to something went wrong stop screen if api validation fails", async () => {
@@ -194,7 +196,7 @@ describe("Director check your answers controller tests", () => {
       const response = await request(app).post(PAGE_URL);
 
       expect(mockGetValidationStatus).toHaveBeenCalled();
-      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=something-went-wrong`)
+      expect(response.header.location).toEqual(`/appoint-update-remove-company-officer/company/${COMPANY_NUMBER}/cannot-use?stopType=something-went-wrong&lang=en`)
     });
   });
 

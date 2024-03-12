@@ -59,6 +59,12 @@ describe("Director date details controller tests", () => {
       expect(response.text).toContain(SURVEY_LINK);
     });
 
+    it("Should navigate to the update submitted page in Welsh", async () => {
+      const response = await request(app).get(UPDATE_SUBMITTED_URL + "?lang=cy");
+      expect(response.text).toContain("Mr John Elizabeth Doe");
+      expect(response.text).toContain("Diweddariad y cyfarwyddwr wedi ei gyflwyno");
+    });
+
     it("Should display the original name of the director", async () => {
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
       expect(response.text).toContain("Mr John Elizabeth Doe");

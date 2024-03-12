@@ -81,8 +81,8 @@ describe("Remove director submitted controller tests", () => {
 
     it("Should render the page in welsh", async () => {
           const response = await request(app).get(SUBMITTED_URL + "?lang=cy");
-               expect(response.text).toContain("Penodi, diweddaru a dileu cyfarwyddwr cwmni");
-          
+               expect(response.text).toContain("Dileu’r cyfarwyddwr wedi ei gyflwyno");
+
     });
 
     it("Should display required subtitles & information", async () => {

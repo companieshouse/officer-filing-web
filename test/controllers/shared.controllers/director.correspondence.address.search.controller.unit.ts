@@ -36,6 +36,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Find the director&#39;s correspondence address";
+const WELSH_PAGE_HEADING = "Dod o hyd i gyfeiriad gohebiaeth y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -119,7 +120,7 @@ describe('Director correspondence address search controller test', () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
-    it.each([[PAGE_URL, "en", PAGE_HEADING], [UPDATE_PAGE_URL, "en", PAGE_HEADING], [PAGE_URL, "cy", "to be translated"], [UPDATE_PAGE_URL, "cy", "to be translated"]])(`Should navigate to '%s' page in english and welsh`, async (url, language, heading) => {
+    it.each([[PAGE_URL, "en", PAGE_HEADING], [UPDATE_PAGE_URL, "en", PAGE_HEADING], [PAGE_URL, "cy", WELSH_PAGE_HEADING], [UPDATE_PAGE_URL, "cy", WELSH_PAGE_HEADING]])(`Should navigate to '%s' page in english and welsh`, async (url, language, heading) => {
       mockGetOfficerFiling.mockResolvedValueOnce({
         directorName: "John Smith"
       })

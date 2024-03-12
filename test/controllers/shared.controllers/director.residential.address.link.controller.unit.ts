@@ -37,7 +37,7 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "If the director&#39;s correspondence address changes in the future, do you want this to apply to their home address too?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
-const PAGE_HEADING_WELSH = "to be translated";
+const PAGE_HEADING_WELSH = "Os bydd cyfeiriad gohebiaeth y cyfarwyddwr yn newid yn y dyfodol, a ydych chi am i hyn fod yn berthnasol i’w cyfeiriad cartref hefyd?";
 
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_LINK_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -79,7 +79,7 @@ const APPOINT_DIRECTORS_CYA_URL_WELSH = APPOINT_DIRECTORS_CYA_URL + "?lang=cy";
 const UPDATE_DIRECTORS_CYA_URL_WELSH = UPDATE_DIRECTORS_CYA_URL + "?lang=cy";
 const BACK_LINK_URL_WELSH = BACK_LINK_URL + "?lang=cy";
 const UPDATE_BACK_LINK_URL_WELSH = UPDATE_BACK_LINK_URL + "?lang=cy";
-const HA_TO_SA_ERROR_WELSH = "to be translated"
+const HA_TO_SA_ERROR_WELSH = "Dewiswch ydw os bydd y cyfeiriad gohebiaeth yn newid yn y dyfodol a&#39;ch bod am i hyn fod yn berthnasol i&#39;r cyfeiriad cartref"
 
 describe("Director residential address link controller tests", () => {
 

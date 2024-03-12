@@ -31,8 +31,7 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
 
     return res.render(template, {
       templateName: template,
-      backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
       directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
@@ -80,7 +79,7 @@ export const postDirectorNationality = async (req: Request, res: Response, next:
 
     const patchedFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
     const nextPage = addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang);
-    return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage));
+    return res.redirect(await setRedirectLink(req, patchedFiling.data.checkYourAnswersLink, nextPage, lang));
   } catch (e) {
     return next(e);
   }
@@ -101,15 +100,31 @@ const checkNationality2 = (officerFiling: OfficerFiling) => {
     return officerFiling.nationality2Link
   }}
 
+/**
+ * Check if the officerFiling and companyAppointment contains identical nationalities.
+ * @param currentOfficerFiling
+ * @param companyAppointment
+ * returns false if size of companyAppointment's nationalities is greater than currentOfficerFiling's nationalities, (which indicates that the one more nationality have been removed)
+ * returns true if companyAppointment's nationalities are identical to currentOfficerFiling's nationalities, false otherwise.
+ */
+
 const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAppointment: CompanyAppointment): boolean => {
   const nationality = companyAppointment.nationality?.split(",")!;
   let sameNationality: boolean = false;
+  // Count the number of non-empty nationalities in currentOfficerFiling
+   const officerFilingNationalitiesCount = ['nationality1', 'nationality2', 'nationality3']
+   .reduce((count, nationalityKey) => currentOfficerFiling[nationalityKey] ? count + 1 : count, 0);
+
+  // Check if companyAppointment has more nationalities than currentOfficerFiling
+  if (nationality.length > officerFilingNationalitiesCount) {
+    return sameNationality;
+  }
+
   if (currentOfficerFiling.nationality1 === nationality[0]) {
-    if (!(((currentOfficerFiling.nationality2) && (nationality[1] !== currentOfficerFiling.nationality2)) 
-        || ((currentOfficerFiling.nationality3) &&(nationality[2] !== currentOfficerFiling.nationality3)))) 
-        {
-          sameNationality = true;
-    } 
+    if ((!currentOfficerFiling.nationality2 || nationality[1] === currentOfficerFiling.nationality2) &&
+        (!currentOfficerFiling.nationality3 || nationality[2] === currentOfficerFiling.nationality3)) {
+      sameNationality = true;
+    }
   } 
   return sameNationality;
 }

@@ -14,7 +14,7 @@ import { buildDateString } from "../../utils/date";
 import { validateDateOfChange } from "../../validation/date.validation";
 import { ValidationError } from "../../model/validation.model";
 import { formatValidationErrors } from "../../validation/validation";
-import { getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { setBackLink } from "../../utils/web";
@@ -59,6 +59,7 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
     let changeOfDateValidationErrors: ValidationError[] = [];
     let docValidateError = validateDateOfChange(docDay, docMonth, docYear, DirectorDateOfChangeValidation, companyProfile, officerFiling);
     const dateOfChangeString = buildDateString(docDay, docMonth, docYear);
+    const lang = selectLang(req.query.lang);
 
     if(docValidateError) {
       changeOfDateValidationErrors.push(docValidateError);
@@ -72,7 +73,7 @@ export const post = async (req: Request, resp: Response, next: NextFunction) => 
 
     await patchOfficerFiling(session, transactionId, submissionId, updatedFiling);
 
-    return resp.redirect(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req));
+    return resp.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang));
   } catch(e) {
     return next(e);
   }

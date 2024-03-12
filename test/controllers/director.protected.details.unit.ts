@@ -36,6 +36,7 @@ const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Does the director have their personal information protected at Companies House?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+const WELSH_PAGE_HEADING = "A yw gwybodaeth bersonol y cyfarwyddwr wedi";
 
 const PAGE_URL = DIRECTOR_PROTECTED_DETAILS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -119,7 +120,7 @@ describe("Director protected details controller tests", () => {
 
        const response = await request(app).get(PAGE_URL+ "?lang=cy").set({"referer": "protected-details"});
 
-       expect(response.text).toContain("to be translated");
+       expect(response.text).toContain(WELSH_PAGE_HEADING);
       });
 
       it('should set checkYourAnswersLink to empty string if ?cya_backlink=true', async () => {

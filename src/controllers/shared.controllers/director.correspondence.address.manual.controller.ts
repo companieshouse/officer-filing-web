@@ -122,7 +122,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
 
     // Validate filing
-    const validationStatus = await getValidationStatus(session, transactionId, submissionId);
+    const validationStatus = await getValidationStatus(session, transactionId, submissionId, false);
     const validationErrors = buildValidationErrors(validationStatus);
     if (validationErrors.length > 0) {
       return renderPage(req, res, session, { 

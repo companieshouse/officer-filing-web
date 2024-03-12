@@ -1,19 +1,19 @@
 {
-  "whatInformationShownInOnlineRegisterInset": "to be translated",
-  "whatInformationShownInOnlineRegisterInsetHint": "to be translated",
+  "whatInformationShownInOnlineRegisterInset": "Pa wybodaeth byddwn yn ei ddangos ar-lein ar y gofrestr gyhoeddus",
+  "whatInformationShownInOnlineRegisterInsetHint": "Byddwn yn dangos cenedligrwydd y cyfarwyddwr ar gofrestr cyhoeddus Tŷ'r Cwmnïau.",
   "companyDetails" : "Manylion y cwmni",
   "companyName": "Enw'r cwmni",
   "companyNumber": "Rhif y cwmni",
   "directorDetails": "Manylion y cyfarwyddwr",
   "directorName": "Enw",
-  "directorPreviousNames": "to be translated",
+  "directorPreviousNames": "Enwau blaenorol",
   "dateAppointed" : "Dyddiad penodi",
   "appointedOnDate" : "to be translated",
   "dateOfBirth" : "Dyddiad geni",
-  "nationality" : "to be translated",
-  "occupation" : "to be translated",
-  "noneString": "to be translated",
+  "nationality" : "Cenedligrwydd",
+  "occupation" : "Galwedigaeth",
+  "noneString": "Dim",
   "thereIsAProblem" : "Mae yna broblem",
-  "backToCorrespondenceAddress": "to be translated",
-  "backToFindHomeAddressText": "to be translated"
+  "backToCorrespondenceAddress": "Ewch nôl i 'Beth yw cyfeiriad gohebiaeth y cyfarwyddwr?'",
+  "backToFindHomeAddressText": "Ewch nôl i 'Dod o hyd i gyfeiriad cartref y cyfarwyddwr'"
 }

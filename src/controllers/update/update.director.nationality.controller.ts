@@ -5,7 +5,7 @@ import { getDirectorNationality, postDirectorNationality } from "../../controlle
 
 
 export const get = (req: Request, resp: Response, next: NextFunction) => {
-  getDirectorNationality(req, resp, next, Templates.UPDATE_DIRECTOR_NATIONALITY, UPDATE_DIRECTOR_NATIONALITY_PATH, true)
+  getDirectorNationality(req, resp, next, Templates.UPDATE_DIRECTOR_NATIONALITY, UPDATE_DIRECTOR_DETAILS_PATH, true)
 }
 
 export const post = (req: Request, resp: Response, next: NextFunction) => {

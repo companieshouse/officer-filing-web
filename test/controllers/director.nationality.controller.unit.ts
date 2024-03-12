@@ -12,8 +12,6 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusErrorNationalityInvalid, mockValidationStatusErrorNationalityLength } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { getField } from "../../src/utils/web";
-import { nationalityOneErrorMessageKey } from "../../src/utils/api.enumerations.keys";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -24,6 +22,7 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "What is the director's nationality?";
+const PAGE_HEADING_WELSH = "Beth yw cenedligrwydd y cyfarwyddwr?";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const DIRECTOR_NATIONALITY_URL = DIRECTOR_NATIONALITY_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
@@ -62,7 +61,7 @@ describe("Director nationality controller tests", () => {
         });
 
         const response = await request(app).get(DIRECTOR_NATIONALITY_URL + "?lang=cy");
-        expect(response.text).toContain("to be translated");
+        expect(response.text).toContain(PAGE_HEADING_WELSH);
       });
 
       it("Should navigate to error page when feature flag is off", async () => {
