@@ -4,7 +4,7 @@ import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
 import { NameValidation } from "./name.validation.config";
-import { REGEX_FOR_VALID_NAME, formatValidationErrors } from "./validation";
+import { REGEX_FOR_VALID_FORMER_NAMES, REGEX_FOR_VALID_NAME, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -149,7 +149,7 @@ const validateFormerNames = (formerNames: string, previousNamesRadio: string, na
     }
     else if (previousNamesRadio == DirectorField.YES) {
         if(formerNames != null && formerNames != "") {
-            if (!formerNames.match(REGEX_FOR_VALID_NAME)){
+            if (!formerNames.match(REGEX_FOR_VALID_FORMER_NAMES)){
                 // invalid characters
                 validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.ErrorField);
             } else if (formerNames.length > NAME_FIELD_LENGTH_160){

@@ -131,6 +131,13 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(FORMER_NAMES_CHARACTERS);
     });
 
+    it ("should render error if previous names contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({
+            previous_names_radio:"Yes", 
+            previous_names:"Previous, Names123"});
+        expect(response.text).toContain(FORMER_NAMES_CHARACTERS);
+    });
+
     it ("should render error if previous names is too long", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({
             previous_names_radio:"Yes",

@@ -14,9 +14,16 @@ export const REGEX_FOR_VALID_CHARACTERS = /^[-,.:; 0-9A-Z&@$£¥€'"«»''""?!/
 export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
 
 /**
- * Regex for name - does not include numbers
+ * Regex for valid names:
+ * Does not allow numbers, but does allow hyphens, space and apostrophes
  */
 export const REGEX_FOR_VALID_NAME = /^[ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ'A-Za-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž -]*$/;
+
+/**
+ * Regex for valid former names:
+ * Does not allow numbers, but does allow hyphens, space, apostrophes and commas
+ */
+export const REGEX_FOR_VALID_FORMER_NAMES = /^[ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ'A-Za-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž, -]*$/;
 
 /**
  * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.
