@@ -3,7 +3,7 @@ import { Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { ACCOUNTS_SIGNOUT_PATH, OFFICER_FILING, SIGNOUT_PATH } from "../../src/types/page.urls";
-import { safeRedirect } from '../../src/controllers/signout.controller';
+import { getPreviousPageUrl, safeRedirect } from '../../src/controllers/signout.controller';
 
 const SIGNOUT_LOCATION = `${OFFICER_FILING}${SIGNOUT_PATH}`;
 
@@ -93,6 +93,22 @@ describe("Signout controller tests", () => {
       
       expect(() => safeRedirect(res as any as Response, url)).toThrowError(new Error('Security failure with URL ' + url))
       expect(res.redirect).not.toHaveBeenCalled()
+    });
+  });
+
+  describe('getPreviousPageUrl tests', () => {
+    it('should return the previous page url', () => {
+      const previousPage = OFFICER_FILING + '/test'
+      const req = {
+        rawHeaders: [
+          'Host', 'localhost:3000',
+          'User-Agent', 'curl/7.64.1',
+          'Accept', '*/*',
+          'Referer', previousPage
+        ]
+      }
+      
+      expect(getPreviousPageUrl(req as any)).toBe(previousPage)
     });
   });
 });

@@ -8,19 +8,19 @@ import { urlUtils } from "../utils/url";
 export const get: Handler = async (req, res) => {
 
   const lang = selectLang(req.query.lang);
-  const previousPageParam = req.params["previousPage"];
-  const returnPage = addLangToUrl(previousPageParam ?? getPreviousPageUrl(req), lang);
-  
-  const locales = getLocalesService();
-  const returnPageEncoded = encodeURIComponent(returnPage);
+  const previousPageParam = req.query.previousPage as string;
+  const returnPage = addLangToUrl(previousPageParam && typeof previousPageParam === 'string' ? previousPageParam : getPreviousPageUrl(req), lang);
   
   logger.debugRequest(req, "Signout return page is " + returnPage);
 
+  const locales = getLocalesService();
+  const returnPageEncoded = encodeURIComponent(returnPage);
+  
   res.render(Templates.SIGNOUT, {
     backLinkUrl: returnPage,
     previousPage: returnPage,
     templateName: Templates.SIGNOUT,
-    currentUrl: urlUtils.getUrlToPath(SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
+    currentUrl: urlUtils.getUrlToPath(OFFICER_FILING + SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
     ...getLocaleInfo(locales, lang)
   });
 };
@@ -43,7 +43,7 @@ export const post = (req, res) => {
   }
 };
 
-const getPreviousPageUrl = (req: Request) => {
+export const getPreviousPageUrl = (req: Request) => {
   const headers = req.rawHeaders;
   const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
   if (!absolutePreviousPageUrl) {
@@ -53,7 +53,6 @@ const getPreviousPageUrl = (req: Request) => {
   const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
   const relativePreviousPageUrl = absolutePreviousPageUrl.substring(indexOfRelativePath);
 
-  logger.debugRequest(req, `Relative previous page URL is ${relativePreviousPageUrl}`);
   return relativePreviousPageUrl;
 };
 
