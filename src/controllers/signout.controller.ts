@@ -8,8 +8,7 @@ import { urlUtils } from "../utils/url";
 export const get: Handler = async (req, res) => {
 
   const lang = selectLang(req.query.lang);
-  const previousPageQueryParam = req.query.previousPage;
-  const returnPage = addLangToUrl(previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req), lang);
+  const returnPage = addLangToUrl(getPreviousPageQueryParamUrl(req), lang);
   
   logger.debugRequest(req, "Signout return page is " + returnPage);
 
@@ -43,7 +42,13 @@ export const post = (req, res) => {
   }
 };
 
-export const getPreviousPageUrl = (req: Request) => {
+
+export const getPreviousPageQueryParamUrl = (req: Request) => {
+  const previousPageQueryParam = req.query.previousPage;
+  return previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req)
+};
+
+const getPreviousPageUrl = (req: Request) => {
   const headers = req.rawHeaders;
   const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
   if (!absolutePreviousPageUrl) {
@@ -51,9 +56,7 @@ export const getPreviousPageUrl = (req: Request) => {
   }
 
   const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
-  const relativePreviousPageUrl = absolutePreviousPageUrl.substring(indexOfRelativePath);
-
-  return relativePreviousPageUrl;
+  return absolutePreviousPageUrl.substring(indexOfRelativePath);
 };
 
 export const safeRedirect = (res: Response, url: string): void => {

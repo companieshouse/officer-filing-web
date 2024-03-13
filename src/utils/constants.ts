@@ -1,4 +1,4 @@
-import { COMPANY_LOOKUP, DATE_DIRECTOR_REMOVED_PATH } from "../types/page.urls";
+import { COMPANY_LOOKUP } from "../types/page.urls";
 
 export const STATEMENT_OF_CAPITAL_ERROR = "Select yes if the statement of capital is correct";
 export const TRADING_STATUS_ERROR = "Select yes if the company trading status is correct";
