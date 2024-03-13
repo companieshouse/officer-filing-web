@@ -74,7 +74,7 @@ const showMustSelectButtonError = (res: Response, req: Request, lang: string, re
     previousPage: returnPage,
     noInputSelectedError: true,
     templateName: Templates.SIGNOUT,
-    currentUrl: urlUtils.getUrlToPath(SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
+    currentUrl: urlUtils.getUrlToPath(OFFICER_FILING + SIGNOUT_PATH, req) + "?previousPage=" + returnPageEncoded,
     ...getLocaleInfo(locales, lang)
    });
 };
