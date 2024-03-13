@@ -8,8 +8,8 @@ import { urlUtils } from "../utils/url";
 export const get: Handler = async (req, res) => {
 
   const lang = selectLang(req.query.lang);
-  const previousPageParam = req.query.previousPage as string;
-  const returnPage = addLangToUrl(previousPageParam && typeof previousPageParam === 'string' ? previousPageParam : getPreviousPageUrl(req), lang);
+  const previousPageQueryParam = req.query.previousPage;
+  const returnPage = addLangToUrl(previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req), lang);
   
   logger.debugRequest(req, "Signout return page is " + returnPage);
 
@@ -28,10 +28,10 @@ export const get: Handler = async (req, res) => {
 export const post = (req, res) => {
 
   const lang = selectLang(req.query.lang);
-  const previousPageParam = req.body["previousPage"];
-  const previousPage = addLangToUrl(previousPageParam ?? OFFICER_FILING, lang);
+  const previousPagePostParam = req.body["previousPage"];
+  const previousPage = addLangToUrl(previousPagePostParam ?? OFFICER_FILING, lang);
 
-  logger.debugRequest(req, "Signout previous page in current lang is " + previousPage);
+  logger.debugRequest(req, "Signout previous page in current lang " + lang + " is " + previousPage);
 
   switch (req.body.signout) {
     case "yes":
