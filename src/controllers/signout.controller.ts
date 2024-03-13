@@ -7,9 +7,10 @@ import { urlUtils } from "../utils/url";
 
 export const get: Handler = async (req, res) => {
 
-  const previousPageParam = req.params["previousPage"];
-  const returnPage = previousPageParam ? previousPageParam : getPreviousPageUrl(req);
   const lang = selectLang(req.query.lang);
+  const previousPageParam = req.params["previousPage"];
+  const returnPage = addLangToUrl(previousPageParam ?? getPreviousPageUrl(req), lang);
+  
   const locales = getLocalesService();
   const returnPageEncoded = encodeURIComponent(returnPage);
   
@@ -26,10 +27,11 @@ export const get: Handler = async (req, res) => {
 
 export const post = (req, res) => {
 
-  const previousPage = req.body["previousPage"];
   const lang = selectLang(req.query.lang);
+  const previousPageParam = req.body["previousPage"];
+  const previousPage = addLangToUrl(previousPageParam ?? OFFICER_FILING, lang);
 
-  logger.debugRequest(req, "Signout previous page is " + previousPage);
+  logger.debugRequest(req, "Signout previous page in current lang is " + previousPage);
 
   switch (req.body.signout) {
     case "yes":
@@ -37,7 +39,7 @@ export const post = (req, res) => {
     case "no":
       return safeRedirect(res, previousPage);
     default:
-      return showMustSelectButtonError(res, req, previousPage);
+      return showMustSelectButtonError(res, req, lang, previousPage);
   }
 };
 
@@ -45,7 +47,7 @@ const getPreviousPageUrl = (req: Request) => {
   const headers = req.rawHeaders;
   const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
   if (!absolutePreviousPageUrl) {
-    return absolutePreviousPageUrl;
+    return OFFICER_FILING;
   }
 
   const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
@@ -55,7 +57,7 @@ const getPreviousPageUrl = (req: Request) => {
   return relativePreviousPageUrl;
 };
 
-const safeRedirect = (res: Response, url: string): void => {
+export const safeRedirect = (res: Response, url: string): void => {
   if (url.startsWith(OFFICER_FILING)) {
     return res.redirect(url);
   }
@@ -63,8 +65,7 @@ const safeRedirect = (res: Response, url: string): void => {
   throw new Error('Security failure with URL ' + url);
 };
 
-const showMustSelectButtonError = (res: Response, req: Request, returnPage: string) => {
-  const lang = selectLang(req.query.lang);
+const showMustSelectButtonError = (res: Response, req: Request, lang: string, returnPage: string) => {
   const locales = getLocalesService();
   const returnPageEncoded = encodeURIComponent(returnPage);
 
