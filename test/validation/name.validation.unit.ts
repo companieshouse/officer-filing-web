@@ -77,7 +77,7 @@ describe("Director name validation tests", () => {
     });
 
     it ("should render error if first name contains numbers", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:"F1rst"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:"First123"});
         expect(response.text).toContain(FIRST_NAME_CHARACTERS);
     });
 
@@ -93,7 +93,7 @@ describe("Director name validation tests", () => {
     });
 
     it ("should render error if middle names contain numbers", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"M1ddle Nam3"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"Middle Name123"});
         expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
     });
 
@@ -114,7 +114,7 @@ describe("Director name validation tests", () => {
     });
 
     it ("should render error if last name contains numbers", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:"L4st"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:"Last123"});
         expect(response.text).toContain(LAST_NAME_CHARACTERS);
     });
 
