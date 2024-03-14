@@ -113,4 +113,33 @@ describe("getCompanyNumberFromRequestParams", () => {
     const result = urlUtils.getAppointmentIdFromRequestParams(req);
     expect(result).toBe("1Kl63l-R7Kik7XkGNnQ3ZvARCVs");
   });
+
+  it("should get back link from request params", () => {
+    const req = {
+      query: {
+        backLink: "confirm-correspondence-address"
+      }
+    } as any as Request;
+    const result = urlUtils.getBackLinkFromRequestParams(req);
+    expect(result).toBe("confirm-correspondence-address");
+  });
+
+  it("should get no back link from multiple request params", () => {
+    const req = {
+      query: {
+        backLink: ["confirm-correspondence-address", ""]
+      }
+    } as any as Request;
+    const result = urlUtils.getBackLinkFromRequestParams(req);
+    expect(result).toBeUndefined;
+  });
+
+  it("should get no back link from request params without backLink param", () => {
+    const req = {
+      query: {
+      }
+    } as any as Request;
+    const result = urlUtils.getBackLinkFromRequestParams(req);
+    expect(result).toBeUndefined;
+  });
 });

@@ -27,7 +27,7 @@ const getTransactionIdFromRequestParams = (req: Request): string => sanitizeTran
 const getSubmissionIdFromRequestParams = (req: Request): string => sanitizeSubmissionId(req.params[urlParams.PARAM_SUBMISSION_ID]);
 const getAppointmentIdFromRequestParams = (req: Request): string => sanitizeAppointmentId(req.params[urlParams.PARAM_APPOINTMENT_ID]);
 
-const sanitizeCompanyNumber = (companyNumber: string): string => {
+export const sanitizeCompanyNumber = (companyNumber: string): string => {
   if (companyNumber) {
     return companyNumber.replace(/[^a-zA-Z0-9]/g, "");
   }
@@ -55,7 +55,13 @@ const sanitizeAppointmentId = (appointmentId: string): string => {
   return "";
 }
 
-const getBackLinkFromRequestParams = (req: Request): string => req.query[urlParams.PARAM_BACK_LINK] as string;
+const getBackLinkFromRequestParams = (req: Request): string | undefined => {
+  const backLink = req.query[urlParams.PARAM_BACK_LINK];
+  if (typeof backLink === "string") {
+      return backLink;
+  }
+  return undefined;
+}
 
 const setQueryParam = (url: string, paramName: URL_QUERY_PARAM, value: string) =>
   url.replace(`{${paramName}}`, value);

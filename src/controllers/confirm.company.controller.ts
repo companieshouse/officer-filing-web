@@ -3,7 +3,7 @@ import { Templates } from "../types/template.paths";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { Session } from "@companieshouse/node-session-handler";
 import { BASIC_STOP_PAGE_PATH, COMPANY_LOOKUP, CREATE_TRANSACTION_PATH, URL_QUERY_PARAM, urlParams } from "../types/page.urls";
-import { urlUtils } from "../utils/url";
+import { sanitizeCompanyNumber, urlUtils } from "../utils/url";
 import { getCompanyProfile } from "../services/company.profile.service";
 import { buildAddress, formatForDisplay } from "../services/confirm.company.service";
 import { getCurrentOrFutureDissolved } from "../services/stop.page.validation.service";
@@ -27,7 +27,7 @@ export const redirectToUrl = (url: string, res: Response) => {
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const session: Session = req.session as Session;
-    const companyNumber = req.query.companyNumber as string;
+    const companyNumber =  sanitizeCompanyNumber(req.query.companyNumber as string);
 
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
@@ -76,7 +76,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const session: Session = req.session as Session;
     const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
    
-    const companyNumber = req.query.companyNumber as string;
+    const companyNumber = sanitizeCompanyNumber(req.query.companyNumber as string);
     req.params[urlParams.PARAM_COMPANY_NUMBER] = companyNumber;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     
