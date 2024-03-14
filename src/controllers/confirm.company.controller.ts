@@ -71,8 +71,6 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    logger.debug("POST confirm company " + req.url + " lang in query params: " + req.query.lang + ", and body: " + req.body.lang);
-
     const session: Session = req.session as Session;
     const lang = req.body.lang ? selectLang(req.body.lang) : selectLang(req.query.lang);
    
