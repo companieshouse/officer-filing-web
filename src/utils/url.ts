@@ -55,6 +55,13 @@ const sanitizeAppointmentId = (appointmentId: string): string => {
   return "";
 }
 
+export const sanitizeStopType = (stopType): string => {
+  if (stopType && typeof stopType === "string") {
+    return stopType.replace(/[^a-z0-9-]/g, "");
+  }
+  return "";
+}
+
 const getBackLinkFromRequestParams = (req: Request): string | undefined => {
   const backLink = req.query[urlParams.PARAM_BACK_LINK];
   if (typeof backLink === "string") {
