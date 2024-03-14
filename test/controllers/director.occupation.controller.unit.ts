@@ -97,6 +97,18 @@ describe("Director occupation controller tests", () => {
         expect(response.text).toContain("Astronaut");
       });
 
+
+      it("Should populate filing data on the page with html decoded when occupation contains special characters.", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          occupation: "Company Secretary/Director",
+        });
+
+        const response = await request(app).get(DIRECTOR_OCCUPATION_URL);
+
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(response.text).toContain("Company Secretary/Director");
+      });
+
       it("Should display full director name on the page", async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           firstName: "Jim",
