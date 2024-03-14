@@ -15,10 +15,10 @@ export const compareAddress = (addressOne: Address | undefined, addressTwo: Addr
   if (addressOne?.addressLine2?.toLowerCase().trim() !== addressTwo?.addressLine2?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.country.toLowerCase().trim() !== addressTwo?.country?.toLowerCase().trim()){
+  if (addressOne?.country?.toLowerCase().trim() !== addressTwo?.country?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.locality.toLowerCase().trim() !== addressTwo?.locality?.toLowerCase().trim()){
+  if (addressOne?.locality?.toLowerCase().trim() !== addressTwo?.locality?.toLowerCase().trim()){
     return false;
   }
   if (addressOne?.postalCode?.toLowerCase().trim() !== addressTwo?.postalCode?.toLowerCase().trim()){
