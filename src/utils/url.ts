@@ -22,10 +22,39 @@ const getUrlToPath = (pathToPage: string, req: Request): string => {
   );
 };
 
-const getCompanyNumberFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_COMPANY_NUMBER];
-const getTransactionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_TRANSACTION_ID];
-const getSubmissionIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_SUBMISSION_ID];
-const getAppointmentIdFromRequestParams = (req: Request): string => req.params[urlParams.PARAM_APPOINTMENT_ID];
+const getCompanyNumberFromRequestParams = (req: Request): string => sanitizeCompanyNumber(req.params[urlParams.PARAM_COMPANY_NUMBER]);
+const getTransactionIdFromRequestParams = (req: Request): string => sanitizeTransactionId(req.params[urlParams.PARAM_TRANSACTION_ID]);
+const getSubmissionIdFromRequestParams = (req: Request): string => sanitizeSubmissionId(req.params[urlParams.PARAM_SUBMISSION_ID]);
+const getAppointmentIdFromRequestParams = (req: Request): string => sanitizeAppointmentId(req.params[urlParams.PARAM_APPOINTMENT_ID]);
+
+const sanitizeCompanyNumber = (companyNumber: string): string => {
+  if (companyNumber) {
+    return companyNumber.replace(/[^a-zA-Z0-9]/g, "");
+  }
+  return "";
+}
+
+const sanitizeTransactionId = (transactionId: string): string => {
+  if (transactionId) {
+    return transactionId.replace(/[^0-9-]/g, "");
+  }
+  return "";
+}
+
+const sanitizeSubmissionId = (submissionId: string): string => {
+  if (submissionId) {
+    return submissionId.replace(/[^a-z0-9]/g, "");
+  }
+  return "";
+}
+
+const sanitizeAppointmentId = (appointmentId: string): string => {
+  if (appointmentId) {
+    return appointmentId.replace(/[^a-zA-Z0-9-_]/g, "");
+  }
+  return "";
+}
+
 const getBackLinkFromRequestParams = (req: Request): string => req.query[urlParams.PARAM_BACK_LINK] as string;
 
 const setQueryParam = (url: string, paramName: URL_QUERY_PARAM, value: string) =>
