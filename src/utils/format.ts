@@ -124,14 +124,14 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
   }
 }
 
-export const lowerCaseAllWordsExceptFirstLetters = (country: string | undefined) => {
-  if (!country){
+export const formatNationalitiesToSentenceCase = (nationality: string | undefined) => {
+  if (!nationality){
     return "";
   }
 
   const wordsForAllLowerCase = ["AND", "OF", "THE", "DA", "PART", "CITIZEN"];
 
-  return country.replace(/\w*/g, (word, index) => {
+  return nationality.replace(/\w*/g, (word, index) => {
     if (word.toUpperCase() === "MCDONALD") {
       return "McDonald";
     }

@@ -5,7 +5,7 @@ import {
   toUpperCase,
   retrieveDirectorNameFromAppointment,
   retrieveDirectorNameFromOfficer,
-  lowerCaseAllWordsExceptFirstLetters
+  formatNationalitiesToSentenceCase
 } from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
@@ -106,7 +106,7 @@ describe("retrieveDirectorNameFromOfficer tests", () => {
   });
 });
 
-describe("lowerCaseAllWordsExceptFirstLetters", () => {
+describe("formatNationalitiesToSentenceCase", () => {
   test.each([
     [undefined, ""],
     ["FRANCE", "France"],
@@ -128,6 +128,6 @@ describe("lowerCaseAllWordsExceptFirstLetters", () => {
     ["South Georgia And The South Sandwich Islands", "South Georgia and the South Sandwich Islands"],
     ["Heard Island And Mcdonald Islands", "Heard Island and McDonald Islands"],
   ])(`Correctly reformats %s`, (str, expectedResult) => {
-    expect(lowerCaseAllWordsExceptFirstLetters(str)).toEqual(expectedResult);
+    expect(formatNationalitiesToSentenceCase(str)).toEqual(expectedResult);
   });
 });
