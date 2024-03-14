@@ -54,6 +54,7 @@ import {
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { formatTitleCase } from "../utils/format";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -82,7 +83,7 @@ const setContent = async (req: Request, stopType: string) => {
     const pageBodyLang = lang === "cy" ? "pageBodyWelsh" : "pageBodyEnglish";
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    var companyName = companyProfile.companyName;
+    var companyName = formatTitleCase(companyProfile.companyName);
     if (companyName === "") {
         if (stopType === STOP_TYPE.DISSOLVED){
             if (lang === "cy"){
