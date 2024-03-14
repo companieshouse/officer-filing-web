@@ -123,3 +123,27 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
     return "";
   }
 }
+
+export const lowerCaseAllWordsExceptFirstLetters = (country: string | undefined) => {
+  if (!country){
+    return "";
+  }
+
+  const wordsForAllLowerCase = ["AND", "OF", "THE", "DA", "PART", "CITIZEN"];
+
+  return country.replace(/\w*/g, (word, index) => {
+    if (word.toUpperCase() === "MCDONALD") {
+      return "McDonald";
+    }
+
+    if (word.toUpperCase() === "DRC") {
+      return word.toUpperCase();
+    }
+
+    if (index !== 0 && wordsForAllLowerCase.includes(word.toUpperCase())){
+      return word.toLowerCase();
+    }
+
+    return `${word.slice(0, 1)}${word.slice(1).toLowerCase()}`;
+  });
+};

@@ -14,6 +14,7 @@ import {
     equalsIgnoreCase,
     formatTitleCase,
     formatDateOfBirth,
+    lowerCaseAllWordsExceptFirstLetters,
   } from "../utils/format";
 import { CompanyOfficer, OfficerCard, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
@@ -162,9 +163,9 @@ async function beginUpdateJourney(req: Request, res: Response, session: Session,
     dateOfBirth: appointment.dateOfBirth?.year + "-" + appointment.dateOfBirth?.month?.toString().padStart(2, '0') + "-" + appointment.dateOfBirth?.day?.toString().padStart(2, '0'),
     appointedOn: appointment.appointedOn? appointment.appointedOn: appointment.appointedBefore,
     occupation: occupation,
-    nationality1: nationalities && nationalities?.length > 0? formatTitleCase(nationalities[0]): "",
-    nationality2: nationalities && nationalities?.length > 1? formatTitleCase(nationalities[1]): "",
-    nationality3: nationalities && nationalities?.length > 2? formatTitleCase(nationalities[2]): "",
+    nationality1: nationalities && nationalities?.length > 0? lowerCaseAllWordsExceptFirstLetters(nationalities[0]): "",
+    nationality2: nationalities && nationalities?.length > 1? lowerCaseAllWordsExceptFirstLetters(nationalities[1]): "",
+    nationality3: nationalities && nationalities?.length > 2? lowerCaseAllWordsExceptFirstLetters(nationalities[2]): "",
     serviceAddress: {
       premises: appointment.serviceAddress?.premises,
       addressLine1: appointment.serviceAddress?.addressLine1,

@@ -12,6 +12,7 @@ import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATION
 import { STOP_TYPE } from "../../utils/constants";
 import { urlUtils } from "../../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
+import { array } from "yargs";
 
 export const getDirectorNationality = async (req: Request, res: Response, next: NextFunction, template: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -120,9 +121,15 @@ const sameNationalityWithChips = (currentOfficerFiling: OfficerFiling, companyAp
     return sameNationality;
   }
 
-  if (currentOfficerFiling.nationality1 === nationality[0]) {
-    if ((!currentOfficerFiling.nationality2 || nationality[1] === currentOfficerFiling.nationality2) &&
-        (!currentOfficerFiling.nationality3 || nationality[2] === currentOfficerFiling.nationality3)) {
+  nationality.forEach((officerNationality, index)=> {
+    if (officerNationality) {
+      nationality[index] = officerNationality.toUpperCase();
+    }
+  });
+
+  if (currentOfficerFiling.nationality1?.toUpperCase() === nationality[0]) {
+    if ((!currentOfficerFiling.nationality2 || nationality[1] === currentOfficerFiling.nationality2.toUpperCase()) &&
+        (!currentOfficerFiling.nationality3 || nationality[2] === currentOfficerFiling.nationality3.toUpperCase())) {
       sameNationality = true;
     }
   } 
