@@ -4,7 +4,7 @@ import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
 import { NameValidation } from "./name.validation.config";
-import { REGEX_FOR_VALID_CHARACTERS, formatValidationErrors } from "./validation";
+import { REGEX_FOR_VALID_FORMER_NAMES, REGEX_FOR_VALID_NAME, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -92,7 +92,7 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
 
 const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
-        if (!title.match(REGEX_FOR_VALID_CHARACTERS)){
+        if (!title.match(REGEX_FOR_VALID_NAME)){
             // invalid characters
             validationErrors.push(nameValidationType.TitleInvalidCharacter.ErrorField);
         } else if (title.length > NAME_FIELD_LENGTH_50){
@@ -104,7 +104,7 @@ const validateTitle = (title: string, nameValidationType: GenericValidationType,
 
 const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(firstName != null && firstName != "") {
-        if (!firstName.match(REGEX_FOR_VALID_CHARACTERS)){
+        if (!firstName.match(REGEX_FOR_VALID_NAME)){
             // invalid characters
             validationErrors.push(nameValidationType.FirstNameInvalidCharacter.ErrorField);
         } else if (firstName.length > NAME_FIELD_LENGTH_50){
@@ -119,7 +119,7 @@ const validateFirstName = (firstName: string, nameValidationType: GenericValidat
 
 const validateMiddleNames = (middleNames: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(middleNames != null && middleNames != "") {
-        if (!middleNames.match(REGEX_FOR_VALID_CHARACTERS)){
+        if (!middleNames.match(REGEX_FOR_VALID_NAME)){
             // invalid characters
             validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.ErrorField);
         } else if (middleNames.length > NAME_FIELD_LENGTH_50){
@@ -131,7 +131,7 @@ const validateMiddleNames = (middleNames: string, nameValidationType: GenericVal
 
 const validateLastName = (lastName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(lastName != null && lastName != "") {
-        if (!lastName.match(REGEX_FOR_VALID_CHARACTERS)){
+        if (!lastName.match(REGEX_FOR_VALID_NAME)){
             // invalid characters
             validationErrors.push(nameValidationType.LastNameInvalidCharacter.ErrorField);
         } else if (lastName.length > NAME_FIELD_LENGTH_160){
@@ -149,7 +149,7 @@ const validateFormerNames = (formerNames: string, previousNamesRadio: string, na
     }
     else if (previousNamesRadio == DirectorField.YES) {
         if(formerNames != null && formerNames != "") {
-            if (!formerNames.match(REGEX_FOR_VALID_CHARACTERS)){
+            if (!formerNames.match(REGEX_FOR_VALID_FORMER_NAMES)){
                 // invalid characters
                 validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.ErrorField);
             } else if (formerNames.length > NAME_FIELD_LENGTH_160){
