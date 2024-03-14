@@ -3,7 +3,7 @@
   /**
    * Function to decode HTML entities
    * HTML encoding converts any special characters, method decodes these special character back to original form
-   * @param html
+   * @param html (possibly) encoded string
    * @return decoded string form
    */
   function decodeHtml(html) {
@@ -13,6 +13,10 @@
     * It's used as a tool to decode the HTML entities.
     */
     var txt = document.createElement("textarea");
+   /**
+    * This line sets the `innerHTML` property of the `textarea` element to the input HTML string. 
+    * When this happens, the browser automatically decodes the HTML entities in the string.
+    */
     txt.innerHTML = html;
     return txt.value;
   }
