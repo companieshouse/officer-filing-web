@@ -16,7 +16,7 @@ import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { patchOfficerFiling, getOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
-import { companyAppointmentCorporateDirector, validCompanyAppointment } from "../mocks/company.appointment.mock";
+import { validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
@@ -81,19 +81,36 @@ describe("Remove director date controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
-
-    it('should display name in uppercase if the officer role is CORPORATE_DIRECTOR or CORPORATE_NOMINEE_DIRECTOR', async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValue(companyAppointmentCorporateDirector);
+    it('should display name in uppercase if the officer role is CORPORATE_DIRECTOR', async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(
+        {name: "test corporate director name", 
+        officerRole: "corporate-director"}
+      );
       mockGetOfficerFiling.mockReturnValueOnce({
         referenceAppointmentId: APPOINTMENT_ID
       });
       const response = await request(app).get(REMOVE_DIRECTOR_URL)
-      expect(response.text).toContain('REACTIONLIQUOR CESSPOOLLIQUOR REGRET');
+      expect(response.text).toContain('TEST CORPORATE DIRECTOR NAME');
     });
 
+    it('should display name in uppercase if the officer role is CORPORATE_NOMINEE_DIRECTOR', async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(
+        {name: "test corporate director name", 
+        officerRole: "corporate-nominee-director"}
+      );
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+      const response = await request(app).get(REMOVE_DIRECTOR_URL)
+      expect(response.text).toContain('TEST CORPORATE DIRECTOR NAME');
+    });
 
     it('should display name in Title Case if the officer role is not a CORPORATE_DIRECTOR or CORPORATE_NOMINEE_DIRECTOR', async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue({
+        forename: "john",
+        surname: "doe",
+        otherForenames: "ELIZABETH",
+      });
       mockGetOfficerFiling.mockReturnValueOnce({
         referenceAppointmentId: APPOINTMENT_ID
       });
@@ -235,11 +252,38 @@ describe("Remove director date controller tests", () => {
                 "removal_date-month": "8",
                 "removal_date-year": "2010" });
 
+        expect(response.text).toContain("John Elizabeth Doe");       
         expect(response.text).toContain("Date the director was removed must be a real date");
         expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
         expect(mockGetValidationStatus).not.toHaveBeenCalled();
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
+
+    it("Should display error before patching if day is not a number for corporate directors", async () => {
+      mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
+      mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(
+        {name: "test corporate director name", 
+        officerRole: "corporate-director"}
+      );
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+
+      const response = await request(app)
+        .post(REMOVE_DIRECTOR_URL)
+        .send({ "removal_date-day": "x",
+                "removal_date-month": "8",
+                "removal_date-year": "2010" });
+
+        expect(response.text).toContain("TEST CORPORATE DIRECTOR NAME");       
+        expect(response.text).toContain("Date the director was removed must be a real date");
+        expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+        expect(mockGetValidationStatus).not.toHaveBeenCalled();
+        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+    });
+
+
 
     it("Should display error before patching if month cannot exist", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
