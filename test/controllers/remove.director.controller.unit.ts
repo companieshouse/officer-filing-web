@@ -16,7 +16,7 @@ import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
 import { patchOfficerFiling, getOfficerFiling } from "../../src/services/officer.filing.service";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
-import { validCompanyAppointment } from "../mocks/company.appointment.mock";
+import { companyAppointmentCorporateDirector, validCompanyAppointment } from "../mocks/company.appointment.mock";
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusResponseList, mockValidationStatusResponsePreOct2009 } from "../mocks/validation.status.response.mock";
 import { retrieveErrorMessageToKey, retrieveStopPageTypeToDisplay } from "../../src/services/remove.directors.error.keys.service";
@@ -79,6 +79,26 @@ describe("Remove director date controller tests", () => {
 
       expect(response.text).toContain(PAGE_HEADING);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+
+    it('should display name in uppercase if the officer role is CORPORATE_DIRECTOR or CORPORATE_NOMINEE_DIRECTOR', async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(companyAppointmentCorporateDirector);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+      const response = await request(app).get(REMOVE_DIRECTOR_URL)
+      expect(response.text).toContain('REACTIONLIQUOR CESSPOOLLIQUOR REGRET');
+    });
+
+
+    it('should display name in Title Case if the officer role is not a CORPORATE_DIRECTOR or CORPORATE_NOMINEE_DIRECTOR', async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(validCompanyAppointment);
+      mockGetOfficerFiling.mockReturnValueOnce({
+        referenceAppointmentId: APPOINTMENT_ID
+      });
+      const response = await request(app).get(REMOVE_DIRECTOR_URL)
+      expect(response.text).toContain('John Elizabeth Doe');
     });
 
 
