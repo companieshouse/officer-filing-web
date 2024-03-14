@@ -52,6 +52,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
+    expect(response.text).toContain(dissolvedCompanyProfile.companyName)
     expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=en");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
@@ -108,6 +109,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
+    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName)
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -154,6 +156,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
 
     expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
+    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName)
     expect(response.text).not.toContain("date-director-removed?lang=cy")
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
