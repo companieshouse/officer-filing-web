@@ -1,5 +1,25 @@
 <script type="text/javascript" src="{{assetPath}}/javascripts/app/accessible-autocomplete.min.js"></script>
 <script type="text/javascript">
+  /**
+   * Function to decode HTML entities
+   * HTML encoding converts any special characters, method decodes these special character back to original form
+   * @param html (possibly) encoded string
+   * @return decoded string form
+   */
+  function decodeHtml(html) {
+   /**
+    * This line creates a new textarea element in the DOM.
+    * This textarea element is not appended to the document, so it doesn't appear on the webpage.
+    * It's used as a tool to decode the HTML entities.
+    */
+    var txt = document.createElement("textarea");
+   /**
+    * This line sets the `innerHTML` property of the `textarea` element to the input HTML string. 
+    * When this happens, the browser automatically decodes the HTML entities in the string.
+    */
+    txt.innerHTML = html;
+    return txt.value;
+  }
   //Split this on | to get an array of values
   const typeaheadArray = "{{typeahead_array}}".split("|")
   const defaultValueArray = "{{typeahead_value}}".split("|")
@@ -14,7 +34,7 @@
       name: 'typeahead_input_' + i
     }
     if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
-      autocompleteConfig.defaultValue = defaultValueArray[i]
+      autocompleteConfig.defaultValue = decodeHtml(defaultValueArray[i]);
     }
     accessibleAutocomplete(autocompleteConfig)
     const autocompleteContainer = document.getElementById("my-autocomplete-container-" + i);

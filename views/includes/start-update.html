@@ -11,11 +11,11 @@
 </ul>
 <h3 class="govuk-heading-s">{{ i18n.startCorporateProtectedDirectors1 }}</h3>
 <p class="govuk-body">{{ i18n.startCorporateProtectedDirectors2 }}
-    <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1" data-event-id="web-filing-link-clicked" class="govuk-link">{{ i18n.startCorporateProtectedDirectors3 }}</a> {{ i18n.startCorporateProtectedDirectors4 }}
-    <a href="https://www.gov.uk/government/collections/companies-house-forms-for-limited-companies#directors-and-secretaries" data-event-id="companies-house-form-link-clicked" class="govuk-link">{{ i18n.startCorporateProtectedDirectors5 }}</a>.
+    <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1/#lang-{{ lang | default('en') }}" data-event-id="web-filing-link-clicked" class="govuk-link">{{ i18n.startCorporateProtectedDirectors3 }}</a> {{ i18n.startCorporateProtectedDirectors4 }}
+    <a href="https://www.gov.uk/government/collections/companies-house-forms-for-limited-companies#directors-and-secretaries?lang={{ lang | default('en') }}" data-event-id="companies-house-form-link-clicked" class="govuk-link">{{ i18n.startCorporateProtectedDirectors5 }}</a>.
 </p>
 <p class="govuk-body">
-    <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register" class="govuk-link" data-event-id="protect-personal-information-link-clicked"><span>{{ i18n.startCorporateProtectedDirectors6 }}</span></a>
+    <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register.{{ lang | default('en') }}" class="govuk-link" data-event-id="protect-personal-information-link-clicked"><span>{{ i18n.startCorporateProtectedDirectors6 }}</span></a>
 </p>
 
 {% set summaryHtml %}
@@ -39,7 +39,7 @@
 <ul class="govuk-list govuk-list--bullet">
     <li>{{ i18n.startBeforeYouStartYoullNeedInfo1 }}</li>
     <li>{{ i18n.startBeforeYouStartYoullNeedInfo2 }}</li>
-    <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="https://www.gov.uk/guidance/company-authentication-codes-for-online-filing.{{ lang | default('en') }}" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
 </ul>
 
 <br>
@@ -54,7 +54,7 @@
     <li>{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedDOA }}</li>
 </ul>
 <p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo1 }}
-    <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register" class="govuk-link" data-event-id="protect-personal-information-link-clicked">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo2 }}</a>
+    <a href="https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register.{{ lang | default('en') }}" class="govuk-link" data-event-id="protect-personal-information-link-clicked">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedInfo2 }}</a>
 </p>
 <p class="govuk-body">
     <span>{{ i18n.startForYourSecurity }}</span>

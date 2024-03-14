@@ -50,6 +50,7 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
       directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
+      lang
     });
   } catch (e) {
     return next(e);
@@ -85,6 +86,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
         directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
         ...getLocaleInfo(locales, lang),
         currentUrl: getCurrentUrl(req, isUpdate, lang),
+        lang
       });
     }
 
