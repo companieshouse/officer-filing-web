@@ -19,7 +19,7 @@
       
       {% if CH01_ACTIVE === "true" %}
         {% include "includes/start-update.html" %}
-      {% elif FEATURE_FLAG_REMOVE_DIRECTOR_20022023 === "true" or AP01_ACTIVE === "true" %}
+      {% elif TM01_ACTIVE === "true" or AP01_ACTIVE === "true" %}
         {% include "includes/start-appoint-remove.html" %}
       {% else %}
         <ul>

@@ -61,7 +61,7 @@ describe("Director name validation tests", () => {
     });
 
     it ("should render error if title is too long", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts, Order of Merlin (first class), Supreme Mugwump, Chief Warlock and Grand Sorcerer"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts - Order of Merlin the first class Supreme Mugwump - Chief Warlock and Grand Sorcerer"});
         expect(response.text).toContain(TITLE_LENGTH);
     });
 
@@ -76,6 +76,11 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(FIRST_NAME_CHARACTERS);
     });
 
+    it ("should render error if first name contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:"First123"});
+        expect(response.text).toContain(FIRST_NAME_CHARACTERS);
+    });
+
     it ("should render error if first name is too long", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({first_name:FIFTY_ONE_CHARACTERS});
         expect(response.text).toContain(FIRST_NAME_LENGTH);
@@ -84,6 +89,11 @@ describe("Director name validation tests", () => {
     // middle name validation
     it ("should render error if middle names has invalid characters", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"§"});
+        expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
+    });
+
+    it ("should render error if middle names contain numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({middle_names:"Middle Name123"});
         expect(response.text).toContain(MIDDLE_NAME_CHARACTERS);
     });
 
@@ -103,6 +113,11 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(LAST_NAME_CHARACTERS);
     });
 
+    it ("should render error if last name contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:"Last123"});
+        expect(response.text).toContain(LAST_NAME_CHARACTERS);
+    });
+
     it ("should render error if last name is too long", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({last_name:ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS});
         expect(response.text).toContain(LAST_NAME_LENGTH);
@@ -113,6 +128,13 @@ describe("Director name validation tests", () => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({
             previous_names_radio:"Yes", 
             previous_names:"§"});
+        expect(response.text).toContain(FORMER_NAMES_CHARACTERS);
+    });
+
+    it ("should render error if previous names contains numbers", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({
+            previous_names_radio:"Yes", 
+            previous_names:"Previous, Names123"});
         expect(response.text).toContain(FORMER_NAMES_CHARACTERS);
     });
 
@@ -139,7 +161,7 @@ describe("Director name validation tests", () => {
         expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
     });
     
-    it ("should render error is previous name radio is yes and previous names is blank", async() => {
+    it ("should render error if previous name radio is yes and previous names is blank", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({
             previous_names_radio:"Yes", 
             previous_names:""});

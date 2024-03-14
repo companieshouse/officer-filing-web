@@ -5,8 +5,8 @@ import { selectLang, getLocalesService, getLocaleInfo } from "../utils/localise"
 import {
   CHS_URL,
   PIWIK_START_GOAL_ID,
-  FEATURE_FLAG_REMOVE_DIRECTOR_20022023,
   EWF_URL,
+  TM01_ACTIVE,
   AP01_ACTIVE,
   CH01_ACTIVE
 } from "../utils/properties";
@@ -21,7 +21,7 @@ export const get = (req: Request, res: Response) => {
     currentUrl: urlUtils.getUrlToPath(OFFICER_FILING, req),
     lang,
     PIWIK_START_GOAL_ID,
-    FEATURE_FLAG_REMOVE_DIRECTOR_20022023,
+    TM01_ACTIVE,
     AP01_ACTIVE,
     CH01_ACTIVE,
     EWF_URL,
