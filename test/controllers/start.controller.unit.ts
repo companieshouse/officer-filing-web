@@ -36,4 +36,14 @@ describe("start controller tests", () => {
     expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=cy');
   });
 
+  it("Should render the external links with expected welsh formats", async () => {
+    const response = await request(app)
+      .get("/appoint-update-remove-company-officer/" + "?lang=cy");
+
+    expect(response.text).toContain(EXPECTED_WELSH);
+    expect(response.text).toContain('/#lang-cy');
+    expect(response.text).toContain('.cy');
+    expect(response.text).toContain('?lang=cy');
+  });
+
 });
