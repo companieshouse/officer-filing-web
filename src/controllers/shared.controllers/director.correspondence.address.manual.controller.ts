@@ -65,7 +65,8 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
       correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
       correspondence_address_back_param: correspondenceAddressBackParam,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang)
+      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      lang
     });
   } catch (e) {
     return next(e);
@@ -217,7 +218,8 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
     ...getLocaleInfo(locales, lang),
-    currentUrl : getCurrentUrl(req, params.isUpdate, lang)
+    currentUrl : getCurrentUrl(req, params.isUpdate, lang),
+    lang
   });
 };
 
