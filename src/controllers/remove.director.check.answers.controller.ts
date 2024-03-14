@@ -50,17 +50,22 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
+    //Check if corporate director and format name based on corporate or individual director
     var corporateDirector = false;
+    var directorName = "";
     if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
       corporateDirector = true;
-    }
+      directorName = (companyOfficer.name).toUpperCase();
+    } else {
+      directorName = formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer))
+    } 
 
     return res.render(Templates.REMOVE_DIRECTOR_CHECK_ANSWERS, {
       templateName: Templates.REMOVE_DIRECTOR_CHECK_ANSWERS,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req), lang),
       company: companyProfile,
       directorTitle: formatTitleCase(appointment.title),
-      name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
+      name: directorName,
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),

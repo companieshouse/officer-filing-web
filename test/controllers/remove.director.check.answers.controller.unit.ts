@@ -78,7 +78,6 @@ describe("Remove director check answers controller tests", () => {
 
     it("Should display summary for the non corporate director", async () => {
       const response = await request(app).get(CHECK_ANSWERS_URL);
-
       expect(mockGetDirectorAndTerminationDate).toHaveBeenCalled();
       expect(response.text).toContain("Company name");
       expect(response.text).toContain("Test Company");
@@ -123,7 +122,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name");
-      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text).toContain("BLUE ENTERPRISES");
       expect(response.text.includes("Date of birth")).toEqual(false);
       expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
@@ -140,7 +139,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Rhif y cwmni");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Enw");
-      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text).toContain("BLUE ENTERPRISES");
       expect(response.text.includes("Date of birth")).toEqual(false);
       expect(response.text).toContain("Dyddiad penodi");
       expect(response.text).toContain("1 Rhagfyr 2022");
@@ -157,7 +156,7 @@ describe("Remove director check answers controller tests", () => {
       expect(response.text).toContain("Company number");
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name");
-      expect(response.text).toContain("Blue Enterprises");
+      expect(response.text).toContain("BLUE ENTERPRISES");
       expect(response.text.includes("Date of birth")).toEqual(false);
       expect(response.text).toContain("Date appointed");
       expect(response.text).toContain("1 December 2022");
