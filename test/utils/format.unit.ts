@@ -108,6 +108,7 @@ describe("retrieveDirectorNameFromOfficer tests", () => {
 
 describe("lowerCaseAllWordsExceptFirstLetters", () => {
   test.each([
+    [undefined, ""],
     ["FRANCE", "France"],
     ["BOSNIA AND HERZEGOVINA", "Bosnia and Herzegovina"],
     ["ISLE OF MAN", "Isle of Man"],

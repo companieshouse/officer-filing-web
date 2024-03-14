@@ -12,7 +12,6 @@ import { BASIC_STOP_PAGE_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATION
 import { STOP_TYPE } from "../../utils/constants";
 import { urlUtils } from "../../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
-import { array } from "yargs";
 
 export const getDirectorNationality = async (req: Request, res: Response, next: NextFunction, template: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
