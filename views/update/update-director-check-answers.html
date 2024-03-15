@@ -165,7 +165,7 @@
         {% endif %}
 
         {% set officerFiling = officerFiling %}
-        {% if officerFiling.residentialAddressHasBeenUpdated or officerFiling.correspondenceAddressHasBeenUpdated %}
+        {% if officerFiling.residentialAddressHasBeenUpdated or officerFiling.serviceAddressHasBeenUpdated %}
           {% set cyaDisplay = true %}
           {% include "includes/check-your-answer/address-details.html" %}
         {% endif %}

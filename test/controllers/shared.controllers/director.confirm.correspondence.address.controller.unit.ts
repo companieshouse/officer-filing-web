@@ -157,7 +157,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+            expect.objectContaining({serviceAddressHasBeenUpdated: true})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -191,7 +191,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+            expect.objectContaining({serviceAddressHasBeenUpdated: true})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -223,7 +223,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
+            expect.objectContaining({serviceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -255,7 +255,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false })
+            expect.objectContaining({serviceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false })
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
@@ -287,7 +287,7 @@ describe("Director confirm correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
+            expect.objectContaining({serviceAddressHasBeenUpdated: true, isServiceAddressSameAsRegisteredOfficeAddress: false})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + nextPageUrl);
