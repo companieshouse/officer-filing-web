@@ -52,10 +52,10 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     //Check if corporate director and format name based on corporate or individual director
     var corporateDirector = false;
-    var directorName = "";
+    let directorName = "";
     if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
       corporateDirector = true;
-      directorName = (companyOfficer.name).toUpperCase();
+      directorName = companyOfficer.name.toUpperCase();
     } else {
       directorName = formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer))
     } 

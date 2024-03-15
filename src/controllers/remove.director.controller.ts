@@ -46,13 +46,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
     //Format name based on corporate or individual director
-    var directorName = "";
-    if(equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
-      directorName = (appointment.name).toUpperCase();
-    } else {
-      directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
-    }
-    
+   let directorName = formatDirectorNameforDisplay(appointment, OFFICER_ROLE, equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromAppointment);
+
     if (officerFiling.resignedOn) {
       var dateFields = officerFiling.resignedOn.split('-');
       return displayPopulatedPage(dateFields, appointment, directorName, req, res);
@@ -88,12 +83,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
     
     //Format name based on corporate or individual director
-    var directorName = "";
-    if(equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
-      directorName = (appointment.name).toUpperCase();
-    } else {
-      directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
-    }
+    let directorName = formatDirectorNameforDisplay(appointment, OFFICER_ROLE, equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromAppointment);
 
     // Get date of resignation
     const day = req.body[RemovalDateField.DAY];
@@ -162,6 +152,19 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
     currentUrl: req.originalUrl,
     errors: formatValidationErrors(validationErrors, lang)
   });
+}
+
+/**
+ * Format the directors name based on the role from Company Appointment
+ */
+function formatDirectorNameforDisplay (appointment: any, OFFICER_ROLE: any, equalsIgnoreCase: Function, formatTitleCase: Function, retrieveDirectorNameFromAppointment: Function): string {
+ let directorName = "";
+  if(equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
+      directorName = appointment.name.toUpperCase();
+  } else {
+      directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
+  }
+  return directorName;
 }
 
 function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, directorName: string, req: Request, res: Response<any, Record<string, any>>) {
