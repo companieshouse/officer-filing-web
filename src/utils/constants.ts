@@ -151,6 +151,8 @@ export const allowedPrivateCompanyTypes = new Array("ltd", "private-limited-guar
 
 export const allowedCompanyTypes = allowedPublicCompanyTypes.concat(allowedPrivateCompanyTypes);
 
+export const lowerCaseWordsForNationalityFormatting = new Array("AND", "OF", "THE", "DA", "PART", "CITIZEN")
+
 export const STOP_PAGE_CONTENT = 
 {
     dissolved:{

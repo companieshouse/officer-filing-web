@@ -1,6 +1,7 @@
 import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN, OFFICER_ROLE } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { lowerCaseWordsForNationalityFormatting } from "../utils/constants";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
@@ -134,3 +135,25 @@ export const formatDirectorNameForDisplay = (appointment: CompanyAppointment): s
   }
    return directorName;
  }
+
+export const formatNationalitiesToSentenceCase = (nationality: string | undefined) => {
+  if (!nationality){
+    return "";
+  }
+
+  return nationality.replace(/\w*/g, (word, index) => {
+    if (word.toUpperCase() === "MCDONALD") {
+      return "McDonald";
+    }
+
+    if (word.toUpperCase() === "DRC") {
+      return word.toUpperCase();
+    }
+
+    if (index !== 0 && lowerCaseWordsForNationalityFormatting.includes(word.toUpperCase())){
+      return word.toLowerCase();
+    }
+
+    return `${word.slice(0, 1)}${word.slice(1).toLowerCase()}`;
+  });
+};
