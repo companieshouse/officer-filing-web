@@ -9,7 +9,7 @@ export const compareAddress = (addressOne: Address | undefined, addressTwo: Addr
   if (addressOne?.premises?.toLowerCase().trim() !== addressTwo?.premises?.toLowerCase().trim()){
     return false;
   }
-  if (addressOne?.addressLine1.toLowerCase().trim() !== addressTwo?.addressLine1?.toLowerCase().trim()){
+  if (addressOne?.addressLine1?.toLowerCase().trim() !== addressTwo?.addressLine1?.toLowerCase().trim()){
     return false;
   }
   if (addressOne?.addressLine2?.toLowerCase().trim() !== addressTwo?.addressLine2?.toLowerCase().trim()){
