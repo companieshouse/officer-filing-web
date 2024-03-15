@@ -79,7 +79,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     
     var nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
-    if (await getCurrentOrFutureDissolved(session, companyNumber)){
+    if (await getCurrentOrFutureDissolved(companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
     }
     else if(!allowedCompanyTypes.includes(companyProfile.type)){

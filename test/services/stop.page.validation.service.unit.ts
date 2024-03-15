@@ -1,19 +1,10 @@
-jest.mock("@companieshouse/api-sdk-node");
-jest.mock("@companieshouse/api-sdk-node/dist/services/officer-filing");
+jest.mock("../../src/services/company.profile.service");
 
-import { createApiClient, Resource } from "@companieshouse/api-sdk-node";
-import { getCurrentOrFutureDissolved } from "../../src/services//stop.page.validation.service";
-import { getSessionRequest } from "../mocks/session.mock";
-import { ApiErrorResponse } from "@companieshouse/api-sdk-node/dist/services/resource";
-import { OfficerFilingService } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import ApiClient from "@companieshouse/api-sdk-node/dist/client";
+import { getCompanyProfile } from "../../src/services/company.profile.service";
+import { getCurrentOrFutureDissolved } from "../../src/services/stop.page.validation.service";
+import { validCompanyProfile } from "../mocks/company.profile.mock";
 
-const mockGetCurrentOrFutureDissolved = OfficerFilingService.prototype.getCurrentOrFutureDissolved as jest.Mock;
-const mockCreatePrivateApiClient = createApiClient as jest.Mock;
-
-mockCreatePrivateApiClient.mockReturnValue({
-  officerFiling: OfficerFilingService.prototype
-} as ApiClient);
+const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 
 describe("Test stop page validation service", () => {
 
@@ -23,56 +14,43 @@ describe("Test stop page validation service", () => {
     jest.clearAllMocks();
   });
 
-  it("Should call api-sdk-node and return true if the company is currently or will be dissolved", async () => {
+  it("Should call getCompanyProfile and return false for valid company profile", async () => {
 
-    const resource: Resource<Boolean> = {
-      httpStatusCode: 200,
-      resource: true
-    };
+    mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(resource);
-    const session =  getSessionRequest();
-    const response = await getCurrentOrFutureDissolved(session, COMPANY_NUMBER);
+    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCurrentOrFutureDissolved).toBeCalledWith(COMPANY_NUMBER);
-    expect(response).toEqual(true);
-  });
-
-  it("Should call api-sdk-node and return false if the company is not currently or about to be dissolved", async () => {
-
-    const resource: Resource<Boolean> = {
-      httpStatusCode: 200,
-      resource: false
-    };
-
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(resource);
-    const session =  getSessionRequest();
-    const response = await getCurrentOrFutureDissolved(session, COMPANY_NUMBER);
-
-    expect(mockGetCurrentOrFutureDissolved).toBeCalledWith(COMPANY_NUMBER);
+    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
     expect(response).toEqual(false);
   });
 
-  it("should throw error when http error code is returned", async () => {
+  it("Should call getCompanyProfile and return true for dissolved company", async () => {
 
-    const errorMessage = "Oops! Someone stepped on the wire.";
-    const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 404,
-      errors: [{ error: errorMessage }]
-    };
+    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved" });
 
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest();
-    const expectedMessage = "Error retrieving company information: " + JSON.stringify(errorResponse);
-    let actualMessage;
+    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    try {
-      await getCurrentOrFutureDissolved(session, COMPANY_NUMBER);
-    } catch (err) {
-      actualMessage = err.message;
-    }
+    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(response).toEqual(true);
+  });
 
-    expect(actualMessage).toBeTruthy();
-    expect(actualMessage).toEqual(expectedMessage);
+  it("Should call getCompanyProfile and return true for company with dateOfCessation", async () => {
+
+    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, dateOfCessation: "2000-01-01" });
+
+    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+
+    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(response).toEqual(true);
+  });
+
+  it("Should call getCompanyProfile and return true for dissolved company with dateOfCessation", async () => {
+
+    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved", dateOfCessation: "2000-01-01" });
+
+    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+
+    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(response).toEqual(true);
   });
 });

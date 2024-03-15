@@ -61,7 +61,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
     // Check if company has been dissolved
-    if (await getCurrentOrFutureDissolved(session, companyNumber)){
+    if (await getCurrentOrFutureDissolved(companyNumber)){
       return res.redirect(addLangToUrl(urlUtils.setQueryParam(urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req), URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED), lang));
     }
 
