@@ -283,8 +283,6 @@ describe("Remove director date controller tests", () => {
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
     });
 
-
-
     it("Should display error before patching if month cannot exist", async () => {
       mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
       mockLookupWebValidationMessage.mockReturnValueOnce("Date the director was removed must be a real date");
