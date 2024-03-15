@@ -101,7 +101,6 @@ describe("Company Appointments service test", () => {
 
       expect(returnedAppointment.usualResidentialAddress.addressLine1).toEqual("********");
       expect(returnedAppointment.usualResidentialAddress.addressLine2).toEqual("********");
-      expect(returnedAppointment.usualResidentialAddress.careOf).toEqual("********");
       expect(returnedAppointment.usualResidentialAddress.country).toEqual("********");
       expect(returnedAppointment.usualResidentialAddress.locality).toEqual("********");
       expect(returnedAppointment.usualResidentialAddress.poBox).toEqual("********");
@@ -120,7 +119,6 @@ describe("Company Appointments service test", () => {
 
       expect(returnedAppointment.usualResidentialAddress.addressLine1).toEqual(companyResource.resource.usualResidentialAddress.addressLine1);
       expect(returnedAppointment.usualResidentialAddress.addressLine2).toEqual(companyResource.resource.usualResidentialAddress.addressLine2);
-      expect(returnedAppointment.usualResidentialAddress.careOf).toEqual(companyResource.resource.usualResidentialAddress.careOf);
       expect(returnedAppointment.usualResidentialAddress.country).toEqual(companyResource.resource.usualResidentialAddress.country);
       expect(returnedAppointment.usualResidentialAddress.locality).toEqual(companyResource.resource.usualResidentialAddress.locality);
       expect(returnedAppointment.usualResidentialAddress.poBox).toEqual(companyResource.resource.usualResidentialAddress.poBox);

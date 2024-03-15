@@ -31,7 +31,6 @@ export const validCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -46,7 +45,6 @@ export const validCompanyProfile: CompanyProfile = {
 export const validAddress = {
   addressLine1: "Line1",
   addressLine2: "Line2",
-  careOf: "careOf",
   country: "England",
   locality: "locality",
   poBox: "123",
@@ -82,7 +80,6 @@ export const validCompanyEstablishedAfter2009Profile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -122,7 +119,6 @@ export const validPublicCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -162,7 +158,6 @@ export const validPublicCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -202,7 +197,6 @@ export const dissolvedMissingNameCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -242,7 +236,6 @@ export const dissolvedMissingNameCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",
@@ -282,7 +275,6 @@ export const overseaCompanyMissingNameCompanyProfile: CompanyProfile = {
   registeredOfficeAddress: {
     addressLineOne: "Line1",
     addressLineTwo: "Line2",
-    careOf: "careOf",
     country: "uk",
     locality: "locality",
     poBox: "123",

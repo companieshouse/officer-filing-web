@@ -43,7 +43,6 @@ const obfuscateResidentialAddress = (resource: CompanyAppointment) => {
   resource.usualResidentialAddress = {
     addressLine1: obfuscatedPattern,
     addressLine2: obfuscatedPattern,
-    careOf: obfuscatedPattern,
     country: obfuscatedPattern,
     locality: obfuscatedPattern,
     poBox: obfuscatedPattern,
