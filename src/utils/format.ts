@@ -1,5 +1,5 @@
 import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { LOCALE_EN } from "./constants";
+import { LOCALE_EN, OFFICER_ROLE } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
@@ -123,3 +123,14 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
     return "";
   }
 }
+
+export const formatDirectorNameForDisplay = (appointment: CompanyAppointment): string => {
+  let directorName = "";
+  if (equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
+    directorName = appointment.name.toUpperCase();
+  }
+  else {
+    directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
+  }
+   return directorName;
+ }

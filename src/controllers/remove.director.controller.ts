@@ -18,13 +18,12 @@ import { patchOfficerFiling, getOfficerFiling } from "../services/officer.filing
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
-import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
+import { formatDirectorNameForDisplay } from "../utils/format";
 import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "../validation/validation";
 import { RemovalDateValidation} from "../validation/remove.date.validation.config";
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../utils/localise";
-import { OFFICER_ROLE } from "../utils/constants";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -152,19 +151,6 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
     currentUrl: req.originalUrl,
     errors: formatValidationErrors(validationErrors, lang)
   });
-}
-
-/**
- * Format the directors name based on the role from Company Appointment
- */
-function formatDirectorNameForDisplay (appointment: CompanyAppointment): string {
- let directorName = "";
-  if(equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
-      directorName = appointment.name.toUpperCase();
-  } else {
-      directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
-  }
-  return directorName;
 }
 
 function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, directorName: string, req: Request, res: Response<any, Record<string, any>>) {
