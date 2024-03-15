@@ -157,7 +157,7 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
 /**
  * Format the directors name based on the role from Company Appointment
  */
-function formatDirectorNameForDisplay (appointment: any): string {
+function formatDirectorNameForDisplay (appointment: CompanyAppointment): string {
  let directorName = "";
   if(equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
       directorName = appointment.name.toUpperCase();
