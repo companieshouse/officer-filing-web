@@ -306,7 +306,6 @@ describe("Stop screen controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
-
     expect(response.text).toContain("Dim ond Cwmnïau cyfyngedig ac anghyfyngedig gall ddefnyddio'r gwasanaeth hwn");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
