@@ -83,7 +83,7 @@ const setContent = async (req: Request, stopType: string) => {
     const pageBodyLang = lang === "cy" ? "pageBodyWelsh" : "pageBodyEnglish";
 
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    var companyName = formatTitleCase(companyProfile.companyName);
+    var companyName = companyProfile.companyName.toUpperCase();
     if (companyName === "") {
         if (stopType === STOP_TYPE.DISSOLVED){
             if (lang === "cy"){
