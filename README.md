@@ -3,7 +3,8 @@ Web front end for Officer Filing service for filing:
 1. TM01 Remove a director
 2. AP01 Appoint a director
 3. CH01 Update a director
-This express / Node / Typescript app sits in from of officer-filing-api and uses Nunjucks and the GOV.UK design toolkit for these Web journeys.
+
+This express / Node / Typescript app sits in from of officer-filing-api and uses Nunjucks and the GOV.UK design toolkit to implement these three Web journeys.
 
 ## DISCLAIMER ***********************************************************************
 Due to a problem with where GOV-UK Frontened looks for it's fonts, we have had to add an override
