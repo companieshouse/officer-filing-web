@@ -1,6 +1,7 @@
 import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { LOCALE_EN } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
@@ -123,3 +124,23 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
     return "";
   }
 }
+
+export const formatAddress = (addressFields: (string | undefined)[]): string => {
+  return addressFields
+    .filter(Boolean)
+    .map(s => s?.trim())
+    .join(', ');
+};
+
+export const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
+  const address = companyProfile.registeredOfficeAddress;
+  return formatAddress([
+    formatTitleCase(address?.premises),
+    formatTitleCase(address?.addressLineOne),
+    formatTitleCase(address?.addressLineTwo),
+    formatTitleCase(address?.locality),
+    formatTitleCase(address?.region),
+    formatTitleCase(address?.country),
+    address?.postalCode?.toUpperCase()
+  ]);
+};
