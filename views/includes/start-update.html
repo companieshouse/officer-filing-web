@@ -9,12 +9,12 @@
     <li>{{ i18n.startWhatYouCanDo4 }}</li>
     <li>{{ i18n.startWhatYouCanDo5 }}</li>
 </ul>
-{% if lang === 'en' %}
-    {% set companiesHouseOnlineFilingCodeLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing' %}
-    {% set companiesHouseApplyToProtectInformationLink = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register' %}
-{% elif lang === 'cy' %}
+{% if lang === 'cy' %}
     {% set companiesHouseRegisterLink = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register.cy' %}
     {% set companiesHouseOnlineFilingCodeLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing.cy' %}
+{% else %}
+    {% set companiesHouseOnlineFilingCodeLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing' %}
+    {% set companiesHouseApplyToProtectInformationLink = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register' %}
 {% endif %}
 <h3 class="govuk-heading-s">{{ i18n.startCorporateProtectedDirectors1 }}</h3>
 <p class="govuk-body">{{ i18n.startCorporateProtectedDirectors2 }}
