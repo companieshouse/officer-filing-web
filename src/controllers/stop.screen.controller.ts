@@ -54,7 +54,6 @@ import {
 } from "../utils/constants";
 import { urlUtils } from "../utils/url";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
-import { formatTitleCase } from "../utils/format";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
