@@ -12,7 +12,7 @@ describe("accessibility statement controller tests", () => {
     jest.clearAllMocks();
   });
 
-  it.each([["?lang=en", PAGE_HEADING_EN], ["?lang=cy", PAGE_HEADING_CY]])("should return accessibility statement page", async (lang, heading) => {
+  it.each([["?lang=en", PAGE_HEADING_EN], ["?lang=cy", PAGE_HEADING_CY]])("should return accessibility statement page in the correct language", async (lang, heading) => {
     const response = await request(app)
       .get(ACCESSIBILITY_STATEMENT_PATH+lang);
 
