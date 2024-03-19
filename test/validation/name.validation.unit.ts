@@ -268,7 +268,6 @@ describe("Director name validation tests", () => {
         expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
     });
 
-    // first name validation
     it ("should persist language in backlink if an error occurs", async() => {
         mockGetOfficerFiling.mockResolvedValueOnce({
             checkYourAnswersLink: undefined
