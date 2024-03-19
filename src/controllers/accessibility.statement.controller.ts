@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Templates } from "../types/template.paths";
-import { OFFICER_FILING } from "../types/page.urls";
+import { getPreviousPageQueryParamUrl } from "../utils/url";
 import { logger } from "../utils/logger";
 
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
@@ -25,19 +25,3 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
         return next(e);
     }
 }
-
-export const getPreviousPageQueryParamUrl = (req: Request) => {
-    const previousPageQueryParam = req.query.previousPage;
-    return previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req)
-};
-
-const getPreviousPageUrl = (req: Request) => {
-    const headers = req.rawHeaders;
-    const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
-    if (!absolutePreviousPageUrl) {
-        return OFFICER_FILING;
-    }
-
-    const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
-    return absolutePreviousPageUrl.substring(indexOfRelativePath);
-};

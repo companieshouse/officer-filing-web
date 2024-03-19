@@ -3,7 +3,7 @@ import { Templates } from "../types/template.paths";
 import { ACCOUNTS_SIGNOUT_PATH, OFFICER_FILING, SIGNOUT_PATH } from "../types/page.urls";
 import { logger } from "../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
-import { urlUtils } from "../utils/url";
+import { urlUtils, getPreviousPageQueryParamUrl } from "../utils/url";
 
 export const get: Handler = async (req, res) => {
 
@@ -40,23 +40,6 @@ export const post = (req, res) => {
     default:
       return showMustSelectButtonError(res, req, lang, previousPage);
   }
-};
-
-
-export const getPreviousPageQueryParamUrl = (req: Request) => {
-  const previousPageQueryParam = req.query.previousPage;
-  return previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req)
-};
-
-const getPreviousPageUrl = (req: Request) => {
-  const headers = req.rawHeaders;
-  const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
-  if (!absolutePreviousPageUrl) {
-    return OFFICER_FILING;
-  }
-
-  const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
-  return absolutePreviousPageUrl.substring(indexOfRelativePath);
 };
 
 export const safeRedirect = (res: Response, url: string): void => {

@@ -3,7 +3,8 @@ import request from "supertest";
 import app from "../../src/app";
 import { ACCESSIBILITY_STATEMENT_PATH } from "../../src/types/page.urls";
 
-const PAGE_HEADING = "Accessibility statement for the Remove a company director service";
+const PAGE_HEADING_EN = "Accessibility statement for Appoint, update and remove a company director service";
+const PAGE_HEADING_CY = "To be translated";
 
 describe("accessibility statement controller tests", () => {
 
@@ -11,11 +12,11 @@ describe("accessibility statement controller tests", () => {
     jest.clearAllMocks();
   });
 
-  it("should return accessibility statement page", async () => {
+  it.each([["?lang=en", PAGE_HEADING_EN], ["?lang=cy", PAGE_HEADING_CY]])("should return accessibility statement page", async (lang, heading) => {
     const response = await request(app)
-      .get(ACCESSIBILITY_STATEMENT_PATH);
+      .get(ACCESSIBILITY_STATEMENT_PATH+lang);
 
-    expect(response.text).toContain(PAGE_HEADING);
+    expect(response.text).toContain(heading);
     expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
     expect(middlewareMocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
   });
