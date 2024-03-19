@@ -165,5 +165,18 @@ describe("Director nationality controller tests", () => {
 
         expect(response.text).toContain(BACK_LINK_URL);
       });
+
+      it("should persist back link in welsh correctly if there are errors", async () => {
+        mockGetOfficerFiling.mockResolvedValue({
+          firstName: "John",
+          lastName: "Smith"
+        })
+        const WELSH_LANG = "?lang=cy";
+        const response = await request(app)
+        .post(DIRECTOR_NATIONALITY_URL + WELSH_LANG)
+        .send({"nationality1": "~"});
+
+        expect(response.text).toContain(BACK_LINK_URL + WELSH_LANG);
+      });
     });
 });
