@@ -35,21 +35,8 @@ export const getDirectorResidentialAddressSearch = async (req: Request, res: Res
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-    const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
-    const lang = selectLang(req.query.lang);
 
-    return res.render(templateName, {
-      templateName: templateName,
-      ...getLocaleInfo(getLocalesService(), lang),
-      currentUrl: urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req),
-      enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(pageLinks.manualEntryLink, req), lang),
-      backLinkUrl:  addLangToUrl(backLinkInfo.backLinkUrl, lang),
-      backLinkText: backLinkInfo.backLinkText,
-      directorName: formatTitleCase(directorName),
-      postcode: officerFiling.residentialAddress?.postalCode,
-      premises: officerFiling.residentialAddress?.premises
-    });
+    renderPage(res, req, officerFiling, [], templateName, pageLinks, isUpdate);
   } catch (e) {
     return next(e);
   }
