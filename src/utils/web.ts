@@ -10,7 +10,7 @@ import { addLangToUrl } from './localise';
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 
 /**
- * Get field from the form. If the field is populated then it will be returned, else undefined.
+ * Get field from the form. If the field is populated then it will be returned, else empty string
  */
 export const getField = (req: Request, fieldName: string): string => {
   const field: string = req.body[fieldName];
