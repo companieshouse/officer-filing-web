@@ -62,20 +62,26 @@ describe("formatAppointmentDate tests", () => {
 describe("formatAddress tests", () => {
     it ("should return address without undefined and empty string in correct format", () => {
       const address = ["123 New St", undefined, "", "AA11 1AZ"];
-      const formattedAddress = formatAddress(address);
-      expect("123 New St, AA11 1AZ")
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
     });
 
     it ("should return address without undefined in correct format", () => {
       const address = ["123 New St", undefined, "AA11 1AZ"];
       const formattedAddress = formatAddress(address);
-      expect("123 New St, AA11 1AZ")
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
     });
 
     it ("should return address without empty string in correct format", () => {
       const address = ["123 New St", "", "AA11 1AZ"];
-      const formattedAddress = formatAddress(address);
-      expect("123 New St, AA11 1AZ")
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without leading or trailing white spaces in correct format", () => {
+      const address = ["123 New St  ", "", "  AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
     });
   })
 
