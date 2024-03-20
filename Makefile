@@ -16,13 +16,13 @@ build: update_submodules
 	export GIT_SSH_COMMAND="ssh" && npm ci
 	npm run build
 
-.PHONY: lint
-lint:
-	npm run lint
-
 .PHONY: dependency-check
 dependency-check:
 	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML --output dependency-report
+
+.PHONY: lint
+lint:
+	npm run lint
 
 .PHONY: sonar
 sonar:
