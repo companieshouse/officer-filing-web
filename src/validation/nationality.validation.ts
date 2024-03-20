@@ -12,7 +12,7 @@ import { urlUtils } from "../utils/url";
 import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling } from "../services/officer.filing.service";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 
 export const nationalityValidator = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,7 +43,7 @@ export const nationalityValidator = async (req: Request, res: Response, next: Ne
       const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
       return res.render(Templates.DIRECTOR_NATIONALITY, {
         templateName: Templates.DIRECTOR_NATIONALITY,
-        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, backLinkUrl),
+        backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, backLinkUrl), lang),
         typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
         typeahead_value: nationality1 + "|" + nationality2 + "|" + nationality3,
         errors: formattedErrors,
