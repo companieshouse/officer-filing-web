@@ -20,6 +20,10 @@ build: update_submodules
 lint:
 	npm run lint
 
+.PHONY: lint
+dependency-check:
+	npm audit --json --> dependency-report.json
+
 .PHONY: sonar
 sonar:
 	npm run sonarqube
