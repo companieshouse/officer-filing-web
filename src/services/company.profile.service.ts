@@ -33,7 +33,6 @@ export const mapCompanyProfileToOfficerFilingAddress = (registeredOffice: Regist
   return {
     addressLine1: registeredOffice.addressLineOne,
     addressLine2: registeredOffice.addressLineTwo,
-    careOf: registeredOffice.careOf,
     country: registeredOffice.country,
     locality: registeredOffice.locality,
     poBox: registeredOffice.poBox,
