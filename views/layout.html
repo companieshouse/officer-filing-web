@@ -93,6 +93,8 @@
 {% set contactUs = i18n.contactUs | default("Contact Us") %}
 {% set developers = i18n.developers | default("Developers") %}
 {% set accessibilityStatement = i18n.accessibilityStatement | default("Accessibility statement") %}
+{% set lang = lang | default('en') %}
+{% set accessibilityStatementLink =  "/appoint-update-remove-company-officer/accessibility-statement?lang=" + lang %}
 {% block footer %}
   {{ govukFooter({
     meta: {
@@ -114,7 +116,7 @@
           text: developers
         },
         {
-          href: "/appoint-update-remove-company-officer/accessibility-statement",
+          href: accessibilityStatementLink,
           text: accessibilityStatement
         }
       ]
