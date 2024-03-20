@@ -161,8 +161,8 @@ export const formatNationalitiesToSentenceCase = (nationality: string | undefine
 
 export const formatAddress = (addressFields: (string | undefined)[]): string => {
   return addressFields
-    .filter(field => field != undefined && field !== "")
     .map(s => s?.trim())
+    .filter(field => field !== undefined && field !== "")
     .join(', ');
 };
 
