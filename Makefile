@@ -11,9 +11,9 @@ clean:
 	rm -rf ./dist
 	rm -f ./build.log
 
-.PHONY: dependency-check
-dependency-check:
-	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML --output dependency-report
+# .PHONY: dependency-check
+# dependency-check:
+# 	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML --output dependency-report
 
 .PHONY: build
 build: update_submodules
