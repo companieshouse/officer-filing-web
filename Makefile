@@ -20,9 +20,9 @@ build: update_submodules
 lint:
 	npm run lint
 
-.PHONY: lint
+.PHONY: dependency-check
 dependency-check:
-	npm audit --json --> dependency-report.json
+	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML --output dependency-report
 
 .PHONY: sonar
 sonar:
