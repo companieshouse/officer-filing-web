@@ -96,7 +96,7 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
       const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
       const appointmentId = originalOfficerFiling.referenceAppointmentId as string;
       companyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      prepareOfficerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+      prepareOfficerFiling.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
         { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: prepareOfficerFiling.serviceAddress },
         companyAppointment);
     }
@@ -132,7 +132,7 @@ const matchAddress = async (req, res, isUpdate, { correspondencePremise, corresp
         };
 
         if (isUpdate && companyAppointment !== undefined) {
-          officerFiling.correspondenceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+          officerFiling.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
             { isServiceAddressSameAsRegisteredOfficeAddress: originalOfficerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
             companyAppointment);
         }

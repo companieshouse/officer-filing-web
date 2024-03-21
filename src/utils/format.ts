@@ -2,6 +2,7 @@ import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-
 import { LOCALE_EN, OFFICER_ROLE } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { lowerCaseWordsForNationalityFormatting } from "../utils/constants";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
@@ -158,3 +159,22 @@ export const formatNationalitiesToSentenceCase = (nationality: string | undefine
   });
 };
 
+export const formatAddress = (addressFields: (string | undefined)[]): string => {
+  return addressFields
+    .map(s => s?.trim())
+    .filter(field => field !== undefined && field !== "")
+    .join(', ');
+};
+
+export const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
+  const address = companyProfile.registeredOfficeAddress;
+  return formatAddress([
+    formatTitleCase(address?.premises),
+    formatTitleCase(address?.addressLineOne),
+    formatTitleCase(address?.addressLineTwo),
+    formatTitleCase(address?.locality),
+    formatTitleCase(address?.region),
+    formatTitleCase(address?.country),
+    address?.postalCode?.toUpperCase()
+  ]);
+};

@@ -258,7 +258,7 @@ describe("Director correspondence address array page controller tests", () => {
               country: "England",
               postalCode: "TE6 6ST"
             },
-            correspondenceAddressHasBeenUpdated: url === UPDATE_PAGE_URL? true: undefined
+            serviceAddressHasBeenUpdated: url === UPDATE_PAGE_URL? true: undefined
           }
         );
       });

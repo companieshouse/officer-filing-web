@@ -206,7 +206,7 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {isServiceAddressSameAsRegisteredOfficeAddress: true, correspondenceAddressHasBeenUpdated: true})
+        {isServiceAddressSameAsRegisteredOfficeAddress: true, serviceAddressHasBeenUpdated: true})
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
@@ -223,7 +223,7 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_yes"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {isServiceAddressSameAsRegisteredOfficeAddress: true, "correspondenceAddressHasBeenUpdated": false})
+        {isServiceAddressSameAsRegisteredOfficeAddress: true, "serviceAddressHasBeenUpdated": false})
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
@@ -240,7 +240,7 @@ describe("Director correspondence address link controller tests", () => {
         const response = await request(app).post(url).send({"sa_to_roa": "sa_to_roa_no"});
 
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
-        {isServiceAddressSameAsRegisteredOfficeAddress: false, correspondenceAddressHasBeenUpdated: false})
+        {isServiceAddressSameAsRegisteredOfficeAddress: false, serviceAddressHasBeenUpdated: false})
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });

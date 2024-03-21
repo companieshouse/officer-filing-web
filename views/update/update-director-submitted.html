@@ -39,7 +39,7 @@
             {% if residentialAddressHasBeenUpdated %}
               {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeResidentialAddress %}
             {% endif %}
-            {% if correspondenceAddressHasBeenUpdated %}
+            {% if serviceAddressHasBeenUpdated %}
               {% set updatedFields = updatedFields ~ (", " if updatedFields else "") ~ i18n.updateTypeCorrespondenceAddress %}
             {% endif %}
             {% set submittedTypesString = updatedFields %}
