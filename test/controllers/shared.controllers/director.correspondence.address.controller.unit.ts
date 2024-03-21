@@ -234,7 +234,7 @@ describe("Director correspondence address controller tests", () => {
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
-            expect.objectContaining({correspondenceAddressHasBeenUpdated: true})
+            expect.objectContaining({serviceAddressHasBeenUpdated: true})
           );
         }
         expect(response.text).toContain("Found. Redirecting to " + redirectLink);

@@ -91,7 +91,7 @@ describe("Director date details controller tests", () => {
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
         residentialAddressHasBeenUpdated: false,
-        correspondenceAddressHasBeenUpdated: false,
+        serviceAddressHasBeenUpdated: false,
       });
 
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
@@ -107,7 +107,7 @@ describe("Director date details controller tests", () => {
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
         residentialAddressHasBeenUpdated: true,
-        correspondenceAddressHasBeenUpdated: true,
+        serviceAddressHasBeenUpdated: true,
       });
 
       const response = await request(app).get(UPDATE_SUBMITTED_URL);
@@ -123,7 +123,7 @@ describe("Director date details controller tests", () => {
         nationalityHasBeenUpdated: true,
         occupationHasBeenUpdated: true,
         residentialAddressHasBeenUpdated: true,
-        correspondenceAddressHasBeenUpdated: true,
+        serviceAddressHasBeenUpdated: true,
       });
 
       const response = await request(app).get(UPDATE_SUBMITTED_URL);

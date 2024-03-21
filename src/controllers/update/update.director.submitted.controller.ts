@@ -42,7 +42,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
       nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
       occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,
       residentialAddressHasBeenUpdated: officerFiling.residentialAddressHasBeenUpdated,
-      correspondenceAddressHasBeenUpdated: officerFiling.correspondenceAddressHasBeenUpdated,
+      serviceAddressHasBeenUpdated: officerFiling.serviceAddressHasBeenUpdated,
       ...getLocaleInfo(locales, lang),
       currentUrl : req.originalUrl,
     });

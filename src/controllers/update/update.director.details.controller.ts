@@ -28,7 +28,7 @@ export const get = async (req: Request, resp: Response, next: NextFunction) => {
     let updatedData = false;
 
     if (officerFiling.nameHasBeenUpdated || officerFiling.occupationHasBeenUpdated || officerFiling.nationalityHasBeenUpdated ||
-      officerFiling.correspondenceAddressHasBeenUpdated || officerFiling.residentialAddressHasBeenUpdated) {
+      officerFiling.serviceAddressHasBeenUpdated || officerFiling.residentialAddressHasBeenUpdated) {
       updatedData = true;
     }
 
