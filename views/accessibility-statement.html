@@ -14,6 +14,14 @@
 {# Remove signout bar on this page by replacing it with nothing #}
 {% endblock %}
 
+{% if lang === 'cy' %}
+    {% set companiesHouseLink = 'https://www.gov.uk/government/organisations/companies-house.cy' %}
+    {% set accessibilitySupportLink = 'https://www.gov.uk/guidance/accessibility-support-for-companies-house-users.cy' %}
+{% else %}
+    {% set companiesHouseLink = 'https://www.gov.uk/government/organisations/companies-house' %}
+    {% set accessibilitySupportLink = 'https://www.gov.uk/guidance/accessibility-support-for-companies-house-users' %}
+{% endif %}
+
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -22,7 +30,7 @@
             {{ i18n.accessibilityStatementHeading }}
         </h1>
 
-        <p class="govuk-body">{{ i18n.accessibilityStatementAboutPreLink }}<a class="govuk-link" href="https://www.gov.uk/government/organisations/companies-house">{{ i18n.accessibilityStatementAboutLinkText }}</a>{{ i18n.accessibilityStatementAboutPostLink }}</p>
+        <p class="govuk-body">{{ i18n.accessibilityStatementAboutPreLink }}<a class="govuk-link" href="{{ companiesHouseLink }}">{{ i18n.accessibilityStatementAboutLinkText }}</a>{{ i18n.accessibilityStatementAboutPostLink }}</p>
 
         <ul class="govuk-list govuk-list--bullet">
             <li>{{ i18n.accessibilityStatementAboutList1 }}</li>
@@ -49,7 +57,7 @@
         </h2>
 
         <p class="govuk-body">{{ i18n.accessibilityStatementReportingPreLink }}
-            <a class="govuk-link" href="https://www.gov.uk/guidance/accessibility-support-for-companies-house-users">{{ i18n.accessibilityStatementReportingLinkText }}</a>{{ i18n.accessibilityStatementReportingPostLink }}
+            <a class="govuk-link" href="{{ accessibilitySupportLink }}">{{ i18n.accessibilityStatementReportingLinkText }}</a>{{ i18n.accessibilityStatementReportingPostLink }}
         </p>
 
         <h2 class="govuk-heading-m">
