@@ -18,8 +18,9 @@ build: update_submodules
 
 .PHONY: dependency-check
 dependency-check:
-	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML
-
+	owasp-dependency-check --project $(artifact_name) --scan $(artifact_name) --format HTML --out dependency-report
+	ls -l
+	
 .PHONY: lint
 lint:
 	npm run lint
