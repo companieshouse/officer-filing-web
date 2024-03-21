@@ -3,7 +3,7 @@ aws_profile = "live-eu-west-2"
 
 account_local_url = "https://find-and-update.company-information.service.gov.uk"
 feature_flag_ap01_web = "true"
-feature_flag_ch01_web = "false"
+feature_flag_ch01_web = "true"
 api_url = "https://private-api.companieshouse.gov.uk"
 cdn_host = "d2aolmgtg7n8lp.cloudfront.net"
 chs_url = "https://find-and-update.company-information.service.gov.uk"
