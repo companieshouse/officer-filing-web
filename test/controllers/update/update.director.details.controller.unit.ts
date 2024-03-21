@@ -47,7 +47,7 @@ describe("Director details tests", () => {
     nameHasBeenUpdated: false,
     occupationHasBeenUpdated: false,
     nationalityHasBeenUpdated: false,
-    correspondenceAddressHasBeenUpdated: false,
+    serviceAddressHasBeenUpdated: false,
     residentialAddressHasBeenUpdated: false
   });
 

@@ -331,7 +331,7 @@ describe("Director correspondence address controller tests", () => {
                 country: "France",
                 postalCode: "TE6 3ST",
               },
-              correspondenceAddressHasBeenUpdated: true
+              serviceAddressHasBeenUpdated: true
             })
           )
         } else {

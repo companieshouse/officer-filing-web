@@ -335,7 +335,7 @@ describe("Active directors controller tests", () => {
         nameHasBeenUpdated: false,
         nationalityHasBeenUpdated: false,
         occupationHasBeenUpdated: false,
-        correspondenceAddressHasBeenUpdated: false,
+        serviceAddressHasBeenUpdated: false,
         residentialAddressHasBeenUpdated: false
       }));
     });
