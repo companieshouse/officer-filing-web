@@ -104,7 +104,7 @@
           <a class="govuk-link" id="update-director-details-link" href="{{correspondenceAddressChangeLink}}" data-event-id="update-address-change-link">{{ i18n.updateDirectorDetailsUpdate }}<span class="govuk-visually-hidden">Update address</span></a>
         </dd>
         <dd class="govuk-summary-list__actions">
-          {% if correspondenceAddressHasBeenUpdated or  residentialAddressHasBeenUpdated %}
+          {% if serviceAddressHasBeenUpdated or  residentialAddressHasBeenUpdated %}
             {{ updateRequiredHtml | safe }}
           {% endif %}
         </dd>

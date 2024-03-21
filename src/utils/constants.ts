@@ -1,4 +1,4 @@
-import { COMPANY_LOOKUP, DATE_DIRECTOR_REMOVED_PATH } from "../types/page.urls";
+import { COMPANY_LOOKUP } from "../types/page.urls";
 
 export const STATEMENT_OF_CAPITAL_ERROR = "Select yes if the statement of capital is correct";
 export const TRADING_STATUS_ERROR = "Select yes if the company trading status is correct";
@@ -150,6 +150,8 @@ export const allowedPublicCompanyTypes = new Array("plc");
 export const allowedPrivateCompanyTypes = new Array("ltd", "private-limited-guarant-nsc-limited-exemption", "private-limited-guarant-nsc", "private-unlimited", "private-unlimited-nsc", "private-limited-shares-section-30-exemption");
 
 export const allowedCompanyTypes = allowedPublicCompanyTypes.concat(allowedPrivateCompanyTypes);
+
+export const lowerCaseWordsForNationalityFormatting = new Array("AND", "OF", "THE", "DA", "PART", "CITIZEN")
 
 export const STOP_PAGE_CONTENT = 
 {

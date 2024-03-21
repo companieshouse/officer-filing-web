@@ -1,6 +1,8 @@
 import { CompanyOfficer, DateOfBirth, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
-import { LOCALE_EN } from "./constants";
+import { LOCALE_EN, OFFICER_ROLE } from "./constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
+import { lowerCaseWordsForNationalityFormatting } from "../utils/constants";
+import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 
 export const formatTitleCase = (str: string|undefined): string =>  {
   if (!str) {
@@ -123,3 +125,56 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
     return "";
   }
 }
+
+export const formatDirectorNameForDisplay = (appointment: CompanyAppointment): string => {
+  let directorName = "";
+  if (equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
+    directorName = appointment.name.toUpperCase();
+  }
+  else {
+    directorName = formatTitleCase(retrieveDirectorNameFromAppointment(appointment))
+  }
+   return directorName;
+ }
+
+export const formatNationalitiesToSentenceCase = (nationality: string | undefined) => {
+  if (!nationality){
+    return "";
+  }
+
+  return nationality.replace(/\w*/g, (word, index) => {
+    if (word.toUpperCase() === "MCDONALD") {
+      return "McDonald";
+    }
+
+    if (word.toUpperCase() === "DRC") {
+      return word.toUpperCase();
+    }
+
+    if (index !== 0 && lowerCaseWordsForNationalityFormatting.includes(word.toUpperCase())){
+      return word.toLowerCase();
+    }
+
+    return `${word.slice(0, 1)}${word.slice(1).toLowerCase()}`;
+  });
+};
+
+export const formatAddress = (addressFields: (string | undefined)[]): string => {
+  return addressFields
+    .map(s => s?.trim())
+    .filter(field => field !== undefined && field !== "")
+    .join(', ');
+};
+
+export const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
+  const address = companyProfile.registeredOfficeAddress;
+  return formatAddress([
+    formatTitleCase(address?.premises),
+    formatTitleCase(address?.addressLineOne),
+    formatTitleCase(address?.addressLineTwo),
+    formatTitleCase(address?.locality),
+    formatTitleCase(address?.region),
+    formatTitleCase(address?.country),
+    address?.postalCode?.toUpperCase()
+  ]);
+};

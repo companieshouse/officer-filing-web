@@ -46,7 +46,6 @@ export const validCompanyProfile: CompanyProfile = {
 export const validAddress = {
   addressLine1: "Line1",
   addressLine2: "Line2",
-  careOf: "careOf",
   country: "England",
   locality: "locality",
   poBox: "123",

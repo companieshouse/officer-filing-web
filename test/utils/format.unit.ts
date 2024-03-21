@@ -4,7 +4,9 @@ import {
   formatTitleCase,
   toUpperCase,
   retrieveDirectorNameFromAppointment,
-  retrieveDirectorNameFromOfficer
+  retrieveDirectorNameFromOfficer,
+  formatNationalitiesToSentenceCase,
+  formatAddress
 } from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
@@ -57,6 +59,32 @@ describe("formatAppointmentDate tests", () => {
   });
 });
 
+describe("formatAddress tests", () => {
+    it ("should return address without undefined and empty string in correct format", () => {
+      const address = ["123 New St", undefined, "", "AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without undefined in correct format", () => {
+      const address = ["123 New St", undefined, "AA11 1AZ"];
+      const formattedAddress = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without empty string in correct format", () => {
+      const address = ["123 New St", "", "AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without leading or trailing white spaces in correct format", () => {
+      const address = ["123 New St  ", "", "  AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+  })
+
 
 describe("toUpperCase tests", () => {
   it("should convert to upper case", () => {
@@ -102,5 +130,31 @@ describe("retrieveDirectorNameFromOfficer tests", () => {
     expect(directorName).toBe("John Doe");
     expect(directorNameCorporate).toBe("Blue Enterprises");
     expect(missingDirectorName).toBe("");
+  });
+});
+
+describe("formatNationalitiesToSentenceCase", () => {
+  test.each([
+    [undefined, ""],
+    ["FRANCE", "France"],
+    ["BOSNIA AND HERZEGOVINA", "Bosnia and Herzegovina"],
+    ["ISLE OF MAN", "Isle of Man"],
+    ["SAINT VINCENT AND THE GRENADINES", "Saint Vincent and the Grenadines"],
+    ["BRITISH INDIAN OCEAN TERRITORY", "British Indian Ocean Territory"],
+    ["SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA", "Saint Helena, Ascension and Tristan da Cunha"],
+    ["SINT MAARTEN (DUTCH PART)", "Sint Maarten (Dutch part)"],
+    ["Congolese (Drc)", "Congolese (DRC)"],
+    ["HEARD ISLAND AND MCDONALD ISLANDS","Heard Island and McDonald Islands"],
+    ["GUINEA-BISSAU", "Guinea-Bissau"],
+    ["Svalbard And Jan Mayen", "Svalbard and Jan Mayen"],
+    ["Saint Helena, Ascension And Tristan Da Cunha", "Saint Helena, Ascension and Tristan da Cunha"],
+    ["Isle Of Mann", "Isle of Mann"],
+    ["Sint Maarten (Dutch Part)", "Sint Maarten (Dutch part)"],
+    ["Congo, The Democratic Republic Of The", "Congo, the Democratic Republic of the"],
+    ["Saint Vincent And The Grenadines", "Saint Vincent and the Grenadines"],
+    ["South Georgia And The South Sandwich Islands", "South Georgia and the South Sandwich Islands"],
+    ["Heard Island And Mcdonald Islands", "Heard Island and McDonald Islands"],
+  ])(`Correctly reformats %s`, (str, expectedResult) => {
+    expect(formatNationalitiesToSentenceCase(str)).toEqual(expectedResult);
   });
 });

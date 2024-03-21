@@ -10,7 +10,7 @@ import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { CURRENT_DIRECTORS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_DETAILS_PATH } from "../types/page.urls";
 import { getOfficerFiling } from "../services/officer.filing.service";
-import { getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 const NAME_FIELD_LENGTH_50 = 50;
 const NAME_FIELD_LENGTH_160 = 160;
@@ -50,7 +50,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
                 ...getLocaleInfo(locales, lang),
                 currentUrl: currentUrl,
                 templateName: Templates.DIRECTOR_NAME,
-                backLinkUrl: setBackLink(req, officerFiling?.checkYourAnswersLink, backLinkUrl),
+                backLinkUrl:  addLangToUrl(setBackLink(req, officerFiling?.checkYourAnswersLink, backLinkUrl), lang),
                 typeahead_array: TITLE_LIST,
                 errors: formattedErrors,
                 typeahead_errors: JSON.stringify(formattedErrors),

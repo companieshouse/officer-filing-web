@@ -12,7 +12,7 @@ import { getDirectorAndTerminationDate } from "../services/remove.directors.chec
 import { retrieveStopPageTypeToDisplay } from "../services/remove.directors.error.keys.service";
 import { Session } from "@companieshouse/node-session-handler";
 import { setAppointedOnDate, toReadableFormat, toReadableFormatMonthYear } from "../utils/date";
-import { equalsIgnoreCase, formatTitleCase, retrieveDirectorNameFromOfficer  } from "../utils/format";
+import { equalsIgnoreCase, formatDirectorNameForDisplay, formatTitleCase } from "../utils/format";
 import { OFFICER_ROLE } from "../utils/constants";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
@@ -50,6 +50,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       }
     }
 
+    let directorName = formatDirectorNameForDisplay(appointment);
+  
     var corporateDirector = false;
     if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
       corporateDirector = true;
@@ -60,7 +62,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DATE_DIRECTOR_REMOVED_PATH, req), lang),
       company: companyProfile,
       directorTitle: formatTitleCase(appointment.title),
-      name: formatTitleCase(retrieveDirectorNameFromOfficer(companyOfficer)),
+      name: directorName,
       dateOfBirth: dateOfBirth,
       appointedOn: setAppointedOnDate(companyOfficer),
       resignedOn: toReadableFormat(companyOfficer.resignedOn),

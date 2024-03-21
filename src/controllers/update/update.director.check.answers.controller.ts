@@ -119,6 +119,6 @@ const hasNotBeenUpdated = (officerFiling: OfficerFiling): boolean => {
   return  !officerFiling.nameHasBeenUpdated && 
           !officerFiling.nationalityHasBeenUpdated && 
           !officerFiling.occupationHasBeenUpdated && 
-          !officerFiling.correspondenceAddressHasBeenUpdated && 
+          !officerFiling.serviceAddressHasBeenUpdated && 
           !officerFiling.residentialAddressHasBeenUpdated;
 }

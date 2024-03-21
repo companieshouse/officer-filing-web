@@ -11,7 +11,7 @@ import { getOfficerFiling } from "../services/officer.filing.service";
 import { formatTitleCase } from "../services/confirm.company.service";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
 import { CREATE_TRANSACTION_PATH } from "../types/page.urls";
-import { retrieveDirectorNameFromAppointment } from "../utils/format";
+import { formatDirectorNameForDisplay } from "../utils/format";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,6 +32,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const companyOfficer: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, officerFiling.referenceAppointmentId);
+    let directorName = formatDirectorNameForDisplay(companyOfficer);
+
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
 
@@ -41,7 +43,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       companyNumber: companyNumber,
       companyName: companyProfile.companyName,
       directorTitle: formatTitleCase(companyOfficer.title),
-      name: formatTitleCase(retrieveDirectorNameFromAppointment(companyOfficer)),
+      name: directorName,
       resignedOn: toReadableFormat(officerFiling.resignedOn),
       removeLink: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
