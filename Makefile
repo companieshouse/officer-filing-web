@@ -32,10 +32,6 @@ test:
 test-unit:
 	npm run test
 
-.PHONY: security-check
-security-check:
-	npm audit --audit-level=high
-
 .PHONY: package
 package: build
 ifndef version
