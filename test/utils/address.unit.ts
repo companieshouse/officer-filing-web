@@ -1,4 +1,4 @@
-import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import {Address} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { compareAddress } from "../../src/utils/address";
 
 const addressOne: Address = {
@@ -11,11 +11,32 @@ const addressOne: Address = {
   region: "Greater London"
 };
 
+const addressOneWithoutAddressLine2: Address = {
+  premises: "123",
+  addressLine1: "Main St",
+  country: "UK",
+  locality: "London",
+  postalCode: "SW1A 1AA",
+  region: "Greater London"
+};
+
 describe("compareAddress", () => {
   it("should return true if all address fields are the same", () => {
     const addressTwo: Address = { ...addressOne };
     const result = compareAddress(addressOne, addressTwo);
     expect(result).toBe(true);
+  });
+
+  it("should return true if address line 2 is undefined for one and empty for another address", () => {
+    const addressTwo: Address = { ...addressOneWithoutAddressLine2, addressLine2: "" };
+    const result = compareAddress(addressOneWithoutAddressLine2, addressTwo);
+    expect(result).toBe(true);
+  });
+
+  it("should return false if address line 2 is removed.", () => {
+    const addressTwo: Address = { ...addressOne, addressLine2: "" };
+    const result = compareAddress(addressOne, addressTwo);
+    expect(result).toBe(false);
   });
 
   it("should return false if premises is different", () => {

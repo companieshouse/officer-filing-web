@@ -3,7 +3,6 @@ import { CompanyOfficer, Address, DateOfBirth, CompanyOfficerLinks, OfficerLinks
 export const mockAddress1: Address = {
   addressLine1: "Diddly squat farm shop",
   addressLine2: "",
-  careOf: undefined,
   country: "England",
   locality: "Chadlington",
   poBox: undefined,
@@ -39,7 +38,6 @@ export const mockCompanyOfficer: CompanyOfficer = {
   dateOfBirth: dateOfBirth,
   links: companyOfficerLinks,
   name: "Doe, John Middlename",
-  title: "Mr",
   forename: "John",
   surname: "Doe",
   otherForenames: "Middlename",

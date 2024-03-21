@@ -16,10 +16,9 @@ import { createValidationError, formatValidationErrors } from '../../validation/
 import { ValidationError } from "../../model/validation.model";
 import { getOfficerFiling, patchOfficerFiling } from '../../services/officer.filing.service';
 import { Session } from "@companieshouse/node-session-handler";
-import { formatTitleCase } from "../../utils/format";
+import { formatAddress, formatDirectorRegisteredOfficeAddress, formatTitleCase } from "../../utils/format";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
-import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
@@ -144,26 +143,6 @@ const formatDirectorServiceAddress = (officerFiling: OfficerFiling): string => {
     formatTitleCase(address?.country),
     address?.postalCode?.toUpperCase()
   ]);
-};
-
-const formatDirectorRegisteredOfficeAddress = (companyProfile: CompanyProfile): string => {
-  const address = companyProfile.registeredOfficeAddress;
-  return formatAddress([
-    formatTitleCase(address?.premises),
-    formatTitleCase(address?.addressLineOne),
-    formatTitleCase(address?.addressLineTwo),
-    formatTitleCase(address?.locality),
-    formatTitleCase(address?.region),
-    formatTitleCase(address?.country),
-    address?.postalCode?.toUpperCase()
-  ]);
-};
-
-const formatAddress = (addressFields: (string | undefined)[]): string => {
-  return addressFields
-    .filter(Boolean)
-    .map(s => s?.trim())
-    .join(', ');
 };
 
 const checkRedirectUrl = (officerFiling: OfficerFiling, nextPageUrl: string, res: Response<any, Record<string, any>>, req: Request, lang: string) => {

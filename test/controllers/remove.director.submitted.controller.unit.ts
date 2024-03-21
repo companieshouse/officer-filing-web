@@ -14,7 +14,7 @@ import { companyAuthenticationMiddleware } from "../../src/middleware/company.au
 import { validCompanyProfile } from "../mocks/company.profile.mock";
 import { getCompanyAppointmentFullRecord } from "../../src/services/company.appointments.service";
 import { getCompanyProfile } from "../../src/services/company.profile.service";
-import { validCompanyAppointment } from "../mocks/company.appointment.mock";
+import { validCompanyAppointment, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockCompanyAuthenticationMiddleware = companyAuthenticationMiddleware as jest.Mock;
@@ -62,7 +62,7 @@ describe("Remove director submitted controller tests", () => {
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
-    it("Should display removal summary for the director", async () => {
+    it("Should display removal summary for the non-corporate director", async () => {
       const response = await request(app).get(SUBMITTED_URL);
 
       expect(mockGetCompanyProfile).toHaveBeenCalled();
@@ -75,6 +75,24 @@ describe("Remove director submitted controller tests", () => {
       expect(response.text).toContain("12345678");
       expect(response.text).toContain("Name of director");
       expect(response.text).toContain("Mr John Elizabeth Doe");
+      expect(response.text).toContain("Date removed");
+      expect(response.text).toContain("8 August 2008");
+    });
+
+    it("Should display removal summary for corporate director", async () => {
+      mockGetCompanyAppointmentFullRecord.mockResolvedValue(companyAppointmentCorporateDirector );
+      const response = await request(app).get(SUBMITTED_URL);
+
+      expect(mockGetCompanyProfile).toHaveBeenCalled();
+      expect(mockGetOfficerFiling).toHaveBeenCalled();
+      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+
+      expect(response.text).toContain("Company name");
+      expect(response.text).toContain("Test Company");
+      expect(response.text).toContain("Company number");
+      expect(response.text).toContain("12345678");
+      expect(response.text).toContain("Name of director");
+      expect(response.text).toContain("REACTIONLIQUOR CESSPOOLLIQUOR REGRET");
       expect(response.text).toContain("Date removed");
       expect(response.text).toContain("8 August 2008");
     });

@@ -13,7 +13,7 @@ import {
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { formatTitleCase } from "../../utils/format";
+import { formatDirectorRegisteredOfficeAddress, formatTitleCase } from "../../utils/format";
 import { formatValidationErrors } from "../../validation/validation";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ValidationError, GenericValidationType } from '../../model/validation.model';
@@ -47,7 +47,7 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       director_correspondence_address: officerFiling.directorServiceAddressChoice,
       directorName: formatTitleCase(directorName),
-      directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+      directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
       lang
@@ -83,7 +83,7 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
         errors: formattedErrors,
         director_correspondence_address: officerFiling.directorServiceAddressChoice,
         directorName: formatTitleCase(directorName),
-        directorRegisteredOfficeAddress: formatDirectorRegisteredAddress(companyProfile),
+        directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
         ...getLocaleInfo(locales, lang),
         currentUrl: getCurrentUrl(req, isUpdate, lang),
         lang
@@ -166,17 +166,6 @@ export const buildResidentialAddressValidationErrors = (req: Request, correspond
   }
   return validationErrors;
 };
-
-const formatDirectorRegisteredAddress = (companyProfile: CompanyProfile) => {
-  return formatTitleCase(`
-          ${companyProfile.registeredOfficeAddress?.premises ? companyProfile.registeredOfficeAddress.premises+',' : ""}
-          ${companyProfile.registeredOfficeAddress?.addressLineOne},
-          ${companyProfile.registeredOfficeAddress?.addressLineTwo ? companyProfile.registeredOfficeAddress.addressLineTwo+',' : ""}
-          ${companyProfile.registeredOfficeAddress?.locality},
-          ${companyProfile.registeredOfficeAddress?.region ? companyProfile.registeredOfficeAddress.region+"," : ""}
-          ${companyProfile.registeredOfficeAddress?.country ? companyProfile.registeredOfficeAddress.country : ""}
-        `) + companyProfile.registeredOfficeAddress?.postalCode
- }
 
  const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
   if(isUpdate){

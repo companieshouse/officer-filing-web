@@ -25,7 +25,7 @@ const DISSOLVED_PAGE_HEADING_WELSH = "Mae&#39;r cwmni wedi&#39;i ddiddymu neu yn
 const DISSOLVED_PAGE_BODY_TEXT = "cannot use this service because it has been dissolved, or it's in the process of being dissolved.";
 const DISSOLVED_PAGE_BODY_TEXT_WELSH = "ddefnyddio'r gwasanaeth hwn oherwydd ei fod wedi ei ddiddymu, neu ei fod yn y broses o gael ei ddiddymu";
 const NON_LIMITED_UNLIMITED_PAGE_HEADING = "Only limited and unlimited companies can use this service";
-const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for Test Company using this service if it's a:";
+const NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT = "You can only file director updates for TEST COMPANY using this service if it's a:";
 const PRE_OCTOBER_2009_PAGE_HEADING = "Directors removed before 1 October 2009 must file on paper instead";
 const PRE_OCTOBER_2009_PAGE_HEADING_WELSH = "Rhaid i gyfarwyddwyr a chafodd ei ddileu cyn 1 Hydref 2009 ffeilio ar bapur yn lle hynny";
 const PRE_OCTOBER_2009_PAGE_BODY_TEXT = "The date the director was removed is before 1 October 2009.";
@@ -52,7 +52,7 @@ describe("Stop screen controller tests", () => {
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
     expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
-    expect(response.text).toContain(dissolvedCompanyProfile.companyName)
+    expect(response.text).toContain(dissolvedCompanyProfile.companyName.toUpperCase())
     expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=en");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
@@ -109,7 +109,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
-    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName)
+    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase())
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -120,7 +120,7 @@ describe("Stop screen controller tests", () => {
       .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
-    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName);
+    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase());
     expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT);
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
@@ -197,7 +197,7 @@ describe("Stop screen controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
     const response = await request(app)
     .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
-    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("Test Company", "this company"));
+    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("TEST COMPANY", "this company"));
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
 
@@ -306,7 +306,6 @@ describe("Stop screen controller tests", () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
-
     expect(response.text).toContain("Dim ond Cwmnïau cyfyngedig ac anghyfyngedig gall ddefnyddio'r gwasanaeth hwn");
     expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
     expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();

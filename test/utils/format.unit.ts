@@ -5,7 +5,8 @@ import {
   toUpperCase,
   retrieveDirectorNameFromAppointment,
   retrieveDirectorNameFromOfficer,
-  formatNationalitiesToSentenceCase
+  formatNationalitiesToSentenceCase,
+  formatAddress
 } from "../../src/utils/format";
 import { DateOfBirth } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { validCompanyAppointment, companyAppointmentMissingMiddleName, companyAppointmentMissingName, companyAppointmentCorporateDirector } from "../mocks/company.appointment.mock";
@@ -57,6 +58,32 @@ describe("formatAppointmentDate tests", () => {
     expect(formattedAppointmentDateErr).toBe("");
   });
 });
+
+describe("formatAddress tests", () => {
+    it ("should return address without undefined and empty string in correct format", () => {
+      const address = ["123 New St", undefined, "", "AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without undefined in correct format", () => {
+      const address = ["123 New St", undefined, "AA11 1AZ"];
+      const formattedAddress = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without empty string in correct format", () => {
+      const address = ["123 New St", "", "AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+
+    it ("should return address without leading or trailing white spaces in correct format", () => {
+      const address = ["123 New St  ", "", "  AA11 1AZ"];
+      const formattedAddress: string = formatAddress(address);
+      expect(formattedAddress).toBe("123 New St, AA11 1AZ")
+    });
+  })
 
 
 describe("toUpperCase tests", () => {

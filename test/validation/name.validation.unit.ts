@@ -5,7 +5,7 @@ jest.mock("../../src/services/officer.filing.service")
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
-import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, CURRENT_DIRECTORS_PATH_END, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
@@ -266,6 +266,15 @@ describe("Director name validation tests", () => {
             previous_names:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS});
         expect(response.text).not.toContain(FORMER_NAMES_CHARACTERS);
         expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
+    });
+
+    it ("should persist language in backlink if an error occurs", async() => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+            checkYourAnswersLink: undefined
+          });
+        const WELSH_LANG = "?lang=cy";
+        const response = await request(app).post(DIRECTOR_NAME_URL + WELSH_LANG).send({first_name:"§"+FIFTY_ONE_CHARACTERS});
+        expect(response.text).toContain(CURRENT_DIRECTORS_PATH_END + WELSH_LANG);
     });
   })
 });

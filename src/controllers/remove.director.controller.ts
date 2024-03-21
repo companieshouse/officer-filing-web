@@ -18,7 +18,7 @@ import { patchOfficerFiling, getOfficerFiling } from "../services/officer.filing
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../services/company.appointments.service";
-import { formatTitleCase, retrieveDirectorNameFromAppointment } from "../utils/format";
+import { formatDirectorNameForDisplay } from "../utils/format";
 import { validateDate } from "../validation/date.validation";
 import { ValidationError } from "../model/validation.model";
 import { formatValidationErrors } from "../validation/validation";
@@ -44,13 +44,16 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     // Get the director name from company appointments
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
 
+    //Format name based on corporate or individual director
+   let directorName = formatDirectorNameForDisplay(appointment);
+
     if (officerFiling.resignedOn) {
       var dateFields = officerFiling.resignedOn.split('-');
-      return displayPopulatedPage(dateFields, appointment, req, res);
+      return displayPopulatedPage(dateFields, appointment, directorName, req, res);
     }
 
     return res.render(Templates.REMOVE_DIRECTOR, {
-      directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
+      directorName: directorName,
       templateName: Templates.REMOVE_DIRECTOR,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang),
       ...getLocaleInfo(locales, lang),
@@ -77,6 +80,9 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     // Get current etag within the appointment
     const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+    
+    //Format name based on corporate or individual director
+    let directorName = formatDirectorNameForDisplay(appointment);
 
     // Get date of resignation
     const day = req.body[RemovalDateField.DAY];
@@ -89,7 +95,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     let dateValidationResult = validateDate(day, month, year, RemovalDateValidation);
     if (dateValidationResult) {
       removeDateValidationErrors.push(dateValidationResult);
-      return displayErrorMessage(removeDateValidationErrors, appointment, req, res);
+      return displayErrorMessage(removeDateValidationErrors, appointment, directorName, req, res);
     }
 
     // Patch filing with the resignation date
@@ -104,7 +110,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
       const errorMessageKey = retrieveErrorMessageToKey(validationStatus, RemovalDateValidation);
       if (errorMessageKey) {
         removeDateValidationErrors.push(errorMessageKey);
-        return displayErrorMessage(removeDateValidationErrors, appointment, req, res);
+        return displayErrorMessage(removeDateValidationErrors, appointment, directorName, req, res);
       }
 
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
@@ -126,7 +132,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 /**
  * Return the page with the rendered error message
  */
-function displayErrorMessage(validationErrors: ValidationError[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+function displayErrorMessage(validationErrors: ValidationError[], appointment: CompanyAppointment, directorName: string, req: Request, res: Response<any, Record<string, any>>) {
 
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
@@ -136,7 +142,7 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
   const backLink = addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
-    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
+    directorName: directorName,
     backLinkUrl: backLink,
     templateName: Templates.REMOVE_DIRECTOR,
     ...req.body,
@@ -147,7 +153,7 @@ function displayErrorMessage(validationErrors: ValidationError[], appointment: C
   });
 }
 
-function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, req: Request, res: Response<any, Record<string, any>>) {
+function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointment, directorName: string, req: Request, res: Response<any, Record<string, any>>) {
   const lang = selectLang(req.query.lang);
   const locales = getLocalesService();
   const dates = {
@@ -160,7 +166,7 @@ function displayPopulatedPage(dateFields: string[], appointment: CompanyAppointm
   const backLink = addLangToUrl(urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req), lang);
 
   return res.render(Templates.REMOVE_DIRECTOR, {
-    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
+    directorName: directorName,
     backLinkUrl: backLink,
     templateName: Templates.REMOVE_DIRECTOR,
     ...dates,

@@ -42,6 +42,7 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Find the director&#39;s home address";
 const WELSH_PAGE_HEADING = "Dod o hyd i gyfeiriad cartref y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+const WELSH_LANG = "?lang=cy"
 const PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -213,7 +214,7 @@ describe('Director residential address search controller test', () => {
       mockGetCompanyProfile.mockResolvedValueOnce({});
       mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
 
-      const response = await request(app).get(url + "?lang=cy");
+      const response = await request(app).get(url + WELSH_LANG);
 
       expect(response.text).toContain(WELSH_PAGE_HEADING);
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -300,6 +301,36 @@ describe('Director residential address search controller test', () => {
       }
       expect(response.text).toContain("UK postcode must only include letters a to z, numbers and spaces");
       expect(response.text).toContain("Property name or number must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
+      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
+    it.each([[PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH_END, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH_END]])("Should page in welsh when validation errors are found and lang is set to cy", async (url, backLink, manualEntryLink) => {
+      mockGetOfficerFiling.mockResolvedValueOnce({
+        firstName: "John",
+        lastName: "Smith"
+      })
+      if (url === UPDATE_PAGE_URL) {
+        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
+      }
+      mockGetCompanyProfile.mockResolvedValueOnce({});
+      mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(mockValidResidentialAddress);
+
+      const response = await request(app).post(url + WELSH_LANG)
+      .send({"postcode": "%%%%%%", "premises": "ゃ"});
+
+      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+      expect(response.text).toContain("%%%%%%");
+      expect(response.text).toContain("ゃ");
+
+      expect(response.text).toContain(backLink + WELSH_LANG);
+      expect(response.text).toContain(manualEntryLink + WELSH_LANG);
+      if(url === UPDATE_PAGE_URL){
+        expect(response.text).toContain("John Elizabeth Doe");
+      }
+      else{
+        expect(response.text).toContain("John Smith");
+      }
+      expect(response.text).toContain("Rhaid i god post y DU gynnwys llythrennau a i z a rhifau a bylchau yn unig");
       expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
     });
 
