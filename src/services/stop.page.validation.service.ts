@@ -4,5 +4,5 @@ export const getCurrentOrFutureDissolved = async (companyNumber: string): Promis
 
     const companyProfile = await getCompanyProfile(companyNumber);
     
-    return !!(companyProfile as any).dateOfCessation || companyProfile.companyStatus === "dissolved";
+    return !!companyProfile.dateOfCessation || companyProfile.companyStatus === "dissolved";
 }
