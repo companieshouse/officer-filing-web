@@ -51,7 +51,6 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
 
     const officerFilingBody: OfficerFiling = {
       isServiceAddressSameAsRegisteredOfficeAddress: false

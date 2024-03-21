@@ -28,7 +28,8 @@ export const getLocaleInfo = (locales: LocalesService, lang: string) => {
     languageEnabled: locales.enabled,
     languages: LanguageNames.sourceLocales(locales.localesFolder),
     i18n: locales.i18nCh.resolveNamespacesKeys(lang),
-    lang
+    lang,
+    htmlLang: lang
   }
 };
 
