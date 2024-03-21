@@ -1,5 +1,12 @@
 # officer-filing-web
-Web front end for Officer Filing service 
+
+CHS Web front end for officer filings:
+
+1. TM01 Remove a director
+2. AP01 Appoint a director
+3. CH01 Update a director
+
+This Node / Express / Typescript Web app sits in from of officer-filing-api and uses Nunjucks and the GOV.UK design toolkit to implement these three Web journeys.
 
 ## DISCLAIMER ***********************************************************************
 Due to a problem with where GOV-UK Frontened looks for it's fonts, we have had to add an override
@@ -44,11 +51,4 @@ In order to run tests locally you will need to do the following:
 
 ### Config variables
 
-Key             | Example Value   | Description
-----------------|---------------- |------------------------------------
-CACHE_SERVER | redis               | Required for storing values in memory
-CDN_HOST     | http://cdn.chs.local | Used when navigating to the webpage
-COOKIE_DOMAIN| chs.local |
-COOKIE_NAME  |__SID |
-COOKIE_SECRET | 
-SHOW_SERVICE_OFFLINE_PAGE | false | Feature Flag
+Please see the configuration in the terraform folder.
