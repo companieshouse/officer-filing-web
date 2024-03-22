@@ -4,7 +4,7 @@ import app from "../../src/app";
 import { ACCESSIBILITY_STATEMENT_PATH } from "../../src/types/page.urls";
 
 const PAGE_HEADING_EN = "Accessibility statement for Appoint, update and remove a company director service";
-const PAGE_HEADING_CY = "To be translated";
+const PAGE_HEADING_CY = "Datganiad hygyrchedd ar gyfer y gwasanaeth Penodi, diweddaru a dileu cyfarwyddwr cwmni";
 
 describe("accessibility statement controller tests", () => {
 
