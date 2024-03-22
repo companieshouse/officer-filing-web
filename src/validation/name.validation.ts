@@ -4,7 +4,7 @@ import { getField, setBackLink } from "../utils/web";
 import { TITLE_LIST } from "../utils/properties";
 import { DirectorField } from "../model/director.model";
 import { NameValidation } from "./name.validation.config";
-import { REGEX_FOR_VALID_FORMER_NAMES, REGEX_FOR_VALID_NAME, formatValidationErrors } from "./validation";
+import { REGEX_FOR_NAME_TITLE, REGEX_FOR_VALID_FORMER_NAMES, REGEX_FOR_VALID_NAME, formatValidationErrors } from "./validation";
 import { Templates } from "../types/template.paths";
 import { urlUtils } from "../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -92,7 +92,7 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
 
 const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
-        if (!title.match(REGEX_FOR_VALID_NAME)){
+        if (!title.match(REGEX_FOR_NAME_TITLE)){
             // invalid characters
             validationErrors.push(nameValidationType.TitleInvalidCharacter.ErrorField);
         } else if (title.length > NAME_FIELD_LENGTH_50){
