@@ -60,6 +60,11 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(TITLE_CHARACTERS);
     });
 
+    it ("should not render error if title has . characters", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"."});
+        expect(response.text).not.toContain(TITLE_CHARACTERS);
+    });
+
     it ("should render error if title is too long", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts - Order of Merlin the first class Supreme Mugwump - Chief Warlock and Grand Sorcerer"});
         expect(response.text).toContain(TITLE_LENGTH);
