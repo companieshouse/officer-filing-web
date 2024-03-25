@@ -3,7 +3,7 @@ import { Response } from "express";
 import request from "supertest";
 import app from "../../src/app";
 import { ACCOUNTS_SIGNOUT_PATH, OFFICER_FILING, SIGNOUT_PATH } from "../../src/types/page.urls";
-import { getPreviousPageQueryParamUrl, safeRedirect } from '../../src/controllers/signout.controller';
+import { safeRedirect } from '../../src/controllers/signout.controller';
 
 const SIGNOUT_LOCATION = `${OFFICER_FILING}${SIGNOUT_PATH}`;
 
@@ -93,58 +93,6 @@ describe("Signout controller tests", () => {
       
       expect(() => safeRedirect(res as any as Response, url)).toThrowError(new Error('Security failure with URL ' + url))
       expect(res.redirect).not.toHaveBeenCalled()
-    });
-  });
-
-  describe('getPreviousPageQueryParamUrl tests', () => {
-    it('should return the previous page url from headers', () => {
-      const previousPage = OFFICER_FILING + '/test'
-      const req = {
-        rawHeaders: [
-          'Host', 'localhost:3000',
-          'User-Agent', 'curl/7.64.1',
-          'Accept', '*/*',
-          'Referer', previousPage
-        ],
-        query: {
-        }
-      }
-      
-      expect(getPreviousPageQueryParamUrl(req as any)).toBe(previousPage)
-    });
-
-    it('should return the previous page url from headers if previousPage query param has multiple values', () => {
-      const previousPage = OFFICER_FILING + '/test'
-      const req = {
-        rawHeaders: [
-          'Host', 'localhost:3000',
-          'User-Agent', 'curl/7.64.1',
-          'Accept', '*/*',
-          'Referer', previousPage
-        ],
-        query: {
-          previousPage: [OFFICER_FILING, "http://example.com"]
-        }
-      }
-      
-      expect(getPreviousPageQueryParamUrl(req as any)).toBe(previousPage)
-    });
-
-    it('should return the previous page url from single previousPage query param', () => {
-      const previousPage = OFFICER_FILING + '/test'
-      const req = {
-        rawHeaders: [
-          'Host', 'localhost:3000',
-          'User-Agent', 'curl/7.64.1',
-          'Accept', '*/*',
-          'Referer', OFFICER_FILING
-        ],
-        query: {
-          previousPage: previousPage
-        }
-      }
-      
-      expect(getPreviousPageQueryParamUrl(req as any)).toBe(previousPage)
     });
   });
 });

@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { urlParams, URL_QUERY_PARAM } from "../types/page.urls";
+import { urlParams, URL_QUERY_PARAM, OFFICER_FILING } from "../types/page.urls";
 import { logger } from "./logger";
 import { URL_LOG_MAX_LENGTH, URL_PARAM_MAX_LENGTH } from "./properties";
 
@@ -147,4 +147,20 @@ export const urlUtils = {
   getUrlWithCompanyNumberTransactionIdAndSubmissionId,
   sanitiseReqUrls: sanitiseReqUrls,
   setQueryParam,
+};
+
+export const getPreviousPageQueryParamUrl = (req: Request) => {
+  const previousPageQueryParam = req.query.previousPage;
+  return previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req)
+};
+
+const getPreviousPageUrl = (req: Request) => {
+  const headers = req.rawHeaders;
+  const absolutePreviousPageUrl = headers.filter(item => item.includes(OFFICER_FILING))[0];
+  if (!absolutePreviousPageUrl) {
+      return OFFICER_FILING;
+  }
+
+  const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
+  return absolutePreviousPageUrl.substring(indexOfRelativePath);
 };
