@@ -19,7 +19,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     return res.render(Templates.ACCESSIBILITY_STATEMENT, {
       templateName: Templates.ACCESSIBILITY_STATEMENT,
       backLinkUrl: returnPage,
-      // currentUrl: req.originalUrl + "?previousPage=" + returnPageEncoded,
       currentUrl: urlUtils.getUrlToPath(ACCESSIBILITY_STATEMENT_PATH, req) + "?previousPage=" + returnPageEncoded,
       ...getLocaleInfo(locales, lang)
     });
