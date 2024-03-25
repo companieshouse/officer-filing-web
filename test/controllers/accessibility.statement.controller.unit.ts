@@ -6,8 +6,6 @@ import { ACCESSIBILITY_STATEMENT_PATH } from "../../src/types/page.urls";
 const PAGE_HEADING_EN = "Accessibility statement for Appoint, update and remove a company director service";
 const PAGE_HEADING_CY = "Datganiad hygyrchedd ar gyfer y gwasanaeth Penodi, diweddaru a dileu cyfarwyddwr cwmni";
 
-// comment to kick off pipeline
-
 describe("accessibility statement controller tests", () => {
 
   beforeEach(() => {
