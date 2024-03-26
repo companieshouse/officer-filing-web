@@ -65,7 +65,7 @@ describe("Director validate first name & title tests", () => {
         expect(validationErrors.length).toBe(1);
     });
 
-    it ("should not object to valid characters in title", async() => {
+    it ("should not object to valid characters in first name", async() => {
         const validationErrors = [];
         validateFirstName("Jane - 'Jones'", NameValidation, validationErrors);
         expect(validationErrors.length).toBe(0);
