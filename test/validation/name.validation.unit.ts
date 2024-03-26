@@ -60,6 +60,11 @@ describe("Director name validation tests", () => {
         expect(response.text).toContain(TITLE_CHARACTERS);
     });
 
+    it ("should render error if title has invalid characters", async() => {
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"()*&"});
+        expect(response.text).toContain(TITLE_CHARACTERS);
+    });
+
     it ("should not render error if title has . characters", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"."});
         expect(response.text).not.toContain(TITLE_CHARACTERS);
