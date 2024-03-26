@@ -160,7 +160,6 @@ const getPreviousPageUrl = (req: Request) => {
   if (!absolutePreviousPageUrl) {
       return OFFICER_FILING;
   }
-  // comment
 
   const indexOfRelativePath = absolutePreviousPageUrl.indexOf(OFFICER_FILING);
   return absolutePreviousPageUrl.substring(indexOfRelativePath);
