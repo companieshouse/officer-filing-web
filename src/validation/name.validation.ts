@@ -90,7 +90,7 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
     return validationErrors;
 };
 
-const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
+export const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
         if (!title.match(REGEX_FOR_NAME_TITLE)){
             // invalid characters
@@ -102,7 +102,7 @@ const validateTitle = (title: string, nameValidationType: GenericValidationType,
     }
 }
 
-const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
+export const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(firstName != null && firstName != "") {
         if (!firstName.match(REGEX_FOR_VALID_NAME)){
             // invalid characters

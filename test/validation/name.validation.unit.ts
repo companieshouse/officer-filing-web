@@ -7,6 +7,8 @@ import request from "supertest";
 import app from "../../src/app";
 import { APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, CURRENT_DIRECTORS_PATH_END, DIRECTOR_NAME_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
 import { getOfficerFiling } from "../../src/services/officer.filing.service";
+import { NameValidation } from "../../src/validation/name.validation.config";
+import { validateTitle, validateFirstName } from "../../src/validation/name.validation";
 
 const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 
@@ -42,6 +44,33 @@ const UPDATE_DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
   .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+
+describe("Director validate first name & title tests", () => {
+
+    it.each(["?", "&", "Dr%", "Mr+Ms"])("should object to invalid characters in title", async(pattern) => {
+        const validationErrors = [];
+        validateTitle(pattern, NameValidation, validationErrors);
+        expect(validationErrors.length).toBe(1);
+    });
+
+    it ("should not object to valid characters in title", async() => {
+        const validationErrors = [];
+        validateTitle("Dr. Prof -", NameValidation, validationErrors);
+        expect(validationErrors.length).toBe(0);
+    });
+
+    it.each(["?", "Head&Toes", "Joe.Doe", "+Drop"])("should object to invalid characters in first name", async(pattern) => {
+        const validationErrors = [];
+        validateFirstName(pattern, NameValidation, validationErrors);
+        expect(validationErrors.length).toBe(1);
+    });
+
+    it ("should not object to valid characters in first name", async() => {
+        const validationErrors = [];
+        validateFirstName("Jane - 'Jones'", NameValidation, validationErrors);
+        expect(validationErrors.length).toBe(0);
+    });
+});
 
 describe("Director name validation tests", () => {
 
