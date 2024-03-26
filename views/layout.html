@@ -93,8 +93,13 @@
 {% set contactUs = i18n.contactUs | default("Contact Us") %}
 {% set developers = i18n.developers | default("Developers") %}
 {% set accessibilityStatement = i18n.accessibilityStatement | default("Accessibility statement") %}
-{% set lang = lang | default('en') %}
-{% set accessibilityStatementLink =  "/appoint-update-remove-company-officer/accessibility-statement?lang=" + lang %}
+
+{% if not accessibilityStatementUrl %}
+  {% set accessibilityStatementLink =  "/appoint-update-remove-company-officer/accessibility-statement?lang=" + (lang | default("en"))%}
+{% else %}
+  {% set accessibilityStatementLink = accessibilityStatementUrl %}
+{% endif %}
+
 {% block footer %}
   {{ govukFooter({
     meta: {

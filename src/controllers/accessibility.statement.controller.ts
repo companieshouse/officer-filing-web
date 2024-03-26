@@ -20,6 +20,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       templateName: Templates.ACCESSIBILITY_STATEMENT,
       backLinkUrl: returnPage,
       currentUrl: urlUtils.getUrlToPath(ACCESSIBILITY_STATEMENT_PATH, req) + "?previousPage=" + returnPageEncoded,
+      accessibilityStatementUrl: addLangToUrl(ACCESSIBILITY_STATEMENT_PATH, lang) + "&previousPage=" + returnPageEncoded,
       ...getLocaleInfo(locales, lang)
     });
   } catch (e) {

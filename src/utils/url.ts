@@ -151,7 +151,7 @@ export const urlUtils = {
 
 export const getPreviousPageQueryParamUrl = (req: Request) => {
   const previousPageQueryParam = req.query.previousPage;
-  return previousPageQueryParam && typeof previousPageQueryParam === 'string' ? previousPageQueryParam : getPreviousPageUrl(req)
+  return previousPageQueryParam && typeof previousPageQueryParam === 'string' && previousPageQueryParam.startsWith(OFFICER_FILING) ? previousPageQueryParam : getPreviousPageUrl(req)
 };
 
 const getPreviousPageUrl = (req: Request) => {
