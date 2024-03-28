@@ -26,7 +26,7 @@
   "homepage": "https://github.com/companieshouse/officer-filing-web#readme",
   "dependencies": {
     "@companieshouse/api-sdk-node": "^2.0.152",
-    "@companieshouse/ch-node-utils": "^1.1.4",
+    "@companieshouse/ch-node-utils": "^1.3.2",
     "@companieshouse/node-session-handler": "^5.0.1",
     "@companieshouse/structured-logging-node": "^2.0.1",
     "@companieshouse/web-security-node": "^2.0.5",
