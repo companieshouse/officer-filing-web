@@ -72,6 +72,7 @@ module "ecs-service" {
   service_scaledown_schedule         = var.service_scaledown_schedule
   service_scaleup_schedule           = var.service_scaleup_schedule
   use_capacity_provider              = var.use_capacity_provider
+  use_fargate                        = var.use_fargate
   fargate_subnets                    = local.application_subnet_ids
 
   # Cloudwatch
