@@ -1,5 +1,7 @@
 {
   "directorConfirmResidentialAddressTitle": "Confirm where the director lives",
   "directorConfirmResidentialAddressEditText": "Edit address",
+  "errorSummaryTitle": "There is a problem",
+  "addressIncompleteErrorMessage": "Address details are missing, please press edit address to update the details",
   "directorConfirmResidentialAddressInsetText": "We will show the country the director lives in on the public Companies House register. We will not show the whole address, unless it's also used for the company's registered office address or the director's correspondence address."
 }

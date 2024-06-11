@@ -21,11 +21,17 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
+
+    // Check for missing mandatory fields using optional chaining
+    const residentialAddress = officerFiling.residentialAddress;
+    const isAddressIncomplete = !residentialAddress?.addressLine1 || !residentialAddress?.country ;
+    
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(directorName),
       enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
+      isAddressIncomplete,
       ...officerFiling.residentialAddress,
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
