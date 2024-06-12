@@ -4,7 +4,6 @@ jest.mock("../../../src/services/company.appointments.service");
 jest.mock("../../../src/utils/address");
 jest.mock("../../../src/utils/is.address.updated");
 
-
 import mocks from "../../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../../src/app";
@@ -42,6 +41,8 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Confirm where the director lives";
 const PAGE_HEADING_WELSH = "Cadarnhewch ble mae&#39;r cyfarwyddwr yn byw";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+const ERROR_ADDRESS_PAGE_HEADING = "There is a problem";
+const ERROR_MISSING_COUNTRY = "Enter a country";
 const APPOINT_PAGE_URL = DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -125,6 +126,25 @@ describe("Director confirm residential address controller tests", () => {
         expect(response.text).toContain("London");
         expect(response.text).toContain("United Kingdom");
         expect(response.text).toContain("SW1A 2AA");
+      });
+
+      it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("Should populate Error on the page for missing country", async (url) => {
+        mockGetOfficerFiling.mockResolvedValue({
+          name: "John Smith",
+          residentialAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        })
+        
+        const response = await request(app).get(url);
+        expect(response.text).toContain(ERROR_MISSING_COUNTRY);
+        expect(response.text).toContain(ERROR_ADDRESS_PAGE_HEADING)
+
       });
 
       it.each([[APPOINT_PAGE_URL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH_END]])("Should navigate back button to search page if officerFiling.residentialAddressBackLink includes DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH", async (url, backLink) => {

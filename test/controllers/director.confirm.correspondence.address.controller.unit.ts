@@ -26,6 +26,8 @@ const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Confirm the director&#39;s correspondence address";
 const PAGE_HEADING_WELSH = "Cadernhewch gyfeiriad gohebiaeth y cyfarwyddwr";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
+const ERROR_ADDRESS_PAGE_HEADING = "There is a problem";
+const ERROR_MISSING_COUNTRY = "Enter a country";
 const PAGE_URL = DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS_PATH
   .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
   .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
@@ -91,6 +93,23 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain("SW1A 2AA");
       });
 
+      it("Should throw error on page with missing address fields", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        })
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(ERROR_MISSING_COUNTRY);
+        expect(response.text).toContain(ERROR_ADDRESS_PAGE_HEADING)
+      });
+
       it("Should navigate back button to search page if officerFiling.correspondenceAddressBackLink includes " + DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, async () => {
         mockGetOfficerFiling.mockResolvedValueOnce({
           directorName: "John Smith",
@@ -137,6 +156,19 @@ describe("Director confirm correspondence address controller tests", () => {
     describe("post tests", () => {
   
       it("Should redirect to residential address page", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            country: "England",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
+        
         const response = await request(app).post(PAGE_URL);
 
         expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
@@ -149,8 +181,38 @@ describe("Director confirm correspondence address controller tests", () => {
         expect(response.text).toContain(ERROR_PAGE_HEADING);
       });  
 
+      it("Should throw error on page with missing address fields", async () => {
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
+        const response = await request(app).get(PAGE_URL);
+        expect(response.text).toContain(ERROR_MISSING_COUNTRY);
+        expect(response.text).toContain(ERROR_ADDRESS_PAGE_HEADING)
+      });
+
       it("should set service address same as registered address to false", async () => {
         
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            country: "England",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
+
         mockPatchOfficerFiling.mockReturnValueOnce({
           data: {
             isServiceAddressSameAsRegisteredOfficeAddress: false
