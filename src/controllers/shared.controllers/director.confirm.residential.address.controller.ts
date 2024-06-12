@@ -11,8 +11,9 @@ import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
 import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
-import { validateManualAddress } from "validation/manual.address.validation";
-import { ResidentialManualAddressValidation } from "validation/address.validation.config";
+import { validateManualAddress } from "../../validation/manual.address.validation";
+import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
+import { formatValidationErrors } from "../../validation/validation";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
@@ -36,12 +37,19 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     
     console.log("---->>> jsValidationErrors" + jsValidationErrors);
 
+    jsValidationErrors.forEach((error, index) => {
+      console.log(`Error ${index + 1}:`);
+      Object.keys(error).forEach(key => {
+          console.log(`  ${key}: ${error[key]}`);
+      });
+    });
+
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(directorName),
       enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-      validationErrors: jsValidationErrors,
+      errors: formatValidationErrors(jsValidationErrors,lang),
       ...officerFiling.residentialAddress,
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
@@ -73,13 +81,20 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
 
     console.log("---->>> jsValidationErrors" + jsValidationErrors);
 
+    jsValidationErrors.forEach((error, index) => {
+      console.log(`Error ${index + 1}:`);
+      Object.keys(error).forEach(key => {
+          console.log(`  ${key}: ${error[key]}`);
+      });
+    });
+
     if(jsValidationErrors.length > 0) {
         return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
           templateName: Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
           backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req), lang),
           directorName: formatTitleCase(directorName),
           enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-          validationErrors: jsValidationErrors,
+          errors: formatValidationErrors(jsValidationErrors,lang),
           ...officerFiling.residentialAddress,
           ...getLocaleInfo(locales, lang),
           currentUrl: getCurrentUrl(req, isUpdate, lang),

@@ -14,9 +14,10 @@ import { getCompanyAppointmentFullRecord } from "../../services/company.appointm
 import { checkIsCorrespondenceAddressUpdated } from "../../utils/is.address.updated";
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
 import { Templates } from "../../types/template.paths";
-import { validateManualAddress } from "validation/manual.address.validation";
-import { CorrespondenceManualAddressValidation } from "validation/address.validation.config";
-import { getDirectorNameBasedOnJourney } from "utils/web";
+import { validateManualAddress } from "../../validation/manual.address.validation";
+import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
+import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { formatValidationErrors } from "../../validation/validation";
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
   try {
@@ -40,6 +41,13 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
 
     console.log("---->>> jsValidationErrors" + jsValidationErrors);
 
+    jsValidationErrors.forEach((error, index) => {
+      console.log(`Error ${index + 1}:`);
+      Object.keys(error).forEach(key => {
+          console.log(`  ${key}: ${error[key]}`);
+      });
+    });
+
     if(isUpdate){
       enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
     } else {
@@ -51,7 +59,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
       enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
-      validationErrors: jsValidationErrors,
+      errors: formatValidationErrors(jsValidationErrors,lang),
       ...officerFiling.serviceAddress,
       ...getLocaleInfo(locales, lang),
       currentUrl: req.originalUrl,
@@ -89,13 +97,20 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
 
     console.log("---->>> jsValidationErrors" + jsValidationErrors);
 
+    jsValidationErrors.forEach((error, index) => {
+      console.log(`Error ${index + 1}:`);
+      Object.keys(error).forEach(key => {
+          console.log(`  ${key}: ${error[key]}`);
+      });
+    });
+
     if(jsValidationErrors.length > 0) {
       return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, {
         templateName: Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS,
         backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req), lang),
         directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
         enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
-        validationErrors: jsValidationErrors,
+        errors: formatValidationErrors(jsValidationErrors,lang),
         ...officerFiling.serviceAddress,
         ...getLocaleInfo(locales, lang),
         currentUrl: req.originalUrl,
