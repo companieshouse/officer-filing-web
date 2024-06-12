@@ -29,24 +29,9 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
 
+    // Validate serviceAddress missing fields if any onload
     const serviceAddress: Address | undefined = officerFiling.serviceAddress;
-
-    if (serviceAddress) {
-        serviceAddress.addressLine1 = "";
-        serviceAddress.country = "";
-    }
-
-    // JS validation
     const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
-
-    console.log("---->>> jsValidationErrors" + jsValidationErrors);
-
-    jsValidationErrors.forEach((error, index) => {
-      console.log(`Error ${index + 1}:`);
-      Object.keys(error).forEach(key => {
-          console.log(`  ${key}: ${error[key]}`);
-      });
-    });
 
     if(isUpdate){
       enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
@@ -86,23 +71,9 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
       enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
     }
     
+    // Validate serviceAddress missing fields if any onload
     const serviceAddress: Address | undefined = officerFiling.serviceAddress;
-
-    if (serviceAddress) {
-        serviceAddress.addressLine1 = "";
-        serviceAddress.country = "";
-    }
-    // JS validation
     const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
-
-    console.log("---->>> jsValidationErrors" + jsValidationErrors);
-
-    jsValidationErrors.forEach((error, index) => {
-      console.log(`Error ${index + 1}:`);
-      Object.keys(error).forEach(key => {
-          console.log(`  ${key}: ${error[key]}`);
-      });
-    });
 
     if(jsValidationErrors.length > 0) {
       return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, {

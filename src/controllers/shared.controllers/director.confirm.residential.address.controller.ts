@@ -26,23 +26,9 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
 
+    // Validate residentialAddress missing fields if any onload
     const residentialAddress: Address | undefined = officerFiling.residentialAddress;
-
-    if (residentialAddress) {
-        residentialAddress.addressLine1 = "";
-        residentialAddress.country = "";
-    }
-    // JS validation
     const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
-    
-    console.log("---->>> jsValidationErrors" + jsValidationErrors);
-
-    jsValidationErrors.forEach((error, index) => {
-      console.log(`Error ${index + 1}:`);
-      Object.keys(error).forEach(key => {
-          console.log(`  ${key}: ${error[key]}`);
-      });
-    });
 
     return res.render(templateName, {
       templateName: templateName,
@@ -70,23 +56,9 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
 
+    // Validate residentialAddress missing fields if any onload
     const residentialAddress: Address | undefined = officerFiling.residentialAddress;
-
-    if (residentialAddress) {
-        residentialAddress.addressLine1 = "";
-        residentialAddress.country = "";
-    }
-    // JS validation
     const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
-
-    console.log("---->>> jsValidationErrors" + jsValidationErrors);
-
-    jsValidationErrors.forEach((error, index) => {
-      console.log(`Error ${index + 1}:`);
-      Object.keys(error).forEach(key => {
-          console.log(`  ${key}: ${error[key]}`);
-      });
-    });
 
     if(jsValidationErrors.length > 0) {
         return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
