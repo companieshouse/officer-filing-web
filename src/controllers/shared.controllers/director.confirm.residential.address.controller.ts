@@ -9,7 +9,11 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
-import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
+import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
+import {
+  Address
+} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { Templates } from "../../types/template.paths";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
@@ -22,9 +26,19 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
 
-    // Check for missing mandatory fields using optional chaining
-    const residentialAddress = officerFiling.residentialAddress;
-    const isAddressIncomplete = !residentialAddress?.addressLine1 || !residentialAddress?.country ;
+    // Ensure residentialAddress is defined
+    const residentialAddress: Address | undefined = officerFiling.residentialAddress;
+
+      if (residentialAddress) {
+        residentialAddress.addressLine1 = "";
+        residentialAddress.country = "";
+      }
+
+
+    // Check for missing mandatory fields using optional chaining and checking for empty strings
+    const isAddressIncomplete = !residentialAddress?.addressLine1?.trim() || !residentialAddress?.country?.trim() || !residentialAddress?.postalCode?.trim();
+    console.log("--->>> isAddressIncomplete: " + isAddressIncomplete);
+
     
     return res.render(templateName, {
       templateName: templateName,
@@ -48,6 +62,35 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
+
+        // Ensure residentialAddress is defined
+        const residentialAddress: Address | undefined = officerFiling.residentialAddress;
+
+        if (residentialAddress) {
+          residentialAddress.addressLine1 = "";
+          residentialAddress.country = "";
+        }
+  
+  
+      // Check for missing mandatory fields using optional chaining and checking for empty strings
+      const isAddressIncomplete = !residentialAddress?.addressLine1?.trim() || !residentialAddress?.country?.trim() || !residentialAddress?.postalCode?.trim();
+      console.log("--->>> isAddressIncomplete: " + isAddressIncomplete);
+
+      if(isAddressIncomplete){
+        return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
+          templateName: Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
+          backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req), lang),
+          directorName: formatTitleCase(directorName),
+          enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
+          isAddressIncomplete,
+          ...officerFiling.residentialAddress,
+          ...getLocaleInfo(locales, lang),
+          currentUrl: getCurrentUrl(req, isUpdate, lang),
+        });
+      }
 
     const officerFilingBody: OfficerFiling = {
       isHomeAddressSameAsServiceAddress: false
