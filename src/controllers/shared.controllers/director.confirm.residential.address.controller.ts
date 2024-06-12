@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from "express";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
-import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../utils/format";
 import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
 import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../../utils/localise";
-import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
-import {
-  Address
-} from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH } from "../../types/page.urls";
 import { Templates } from "../../types/template.paths";
+import { validateManualAddress } from "validation/manual.address.validation";
+import { ResidentialManualAddressValidation } from "validation/address.validation.config";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
   try {
@@ -26,26 +25,23 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
 
-    // Ensure residentialAddress is defined
     const residentialAddress: Address | undefined = officerFiling.residentialAddress;
 
-      if (residentialAddress) {
+    if (residentialAddress) {
         residentialAddress.addressLine1 = "";
         residentialAddress.country = "";
-      }
-
-
-    // Check for missing mandatory fields using optional chaining and checking for empty strings
-    const isAddressIncomplete = !residentialAddress?.addressLine1?.trim() || !residentialAddress?.country?.trim() || !residentialAddress?.postalCode?.trim();
-    console.log("--->>> isAddressIncomplete: " + isAddressIncomplete);
-
+    }
+    // JS validation
+    const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
     
+    console.log("---->>> jsValidationErrors" + jsValidationErrors);
+
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
       directorName: formatTitleCase(directorName),
       enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-      isAddressIncomplete,
+      validationErrors: jsValidationErrors,
       ...officerFiling.residentialAddress,
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
@@ -66,26 +62,24 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
     const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
 
-        // Ensure residentialAddress is defined
-        const residentialAddress: Address | undefined = officerFiling.residentialAddress;
+    const residentialAddress: Address | undefined = officerFiling.residentialAddress;
 
-        if (residentialAddress) {
-          residentialAddress.addressLine1 = "";
-          residentialAddress.country = "";
-        }
-  
-  
-      // Check for missing mandatory fields using optional chaining and checking for empty strings
-      const isAddressIncomplete = !residentialAddress?.addressLine1?.trim() || !residentialAddress?.country?.trim() || !residentialAddress?.postalCode?.trim();
-      console.log("--->>> isAddressIncomplete: " + isAddressIncomplete);
+    if (residentialAddress) {
+        residentialAddress.addressLine1 = "";
+        residentialAddress.country = "";
+    }
+    // JS validation
+    const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
 
-      if(isAddressIncomplete){
+    console.log("---->>> jsValidationErrors" + jsValidationErrors);
+
+    if(jsValidationErrors.length > 0) {
         return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
           templateName: Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
           backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req), lang),
           directorName: formatTitleCase(directorName),
           enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-          isAddressIncomplete,
+          validationErrors: jsValidationErrors,
           ...officerFiling.residentialAddress,
           ...getLocaleInfo(locales, lang),
           currentUrl: getCurrentUrl(req, isUpdate, lang),
