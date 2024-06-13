@@ -141,6 +141,20 @@ describe("Director confirm correspondence address controller tests", () => {
 
     describe("post tests", () => {
       it.each([[PAGE_URL,DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL],[UPDATE_PAGE_URL, UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL]])('Should redirect to residential address page', async (url, nextPageUrl) => {
+
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            country: "England",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
+
         mockGetOfficerFiling.mockResolvedValueOnce({
           referenceAppointmentId: "123456"
         })
@@ -203,6 +217,18 @@ describe("Director confirm correspondence address controller tests", () => {
           referenceAppointmentId: "123456",
           isServiceAddressSameAsRegisteredOfficeAddress: true
         });
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            country: "England",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
         if (url === UPDATE_PAGE_URL) {
           mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
             serviceAddressIsSameAsRegisteredOfficeAddress: true
@@ -240,6 +266,18 @@ describe("Director confirm correspondence address controller tests", () => {
             serviceAddressIsSameAsRegisteredOfficeAddress: true
           });
         }
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+          premises: "110",
+          addressLine1: "Test line 1",
+          addressLine2: "Downing Street",
+          locality: "Westminster",
+          region: "London",
+          country: "England",
+          postalCode: "SW1A 2AA"
+          }
+        });
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
             firstName: "John",
@@ -272,6 +310,18 @@ describe("Director confirm correspondence address controller tests", () => {
             serviceAddressIsSameAsRegisteredOfficeAddress: true
           });
         }
+        mockGetOfficerFiling.mockResolvedValueOnce({
+          name: "John Smith",
+          serviceAddress: {
+            premises: "110",
+            addressLine1: "Test line 1",
+            addressLine2: "Downing Street",
+            locality: "Westminster",
+            country: "England",
+            region: "London",
+            postalCode: "SW1A 2AA"
+          }
+        });
         mockPatchOfficerFiling.mockResolvedValueOnce({
           data: {
             firstName: "John",

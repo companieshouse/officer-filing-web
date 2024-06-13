@@ -269,8 +269,6 @@ describe("Stop screen controller tests", () => {
 
   it("Should display something-went-wrong stop-screen heading and content in Welsh", async () => {
     mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    console.log(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy")
-
     const response = await request(app)
       .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy");
 
