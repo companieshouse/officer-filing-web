@@ -120,7 +120,7 @@ const mockResponseBodyOfUKAddresses: UKAddress[] = [mockResponseBodyOfUKAddress1
 describe('Director residential address search controller test', () => {
 
   beforeEach(() => {
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockPatchOfficerFiling.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();

@@ -1,7 +1,27 @@
 jest.mock("ioredis");
 jest.mock("../../src/utils/feature.flag");
 jest.mock("@companieshouse/web-security-node")
+jest.mock("../../src/middleware/csrf.middleware", () => {
+  return {
+    createCsrfProtectionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+      return (req: Request, res: Response, next: NextFunction) => {
+        next();
+      };
+    }),
+  };
+});
+jest.mock("../../src/middleware/session.middleware", () => {
+  return {
+    createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+      return (req: Request, res: Response, next: NextFunction) => {
+        next();
+      };
+    }),
+  };
+});
 
+
+// import mockCreateCsrfProtectionMiddleware from "../mocks/csrf.middleware.mock";
 import request from "supertest";
 import { Request, Response, NextFunction } from "express";
 import app from "../../src/app";

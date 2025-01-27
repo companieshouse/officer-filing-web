@@ -120,7 +120,7 @@ describe("Director name controller tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockReset();
     mockGetCompanyProfile.mockReset();
     mockPatchOfficerFiling.mockReset();

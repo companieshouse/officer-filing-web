@@ -66,7 +66,7 @@ const UPDATE_NEXT_PAGE_ON_NO_URL = UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH
 describe("Director link correspondence address enter manually controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
     });
   

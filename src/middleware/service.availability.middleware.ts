@@ -9,8 +9,10 @@ import { isActiveFeature } from "../utils/feature.flag";
 export const serviceAvailabilityMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
   if (!isActiveFeature(TM01_ACTIVE)) {
+    console.log("Unexpected path");
     return res.render(Templates.SERVICE_OFFLINE_MID_JOURNEY, {EWF_URL});
   }
 
+  console.log("Next is next");
   return next();
 };

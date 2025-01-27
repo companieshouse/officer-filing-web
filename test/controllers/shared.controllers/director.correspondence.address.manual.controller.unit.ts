@@ -98,7 +98,7 @@ describe("Director correspondence address controller tests", () => {
 
     beforeEach(() => {
       jest.clearAllMocks();
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetValidationStatus.mockReset();
       mockPatchOfficerFiling.mockReset();
       mockGetCompanyAppointmentFullRecord.mockClear();

@@ -72,7 +72,7 @@ const UPDATE_BACK_LINK_URL_WELSH = UPDATE_BACK_LINK_URL + "?lang=cy"
 describe("Director correspondence address link controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockReset();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockPatchOfficerFiling.mockReset();

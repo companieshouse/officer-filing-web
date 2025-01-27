@@ -21,7 +21,7 @@ const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
 const mockGetCompanyAppointmentFullRecord = getCompanyAppointmentFullRecord as jest.Mock;
 
 beforeEach(() => {
-  mocks.mockSessionMiddleware.mockClear();
+  mocks.mockCreateSessionMiddleware.mockClear();
   mockPatchOfficerFiling.mockClear();
 });
 
