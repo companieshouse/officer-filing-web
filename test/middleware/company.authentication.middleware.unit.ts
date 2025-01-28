@@ -8,6 +8,7 @@ jest.mock("../../src/middleware/csrf.middleware", () => {
         next();
       };
     }),
+    csrfErrorHandler: jest.fn(),
   };
 });
 jest.mock("../../src/middleware/session.middleware", () => {
@@ -41,22 +42,22 @@ describe("company authentication middleware tests", () => {
     const mockRequest = {} as Request;
     const mockResponse = {} as Response;
     const mockNext = jest.fn() as NextFunction;
-    
+
     beforeEach(() => {
      jest.clearAllMocks();
     });
-    
+
     it("should return 500 error page", async () => {
         mockIsActiveFeature.mockReturnValueOnce(false);
         const response = await request(app).get("/appoint-update-remove-company-officer");
-    
+
         expect(response.text).toContain("Sorry, there is a problem with this service");
     });
-    
+
     it("should not return 500 error page if feature flag is active", async () => {
         mockIsActiveFeature.mockReturnValueOnce(true);
         const response = await request(app).get("/appoint-update-remove-company-officer");
-    
+
         expect(response.text).not.toContain("Sorry, there is a problem with this service");
     });
 

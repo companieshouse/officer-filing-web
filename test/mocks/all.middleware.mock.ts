@@ -1,7 +1,7 @@
 import mockServiceAvailabilityMiddleware from "./service.availability.middleware.mock";
 import mockAuthenticationMiddleware from "./authentication.middleware.mock";
 import { mockCreateSessionMiddleware, mockSessionStore, setShouldThrowError } from "./session.middleware.mock";
-import mockCsrfMiddleware from "./csrf.middleware.mock";
+import { mockCreateCsrfProtectionMiddleware, mockCsrfErrorHandler } from "./csrf.middleware.mock";
 import mockCompanyAuthenticationMiddleware from "./company.authentication.middleware.mock";
 // import mockSubmissionIdValidationMiddleware from "./submission.id.validation.middleware.mock";
 // import mockTransactionIdValidationMiddleware from "./transaction.id.validation.middleware.mock";
@@ -13,8 +13,9 @@ export default {
   mockAuthenticationMiddleware,
   mockCreateSessionMiddleware,
   setShouldThrowError,
-  mockCsrfMiddleware,
+  mockCreateCsrfProtectionMiddleware,
   mockCompanyAuthenticationMiddleware,
+  mockCsrfErrorHandler,
   // mockSubmissionIdValidationMiddleware,
   // mockTransactionIdValidationMiddleware,
   // mockIsPscQueryParameterValidationMiddleware,

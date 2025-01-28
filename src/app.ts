@@ -55,7 +55,7 @@ app.use(cookieParser());
 app.use(serviceAvailabilityMiddleware);
 
 app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
-// TODO app.use(`${urls.OFFICER_FILING}*`, csrfProtectionMiddleware);
+app.use(`${urls.OFFICER_FILING}*`, csrfProtectionMiddleware);
 
 // ------------- Enable login redirect -----------------
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
@@ -65,7 +65,7 @@ app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
 app.use(errorHandler, pageNotFound);
-// TODO app.use(csrfErrorHandler);
+app.use(csrfErrorHandler);
 
 logger.info("Officer filing Web has started");
 export default app;
