@@ -15,7 +15,7 @@
 {% include "includes/grid-row-div-start.html" %}
 
       <form action="" method="post">
-        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+        {% include "csrf_token.njk" %}
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
         {% set fieldset = {

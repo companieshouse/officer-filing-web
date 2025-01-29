@@ -14,7 +14,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <form action="" method="post">
-      {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+      {% include "csrf_token.njk" %}
       {% if officerErrorMsg %}
         {{ govukErrorSummary({
           titleText: i18n.error-there-is-a-problem,

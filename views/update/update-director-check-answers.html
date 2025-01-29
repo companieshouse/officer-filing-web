@@ -18,7 +18,7 @@
       {% include "includes/list/errors.html" %}
 
       <form action="" method="post">
-        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+        {% include "csrf_token.njk" %}
         <span class="govuk-caption-l gem-c-title__context" id="update-director-cya--name">
           {{directorNameCompanyAppointment}}
         </span>

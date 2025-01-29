@@ -54,7 +54,7 @@
       {% endif %}
 
       <form action="" method="post">
-          {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+        {% include "csrf_token.njk" %}
         <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
         {{ govukRadios({
           errorMessage: errors.director_address if errors,
