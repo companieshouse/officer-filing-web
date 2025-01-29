@@ -12,8 +12,9 @@
 
 {% block content %}
   {% include "includes/grid-row-div-start.html" %}
-      
+
       <form action="" method="post">
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
 

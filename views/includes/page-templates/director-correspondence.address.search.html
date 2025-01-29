@@ -16,8 +16,9 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
         <span class="govuk-caption-l">{{directorName}}</span>
         <h1 class="govuk-heading-l">{{ i18n.directorCorrespondenceSearchTitle }}</h1>
         <!-- This is the search page for the correspondence address -->

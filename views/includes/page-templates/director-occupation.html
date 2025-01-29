@@ -15,14 +15,14 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
-      <form action="" method="post">
 
+      <form action="" method="post">
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
 
         <div>
           <span class="govuk-caption-l">{{directorName}}</span>
           <h1 class="govuk-heading-l"> {{ i18n.directorOccupationTitle }}</h1>
-          <p class="govuk-body">{{ i18n.directorOccupationBody }} 
+          <p class="govuk-body">{{ i18n.directorOccupationBody }}
           </p>
           <div id="typeahead-form-group-0" class="govuk-form-group">
         <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>

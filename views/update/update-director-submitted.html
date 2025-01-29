@@ -16,6 +16,7 @@
         {% include "includes/list/errors.html" %}
 
         <form action="" method="post">
+            {{ csrfTokenInput({ csrfToken: csrfToken }) }}
 
             <div class="govuk-panel govuk-panel--confirmation">
                 <h1 class="govuk-panel__title">

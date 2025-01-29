@@ -16,9 +16,10 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
-        
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+
         <span class="govuk-caption-l">{{name}}</span>
         <h1 class="govuk-heading-l">{{i18n.appointDirectorCheckYourAnswersTitle}}</h1>
         <!-- This is the page for the appoint a director check your answers screen -->
@@ -39,7 +40,7 @@
             },
             {
               classes: "govuk-summary-list__row--no-actions",
-              
+
               key: {
                 id: "appoint-cya-company-number",
                 text: i18n.companyNumber
@@ -219,12 +220,12 @@
               }
             }
           ]
-        }) }} 
+        }) }}
 
         {% set officerFiling = officerFiling %}
         {% set cyaDisplay = true %}
         {% include "includes/check-your-answer/address-details.html" %}
-      
+
         <h2 class="govuk-fieldset__heading-m">{{i18n.appointDirectorCheckYourAnswersConsentToAct}}</h2>
 
         {{ govukCheckboxes({

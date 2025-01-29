@@ -17,6 +17,7 @@
 
       {% include "includes/list/errors.html" %}
       <form action="" method="post">
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
 
         <span class="govuk-caption-l">{{ directorName }}</span>
         <h1 class="govuk-heading-l">{{ i18n.directorConfirmCorrespondenceAddressTitle }} </h1>
@@ -28,7 +29,7 @@
         </div>
 
         {% include "includes/inset-text/correspondence-inset-text.html" %}
-        
+
         {{ govukButton({
           attributes: {
             "data-event-id": "confirm-and-continue-button"

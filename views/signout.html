@@ -49,6 +49,7 @@
         {% endif %}
 
         <form action="" method="POST">
+            {{ csrfTokenInput({ csrfToken: csrfToken }) }}
             {{ govukRadios({
                 classes: "govuk-radios--inline",
                 idPrefix: "signout",
@@ -79,8 +80,8 @@
                         }
                     }
                 ]
-                }) 
-            }} 
+                })
+            }}
             {{ govukInput({
                 value: previousPage,
                 name: "previousPage",

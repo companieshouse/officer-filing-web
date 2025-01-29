@@ -20,8 +20,9 @@
         {% set directorRegisteredOfficeAddressValue = directorRegisteredOfficeAddress %}
       {% endif %}
 
-      
+
       <form action="" method="post">
+        {{ csrfTokenInput({ csrfToken: csrfToken }) }}
         <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
         {{ govukRadios({
           errorMessage: errors.director_correspondence_address if errors,
@@ -46,7 +47,7 @@
                 "data-event-id": "director_registered_office_address"
               },
               hint: {
-                text: i18n.directorCorrespondenceAddressRadioHint              
+                text: i18n.directorCorrespondenceAddressRadioHint
               },
               id: "director_registered_address"
             },

@@ -15,9 +15,10 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
-        
+          {{ csrfTokenInput({ csrfToken: csrfToken }) }}
+
         <span class="govuk-caption-l gem-c-title__context">
           {{directorName}}
         </span>
