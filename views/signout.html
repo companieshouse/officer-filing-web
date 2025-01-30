@@ -49,7 +49,7 @@
         {% endif %}
 
         <form action="" method="POST">
-            {% include "csrf_token.njk" %}
+            {% include "includes/csrf_token.njk" %}
             {{ govukRadios({
                 classes: "govuk-radios--inline",
                 idPrefix: "signout",
