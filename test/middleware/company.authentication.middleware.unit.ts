@@ -22,7 +22,6 @@ jest.mock("../../src/middleware/session.middleware", () => {
 });
 
 
-// import mockCreateCsrfProtectionMiddleware from "../mocks/csrf.middleware.mock";
 import request from "supertest";
 import { Request, Response, NextFunction } from "express";
 import app from "../../src/app";
