@@ -17,7 +17,8 @@
       {% include "includes/list/errors.html" %}
 
       <form action="" method="post">
-        {% include "includes/csrf_token.njk"   %}
+        {# sonarqube ignore 7 #}
+        {% include "includes/csrf_token.njk" %}
 
         <span class="govuk-caption-l gem-c-title__context">
           {{directorName}}

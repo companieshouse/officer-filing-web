@@ -14,7 +14,8 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ i18n.confirmCompanyTitle }} </h1>
       <form action="" method="post">
-        {% include "includes/csrf_token.njk"       %}
+        {# sonarqube ignore 1 #}
+        {% include "includes/csrf_token.njk" %}
 
         {% set notDueWarningHTML %}
         <p style="font-weight: 400; display: inline;">
