@@ -12,8 +12,10 @@
 
 {% block content %}
   {% include "includes/grid-row-div-start.html" %}
-      
+
       <form action="" method="post">
+        {# sonarqube ignore 5 #}
+        {% include "includes/csrf_token.njk" %}
         <div class="govuk-form-group">
         <span class="govuk-caption-l">{{directorName}}</span>
 

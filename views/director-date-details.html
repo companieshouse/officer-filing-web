@@ -15,14 +15,15 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
-        
+        {% include "includes/csrf_token.njk"  %}
+
         <span class="govuk-caption-l gem-c-title__context">
           {{directorName}}
         </span>
         <h1 class="govuk-heading-l">{{ i18n.dateDetailsTitle }}</h1>
-        
+
         {% include "includes/inputs/date/dob-date-input.html" %}
         <br>
         {% include "includes/inputs/date/appoint-date-input.html" %}

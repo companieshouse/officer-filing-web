@@ -44,7 +44,7 @@ const PAGE_HEADING = "Director update submitted";
 describe("Director date details controller tests", () => {
 
   beforeEach(() => {
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();

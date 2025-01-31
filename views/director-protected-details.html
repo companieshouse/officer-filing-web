@@ -16,8 +16,9 @@
     <div class="govuk-grid-column-two-thirds">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
+        {% include "includes/csrf_token.njk" %}
         <span class="govuk-caption-l">{{directorName}}</span>
 
         {{ govukRadios({

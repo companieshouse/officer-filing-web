@@ -1,5 +1,14 @@
 jest.mock("ioredis");
 jest.mock("../../src/utils/feature.flag");
+jest.mock("../../src/middleware/session.middleware", () => {
+  return {
+    createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+      return (req: Request, res: Response, next: NextFunction) => {
+        next();
+      };
+    }),
+  };
+});
 
 import request from "supertest";
 import app from "../../src/app";

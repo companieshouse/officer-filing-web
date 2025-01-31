@@ -42,7 +42,7 @@ const PAGE_HEADING_WELSH = "Pryd newidiodd manylion y cyfarwyddwr?"
 describe("Director date of change controller tests", () => {
 
   beforeEach(() => {
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockPatchOfficerFiling.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();

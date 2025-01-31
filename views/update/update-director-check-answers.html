@@ -16,14 +16,15 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
+        {% include "includes/csrf_token.njk" %}
         <span class="govuk-caption-l gem-c-title__context" id="update-director-cya--name">
           {{directorNameCompanyAppointment}}
         </span>
         <h1 class="govuk-heading-l" id="update-director-cya-title">{{ i18n.updateDirectorCheckAnswersTitle }}</h1>
         <h2 class="govuk-heading-m" id="update-director-cya-company-details">{{ i18n.updateDirectorCheckAnswersCompanyDetails }}</h2>
-          
+
         {{ govukSummaryList({
           attributes: {
             id: "update-director-cya-summary-list"
@@ -161,7 +162,7 @@
               nationalityListElement,
               occupationListElement
             ]
-          }) }} 
+          }) }}
         {% endif %}
 
         {% set officerFiling = officerFiling %}

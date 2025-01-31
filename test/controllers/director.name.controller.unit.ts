@@ -45,7 +45,7 @@ const BACK_LINK_URL = CURRENT_DIRECTORS_PATH
 describe("Director name controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
       mockGetOfficerFiling.mockClear();
     });

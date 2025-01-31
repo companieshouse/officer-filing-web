@@ -97,7 +97,7 @@ const directorNameMock = {
 describe("Director correspondence address controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
     });
 
     describe("get tests", () => {

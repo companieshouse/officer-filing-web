@@ -40,7 +40,7 @@ const NEXT_PAGE_URL = DIRECTOR_RESIDENTIAL_ADDRESS_PATH
 describe("Director confirm correspondence address controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
     });
   

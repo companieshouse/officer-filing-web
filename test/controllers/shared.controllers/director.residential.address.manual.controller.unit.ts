@@ -78,7 +78,7 @@ describe("Director residential address manual controller tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
   });
 
   describe("get tests", () => {

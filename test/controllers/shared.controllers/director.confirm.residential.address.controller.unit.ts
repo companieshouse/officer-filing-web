@@ -71,7 +71,7 @@ const UPDATE_DIRECTOR_CHECK_ANSWERS_URL = UPDATE_DIRECTOR_CHECK_ANSWERS_PATH
 describe("Director confirm residential address controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockReset();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockPatchOfficerFiling.mockReset();

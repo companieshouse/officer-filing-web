@@ -69,7 +69,7 @@ const PAGE_HEADING_WELSH = "Gwiriwch eich atebion cyn cyflwyno&#39;r diweddariad
 describe("Director check your answers controller tests", () => {
 
   beforeEach(() => {
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockGetCompanyProfile.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();

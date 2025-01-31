@@ -14,8 +14,9 @@
     <div class="govuk-grid-column-three-quarters">
 
       {% include "includes/list/errors.html" %}
-      
+
       <form action="" method="post">
+        {% include "includes/csrf_token.njk" %}
 
         <div class="govuk-panel govuk-panel--confirmation">
           <h1 class="govuk-panel__title">

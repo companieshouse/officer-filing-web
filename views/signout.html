@@ -49,6 +49,7 @@
         {% endif %}
 
         <form action="" method="POST">
+            {% include "includes/csrf_token.njk" %}
             {{ govukRadios({
                 classes: "govuk-radios--inline",
                 idPrefix: "signout",
@@ -79,8 +80,8 @@
                         }
                     }
                 ]
-                }) 
-            }} 
+                })
+            }}
             {{ govukInput({
                 value: previousPage,
                 name: "previousPage",

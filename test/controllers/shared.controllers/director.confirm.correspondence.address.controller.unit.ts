@@ -51,7 +51,7 @@ const UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PAGE_URL = UPDATE_DIRECTOR_RESIDENTIAL
 describe("Director confirm correspondence address controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockPatchOfficerFiling.mockReset();

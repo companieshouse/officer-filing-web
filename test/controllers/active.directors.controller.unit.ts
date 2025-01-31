@@ -53,7 +53,7 @@ describe("Active directors controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetCompanyOfficers.mockClear();
     mockGetCompanyProfile.mockClear();
     mockPostOfficerFiling.mockClear();

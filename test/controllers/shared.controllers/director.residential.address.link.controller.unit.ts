@@ -84,7 +84,7 @@ const HA_TO_SA_ERROR_WELSH = "Dewiswch ydw os bydd y cyfeiriad gohebiaeth yn new
 describe("Director residential address link controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockCompareAddress.mockClear();
