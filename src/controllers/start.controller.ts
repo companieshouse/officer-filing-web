@@ -8,7 +8,8 @@ import {
   EWF_URL,
   TM01_ACTIVE,
   AP01_ACTIVE,
-  CH01_ACTIVE
+  CH01_ACTIVE,
+  SERVICE_WITHDRAWN
 } from "../utils/properties";
 import { Templates } from "../types/template.paths";
 
@@ -25,5 +26,6 @@ export const get = (req: Request, res: Response) => {
     AP01_ACTIVE,
     CH01_ACTIVE,
     EWF_URL,
+    SERVICE_WITHDRAWN,
     templateName: Templates.START });
 };

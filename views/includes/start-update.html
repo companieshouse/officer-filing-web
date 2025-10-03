@@ -1,3 +1,18 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% if SERVICE_WITHDRAWN === "true" %}
+    {% set html %}
+        <p class="govuk-notification-banner__heading">
+            <span>{{ i18n.startUseWebFilingInstead }}</span>
+            <a class="govuk-notification-banner__link" href="https://ewf.companieshouse.gov.uk//seclogin?tc=1/#lang-{{lang|default('en')}}" data-event-id="web-filing-link-clicked">{{ i18n.startUseThisServiceInfo6 }}</a>.
+        </p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+        html: html
+    }) }}
+{% endif %}
+
 <h1 class="govuk-heading-xl">
     {{ i18n.appTitle }}
 </h1>
@@ -67,13 +82,20 @@
     <span>{{ i18n.startForYourSecurity }}</span>
 </p>
 
-<br>
-<a href="/appoint-update-remove-company-officer/company-number?lang={{ lang | default('en') }}" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
-    {{ i18n.startStartNowButton }}
-    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
-    <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
-    </svg>
-</a>
+ {% if SERVICE_WITHDRAWN === "true" %}
+    <p class="call-to-action">
+        <span>{{ i18n.startUseWebFilingInstead }}</span>
+        <a href="https://ewf.companieshouse.gov.uk//seclogin?tc=1/#lang-{{lang|default('en')}}" data-event-id="web-filing-link-clicked" class="govuk-link">{{ i18n.startUseThisServiceInfo6 }}</a>.
+    </p>
+{% else %}
+    <br>
+    <a href="/appoint-update-remove-company-officer/company-number?lang={{ lang | default('en') }}" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
+        {{ i18n.startStartNowButton }}
+        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
+        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+        </svg>
+    </a>
+{% endif %}
 
 <p class="govuk-body">
     <a href="https://mcmw.abilitynet.org.uk/" class="govuk-link" data-event-id="adapt-your-device-link-clicked"><span>{{ i18n.startAdaptDevice1 }}</span></a>

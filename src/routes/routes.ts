@@ -53,7 +53,7 @@ import * as updateDirectorResidentialAddressLink from "../controllers/update/upd
 import * as updateDirectorResidentialAddress from "../controllers/update/update.director.residential.address.controller";
 import * as updateDirectorResidentialAddressManual from "../controllers/update/update.director.residential.address.manual.controller";
 import * as urls from "../types/page.urls";
-import { AP01_ACTIVE, CH01_ACTIVE } from "../utils/properties";
+import { AP01_ACTIVE, CH01_ACTIVE, SERVICE_WITHDRAWN } from "../utils/properties";
 import { checkYourAnswersMiddleware } from "../middleware/check.your.answers.middleware";
 import { nameValidator } from "../validation/name.validation";
 import { nationalityValidator } from "../validation/nationality.validation";
@@ -71,6 +71,10 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 };
 
 router.get("/", startRoute.get);
+
+if (isFeatureEnabled(SERVICE_WITHDRAWN)) {
+  router.get("*", startRoute.get);
+}
 
 router.get(urls.COMPANY_NUMBER, companyNumberRoute.get);
 
