@@ -26,11 +26,11 @@
   },
   "homepage": "https://github.com/companieshouse/officer-filing-web#readme",
   "dependencies": {
-    "@companieshouse/api-sdk-node": "^2.0.298",
+    "@companieshouse/api-sdk-node": "^2.0.152",
     "@companieshouse/ch-node-utils": "^1.1.4",
     "@companieshouse/node-session-handler": "^5.0.1",
     "@companieshouse/structured-logging-node": "^2.0.1",
-    "@companieshouse/web-security-node": "^4.4.12",
+    "@companieshouse/web-security-node": "^4.4.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.1",
     "express-validator": "^6.14.0",
