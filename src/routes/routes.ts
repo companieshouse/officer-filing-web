@@ -72,7 +72,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 
 router.get("/", startRoute.get);
 
-if (isFeatureEnabled(SERVICE_WITHDRAWN)) {
+if (SERVICE_WITHDRAWN === 'true') {
   router.get("*", startRoute.get);
 }
 
