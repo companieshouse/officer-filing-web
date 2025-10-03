@@ -40,7 +40,7 @@ describe("Director nationality controller tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockReturnValue({
       checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
       firstName: "John",

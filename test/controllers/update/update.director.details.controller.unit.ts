@@ -52,7 +52,7 @@ describe("Director details tests", () => {
   });
 
   beforeEach(() => {
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockGetCompanyProfile.mockClear();
   });

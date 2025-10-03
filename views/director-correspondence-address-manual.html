@@ -22,6 +22,7 @@
       {% include "includes/list/errors.html" %}
 
       <form action="" method="post">
+        {% include "includes/csrf_token.njk" %}
 
         <span class="govuk-caption-l">{{directorName}}</span>
         <h1 class="govuk-heading-l">{{ i18n.enterDirectorsCorrespondenceAddress }}</h1>

@@ -76,7 +76,7 @@ describe("Director name validation tests", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockResolvedValueOnce({
       checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH
     });

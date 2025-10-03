@@ -60,7 +60,7 @@ const mockReq = {
 describe("Director protected details controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetOfficerFiling.mockClear();
     });
   

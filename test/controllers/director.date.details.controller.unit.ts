@@ -39,7 +39,7 @@ describe("Director date details controller tests", () => {
 
     beforeEach(() => {
       mocks.mockAuthenticationMiddleware.mockClear();
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockPatchOfficerFiling.mockClear();
       mockGetCompanyProfile.mockResolvedValue(validCompanyProfile)
     });

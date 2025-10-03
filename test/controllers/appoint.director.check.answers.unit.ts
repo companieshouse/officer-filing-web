@@ -47,7 +47,7 @@ const NEXT_PAGE_URL = APPOINT_DIRECTOR_SUBMITTED_PATH
 describe("Appoint director check answers controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
     });
   
     describe("get tests", () => {

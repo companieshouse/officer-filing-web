@@ -1,11 +1,6 @@
 environment = "staging"
 aws_profile = "staging-eu-west-2"
 
-# service configs
-use_set_environment_files = true
-
-# Scaling configs
-desired_task_count = 2 # use multi instance in live
 
 # Scheduled scaling of tasks
 service_autoscale_enabled  = true

@@ -31,12 +31,12 @@
               "data-event-id": "director_correspondence_address"
             },
             hint: {
-              text: i18n.directorHomeAddressCorrespondenceAddressHint              
+              text: i18n.directorHomeAddressCorrespondenceAddressHint
             }
           }
         %}
       {% endif %}
-      
+
       {% if canUseRegisteredOfficeAddress and directorServiceAddressChoice !== 'director_registered_office_address' %}
         {% set registeredOfficeAddressDisplay = {
           id: "director_registered_office_address",
@@ -47,13 +47,14 @@
             "data-event-id": "director_registered_office_address"
           },
           hint: {
-            text: i18n.directorHomeAddressRegisteredOfficeaddressRadioHint              
+            text: i18n.directorHomeAddressRegisteredOfficeaddressRadioHint
           }
         }
         %}
       {% endif %}
-      
+
       <form action="" method="post">
+        {% include "includes/csrf_token.njk" %}
         <span class="govuk-caption-l govuk-!-padding-bottom-1">{{directorName}}</span>
         {{ govukRadios({
           errorMessage: errors.director_address if errors,
@@ -92,7 +93,7 @@
         {% else %}
           <input type="hidden" name="corresponse_address_display" value="director_different_address" />
         {% endif %}
-        
+
         <div class="govuk-inset-text">
           <h2 class="govuk-heading-m">{{ i18n.whatInformationShownInOnlineRegisterInset }}</h2>
             <p>{{ i18n.directorHomeAddressRadioInsetText }}</p>

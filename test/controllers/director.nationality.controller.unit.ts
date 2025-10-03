@@ -43,7 +43,7 @@ const BACK_LINK_URL = DIRECTOR_DATE_DETAILS_PATH
 describe("Director nationality controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
       mockPatchOfficerFiling.mockClear();
     });

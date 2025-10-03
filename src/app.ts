@@ -6,14 +6,22 @@ import * as urls from "./types/page.urls";
 import { pageNotFound, errorHandler } from "./controllers/error.controller";
 import { serviceAvailabilityMiddleware } from "./middleware/service.availability.middleware";
 import { authenticationMiddleware } from "./middleware/authentication.middleware";
-import { sessionMiddleware } from "./middleware/session.middleware";
+import { createSessionMiddleware } from "./middleware/session.middleware";
 import cookieParser from "cookie-parser";
 import { logger } from "./utils/logger";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
-import { AP01_ACTIVE, CH01_ACTIVE } from "./utils/properties";
+import { AP01_ACTIVE, CACHE_SERVER, CH01_ACTIVE } from "./utils/properties";
+import { SessionStore } from "@companieshouse/node-session-handler";
+import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
+import Redis from "ioredis";
 
 const app = express();
 app.disable("x-powered-by");
+
+const redis = new Redis(CACHE_SERVER);
+const sessionStore = new SessionStore(redis);
+const sessionMiddleware = createSessionMiddleware(sessionStore);
+const csrfProtectionMiddleware = createCsrfProtectionMiddleware(sessionStore);
 
 // view engine setup
 const nunjucksEnv = nunjucks.configure([
@@ -21,6 +29,7 @@ const nunjucksEnv = nunjucks.configure([
   "node_modules/govuk-frontend/",
   "node_modules/govuk-frontend/components/",
   "node_modules/@companieshouse/ch-node-utils/templates/",
+  "node_modules/@companieshouse/",
 ], {
   autoescape: true,
   express: app,
@@ -46,7 +55,7 @@ app.use(cookieParser());
 app.use(serviceAvailabilityMiddleware);
 
 app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
-
+app.use(`${urls.OFFICER_FILING}*`, csrfProtectionMiddleware);
 
 // ------------- Enable login redirect -----------------
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
@@ -56,6 +65,7 @@ app.use(commonTemplateVariablesMiddleware)
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
 app.use(errorHandler, pageNotFound);
+app.use(csrfErrorHandler);
 
 logger.info("Officer filing Web has started");
 export default app;

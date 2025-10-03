@@ -46,7 +46,7 @@ const ETAG_STOP_PAGE_URL = `/appoint-update-remove-company-officer/company/${COM
 describe("Update Director name controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockGetOfficerFiling.mockClear();
     });

@@ -47,7 +47,7 @@ describe("Remove director submitted controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetOfficerFiling.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetCompanyProfile.mockClear();

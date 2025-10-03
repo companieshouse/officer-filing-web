@@ -58,7 +58,7 @@ describe("Remove director check answers controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetDirectorAndTerminationDate.mockClear();
     mockGetCompanyProfile.mockClear();
     mockGetValidationStatus.mockClear();

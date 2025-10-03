@@ -32,5 +32,9 @@ typings/
 # IDE
 .idea/
 
+# Vim files
+*.vim
+.*.sw?
+
 dist/
 coverage/

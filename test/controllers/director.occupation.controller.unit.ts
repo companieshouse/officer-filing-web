@@ -51,7 +51,7 @@ describe("Director occupation controller tests", () => {
 
     beforeEach(() => {
       mocks.mockAuthenticationMiddleware.mockClear();
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockGetValidationStatus.mockClear();
       mockGetOfficerFiling.mockClear();
       mockPatchOfficerFiling.mockClear()

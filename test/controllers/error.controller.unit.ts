@@ -60,14 +60,15 @@ describe("Error controller test", () => {
   });
 
   it("Should render the error page on error", async () => {
+
     const message = "Can't connect";
-    mocks.mockSessionMiddleware.mockImplementationOnce((req: Request, res: Response, next: NextFunction) => {
-      return next(new Error(message));
-    });
+    mocks.setShouldThrowError(true, message);
+
     const response = await request(app).get(CONFIRM_COMPANY_PATH);
 
     expect(response.status).toEqual(500);
     expect(response.text).toContain("Sorry, there is a problem with this service");
     expect(mockLoggerErrorRequest.mock.calls[0][1]).toContain(message);
+
   });
 });

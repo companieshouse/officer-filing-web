@@ -62,7 +62,7 @@ const UPDATE_NEXT_PAGE_URL_WELSH = UPDATE_NEXT_PAGE_URL + "?lang=cy";
 describe("Director correspondence address array page controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockSessionMiddleware.mockClear();
+      mocks.mockCreateSessionMiddleware.mockClear();
       mockPatchOfficerFiling.mockClear();
       mockGetCompanyAppointmentFullRecord.mockClear();
       mockGetOfficerFiling.mockClear();

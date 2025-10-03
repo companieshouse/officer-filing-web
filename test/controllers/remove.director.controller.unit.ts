@@ -56,7 +56,7 @@ describe("Remove director date controller tests", () => {
 
   beforeEach(() => {
     mocks.mockAuthenticationMiddleware.mockClear();
-    mocks.mockSessionMiddleware.mockClear();
+    mocks.mockCreateSessionMiddleware.mockClear();
     mockGetCompanyProfile.mockClear();
     mockGetCompanyAppointmentFullRecord.mockClear();
     mockGetValidationStatus.mockClear();
