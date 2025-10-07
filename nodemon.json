@@ -1,11 +1,12 @@
 {
   "exec": "node --inspect=0.0.0.0:9229 -r ts-node/register src/bin/nodemon-entry.ts",
-  "ext": "ts,js,json,njk,scss,env",
+  "ext": "ts,js,json,njk,scss,env,html",
   "watch": [
     "./locales",
     "./src",
     "./assets/src",
-    "./package.json"
+    "./package.json",
+    "./views"
   ],
   "events": {
     "restart": "echo '🔄 '  Nodemon Restarting...",

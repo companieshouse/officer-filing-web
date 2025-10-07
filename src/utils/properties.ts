@@ -37,6 +37,7 @@ const getEnvironmentVariable = (key: string, defaultValue?: any): string => {
   export const TM01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_TM01_WEB", "false");
   export const AP01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_AP01_WEB", "false");
   export const CH01_ACTIVE = getEnvironmentVariable("FEATURE_FLAG_CH01_WEB", "false");
+  export const SERVICE_WITHDRAWN = getEnvironmentVariable("FEATURE_FLAG_SERVICE_WITHDRAWN_02102025", "false");
 
   export const PIWIK_START_GOAL_ID = getEnvironmentVariable("PIWIK_START_GOAL_ID");
 
