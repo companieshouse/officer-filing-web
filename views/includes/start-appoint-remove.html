@@ -13,16 +13,14 @@
 </p>
 
 {% if lang === 'cy' %}
-    {% set companiesHouseOnlineCodeFilingLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing.cy' %}
+    {% set companiesHouseOnlineFilingCodeLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing.cy' %}
     {% set companiesHouseApplyToProtectInformation = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register.cy' %}
 {% else %}
-    {% set companiesHouseOnlineCodeFilingLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing' %}
+    {% set companiesHouseOnlineFilingCodeLink = 'https://www.gov.uk/guidance/company-authentication-codes-for-online-filing' %}
     {% set companiesHouseApplyToProtectInformation = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register' %}
 {% endif %}
 
 {% include "includes/start-common.html" %}
-    <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="{{ companiesHouseOnlineCodeFilingLink }}" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
-</ul>
 
 <br>
 <p class="govuk-body">{{ i18n.startBeforeYouStartToAppointADirectorYoullNeedTitle }}</p>
