@@ -1,0 +1,19 @@
+{% set summaryHtml %}
+    <div>{{ i18n.startWhatIsACorporateDirectorTitle }}</div>
+{% endset %}
+{% set corporateDetails %}
+    <p>{{ i18n.startWhatIsACorporateDirectorInfo1 }}</p>
+    <p>{{ i18n.startWhatIsACorporateDirectorInfo2 }}</p>
+{% endset %}
+{{ govukDetails({
+    summaryHtml: summaryHtml ,
+    html: corporateDetails,
+    attributes: {
+    "data-event-id": "what-is-a-corporate-director-accordion"
+    }
+}) }}
+<h2 class="govuk-heading-m">{{ i18n.startBeforeYouStartTitle }}</h2>
+<p class="govuk-body">{{ i18n.startBeforeYouStartYoullNeedTitle }}</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo1 }}</li>
+    <li>{{ i18n.startBeforeYouStartYoullNeedInfo2 }}</li>

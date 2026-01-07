@@ -20,27 +20,7 @@
     {% set companiesHouseApplyToProtectInformation = 'https://www.gov.uk/guidance/applying-to-protect-your-personal-information-on-the-companies-house-register' %}
 {% endif %}
 
-{% set summaryHtml %}
-    <div>{{ i18n.startWhatIsACorporateDirectorTitle }}</div>
-{% endset %}
-{% set corporateDetails %}
-    <p>{{ i18n.startWhatIsACorporateDirectorInfo1 }}</p>
-    <p>{{ i18n.startWhatIsACorporateDirectorInfo2 }}</p>
-{% endset %}
-
-{{ govukDetails({
-    summaryHtml: summaryHtml ,
-    html: corporateDetails,
-    attributes: {
-    "data-event-id": "what-is-a-corporate-director-accordion"
-    }
-}) }}
-
-<h2 class="govuk-heading-m">{{ i18n.startBeforeYouStartTitle }}</h2>
-<p class="govuk-body">{{ i18n.startBeforeYouStartYoullNeedTitle }}</p>
-<ul class="govuk-list govuk-list--bullet">
-    <li>{{ i18n.startBeforeYouStartYoullNeedInfo1 }}</li>
-    <li>{{ i18n.startBeforeYouStartYoullNeedInfo2 }}</li>
+{% include "includes/start-common.html" %}
     <li>{{ i18n.startBeforeYouStartYoullNeedInfo3 }} <a href="{{ companiesHouseOnlineCodeFilingLink }}" data-event-id="start-now-company-authentication-link-clicked">{{ i18n.startBeforeYouStartYoullNeedInfo4 }}</a> </li>
 </ul>
 
