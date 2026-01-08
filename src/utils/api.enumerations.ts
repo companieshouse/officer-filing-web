@@ -38,10 +38,14 @@ export const overwriteDirectorName = (validationMessage: string, directorName: s
 export const convertAPIMessageToKey = (validationMessage: string): string => {
 
   for (const element of Object.keys(officerFilingMessages.validation)) {
-    var message = lookupAPIValidationMessage(element);
-    message = message.replace(/<.*>/g,"(.*)");
+    let message = lookupAPIValidationMessage(element);
 
-    const matchMessages = new RegExp(message);
+    // Convert any HTML tags in the message to a regex wildcard
+    message = message.replace(/<[^<>]*>/g, "(.*)");
+
+    // Anchor the regex to the start and end of the string to avoid unnecessary backtracking
+    const matchMessages = new RegExp(`^${message}$`);
+
     if (matchMessages.test(validationMessage)) {
       return element;
     }

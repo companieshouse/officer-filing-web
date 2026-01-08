@@ -89,7 +89,7 @@ describe("api enumeration tests", () => {
     expect(readableValidationMessage).toEqual("Date John Doe was removed must be today or in the past");
   });
 
-  it("should return orginial validation error message if there is tag to overwrite", () => {
+  it("should return original validation error message if there is tag to overwrite", () => {
     const readableValidationMessage: string = overwriteDirectorName("Testing the api-enumerations", "John Doe");
     expect(readableValidationMessage).toEqual("Testing the api-enumerations");
   });
@@ -105,8 +105,19 @@ describe("api enumeration tests", () => {
     expect(validationKey).toEqual(VALIDATION_API_KEY);
   });
 
-  it("should return orignial validation message when there is no validation key found", () => {
+  it("should return original validation message when there is no validation key found", () => {
     const validationKey: string = convertAPIMessageToKey(VALIDATION_WEB_MESSAGE);
     expect(validationKey).toEqual(VALIDATION_WEB_MESSAGE);
+  });
+
+  it("should handle long input strings efficiently to avoid backtracking", () => {
+    const longInput = "<tag>".repeat(10000) + "end";
+    const start = Date.now();
+
+    const validationKey = convertAPIMessageToKey(longInput);
+
+    const duration = Date.now() - start;
+    expect(validationKey).toEqual(longInput); // Should return the original message
+    expect(duration).toBeLessThan(100); // Ensure the regex executes efficiently
   });
 });
