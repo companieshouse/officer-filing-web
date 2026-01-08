@@ -67,12 +67,19 @@
     </p>
 {% else %}
     <br>
-    <a href="/appoint-update-remove-company-officer/company-number?lang={{ lang | default('en') }}" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button" onkeydown="">
-        {{ i18n.startStartNowButton }}
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
-        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
-        </svg>
-    </a>
+      <form method="post">
+        {% include "csrf-token.njk" %}
+        {{
+          govukButton({
+            text: "Start now",
+            isStartButton: true,
+            attributes: {
+              id: "start-now",
+              onclick: "_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" if piwik
+            }
+          })
+        }}
+      </form>
 {% endif %}
 
 <p class="govuk-body">
