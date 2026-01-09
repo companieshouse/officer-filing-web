@@ -1,4 +1,5 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% if SERVICE_WITHDRAWN === "true" %}
     {% set html %}
@@ -67,12 +68,15 @@
     </p>
 {% else %}
     <br>
-    <a href="/appoint-update-remove-company-officer/company-number?lang={{ lang | default('en') }}" id="start-now" onclick="_paq.push(['trackGoal', '{{PIWIK_START_GOAL_ID}}'])" data-event-id="start-now-start-button" role="button" draggable="false" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8" data-module="govuk-button">
-        {{ i18n.startStartNowButton }}
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewbox="0 0 33 40" role="presentation" focusable="false">
-        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
-        </svg>
-    </a>
+    {{ govukButton({
+            text: i18n.startStartNowButton,
+            href: "/appoint-update-remove-company-officer/company-number?lang=" + lang | default('en'), 
+            id: "start-now",
+            isStartButton: true,
+            attributes: {
+                "data-goal-id": PIWIK_START_GOAL_ID
+            }
+        }) }}
 {% endif %}
 
 <p class="govuk-body">

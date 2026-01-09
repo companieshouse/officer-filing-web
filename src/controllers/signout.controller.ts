@@ -5,16 +5,15 @@ import { logger } from "../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 import { urlUtils, getPreviousPageQueryParamUrl } from "../utils/url";
 
-export const get: Handler = async (req, res) => {
-
-  const lang = selectLang(req.query.lang);
+export const get: Handler = (req, res) => {
+  const lang = selectLang(req.query.lang as string);
   const returnPage = addLangToUrl(getPreviousPageQueryParamUrl(req), lang);
-  
+
   logger.debugRequest(req, "Signout return page is " + returnPage);
 
   const locales = getLocalesService();
   const returnPageEncoded = encodeURIComponent(returnPage);
-  
+
   res.render(Templates.SIGNOUT, {
     backLinkUrl: returnPage,
     previousPage: returnPage,
@@ -26,7 +25,7 @@ export const get: Handler = async (req, res) => {
 
 export const post = (req, res) => {
 
-  const lang = selectLang(req.query.lang);
+  const lang = selectLang(req.query.lang as string);
   const previousPagePostParam = req.body["previousPage"];
   const previousPage = addLangToUrl(previousPagePostParam ?? OFFICER_FILING, lang);
 
