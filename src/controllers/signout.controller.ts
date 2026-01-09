@@ -5,8 +5,8 @@ import { logger } from "../utils/logger";
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 import { urlUtils, getPreviousPageQueryParamUrl } from "../utils/url";
 
-export const get: Handler = async (req, res) => {
-  const lang = await selectLang(req.query.lang as string);
+export const get: Handler = (req, res) => {
+  const lang = selectLang(req.query.lang as string);
   const returnPage = addLangToUrl(getPreviousPageQueryParamUrl(req), lang);
 
   logger.debugRequest(req, "Signout return page is " + returnPage);
