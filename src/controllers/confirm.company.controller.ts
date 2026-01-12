@@ -31,7 +31,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-    logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
+    logger.debug("languageEnabled: " + String(locales.enabled) + " for " + lang + " from " + locales.localesFolder);
     logger.debug("localisations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
     
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
