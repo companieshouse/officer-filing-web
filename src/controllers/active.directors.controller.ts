@@ -267,7 +267,7 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
   if (officer.links != undefined) {
     const self = officer.links.self;
     if (self != undefined) {
-      const matches = self.match("\/appointments\/([^\/]+)");
+      const matches = self.match("/appointments/([^/]+)");
       if (matches && matches[1]) {
         return matches[1];
       }
