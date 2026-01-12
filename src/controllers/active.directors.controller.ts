@@ -269,7 +269,7 @@ const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
     if (self != undefined) {
       const regex = /\/appointments\/([^/]+)/;
       const match = regex.exec(self);
-      if (match && match[1]) {
+      if (match?.[1]) {
         return match[1];
       }
     }
