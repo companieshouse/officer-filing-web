@@ -1,6 +1,6 @@
 import {PremiseValidationType, ValidationError} from "../model/validation.model";
 
-const REGEX_FOR_PREMISE = /^[-,.:;A-Za-z0-9&@$£¥€'«»?!/\\()\[\]{}<>=#%+ÀÁÂÃÄÅĀĂĄÆÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽa-zÀÖØſƒǺẀỲàáâãäåāăąæçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž\s]*$/;
+const REGEX_FOR_PREMISE = /^[-,.:;A-Za-z0-9&@$£¥€'«»?!/\\()[\]{}<>=#%+À-ÖØ-öø-ÿ\s]*$/;
 
 export const validatePremise = (premise: string,
 								premisesValidationType: PremiseValidationType,
