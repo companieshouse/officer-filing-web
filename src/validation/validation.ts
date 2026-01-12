@@ -74,7 +74,7 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
  * @returns An allowed error message key, or an empty string
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
-    var listOfValidationKeys = new Array();
+    let listOfValidationKeys = new Array();
     if (!validationStatusResponse || !validationStatusResponse.errors) {
         return "";
     }
@@ -85,7 +85,7 @@ export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse:
     });
   
     // If the errorMessageKey of the validation response matches one of the given allowed keys then allow it - these values are ordered by priority
-    for (var key of Object.values(allowedKeyEnum)) {
+    for (const key of Object.values(allowedKeyEnum)) {
       if (listOfValidationKeys.includes(key)) {
         return key as string;
       }

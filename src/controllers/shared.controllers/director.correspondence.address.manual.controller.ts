@@ -154,43 +154,43 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   const validationErrors: ValidationError[] = [];
 
   // Premises
-  var premisesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPremisesErrorMessageKey);
+  let premisesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPremisesErrorMessageKey);
   if (premisesKey) {
     validationErrors.push(createValidationErrorBasic(premisesKey, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES));
   }
 
   // Address line 1
-  var addressLineOneKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineOneErrorMessageKey);
+  let addressLineOneKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineOneErrorMessageKey);
   if (addressLineOneKey) {
     validationErrors.push(createValidationErrorBasic(addressLineOneKey, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1));
   }
 
   // Address line 2
-  var addressLineTwoKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineTwoErrorMessageKey);
+  let addressLineTwoKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineTwoErrorMessageKey);
   if (addressLineTwoKey) {
     validationErrors.push(createValidationErrorBasic(addressLineTwoKey, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2));
   }
 
   // City
-  var cityKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressLocalityErrorMessageKey);
+  let cityKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressLocalityErrorMessageKey);
   if (cityKey) {
     validationErrors.push(createValidationErrorBasic(cityKey, DirectorField.CORRESPONDENCE_ADDRESS_CITY));
   }
 
   // County
-  var countyKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressRegionErrorMessageKey);
+  let countyKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressRegionErrorMessageKey);
   if (countyKey) {
     validationErrors.push(createValidationErrorBasic(countyKey, DirectorField.CORRESPONDENCE_ADDRESS_COUNTY));
   }
 
   // Country
-  var countryKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressCountryErrorMessageKey);
+  let countryKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressCountryErrorMessageKey);
   if (countryKey) {
     validationErrors.push(createValidationErrorBasic(countryKey, DirectorField.CORRESPONDENCE_ADDRESS_COUNTRY));
   }
 
   // Postcode
-  var postcodeKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPostcodeErrorMessageKey);
+  let postcodeKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPostcodeErrorMessageKey);
   if (postcodeKey) {
     validationErrors.push(createValidationErrorBasic(postcodeKey, DirectorField.CORRESPONDENCE_ADDRESS_POSTCODE));
   }

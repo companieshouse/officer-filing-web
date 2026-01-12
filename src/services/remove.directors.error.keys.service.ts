@@ -6,7 +6,7 @@ import { DateValidationType, ValidationError } from "../model/validation.model";
 
 export const retrieveErrorMessageToKey = (validationStatusResponse: ValidationStatusResponse, dateValidationType: DateValidationType): ValidationError | undefined => {
 
-    var listOfValidationKeys = new Array();
+    let listOfValidationKeys = new Array();
 
     if (!validationStatusResponse.errors) {
         return undefined;
@@ -39,7 +39,7 @@ export const retrieveErrorMessageToKey = (validationStatusResponse: ValidationSt
    * @returns Either the name of the stop type or an empty string
    */
   export const retrieveStopPageTypeToDisplay = (validationStatusResponse: ValidationStatusResponse): string => {
-    var listOfValidationKeys = new Array();
+    let listOfValidationKeys = new Array();
     
     if (!validationStatusResponse.errors) {
         return "";

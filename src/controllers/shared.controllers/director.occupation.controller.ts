@@ -155,7 +155,7 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   const validationErrors: ValidationError[] = [];
 
   // Occupation
-  var occupationKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, occupationErrorMessageKey);
+  let occupationKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, occupationErrorMessageKey);
   if (occupationKey) {
     validationErrors.push(createValidationErrorBasic(occupationKey, DirectorField.OCCUPATION));
   }

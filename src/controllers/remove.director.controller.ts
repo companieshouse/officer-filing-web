@@ -48,7 +48,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
    let directorName = formatDirectorNameForDisplay(appointment);
 
     if (officerFiling.resignedOn) {
-      var dateFields = officerFiling.resignedOn.split('-');
+      let dateFields = officerFiling.resignedOn.split('-');
       return displayPopulatedPage(dateFields, appointment, directorName, req, res);
     }
 
@@ -115,7 +115,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
      const stopPageType = retrieveStopPageTypeToDisplay(validationStatus);
      if (stopPageType) {
-      var stopPageUrl = urlUtils.getUrlToPath(APPID_STOP_PAGE_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId);
+      let stopPageUrl = urlUtils.getUrlToPath(APPID_STOP_PAGE_PATH, req).replace(`:${urlParams.PARAM_APPOINTMENT_ID}`, appointmentId);
       stopPageUrl = addLangToUrl(urlUtils.setQueryParam(stopPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, stopPageType), lang);
       return res.redirect(stopPageUrl);
      }
