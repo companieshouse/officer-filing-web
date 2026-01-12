@@ -34,7 +34,7 @@ export const getResidentialAddressManualEntry = async (req: Request, res: Respon
 
     const residentialAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLinkPath = addLangToUrl(urlUtils.getUrlToPath(backLink, req), lang);
-    if(residentialAddressBackParam && residentialAddressBackParam.includes("confirm-residential-address")) {
+    if(residentialAddressBackParam?.includes("confirm-residential-address")) {
       backLinkPath = addLangToUrl(urlUtils.getUrlToPath(confirmResidentialAddress, req), lang);
     }
     

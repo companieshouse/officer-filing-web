@@ -40,14 +40,14 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const locales = getLocalesService();
-    const lang = selectLang(req.query.lang);
+    const lang = selectLang(req.query?.lang);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
-    if(correspondenceAddressBackParam && correspondenceAddressBackParam.includes("confirm-correspondence-address")) {
+    if(correspondenceAddressBackParam?.includes("confirm-correspondence-address")) {
       backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.confirmCorrespondenceAddressPath, req), lang)
     }
 
@@ -79,7 +79,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const lang = selectLang(req.query.lang);
+    const lang = selectLang(req.query?.lang);
 
     const serviceAddress : Address =  {
       premises: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES),
@@ -200,7 +200,7 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 
 export const renderPage = async (req: Request, res: Response, session: Session, params: RenderManualEntryParams) => {
   const locales = getLocalesService();
-  const lang = selectLang(req.query.lang);
+  const lang = selectLang(req.query?.lang);
   const formattedErrors = formatValidationErrors(params.validationErrors, lang);
   const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
   return res.render(params.templateName, {
