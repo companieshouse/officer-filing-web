@@ -27,7 +27,9 @@ export const validateOccupation = (occupation: string, occupationValidationType:
  * @returns the validation error if the occupation field is invalid, otherwise undefined
  */
 const validateInvalidCharacterValuesForOccupation = (occupation: string, occupationValidationType: OccupationValidationType): ValidationError | undefined => {
-    if(!occupation.match(REGEX_FOR_VALID_CHARACTERS)) {
+    const regex = REGEX_FOR_VALID_CHARACTERS;
+    const match = regex.exec(occupation);
+    if (!match) {
         return occupationValidationType.InvalidCharacters.Occupation;
     }
     return undefined;
