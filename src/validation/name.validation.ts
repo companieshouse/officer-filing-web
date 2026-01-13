@@ -92,7 +92,10 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
 
 export const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(title != null && title != "") {
-        if (!title.match(REGEX_FOR_NAME_TITLE)){
+        const regex = REGEX_FOR_NAME_TITLE;
+        const match = regex.exec(title);
+
+        if (!match){
             // invalid characters
             validationErrors.push(nameValidationType.TitleInvalidCharacter.ErrorField);
         } else if (title.length > NAME_FIELD_LENGTH_50){
@@ -104,7 +107,9 @@ export const validateTitle = (title: string, nameValidationType: GenericValidati
 
 export const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(firstName != null && firstName != "") {
-        if (!firstName.match(REGEX_FOR_VALID_NAME)){
+        const regex = REGEX_FOR_VALID_NAME;
+        const match = regex.exec(firstName);
+        if (!match){
             // invalid characters
             validationErrors.push(nameValidationType.FirstNameInvalidCharacter.ErrorField);
         } else if (firstName.length > NAME_FIELD_LENGTH_50){
@@ -119,7 +124,9 @@ export const validateFirstName = (firstName: string, nameValidationType: Generic
 
 const validateMiddleNames = (middleNames: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(middleNames != null && middleNames != "") {
-        if (!middleNames.match(REGEX_FOR_VALID_NAME)){
+        const regex = REGEX_FOR_VALID_NAME;
+        const match = regex.exec(middleNames); 
+        if (!match){
             // invalid characters
             validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.ErrorField);
         } else if (middleNames.length > NAME_FIELD_LENGTH_50){
@@ -131,7 +138,9 @@ const validateMiddleNames = (middleNames: string, nameValidationType: GenericVal
 
 const validateLastName = (lastName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if(lastName != null && lastName != "") {
-        if (!lastName.match(REGEX_FOR_VALID_NAME)){
+        const regex = REGEX_FOR_VALID_NAME;
+        const match = regex.exec(lastName);
+        if (!match){
             // invalid characters
             validationErrors.push(nameValidationType.LastNameInvalidCharacter.ErrorField);
         } else if (lastName.length > NAME_FIELD_LENGTH_160){
@@ -149,7 +158,9 @@ const validateFormerNames = (formerNames: string, previousNamesRadio: string, na
     }
     else if (previousNamesRadio == DirectorField.YES) {
         if(formerNames != null && formerNames != "") {
-            if (!formerNames.match(REGEX_FOR_VALID_FORMER_NAMES)){
+            const regex = REGEX_FOR_VALID_FORMER_NAMES;
+            const match = regex.exec(formerNames);
+            if (!match){
                 // invalid characters
                 validationErrors.push(nameValidationType.PreviousNamesInvalidCharacter.ErrorField);
             } else if (formerNames.length > NAME_FIELD_LENGTH_160){

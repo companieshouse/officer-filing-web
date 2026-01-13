@@ -46,7 +46,7 @@ export const toReadableFormatMonthYear = (monthNum: number, year: number): strin
 };
 
 export const setAppointedOnDate = (officer: CompanyOfficer): string => {
-  var appointedOn = formatAppointmentDate(officer.appointedOn);
+  let appointedOn = formatAppointmentDate(officer.appointedOn);
       if(appointedOn === ""){
         appointedOn = "Before 1992";
       }

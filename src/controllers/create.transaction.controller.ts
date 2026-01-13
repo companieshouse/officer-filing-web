@@ -17,7 +17,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
     const transaction: Transaction = await postTransaction(session, companyNumber, DESCRIPTION, REFERENCE);
     const transactionId = transaction.id as string;
     req.params[urlParams.PARAM_TRANSACTION_ID] = transactionId;
-    var nextPageUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
+    let nextPageUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
     if (lang != undefined && lang != "") {
       nextPageUrl = nextPageUrl + "?lang=" + selectLang(lang);
     }

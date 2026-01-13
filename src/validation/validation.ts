@@ -11,7 +11,7 @@ export const REGEX_FOR_VALID_CHARACTERS = /^[-,.:; 0-9A-Z&@$£¥€'"«»''""?!/
 /**
  * Regex for valid UK postcode
  */
-export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/;
+export const REGEX_FOR_VALID_UK_POSTCODE = /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/;
 
 /**
  * Regex for valid names:
@@ -44,7 +44,7 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
     let errorMessage = validationResult.messageKey;
     if (lang != undefined) {
       const error = localesService.i18nCh.resolveSingleKey("error-" + validationResult.messageKey, lang);
-      if (!error.startsWith("error-")) {
+      if (!error?.startsWith("error-")) {
         errorMessage = error;
       }
     }
@@ -58,7 +58,7 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
     // errors.errorList[] relates to the linked error messages at the top of the page
     errors.errorList.push({ href: '#' + validationResult.link, text: errorMessage });
     
-    // errors[] relates to the highlighed fields and the message just above those fields
+    // errors[] relates to the highlighted fields and the message just above those fields
     validationResult.source.forEach(field => {
       errors[field] = { text: errorMessage };
     });
@@ -70,11 +70,11 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
 /**
  * Maps API error messages to an error key in the given enum
  * @param validationStatusResponse Response from getValidation endpoint, this contains all errors from the validation
- * @param allowedKeyEnum Enum containining the errors that are allowed to be mapped. The order of the values within this enum defines priority order of the messages.
+ * @param allowedKeyEnum Enum containing the errors that are allowed to be mapped. The order of the values within this enum defines priority order of the messages.
  * @returns An allowed error message key, or an empty string
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
-    var listOfValidationKeys = new Array();
+    let listOfValidationKeys = new Array();
     if (!validationStatusResponse || !validationStatusResponse.errors) {
         return "";
     }
@@ -85,7 +85,7 @@ export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse:
     });
   
     // If the errorMessageKey of the validation response matches one of the given allowed keys then allow it - these values are ordered by priority
-    for (var key of Object.values(allowedKeyEnum)) {
+    for (const key of Object.values(allowedKeyEnum)) {
       if (listOfValidationKeys.includes(key)) {
         return key as string;
       }

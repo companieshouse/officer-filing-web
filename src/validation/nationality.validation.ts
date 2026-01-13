@@ -1,4 +1,3 @@
-
 import { NextFunction, Request, Response } from "express";
 import { GenericValidationType, ValidationError } from "../model/validation.model";
 import { NATIONALITY_LIST } from "../utils/properties";
@@ -89,7 +88,9 @@ export const validateNationality2 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[1]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_2)) {
-      if (!nationality[1].trim().length || !nationality[1].match(REGEX_FOR_VALID_CHARACTERS)) {
+      const regex = REGEX_FOR_VALID_CHARACTERS;
+      const match = regex.exec(nationality[1]);
+      if (!match) {
         validationError.push(nationalityValidationType.Nationality2InvalidCharacter.ErrorField);
       } else if ((nationality[1].length > 50)) {
           validationError.push(nationalityValidationType.Nationality2LengthValidator.ErrorField);
@@ -115,7 +116,9 @@ export const validateNationality3 = (nationality: string[], nationalityValidatio
   const nationalityList = NATIONALITY_LIST.split(";");
   if (nationality[2]) {
     if (validationError.every(error => error.link !== DirectorField.NATIONALITY_3)) {
-      if (!nationality[2].trim().length || !nationality[2].match(REGEX_FOR_VALID_CHARACTERS)) {
+      const regex = REGEX_FOR_VALID_CHARACTERS;
+      const match = regex.exec(nationality[2]);
+      if (!nationality[2].trim().length || !match) {
         validationError.push(nationalityValidationType.Nationality3InvalidCharacter.ErrorField);
       } else if ((nationality[2].length > 50)) {
             validationError.push(nationalityValidationType.Nationality3LengthValidator.ErrorField);  
@@ -132,7 +135,8 @@ const validateCommonNationality = (
       validationError: ValidationError[], 
       nationalityValidationType: GenericValidationType, 
       nationalityList: string[]) => {
-  if (!nationality[0].trim().length || !nationality[0].match(REGEX_FOR_VALID_CHARACTERS)) {
+  const regex = REGEX_FOR_VALID_CHARACTERS;
+  if (!nationality[0].trim().length || !regex.exec(nationality[0])) {
     //character
     validationError.push(nationalityValidationType.Nationality1InvalidCharacter.ErrorField);
   } else if ((nationality[0].length > 50)) {

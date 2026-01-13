@@ -40,14 +40,14 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const locales = getLocalesService();
-    const lang = selectLang(req.query.lang);
+    const lang = selectLang(req.query?.lang);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
 
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
-    if(correspondenceAddressBackParam && correspondenceAddressBackParam.includes("confirm-correspondence-address")) {
+    if(correspondenceAddressBackParam?.includes("confirm-correspondence-address")) {
       backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.confirmCorrespondenceAddressPath, req), lang)
     }
 
@@ -79,7 +79,7 @@ export const postDirectorCorrespondenceAddressManual = async (req: Request, res:
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const originalFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const lang = selectLang(req.query.lang);
+    const lang = selectLang(req.query?.lang);
 
     const serviceAddress : Address =  {
       premises: getField(req, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES),
@@ -154,43 +154,43 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
   const validationErrors: ValidationError[] = [];
 
   // Premises
-  var premisesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPremisesErrorMessageKey);
+  let premisesKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPremisesErrorMessageKey);
   if (premisesKey) {
     validationErrors.push(createValidationErrorBasic(premisesKey, DirectorField.CORRESPONDENCE_ADDRESS_PREMISES));
   }
 
   // Address line 1
-  var addressLineOneKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineOneErrorMessageKey);
+  let addressLineOneKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineOneErrorMessageKey);
   if (addressLineOneKey) {
     validationErrors.push(createValidationErrorBasic(addressLineOneKey, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_1));
   }
 
   // Address line 2
-  var addressLineTwoKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineTwoErrorMessageKey);
+  let addressLineTwoKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressAddressLineTwoErrorMessageKey);
   if (addressLineTwoKey) {
     validationErrors.push(createValidationErrorBasic(addressLineTwoKey, DirectorField.CORRESPONDENCE_ADDRESS_ADDRESS_LINE_2));
   }
 
   // City
-  var cityKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressLocalityErrorMessageKey);
+  let cityKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressLocalityErrorMessageKey);
   if (cityKey) {
     validationErrors.push(createValidationErrorBasic(cityKey, DirectorField.CORRESPONDENCE_ADDRESS_CITY));
   }
 
   // County
-  var countyKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressRegionErrorMessageKey);
+  let countyKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressRegionErrorMessageKey);
   if (countyKey) {
     validationErrors.push(createValidationErrorBasic(countyKey, DirectorField.CORRESPONDENCE_ADDRESS_COUNTY));
   }
 
   // Country
-  var countryKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressCountryErrorMessageKey);
+  let countryKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressCountryErrorMessageKey);
   if (countryKey) {
     validationErrors.push(createValidationErrorBasic(countryKey, DirectorField.CORRESPONDENCE_ADDRESS_COUNTRY));
   }
 
   // Postcode
-  var postcodeKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPostcodeErrorMessageKey);
+  let postcodeKey = mapValidationResponseToAllowedErrorKey(validationStatusResponse, correspondenceAddressPostcodeErrorMessageKey);
   if (postcodeKey) {
     validationErrors.push(createValidationErrorBasic(postcodeKey, DirectorField.CORRESPONDENCE_ADDRESS_POSTCODE));
   }
@@ -200,7 +200,7 @@ export const buildValidationErrors = (validationStatusResponse: ValidationStatus
 
 export const renderPage = async (req: Request, res: Response, session: Session, params: RenderManualEntryParams) => {
   const locales = getLocalesService();
-  const lang = selectLang(req.query.lang);
+  const lang = selectLang(req.query?.lang);
   const formattedErrors = formatValidationErrors(params.validationErrors, lang);
   const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
   return res.render(params.templateName, {

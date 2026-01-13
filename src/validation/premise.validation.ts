@@ -29,7 +29,9 @@ export const validatePremise = (premise: string,
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateInvalidCharacterValuesForPremise = (premise: string, premiseValidationType : PremiseValidationType): ValidationError | undefined => {
-	if (!premise.match(REGEX_FOR_PREMISE)) {
+	const regex = REGEX_FOR_PREMISE;
+	const match = regex.exec(premise);	
+	if (!match) {
 		return premiseValidationType.InvalidCharacters.Premise;
 	}
 	return undefined;

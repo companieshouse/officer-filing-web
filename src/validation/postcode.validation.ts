@@ -55,7 +55,9 @@ const validateMissingValues = (postcode: string | undefined, postcodeValidationT
  * @returns A ValidationError object if one occurred, else undefined
  */
 const validateCharacterForPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
-    if (!postcode.match(REGEX_FOR_POSTCODE_CHARACTERS)) {
+    const regex = REGEX_FOR_POSTCODE_CHARACTERS;
+    const match = regex.exec(postcode);
+    if (!match) {
         return postcodeValidationType.InvalidCharacters.Postcode;
     }
     return undefined;
@@ -79,7 +81,9 @@ const validateLengthForPostcode = (postcode: string, postcodeValidationType : Po
  */
 
 const validateValidPostcode = (postcode: string, postcodeValidationType : PostcodeValidationType): ValidationError | undefined => {
-    if (!postcode.match(REGEX_FOR_VALID_UK_POSTCODE)) {
+    const regex = REGEX_FOR_VALID_UK_POSTCODE;
+    const match = regex.exec(postcode);
+    if (!match) {
         return postcodeValidationType.InvalidPostcode.Postcode;
     }
     return undefined;

@@ -31,7 +31,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-    logger.debug("languageEnabled: " + locales.enabled + " for " + lang + " from " + locales.localesFolder);
+    logger.debug("languageEnabled: " + String(locales.enabled) + " for " + lang + " from " + locales.localesFolder);
     logger.debug("localisations: " + JSON.stringify(locales.i18nCh.resolveNamespacesKeys(lang)));
     
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
@@ -46,7 +46,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
 const buildPageOptions = async (session: Session, companyProfile: CompanyProfile, locales: LocalesService, lang: string): Promise<Object> => {
   companyProfile = formatForDisplay(companyProfile, locales, lang);
-  var addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
+  let addressArray: string[] = [companyProfile.registeredOfficeAddress.poBox,
     companyProfile.registeredOfficeAddress.premises, companyProfile.registeredOfficeAddress.addressLineOne,
     companyProfile.registeredOfficeAddress.addressLineTwo, companyProfile.registeredOfficeAddress.locality,
     companyProfile.registeredOfficeAddress.region, companyProfile.registeredOfficeAddress.country,
@@ -78,7 +78,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
     req.params[urlParams.PARAM_COMPANY_NUMBER] = companyNumber;
     const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
     
-    var nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
+    let nextPageUrl = urlUtils.getUrlToPath(BASIC_STOP_PAGE_PATH, req);
     if (await getCurrentOrFutureDissolved(companyNumber)){
       nextPageUrl = urlUtils.setQueryParam(nextPageUrl, URL_QUERY_PARAM.PARAM_STOP_TYPE, STOP_TYPE.DISSOLVED);
     }

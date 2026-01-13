@@ -39,7 +39,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
       throw Error("Resigned on date is missing for submissionId: " + submissionId);
     }
 
-    var dateOfBirth = "";
+    let dateOfBirth = "";
     if(companyOfficer.dateOfBirth !== undefined){
       dateOfBirth = companyOfficer.dateOfBirth?.year;
       if(companyOfficer.dateOfBirth?.day !== undefined){
@@ -52,7 +52,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 
     let directorName = formatDirectorNameForDisplay(appointment);
   
-    var corporateDirector = false;
+    let corporateDirector = false;
     if(equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(companyOfficer.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
       corporateDirector = true;
     }
