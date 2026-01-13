@@ -65,7 +65,7 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
       correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
       correspondence_address_back_param: correspondenceAddressBackParam,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : geAppointUrl(req, lang),
       lang
     });
   } catch (e) {
@@ -218,15 +218,15 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
     ...getLocaleInfo(locales, lang),
-    currentUrl : getCurrentUrl(req, params.isUpdate, lang),
+    currentUrl : params.isUpdate ? getUpdateUrl(req, lang) : geAppointUrl(req, lang),
     lang
   });
 };
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
-  if (isUpdate) {
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
-  } else {
-    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
-  }
-}
+const geAppointUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+};
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+};

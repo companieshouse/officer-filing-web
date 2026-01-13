@@ -38,7 +38,7 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
       errors: formatValidationErrors(jsValidationErrors,lang),
       ...officerFiling.residentialAddress,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
     });
   } catch (e) {
     return next(e);
@@ -69,7 +69,7 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
           errors: formatValidationErrors(jsValidationErrors,lang),
           ...officerFiling.residentialAddress,
           ...getLocaleInfo(locales, lang),
-          currentUrl: getCurrentUrl(req, isUpdate, lang),
+          currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
         });
       }
 
@@ -98,10 +98,10 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
   }
 };
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
-  if(isUpdate){
-      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-    } else {
-      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-  }
+const getAppointUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
+}
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
 }
