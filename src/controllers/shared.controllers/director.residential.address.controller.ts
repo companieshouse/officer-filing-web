@@ -109,7 +109,7 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
       }
 
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      setRedirectCorrespondanceAddressSelected(isUpdate, res, req, officerFiling, lang);
+      setRedirectCorrespondenceAddressSelected(isUpdate, res, req, officerFiling, lang);
 
     } else {
       await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
@@ -175,24 +175,28 @@ const renderPage = (req: Request, res: Response, params: RenderAddressRadioParam
     directorServiceAddressChoice: params.officerFiling.directorServiceAddressChoice,
     canUseRegisteredOfficeAddress,
     ...getLocaleInfo(locales, lang),
-    currentUrl: getCurrentUrl(req, isUpdate, lang),
+    currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
   });
 };
 
 const setRedirectROASelected = (isUpdate: boolean, res: Response<any, Record<string, any>>, req: Request, data: OfficerFiling, lang: string) => {
-
-    if (isUpdate){
-        return data.checkYourAnswersLink
-          ? res.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang))
-          : res.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang));
-    } else {
-    return data.checkYourAnswersLink
-        ? res.redirect(addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang))
-        : res.redirect(addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang));
-    }
+  return isUpdate ? getUpdateLink(req,  res, data, lang) : getAppointLink(req, res, data, lang);
 }
 
-const setRedirectCorrespondanceAddressSelected = (isUpdate: boolean, res: Response<any, Record<string, any>>, req: Request, officerFiling: OfficerFiling, lang: string) => {
+const getUpdateLink = (req: Request, res: Response<any, Record<string, any>>, data: OfficerFiling, lang: string) => {
+  return data.checkYourAnswersLink
+    ? res.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang))
+      : res.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang));
+}
+
+const getAppointLink = (req: Request, res: Response<any, Record<string, any>>, data: OfficerFiling, lang: string) => {
+  return data.checkYourAnswersLink
+    ? res.redirect(addLangToUrl(urlUtils.getUrlToPath(APPOINT_DIRECTOR_CHECK_ANSWERS_PATH, req), lang))
+      : res.redirect(addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_PROTECTED_DETAILS_PATH, req), lang));
+}
+
+
+const setRedirectCorrespondenceAddressSelected = (isUpdate: boolean, res: Response<any, Record<string, any>>, req: Request, officerFiling: OfficerFiling, lang: string) => {
     if(officerFiling.isServiceAddressSameAsRegisteredOfficeAddress){
         if (isUpdate) {
             return checkRedirectUrl(officerFiling, addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang), res, req, lang);
@@ -206,10 +210,10 @@ const setRedirectCorrespondanceAddressSelected = (isUpdate: boolean, res: Respon
     }
 }
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
-  if(isUpdate){
-      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang);
-    } else {
-      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang);
-  }
+const getAppointUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang)
+}
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH, req), lang)
 }

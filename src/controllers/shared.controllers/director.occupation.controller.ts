@@ -37,7 +37,7 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
       backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
@@ -63,7 +63,8 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   // render validation errors
   if(frontendValidationErrors) {
-    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate, lang));
+    const currentUrl = isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, currentUrl);
   }
 
   // patch the filing with occupation when no front end validation errors encountered.
@@ -128,20 +129,13 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
   });
 }
 
-/**
- * Determine the URL of the page based on whether it is part of the AP01 or CH01 flow.
- * @param req 
- * @param isUpdate 
- * @returns 
- */
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
-  if(isUpdate){
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang);
-    }
-    else{
+const getAppointUrl = (req: Request, lang: string): string => {
     return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req), lang)
-    }
 }
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang);
+};
 
 /**
  * Build a list of error objects that will be displayed on the page, based on the result from getValidation.
