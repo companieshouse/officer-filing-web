@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getAddressOptions, getAppointDirectorNameBasedOnJourney, getCountryFromKey, getUpdateDirectorNameBasedOnJourney, setBackLink } from "../../utils/web";
+import { getAddressOptions, getDirectorNameForAppointJourney, getCountryFromKey, getDirectorNameForUpdateJourney, setBackLink } from "../../utils/web";
 import { urlUtils } from "../../utils/url";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
@@ -29,8 +29,8 @@ export const getCorrespondenceAddressChooseAddress = async (req: Request, res: R
 
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = isUpdate ? 
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+      await getDirectorNameForAppointJourney(officerFiling);
 
     const postalCode = officerFiling?.serviceAddress?.postalCode;
     if (!postalCode) {
@@ -60,8 +60,8 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
   const confirmAddressUrl = addLangToUrl(urlUtils.getUrlToPath(nextPagePath, req), lang);
   const directorName = isUpdate ? 
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+      await getDirectorNameForAppointJourney(officerFiling);
   const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
   const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
   const selectedPremises = req.body[DirectorField.ADDRESS_ARRAY];

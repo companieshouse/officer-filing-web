@@ -3,7 +3,7 @@ import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../utils/format";
-import { getAppointDirectorNameBasedOnJourney, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -24,8 +24,8 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = isUpdate ? 
-          await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-          await getAppointDirectorNameBasedOnJourney(officerFiling);
+          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+          await getDirectorNameForAppointJourney(officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
 
     // Validate residentialAddress missing fields if any onload
@@ -56,8 +56,8 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     const directorName = isUpdate ? 
-          await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-          await getAppointDirectorNameBasedOnJourney(officerFiling);
+          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+          await getDirectorNameForAppointJourney(officerFiling);
     const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
 
     // Validate residentialAddress missing fields if any onload

@@ -12,7 +12,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../services/confirm.company.service";
 import { DirectorField } from "../../model/director.model";
-import { getAppointDirectorNameBasedOnJourney, getField, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getField, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -27,8 +27,8 @@ export const getResidentialLink = async (req: Request, res: Response, next: Next
     
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);       
     const directorName = isUpdate ? 
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+      await getDirectorNameForAppointJourney(officerFiling);
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
     return res.render(templateName, {
@@ -58,8 +58,8 @@ export const postResidentialLink = async (req: Request, res: Response, next: Nex
       const linkError = createValidationErrorBasic("residential-address-to-correspondence-address-link-no-radio-selected", DirectorField.HA_TO_SA_RADIO);
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const directorName = isUpdate ? 
-        await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-        await getAppointDirectorNameBasedOnJourney(officerFiling);
+        await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+        await getDirectorNameForAppointJourney(officerFiling);
       return res.render(templateName, {
         templateName: templateName,
         backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),

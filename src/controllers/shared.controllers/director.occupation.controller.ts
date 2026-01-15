@@ -7,7 +7,7 @@ import { OCCUPATION_LIST } from "../../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getAppointDirectorNameBasedOnJourney, getField, getUpdateDirectorNameBasedOnJourney, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getField, getDirectorNameForUpdateJourney, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
 import { formatSentenceCase, formatTitleCase } from "../../utils/format";
@@ -43,8 +43,8 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
       directorName: isUpdate ? 
-        formatTitleCase(await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling)): 
-        formatTitleCase(await getAppointDirectorNameBasedOnJourney(officerFiling)),
+        formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)): 
+        formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
      });
      
   } catch (e) {
@@ -128,8 +128,8 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
     errors: formattedErrors,
     typeahead_errors: JSON.stringify(formattedErrors),
     directorName: isUpdate ?  
-      formatTitleCase(await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling)) :    
-      formatTitleCase(await getAppointDirectorNameBasedOnJourney(officerFiling)),
+      formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) :    
+      formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
   });
 }
 

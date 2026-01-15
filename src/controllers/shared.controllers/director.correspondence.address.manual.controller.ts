@@ -10,7 +10,7 @@ import {
   ValidationStatusResponse
 } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField, getUpdateDirectorNameBasedOnJourney, getAppointDirectorNameBasedOnJourney } from "../../utils/web";
+import { getField, getDirectorNameForUpdateJourney, getDirectorNameForAppointJourney } from "../../utils/web";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../../validation/validation";
 import { ValidationError } from "../../model/validation.model";
@@ -44,8 +44,8 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const directorName = isUpdate ?  
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) :    
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) :    
+      await getDirectorNameForAppointJourney(officerFiling);
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
     if(correspondenceAddressBackParam?.includes("confirm-correspondence-address")) {
@@ -204,8 +204,8 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
   const lang = selectLang(req.query?.lang);
   const formattedErrors = formatValidationErrors(params.validationErrors, lang);
   const directorName = params.isUpdate ?  
-      await getUpdateDirectorNameBasedOnJourney(session, req, params.officerFiling) :    
-      await getAppointDirectorNameBasedOnJourney(params.officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, params.officerFiling) :    
+      await getDirectorNameForAppointJourney(params.officerFiling);
 
   return res.render(params.templateName, {
     templateName: params.templateName,

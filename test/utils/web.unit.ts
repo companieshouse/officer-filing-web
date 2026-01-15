@@ -10,8 +10,9 @@ import {
   getCountryFromKey,
   getField,
   setRedirectLink,
-  getUpdateDirectorNameBasedOnJourney,
-  getAppointDirectorNameBasedOnJourney
+  getDirectorNameForUpdateJourney,
+  getAppointDirectorNameBasedOnJourney,
+  getDirectorNameForAppointJourney
 } from "../../src/utils/web";
 import { Request } from 'express';
 import { patchOfficerFiling } from "../../src/services/officer.filing.service";
@@ -186,7 +187,7 @@ describe('setRedirectLink', () => {
         surname: "Smith"
       });
 
-      const result = await getUpdateDirectorNameBasedOnJourney(mockSession, mockReq, mockOfficerFiling);
+      const result = await getDirectorNameForUpdateJourney(mockSession, mockReq, mockOfficerFiling);
       expect(result).toBe('John mid Smith');
     });
   
@@ -198,7 +199,7 @@ describe('setRedirectLink', () => {
         lastName: "Doe"
       };
 
-      const result = await getAppointDirectorNameBasedOnJourney(mockOfficerFiling);
+      const result = await getDirectorNameForAppointJourney(mockOfficerFiling);
       expect(result).toBe('John Doe');
     });
   });

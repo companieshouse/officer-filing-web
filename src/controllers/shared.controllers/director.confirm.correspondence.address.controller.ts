@@ -16,7 +16,7 @@ import { getLocaleInfo, getLocalesService, selectLang, addLangToUrl } from "../.
 import { Templates } from "../../types/template.paths";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
-import { getAppointDirectorNameBasedOnJourney, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { formatValidationErrors } from "../../validation/validation";
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
@@ -42,7 +42,7 @@ export const getConfirmCorrespondence = async (req: Request, res: Response, next
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
-      directorName : isUpdate ? await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : await getAppointDirectorNameBasedOnJourney(officerFiling),
+      directorName : isUpdate ? await getDirectorNameForUpdateJourney(session, req, officerFiling) : await getDirectorNameForAppointJourney(officerFiling),
       enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
       errors: formatValidationErrors(jsValidationErrors,lang),
       ...officerFiling.serviceAddress,
@@ -80,8 +80,8 @@ export const postConfirmCorrespondence = async (req: Request, res: Response, nex
         templateName: Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS,
         backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req), lang),
         directorName : isUpdate ? 
-          formatTitleCase(await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling)) : 
-          formatTitleCase(await getAppointDirectorNameBasedOnJourney(officerFiling)),
+          formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) : 
+          formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
         enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
         errors: formatValidationErrors(jsValidationErrors,lang),
         ...officerFiling.serviceAddress,

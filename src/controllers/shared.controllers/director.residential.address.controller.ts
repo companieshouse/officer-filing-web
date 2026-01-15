@@ -22,7 +22,7 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../.
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
-import { getAppointDirectorNameBasedOnJourney, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { RenderAddressRadioParams } from "../../utils/render.page.params";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -35,8 +35,8 @@ export const getDirectorResidentialAddress = async (req: Request, res: Response,
   try {
     const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
     const directorName = isUpdate ? 
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+      await getDirectorNameForAppointJourney(officerFiling);
     return renderPage(req, res, {
       officerFiling: officerFiling,
       companyProfile: companyProfile,
@@ -65,8 +65,8 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
     const directorName = isUpdate ? 
-      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
-      await getAppointDirectorNameBasedOnJourney(officerFiling);
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+      await getDirectorNameForAppointJourney(officerFiling);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors, lang);

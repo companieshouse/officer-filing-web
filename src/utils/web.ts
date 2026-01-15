@@ -77,14 +77,14 @@ export const getCountryFromKey = (country: string): string => {
 /**
  * Set the directors' name based on AP01 journey
  */
-export const getAppointDirectorNameBasedOnJourney = async (officerFiling: OfficerFiling): Promise<string> => {
+export const getDirectorNameForAppointJourney = async (officerFiling: OfficerFiling): Promise<string> => {
   return retrieveDirectorNameFromFiling(officerFiling)
 }
 
 /**
  * Set the directors' name based on CH01 journey
  */
-export const getUpdateDirectorNameBasedOnJourney = async (session: Session, req: Request, officerFiling: OfficerFiling): Promise<string> => {
+export const getDirectorNameForUpdateJourney = async (session: Session, req: Request, officerFiling: OfficerFiling): Promise<string> => {
   const companyAppointment = await getCompanyAppointmentFullRecord(session, urlUtils.getCompanyNumberFromRequestParams(req), officerFiling.referenceAppointmentId as string);
   return retrieveDirectorNameFromAppointment(companyAppointment)
 }
