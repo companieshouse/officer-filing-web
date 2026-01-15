@@ -45,7 +45,7 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
   }
 };
 
-export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageurl: string, isUpdate: boolean) => {
+export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageUrl: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -92,7 +92,7 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     if (officerFiling.checkYourAnswersLink) {
       return res.redirect(addLangToUrl(urlUtils.getUrlToPath(checkYourAnswersLink, req), lang));
     }
-    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageurl, req), lang));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
   } catch (e) {
     return next(e);
   }
