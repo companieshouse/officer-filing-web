@@ -52,7 +52,7 @@ export const getResidentialAddressManualEntry = async (req: Request, res: Respon
       residential_address_postcode: officerFiling.residentialAddress?.postalCode,
       residential_address_back_param: residentialAddressBackParam,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang)
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang)
     });
   } catch (e) {
     return next(e);
@@ -132,14 +132,14 @@ export const renderPage = (req: Request, res: Response, params: RenderManualEntr
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
     ...getLocaleInfo(locales, lang),
-    currentUrl : getCurrentUrl(req, params.isUpdate, lang)
+    currentUrl : params.isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
   });
 }
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
-  if (isUpdate) {
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
-  } else {
-    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
-  }
+const getAppointUrl = (req: Request, lang: string) => {
+  return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
+}
+
+const getUpdateUrl = (req: Request, lang: string) => {
+  return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH, req), lang);
 }

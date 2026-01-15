@@ -119,31 +119,31 @@ const matchAddress = async ({ req, res }, isUpdate, { residentialPostalCode, res
 
          // Patch filing with updated information
          await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-         return res.redirect(addLangToUrl(getConfirmAddressPath(req, isUpdate), lang));
+         const confirmAddressPath = isUpdate ? getUpdateConfirmAddressPath(req) : getAppointConfirmAddressPath(req);
+         return res.redirect(addLangToUrl(confirmAddressPath, lang));
        }
      }
    }
 
    // Redirect user to choose addresses if premises not supplied or not found in addresses array
-   return res.redirect(addLangToUrl(getAddressSearchPath(req, isUpdate), lang));
+   const addressSearchPath = isUpdate ? getUpdateAddressSearchPath(req) : getAppointAddressSearchPath(req);
+   return res.redirect(addLangToUrl(addressSearchPath, lang));
 };
 
-const getConfirmAddressPath = (req: Request, isUpdate: boolean) => {
-  if(isUpdate) {
-    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-  }
-  else{
-    return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
-  }
+const getAppointConfirmAddressPath = (req: Request) => {
+  return urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
 }
 
-const getAddressSearchPath = (req: Request, isUpdate: boolean) => {
-  if(isUpdate){
-    return urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-  }
-  else{
-    return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
-  }
+const getUpdateConfirmAddressPath = (req: Request,) => {
+  return urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req);
+}
+
+const getUpdateAddressSearchPath = (req: Request) => {
+  return urlUtils.getUrlToPath(UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
+}
+
+const getAppointAddressSearchPath = (req: Request) => {
+  return urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_CHOOSE_ADDRESS_PATH, req);
 }
 
 const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
