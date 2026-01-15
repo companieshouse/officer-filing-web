@@ -100,17 +100,20 @@ export const postDirectorResidentialAddressSearch = async (req: Request, res: Re
   }
 };
 
-
 const matchAddress = async (
-  { req, res },
-  { residentialPostalCode, residentialPremise },
+  context,
+  addressDetails,
   companyAppointment,
   originalOfficerFiling,
-  { session, transactionId, submissionId },
+  filingDetails,
   lang,
-  getConfirmAddressPath,
-  getAddressSearchPath
+  pathFunctions
 ) => {
+  const { req, res } = context;
+  const { residentialPostalCode, residentialPremise } = addressDetails;
+  const { session, transactionId, submissionId } = filingDetails;
+  const { getConfirmAddressPath, getAddressSearchPath } = pathFunctions;
+
   // Look up the addresses, as by now validated postcode is valid and exist
   const ukAddresses: UKAddress[] = await getUKAddressesFromPostcode(
     POSTCODE_ADDRESSES_LOOKUP_URL,
@@ -155,42 +158,46 @@ const matchAddress = async (
 };
 
 const matchAppointAddress = async (
-  { req, res },
-  { residentialPostalCode, residentialPremise },
+  context,
+  addressDetails,
   companyAppointment,
   originalOfficerFiling,
-  { session, transactionId, submissionId },
+  filingDetails,
   lang
 ) => {
   return matchAddress(
-    { req, res },
-    { residentialPostalCode, residentialPremise },
+    context,
+    addressDetails,
     companyAppointment,
     originalOfficerFiling,
-    { session, transactionId, submissionId },
+    filingDetails,
     lang,
-    getAppointConfirmAddressPath,
-    getAppointAddressSearchPath
+    {
+      getConfirmAddressPath: getAppointConfirmAddressPath,
+      getAddressSearchPath: getAppointAddressSearchPath,
+    }
   );
 };
 
 const matchUpdateAddress = async (
-  { req, res },
-  { residentialPostalCode, residentialPremise },
+  context,
+  addressDetails,
   companyAppointment,
   originalOfficerFiling,
-  { session, transactionId, submissionId },
+  filingDetails,
   lang
 ) => {
   return matchAddress(
-    { req, res },
-    { residentialPostalCode, residentialPremise },
+    context,
+    addressDetails,
     companyAppointment,
     originalOfficerFiling,
-    { session, transactionId, submissionId },
+    filingDetails,
     lang,
-    getUpdateConfirmAddressPath,
-    getUpdateAddressSearchPath
+    {
+      getConfirmAddressPath: getUpdateConfirmAddressPath,
+      getAddressSearchPath: getUpdateAddressSearchPath,
+    }
   );
 };
 
