@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getAddressOptions, getCountryFromKey, getDirectorNameBasedOnJourney, setBackLink } from "../../utils/web";
+import { getAddressOptions, getAppointDirectorNameBasedOnJourney, getCountryFromKey, getUpdateDirectorNameBasedOnJourney, setBackLink } from "../../utils/web";
 import { urlUtils } from "../../utils/url";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
@@ -28,7 +28,9 @@ export const getCorrespondenceAddressChooseAddress = async (req: Request, res: R
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
 
     const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
 
     const postalCode = officerFiling?.serviceAddress?.postalCode;
     if (!postalCode) {
@@ -57,8 +59,9 @@ export const postCorrespondenceAddressChooseAddress = async (req: Request, res: 
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
   const confirmAddressUrl = addLangToUrl(urlUtils.getUrlToPath(nextPagePath, req), lang);
-  const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+  const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
   const postalCode = officerFiling?.serviceAddress?.postalCode ?? '';
   const addresses: UKAddress[] = await getUKAddressesFromPostcode(POSTCODE_ADDRESSES_LOOKUP_URL, postalCode.replace(/\s/g, ''));
   const selectedPremises = req.body[DirectorField.ADDRESS_ARRAY];

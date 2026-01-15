@@ -20,7 +20,7 @@ import { ValidationError, GenericValidationType } from '../../model/validation.m
 import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../../services/company.profile.service";
 import { CompanyProfile } from "@companieshouse/api-sdk-node/dist/services/company-profile/types";
 import { urlUtilsRequestParams } from "../shared.controllers/director.residential.address.controller";
-import { setBackLink, getDirectorNameBasedOnJourney } from "../../utils/web";
+import { setBackLink, getUpdateDirectorNameBasedOnJourney, getAppointDirectorNameBasedOnJourney } from "../../utils/web";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
@@ -39,8 +39,9 @@ export const getDirectorCorrespondenceAddress = async (req: Request, res: Respon
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+    const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
     return res.render(templateName, {
       templateName: templateName,
       backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
@@ -75,8 +76,9 @@ export const postDirectorCorrespondenceAddress = async (req: Request, res: Respo
       const locales = getLocalesService();
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const formattedErrors = formatValidationErrors(validationErrors, lang);
-      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+      const directorName = isUpdate ? 
+        await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+        await getAppointDirectorNameBasedOnJourney(officerFiling);
       return res.render(templateName, {
         templateName: templateName,
         backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),

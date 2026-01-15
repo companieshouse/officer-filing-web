@@ -5,7 +5,7 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../services/confirm.company.service";
 import { DirectorField } from "../../model/director.model";
-import { getDirectorNameBasedOnJourney, getField } from "../../utils/web";
+import { getAppointDirectorNameBasedOnJourney, getField, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
 import { Session } from "@companieshouse/node-session-handler";
 import { selectLang, getLocalesService, getLocaleInfo, addLangToUrl } from "../../utils/localise";
 import { saToRoaErrorMessageKey } from "../../utils/api.enumerations.keys";
@@ -21,7 +21,9 @@ export const getCorrespondenceLink = async (req: Request, res: Response, next: N
     const locales = getLocalesService();
     const lang = selectLang(req.query.lang);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ?  
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) :    
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
 
     return res.render(templateName,{
       templateName: templateName,
@@ -48,7 +50,9 @@ export const postCorrespondenceLink = async (req: Request, res: Response, next: 
     if (isServiceAddressSameAsRegisteredOfficeAddress === undefined) {
       const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
       const linkError = createValidationErrorBasic(saToRoaErrorMessageKey.SA_TO_ROA_ERROR, DirectorField.SA_TO_ROA_RADIO);
-      const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+      const directorName = isUpdate ?  
+        await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) :    
+        await getAppointDirectorNameBasedOnJourney(officerFiling);
       return res.render(templateName,{
         templateName: templateName,
         ...getLocaleInfo(locales, lang),

@@ -21,7 +21,7 @@ import { validatePostcode } from "../../validation/postcode.validation";
 import { PostcodeValidation, PremiseValidation, ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
-import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getAppointDirectorNameBasedOnJourney, getCountryFromKey, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 import { checkIsResidentialAddressUpdated } from "../../utils/is.address.updated";
@@ -148,7 +148,10 @@ const getAppointAddressSearchPath = (req: Request) => {
 
 const renderPage = async (res: Response, req: Request, officerFiling : OfficerFiling, validationErrors: ValidationError[], templateName: string, pageLinks: PageLinks, isUpdate: boolean) => {
   const session: Session = req.session as Session;
-  const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+
+  const directorName = isUpdate ? 
+    await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+    await getAppointDirectorNameBasedOnJourney(officerFiling);
   const backLinkInfo = await getBackLinkInfo(req, urlUtils.getCompanyNumberFromRequestParams(req), pageLinks);
   const lang = selectLang(req.query.lang);
   return res.render(templateName, {

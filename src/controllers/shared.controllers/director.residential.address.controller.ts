@@ -22,7 +22,7 @@ import { getCompanyProfile, mapCompanyProfileToOfficerFilingAddress } from "../.
 import { ResidentialManualAddressValidation } from "../../validation/address.validation.config";
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { logger } from "../../utils/logger";
-import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getAppointDirectorNameBasedOnJourney, getUpdateDirectorNameBasedOnJourney } from "../../utils/web";
 import { RenderAddressRadioParams } from "../../utils/render.page.params";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -34,7 +34,9 @@ const directorResidentialChoiceHtmlField: string = "director_address";
 export const getDirectorResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
   try {
     const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
     return renderPage(req, res, {
       officerFiling: officerFiling,
       companyProfile: companyProfile,
@@ -62,7 +64,9 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
     const lang = selectLang(req.query.lang);
     const selectedSraAddressChoice = req.body[directorResidentialChoiceHtmlField];
     const { officerFiling, companyProfile, transactionId, session, submissionId } = await urlUtilsRequestParams(req);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
     const validationErrors = buildValidationErrors(req);
     if (validationErrors.length > 0) {
       const formattedErrors = formatValidationErrors(validationErrors, lang);
@@ -95,7 +99,13 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
       }
 
       const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-      setRedirectROASelected(isUpdate, res, req, patchFiling.data, lang);
+
+      if (isUpdate) {
+        setUpdateRedirectROASelected(res, req, patchFiling.data, lang);
+      
+      } else {
+        setAppointRedirectROASelected(res, req, patchFiling.data, lang);
+      }
 
     } else if (selectedSraAddressChoice === "director_correspondence_address") {
       officerFilingBody.residentialAddress = officerFiling.serviceAddress;
@@ -124,7 +134,7 @@ export const postDirectorResidentialAddress = async (req: Request, res: Response
 };
 
 export const buildValidationErrors = (req: Request): ValidationError[] => {
-  const displayedAddress = req.body["corresponse_address_display"];
+  const displayedAddress = req.body["correspondence_address_display"];
   const validationErrors: ValidationError[] = [];
   if (req.body[directorResidentialChoiceHtmlField] === undefined) {
     validationErrors.push(createValidationError("residential-address-blank", [directorResidentialChoiceHtmlField], displayedAddress));
@@ -179,8 +189,12 @@ const renderPage = (req: Request, res: Response, params: RenderAddressRadioParam
   });
 };
 
-const setRedirectROASelected = (isUpdate: boolean, res: Response<any, Record<string, any>>, req: Request, data: OfficerFiling, lang: string) => {
-  return isUpdate ? getUpdateLink(req,  res, data, lang) : getAppointLink(req, res, data, lang);
+const setAppointRedirectROASelected = (res: Response<any, Record<string, any>>, req: Request, data: OfficerFiling, lang: string) => {
+  return getAppointLink(req, res, data, lang);
+}
+
+const setUpdateRedirectROASelected = (res: Response<any, Record<string, any>>, req: Request, data: OfficerFiling, lang: string) => {
+  return getUpdateLink(req,  res, data, lang);
 }
 
 const getUpdateLink = (req: Request, res: Response<any, Record<string, any>>, data: OfficerFiling, lang: string) => {

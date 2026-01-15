@@ -7,7 +7,7 @@ import { OCCUPATION_LIST } from "../../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getAppointDirectorNameBasedOnJourney, getField, getUpdateDirectorNameBasedOnJourney, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
 import { formatSentenceCase, formatTitleCase } from "../../utils/format";
@@ -42,7 +42,9 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
-      directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+      directorName: isUpdate ? 
+        formatTitleCase(await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling)): 
+        formatTitleCase(await getAppointDirectorNameBasedOnJourney(officerFiling)),
      });
      
   } catch (e) {
@@ -125,7 +127,9 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
     typeahead_value: formatSentenceCase(occupation),
     errors: formattedErrors,
     typeahead_errors: JSON.stringify(formattedErrors),
-    directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+    directorName: isUpdate ?  
+      formatTitleCase(await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling)) :    
+      formatTitleCase(await getAppointDirectorNameBasedOnJourney(officerFiling)),
   });
 }
 

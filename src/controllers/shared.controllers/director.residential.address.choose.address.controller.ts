@@ -6,7 +6,7 @@ import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-l
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { formatTitleCase } from "../../utils/format";
-import {getAddressOptions, getCountryFromKey, getDirectorNameBasedOnJourney, setBackLink} from "../../utils/web";
+import {getAddressOptions, getAppointDirectorNameBasedOnJourney, getCountryFromKey, getUpdateDirectorNameBasedOnJourney, setBackLink} from "../../utils/web";
 import { RenderArrayPageParams } from "../../utils/render.page.params";
 import {
   DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH,
@@ -27,8 +27,9 @@ export const getResidentialAddressChooseAddress = async (req: Request, res: Resp
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+    const directorName = isUpdate ? 
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
     const postalCode = officerFiling?.residentialAddress?.postalCode;
     if(!postalCode) {
       throw new Error("Postal code is undefined");
@@ -58,7 +59,9 @@ export const postResidentialAddressChooseAddress = async (req: Request, res: Res
   const lang = selectLang(req.query.lang);
 
   const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-  const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+  const directorName = isUpdate ? 
+    await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) : 
+    await getAppointDirectorNameBasedOnJourney(officerFiling);
   const confirmResidentialAddressUrl = addLangToUrl(urlUtils.getUrlToPath(nextPagePath, req), lang);
 
   const postalCode = officerFiling?.residentialAddress?.postalCode ?? '';

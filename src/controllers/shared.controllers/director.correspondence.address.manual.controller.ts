@@ -10,7 +10,7 @@ import {
   ValidationStatusResponse
 } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField, getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getField, getUpdateDirectorNameBasedOnJourney, getAppointDirectorNameBasedOnJourney } from "../../utils/web";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../../validation/validation";
 import { ValidationError } from "../../model/validation.model";
@@ -43,8 +43,9 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
     const lang = selectLang(req.query?.lang);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+    const directorName = isUpdate ?  
+      await getUpdateDirectorNameBasedOnJourney(session, req, officerFiling) :    
+      await getAppointDirectorNameBasedOnJourney(officerFiling);
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
     if(correspondenceAddressBackParam?.includes("confirm-correspondence-address")) {
@@ -202,7 +203,10 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
   const locales = getLocalesService();
   const lang = selectLang(req.query?.lang);
   const formattedErrors = formatValidationErrors(params.validationErrors, lang);
-  const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
+  const directorName = params.isUpdate ?  
+      await getUpdateDirectorNameBasedOnJourney(session, req, params.officerFiling) :    
+      await getAppointDirectorNameBasedOnJourney(params.officerFiling);
+
   return res.render(params.templateName, {
     templateName: params.templateName,
     backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(params.backUrlPath, req), lang),
