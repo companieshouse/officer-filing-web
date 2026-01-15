@@ -63,7 +63,7 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   // render validation errors
   if(frontendValidationErrors) {
-    const currentUrl = isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+    const currentUrl = isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang)
     return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, currentUrl);
   }
 
