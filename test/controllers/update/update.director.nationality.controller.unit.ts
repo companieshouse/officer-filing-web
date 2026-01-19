@@ -11,6 +11,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/offi
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
 import { UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NATIONALITY_PATH, urlParams } from "../../../src/types/page.urls";
+import { DirectorField } from "../../../src/model/director.model";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -216,7 +217,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"})
+        .send({[DirectorField.NATIONALITY_1]:"British"})
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: true
@@ -239,7 +240,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British", typeahead_input_1: "Irish"})
+        .send({[DirectorField.NATIONALITY_1]:"British", [DirectorField.NATIONALITY_2]: "Irish"})
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: true
@@ -263,7 +264,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British", typeahead_input_1: ""})
+        .send({[DirectorField.NATIONALITY_1]:"British", [DirectorField.NATIONALITY_2]: ""})
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: true
@@ -286,7 +287,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"});
+        .send({[DirectorField.NATIONALITY_1]:"British"});
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: false
@@ -309,7 +310,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British", typeahead_input_1:"Irish"});
+        .send({[DirectorField.NATIONALITY_1]:"British", [DirectorField.NATIONALITY_2]:"Irish"});
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: false
@@ -332,7 +333,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British", typeahead_input_1:"Irish", typeahead_input_2:"Congolese (Congo)"});
+        .send({[DirectorField.NATIONALITY_1]:"British", [DirectorField.NATIONALITY_2]:"Irish", [DirectorField.NATIONALITY_3]:"Congolese (Congo)"});
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_DETAILS_URL);
       expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
         nationalityHasBeenUpdated: false
@@ -355,7 +356,8 @@ describe("Update director nationality controller tests", () => {
       }});
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"});
+        .send({ [DirectorField.NATIONALITY_1]: "British" });
+
       expect(response.text).toContain("Found. Redirecting to " + UPDATE_DIRECTOR_CHECK_YOUR_ANSWER_URL);
     })
 
@@ -369,7 +371,7 @@ describe("Update director nationality controller tests", () => {
 
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"});
+        .send({[DirectorField.NATIONALITY_1]:"British"});
       expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
     });
 
@@ -377,7 +379,7 @@ describe("Update director nationality controller tests", () => {
       mockPatchOfficerFiling.mockRejectedValueOnce(new Error("Error getting officer filing"));
       const response = await request(app)
         .post(UPDATE_DIRECTOR_NATIONALITY_URL)
-        .send({typeahead_input_0:"British"});
+        .send({[DirectorField.NATIONALITY_1]:"British"});
       expect(response.text).toContain(ERROR_PAGE_HEADING);
       expect(response.text).not.toContain("Found. Redirecting to " + UPDATE_DIRECTOR_NATIONALITY_URL);
     });

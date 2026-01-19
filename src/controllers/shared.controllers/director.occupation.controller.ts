@@ -38,11 +38,12 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
       currentUrl: getCurrentUrl(req, isUpdate, lang),
-      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
+      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
       directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+      occupationField: DirectorField.OCCUPATION, // pass enum value to template
      });
      
   } catch (e) {

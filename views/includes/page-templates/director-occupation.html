@@ -29,7 +29,7 @@
             {% set typeaheadTitle = ["<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='{{ occupationField }}'>", i18n.directorOccupation, "</label></h2>"] | join | safe %}
             {% set dropdownHint = i18n.directorOccupationDropdownHint %}
             {% set dropdownDefaultText = i18n.directorOccupationDropdownDefaultText %}
-            {% set errorMessage = errors.typeahead_input_0 %}
+            {% set errorMessage = errors.typeahead_occ_input_0 %}
             {% set typeaheadHint = [i18n.directorOccupationTypeaheadHintP1, " <br> ", i18n.directorOccupationTypeaheadHintP2] | join | safe %}
 
             {% include "includes/inputs/fields/typeahead-input.html" %}

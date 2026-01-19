@@ -13,14 +13,14 @@
 {% block content %}
 
 {% if errors %}
-  {% set dropdownOneError =  errors.typeahead_input_0 %}
-  {% set dropdownTwoError =  errors.typeahead_input_1 %}
-  {% set dropdownThreeError =  errors.typeahead_input_2 %}
+  {% set dropdownOneError =  errors.typeahead_nat_input_0 %}
+  {% set dropdownTwoError =  errors.typeahead_nat_input_1 %}
+  {% set dropdownThreeError =  errors.typeahead_nat_input_2 %}
 {% endif %}
 {% set typeaheadHint = i18n.directorNationalityListHint+"|"+i18n.directorNationalitySecondNationalityHint+"|"+i18n.directorNationalityThirdNationalityHint %}
 {% set thirdNationality = "<label class='govuk-label' for='typeahead_input_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
 
-{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityLabel~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
+{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_nat_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_nat_input_1'>"~i18n.directorNationalitySecondNationalityLabel~"</label>|<label class='govuk-label' for='typeahead_nat_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
 {% set typeaheadTitle =  aheadTitle | safe %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">

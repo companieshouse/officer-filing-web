@@ -12,6 +12,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer
 import { getValidationStatus } from "../../src/services/validation.status.service";
 import { mockValidValidationStatusResponse, mockValidationStatusErrorNationalityInvalid, mockValidationStatusErrorNationalityLength } from "../mocks/validation.status.response.mock";
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
+import { DirectorField } from "../../src/model/director.model";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -86,7 +87,7 @@ describe("Director nationality controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
         }});
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British"});
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({[DirectorField.NATIONALITY_1]:"British"});
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -97,7 +98,7 @@ describe("Director nationality controller tests", () => {
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{
           }});
 
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"British", lang:"cy"});
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({[DirectorField.NATIONALITY_1]:"British", lang:"cy"});
         expect(mockPatchOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_OCCUPATION_URL + "?lang=cy");
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -120,7 +121,7 @@ describe("Director nationality controller tests", () => {
           lastName: "Smith"
         });
         
-        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({typeahead_input_0:"dj",typeahead_input_1:"dj",typeahead_input_2:"dj"});
+        const response = await request(app).post(DIRECTOR_NATIONALITY_URL).send({[DirectorField.NATIONALITY_1]:"dj",[DirectorField.NATIONALITY_2]:"dj",[DirectorField.NATIONALITY_3]:"dj"});
   
         expect(response.text).toContain("Select a nationality from the list");
         expect(response.text.includes("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters")).toEqual(false);
