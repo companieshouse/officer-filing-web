@@ -7,12 +7,13 @@ import request from "supertest";
 import app from "../../src/app";
 
 import { getValidationStatus } from "../../src/services/validation.status.service";
-import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, CURRENT_DIRECTORS_PATH, UPDATE_DIRECTOR_DETAILS_PATH, UPDATE_DIRECTOR_NAME_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_DATE_DETAILS_PATH, DIRECTOR_NAME_PATH, CURRENT_DIRECTORS_PATH,  urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { mockValidValidationStatusResponse } from "../mocks/validation.status.response.mock";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
+import { DirectorField } from "../../src/model/director.model";
 
-const mockIsActiveFeature = isActiveFeature as jest.Mock;
+const mockIsActiveFeature = isActiveFeature as jest.Mock
 mockIsActiveFeature.mockReturnValue(true);
 const mockGetValidationStatus = getValidationStatus as jest.Mock;
 const mockPatchOfficerFiling = patchOfficerFiling as jest.Mock;
@@ -176,7 +177,7 @@ describe("Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_title_input_0": "Dr", 
+            [DirectorField.OCCUPATION]: "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 
