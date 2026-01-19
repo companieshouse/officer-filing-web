@@ -135,7 +135,7 @@ describe("Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_input_0": "Dr", 
+            "typeahead_title_input_0": "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 
@@ -176,7 +176,7 @@ describe("Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_input_0": "Dr", 
+            "typeahead_title_input_0": "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 

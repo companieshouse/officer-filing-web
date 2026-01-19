@@ -1,5 +1,5 @@
 export enum DirectorField {
-  TITLE = "typeahead_input_0",
+  TITLE = "typeahead_title_input_0",
   FIRST_NAME = "first_name",
   MIDDLE_NAMES = "middle_names",
   LAST_NAME = "last_name",

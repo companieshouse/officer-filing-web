@@ -15,7 +15,6 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
-const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 
 const FIFTY_ONE_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -48,25 +47,25 @@ const UPDATE_DIRECTOR_NAME_URL = UPDATE_DIRECTOR_NAME_PATH
 describe("Director validate first name & title tests", () => {
 
     it.each(["?", "&", "Dr%", "Mr+Ms"])("should object to invalid characters in title", async(pattern) => {
-        const validationErrors = [];
+        const validationErrors: string | any[] = [];
         validateTitle(pattern, NameValidation, validationErrors);
         expect(validationErrors.length).toBe(1);
     });
 
     it ("should not object to valid characters in title", async() => {
-        const validationErrors = [];
+        const validationErrors: string | any[] = [];
         validateTitle("Dr. Prof -", NameValidation, validationErrors);
         expect(validationErrors.length).toBe(0);
     });
 
     it.each(["?", "Head&Toes", "Joe.Doe", "+Drop"])("should object to invalid characters in first name", async(pattern) => {
-        const validationErrors = [];
+        const validationErrors: string | any[] = [];
         validateFirstName(pattern, NameValidation, validationErrors);
         expect(validationErrors.length).toBe(1);
     });
 
     it ("should not object to valid characters in first name", async() => {
-        const validationErrors = [];
+        const validationErrors: string | any[] = [];
         validateFirstName("Jane - 'Jones'", NameValidation, validationErrors);
         expect(validationErrors.length).toBe(0);
     });
@@ -85,17 +84,17 @@ describe("Director name validation tests", () => {
   describe("Name frontend validation", () => {
     // title validation
     it ("should render error if title has invalid characters", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"§"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_title_input_0:"§"});
         expect(response.text).toContain(TITLE_CHARACTERS);
     });
 
     it ("should not render error if title has . characters", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"."});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_title_input_0:"."});
         expect(response.text).not.toContain(TITLE_CHARACTERS);
     });
 
     it ("should render error if title is too long", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"Headmaster of Hogwarts - Order of Merlin the first class Supreme Mugwump - Chief Warlock and Grand Sorcerer"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_title_input_0:"Headmaster of Hogwarts - Order of Merlin the first class Supreme Mugwump - Chief Warlock and Grand Sorcerer"});
         expect(response.text).toContain(TITLE_LENGTH);
     });
 
@@ -207,7 +206,7 @@ describe("Director name validation tests", () => {
     // multiple error validation tests
     // title validation
     it ("should render one title error if title has invalid characters and is too long", async() => {
-        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_input_0:"§Headmaster of Hogwarts, Order of Merlin (first class), Supreme Mugwump, Chief Warlock and Grand Sorcerer"});
+        const response = await request(app).post(DIRECTOR_NAME_URL).send({typeahead_title_input_0:"§Headmaster of Hogwarts, Order of Merlin (first class), Supreme Mugwump, Chief Warlock and Grand Sorcerer"});
         expect(response.text).toContain(TITLE_CHARACTERS);
         expect(response.text).not.toContain(TITLE_LENGTH);
     });
@@ -247,7 +246,7 @@ describe("Director name validation tests", () => {
     // multiple field errors
     it ("should one error per field if all fields have errors", async() => {
         const response = await request(app).post(DIRECTOR_NAME_URL).send({
-            typeahead_input_0:"§"+FIFTY_ONE_CHARACTERS,
+            typeahead_title_input_0:"§"+FIFTY_ONE_CHARACTERS,
             first_name:"",
             middle_names:"§"+FIFTY_ONE_CHARACTERS,
             last_name:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS,
@@ -270,7 +269,7 @@ describe("Director name validation tests", () => {
 
     it ("should one error per field if all fields have errors on update", async() => {
         const response = await request(app).post(UPDATE_DIRECTOR_NAME_URL).send({
-            typeahead_input_0:"§"+FIFTY_ONE_CHARACTERS,
+            typeahead_title_input_0:"§"+FIFTY_ONE_CHARACTERS,
             first_name:"",
             middle_names:"§"+FIFTY_ONE_CHARACTERS,
             last_name:"§"+ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS,
