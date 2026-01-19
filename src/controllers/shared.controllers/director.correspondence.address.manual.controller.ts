@@ -10,7 +10,7 @@ import {
   ValidationStatusResponse
 } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getField, getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getField, getDirectorNameForUpdateJourney, getDirectorNameForAppointJourney } from "../../utils/web";
 import { getValidationStatus } from "../../services/validation.status.service";
 import { createValidationErrorBasic, formatValidationErrors, mapValidationResponseToAllowedErrorKey } from "../../validation/validation";
 import { ValidationError } from "../../model/validation.model";
@@ -43,8 +43,9 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
     const lang = selectLang(req.query?.lang);
 
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
-
+    const directorName = isUpdate ?  
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) :    
+      await getDirectorNameForAppointJourney(officerFiling);
     const correspondenceAddressBackParam = urlUtils.getBackLinkFromRequestParams(req);
     let backLink = addLangToUrl(urlUtils.getUrlToPath(backUrlPaths.correspondenceAddressSearchPath, req), lang);
     if(correspondenceAddressBackParam?.includes("confirm-correspondence-address")) {
@@ -65,7 +66,7 @@ export const getDirectorCorrespondenceAddressManual = async (req: Request, res: 
       correspondence_address_postcode: officerFiling.serviceAddress?.postalCode,
       correspondence_address_back_param: correspondenceAddressBackParam,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : geAppointUrl(req, lang),
       lang
     });
   } catch (e) {
@@ -202,7 +203,10 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
   const locales = getLocalesService();
   const lang = selectLang(req.query?.lang);
   const formattedErrors = formatValidationErrors(params.validationErrors, lang);
-  const directorName = await getDirectorNameBasedOnJourney(params.isUpdate, session, req, params.officerFiling);
+  const directorName = params.isUpdate ?  
+      await getDirectorNameForUpdateJourney(session, req, params.officerFiling) :    
+      await getDirectorNameForAppointJourney(params.officerFiling);
+
   return res.render(params.templateName, {
     templateName: params.templateName,
     backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(params.backUrlPath, req), lang),
@@ -218,15 +222,15 @@ export const renderPage = async (req: Request, res: Response, session: Session, 
     typeahead_errors: JSON.stringify(formattedErrors),
     errors: formattedErrors,
     ...getLocaleInfo(locales, lang),
-    currentUrl : getCurrentUrl(req, params.isUpdate, lang),
+    currentUrl : params.isUpdate ? getUpdateUrl(req, lang) : geAppointUrl(req, lang),
     lang
   });
 };
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
-  if (isUpdate) {
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
-  } else {
-    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
-  }
-}
+const geAppointUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+};
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req), lang);
+};
