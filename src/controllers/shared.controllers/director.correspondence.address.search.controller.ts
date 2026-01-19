@@ -24,7 +24,7 @@ import { validateUKPostcode } from "../../validation/uk.postcode.validation";
 import { POSTCODE_ADDRESSES_LOOKUP_URL } from "../../utils/properties";
 import { UKAddress } from "@companieshouse/api-sdk-node/dist/services/postcode-lookup";
 import { getUKAddressesFromPostcode } from "../../services/postcode.lookup.service";
-import { getCountryFromKey, getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getCountryFromKey, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { validatePostcode } from "../../validation/postcode.validation";
 import { validatePremise } from "../../validation/premise.validation";
 import { Templates } from "../../types/template.paths";
@@ -39,7 +39,9 @@ export const getCorrespondenceAddressLookUp = async (req: Request, res: Response
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ?  
+      await getDirectorNameForUpdateJourney(session, req, officerFiling) :    
+      await getDirectorNameForAppointJourney(officerFiling);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
     return res.render(templateName, {
@@ -78,7 +80,9 @@ export const postCorrespondenceAddressLookUp = async (req: Request, res: Respons
                        "postalCode": correspondencePostalCode,
                        "country" : ""}    };
 
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, prepareOfficerFiling);
+    const directorName = isUpdate ?  
+      await getDirectorNameForUpdateJourney(session, req, prepareOfficerFiling) :    
+      await getDirectorNameForAppointJourney(prepareOfficerFiling);
 
     // Validate formatting errors for fields, render errors if found.
     if(jsValidationErrors.length > 0) {

@@ -26,6 +26,9 @@ import { isActiveFeature } from "../../../src/utils/feature.flag";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { compareAddress } from "../../../src/utils/address";
 import { checkIsResidentialAddressUpdated } from "../../../src/utils/is.address.updated";
+import { ValidationError } from "../../../src/model/validation.model";
+import { validateManualAddress } from "../../../src/validation/manual.address.validation";
+import { ResidentialManualAddressValidation } from "../../../src/validation/address.validation.config";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -91,6 +94,7 @@ describe("Director confirm residential address controller tests", () => {
       });
 
       it.each([[APPOINT_PAGE_URL], [UPDATE_PAGE_URL]])("Should populate details on the page", async (url) => {
+
         mockGetOfficerFiling.mockResolvedValue({
           name: "John Smith",
           residentialAddress: {
@@ -298,6 +302,43 @@ describe("Director confirm residential address controller tests", () => {
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.anything(), TRANSACTION_ID, SUBMISSION_ID, expect.objectContaining({
           isHomeAddressSameAsServiceAddress: false
         }));
+        expect(response.text).toContain("Found. Redirecting to ");
       });
-    });
+          
+      it.each([[APPOINT_PAGE_URL, APPOINT_DIRECTOR_CHECK_ANSWERS_URL], [UPDATE_PAGE_URL, UPDATE_DIRECTOR_CHECK_ANSWERS_URL]])("should handle validation errors", async (url) => {
+        const mockValidationErrors: ValidationError[] = [
+          { messageKey: "addressLine1", source: ["Address Line 1 is required"], link: "addressLine1" },
+        ];
+
+        const validateManualAddressSpy = jest
+          .spyOn(require("../../../src/validation/manual.address.validation"), "validateManualAddress")
+          .mockReturnValueOnce(mockValidationErrors);
+
+        const residentialAddress = {
+        addressLine1: "",
+        addressLine2: "Some Address",
+        locality: "City",
+        region: "Region",
+        country: "Country",
+        postalCode: "12345",
+      };
+
+        mockGetOfficerFiling.mockReturnValueOnce({
+          referenceAppointmentId: "123",
+          residentialAddress: residentialAddress,
+        });
+
+        mockGetOfficerFiling.mockReturnValueOnce({ referenceAppointmentId: "123" });
+        mockGetCompanyAppointmentFullRecord.mockResolvedValue({});
+
+        const response = await request(app).post(url);
+
+        expect(validateManualAddressSpy).toHaveBeenCalled();
+        expect(response.text).toContain(ERROR_ADDRESS_PAGE_HEADING);
+        expect(response.text).toContain("addressLine1");
+        validateManualAddressSpy.mockRestore();
+      }
+    );
+  });
+
 });

@@ -3,7 +3,7 @@ import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
-import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getField, getDirectorNameForUpdateJourney, setBackLink, setRedirectLink } from "../../utils/web";
 import { NATIONALITY_LIST } from "../../utils/properties";
 import { formatTitleCase } from "../../utils/format";
 import { DirectorField } from "../../model/director.model";
@@ -34,7 +34,9 @@ export const getDirectorNationality = async (req: Request, res: Response, next: 
       backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
       typeahead_array: NATIONALITY_LIST + "|" + NATIONALITY_LIST + "|" + NATIONALITY_LIST,
       typeahead_value: officerFiling.nationality1 + "|" + officerFiling.nationality2 + "|" + officerFiling.nationality3,
-      directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+      directorName: isUpdate ?  
+        formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) :    
+        formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
       nationality2_hidden: checkNationality2(officerFiling),
       nationality3_hidden: checkNationality3(officerFiling),
       ...getLocaleInfo(locales, lang),

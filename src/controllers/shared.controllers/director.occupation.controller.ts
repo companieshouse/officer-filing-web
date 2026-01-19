@@ -7,7 +7,7 @@ import { OCCUPATION_LIST } from "../../utils/properties";
 import { Session } from "@companieshouse/node-session-handler";
 import { OfficerFiling, ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { DirectorField } from "../../model/director.model";
-import { getDirectorNameBasedOnJourney, getField, setBackLink, setRedirectLink } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getField, getDirectorNameForUpdateJourney, setBackLink, setRedirectLink } from "../../utils/web";
 import { logger } from "../../utils/logger";
 import { ValidationError } from "../../model/validation.model";
 import { formatSentenceCase, formatTitleCase } from "../../utils/format";
@@ -37,12 +37,14 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
     return res.render(templateName, {
       templateName: templateName,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
       backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
       optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
       typeahead_array: OCCUPATION_LIST,
       typeahead_value: formatSentenceCase(officerFiling.occupation),
-      directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+      directorName: isUpdate ? 
+        formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)): 
+        formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
      });
      
   } catch (e) {
@@ -63,7 +65,8 @@ export const postDirectorOccupation = async (req: Request, res: Response, next: 
 
   // render validation errors
   if(frontendValidationErrors) {
-    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, getCurrentUrl(req, isUpdate, lang));
+    const currentUrl = isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang)
+    return renderPage(res, req, officerFiling, [frontendValidationErrors], occupation, currentUrl);
   }
 
   // patch the filing with occupation when no front end validation errors encountered.
@@ -124,24 +127,19 @@ export const renderPage = async (res: Response, req: Request, officerFiling: Off
     typeahead_value: formatSentenceCase(occupation),
     errors: formattedErrors,
     typeahead_errors: JSON.stringify(formattedErrors),
-    directorName: formatTitleCase(await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling)),
+    directorName: isUpdate ?  
+      formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) :    
+      formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
   });
 }
 
-/**
- * Determine the URL of the page based on whether it is part of the AP01 or CH01 flow.
- * @param req 
- * @param isUpdate 
- * @returns 
- */
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string) => {
-  if(isUpdate){
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang);
-    }
-    else{
+const getAppointUrl = (req: Request, lang: string): string => {
     return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_OCCUPATION_PATH, req), lang)
-    }
 }
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+  return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_OCCUPATION_PATH, req), lang);
+};
 
 /**
  * Build a list of error objects that will be displayed on the page, based on the result from getValidation.

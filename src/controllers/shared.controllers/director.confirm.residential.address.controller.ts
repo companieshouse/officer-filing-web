@@ -3,7 +3,7 @@ import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
 import { getOfficerFiling, patchOfficerFiling } from "../../services/officer.filing.service";
 import { formatTitleCase } from "../../utils/format";
-import { getDirectorNameBasedOnJourney } from "../../utils/web";
+import { getDirectorNameForAppointJourney, getDirectorNameForUpdateJourney } from "../../utils/web";
 import { Address, OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
@@ -23,7 +23,9 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
     const session: Session = req.session as Session;
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ? 
+          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+          await getDirectorNameForAppointJourney(officerFiling);
     const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
 
     // Validate residentialAddress missing fields if any onload
@@ -38,14 +40,14 @@ export const getDirectorConfirmResidentialAddress = async (req: Request, res: Re
       errors: formatValidationErrors(jsValidationErrors,lang),
       ...officerFiling.residentialAddress,
       ...getLocaleInfo(locales, lang),
-      currentUrl: getCurrentUrl(req, isUpdate, lang),
+      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
     });
   } catch (e) {
     return next(e);
   }
 };
 
-export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageurl: string, isUpdate: boolean) => {
+export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageUrl: string, isUpdate: boolean) => {
   try {
     const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
     const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
@@ -53,7 +55,9 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
     const lang = selectLang(req.query.lang);
     const locales = getLocalesService();
-    const directorName = await getDirectorNameBasedOnJourney(isUpdate, session, req, officerFiling);
+    const directorName = isUpdate ? 
+          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
+          await getDirectorNameForAppointJourney(officerFiling);
     const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
 
     // Validate residentialAddress missing fields if any onload
@@ -69,7 +73,7 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
           errors: formatValidationErrors(jsValidationErrors,lang),
           ...officerFiling.residentialAddress,
           ...getLocaleInfo(locales, lang),
-          currentUrl: getCurrentUrl(req, isUpdate, lang),
+          currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
         });
       }
 
@@ -92,16 +96,16 @@ export const postDirectorConfirmResidentialAddress = async (req: Request, res: R
     if (officerFiling.checkYourAnswersLink) {
       return res.redirect(addLangToUrl(urlUtils.getUrlToPath(checkYourAnswersLink, req), lang));
     }
-    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageurl, req), lang));
+    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
   } catch (e) {
     return next(e);
   }
 };
 
-const getCurrentUrl = (req: Request, isUpdate: boolean, lang: string): string => {
-  if(isUpdate){
-      return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-    } else {
-      return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-  }
+const getAppointUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
+}
+
+const getUpdateUrl = (req: Request, lang: string): string => {
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
 }

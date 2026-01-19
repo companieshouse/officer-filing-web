@@ -87,11 +87,11 @@
 
         <!-- Tracking for displayed radio for handling error message link -->
         {% if registeredOfficeAddressDisplay %}
-          <input type="hidden" name="corresponse_address_display" value="director_registered_office_address" />
+          <input type="hidden" name="correspondence_address_display" value="director_registered_office_address" />
         {% elif manualAddressDisplay %}
-          <input type="hidden" name="corresponse_address_display" value="director_correspondence_address" />
+          <input type="hidden" name="correspondence_address_display" value="director_correspondence_address" />
         {% else %}
-          <input type="hidden" name="corresponse_address_display" value="director_different_address" />
+          <input type="hidden" name="correspondence_address_display" value="director_different_address" />
         {% endif %}
 
         <div class="govuk-inset-text">
