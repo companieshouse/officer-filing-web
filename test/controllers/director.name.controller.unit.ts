@@ -136,7 +136,7 @@ describe("Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_title_input_0": "Dr", 
+            [DirectorField.TITLE]: "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 
