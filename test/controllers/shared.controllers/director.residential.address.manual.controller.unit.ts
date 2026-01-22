@@ -60,7 +60,7 @@ const validData = {
   "residential_address_line_2": "Two",
   "residential_address_city": "Three",
   "residential_address_county": "Four",
-  "typeahead_input_0": "France",
+  "typeahead_input_residentialCountry_0": "France",
   "residential_address_postcode": "TE6 3ST"
 }
 
@@ -70,7 +70,7 @@ const invalidData = {
   "residential_address_line_2": "Twoゃ",
   "residential_address_city": "Three",
   "residential_address_county": "Fourゃ",
-  "typeahead_input_0": "England",
+  "typeahead_input_residentialCountry_0": "England",
   "residential_address_postcode": "ゃ"
 }
 

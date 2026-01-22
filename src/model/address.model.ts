@@ -13,7 +13,7 @@ export enum CorrespondenceAddressField {
 	CITY = "correspondence_address_city",
 	COUNTY = "correspondence_address_county",
 	POSTCODE = "correspondence_address_postcode",
-	COUNTRY = "typeahead_input_0"
+	COUNTRY = "typeahead_input_correspondenceCountry_0"
 }
 
 export enum ResidentialAddressField {
@@ -23,5 +23,5 @@ export enum ResidentialAddressField {
 	CITY = "residential_address_city",
 	COUNTY = "residential_address_county",
 	POSTCODE = "residential_address_postcode",
-	COUNTRY = "typeahead_input_0"
+	COUNTRY = "typeahead_input_residentialCountry_0"
 }

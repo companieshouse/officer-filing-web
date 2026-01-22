@@ -25,13 +25,15 @@
   const defaultValueArray = "{{typeahead_value}}".split("|")
   const hintArray = "{{typeaheadHint}}".split("|")
   const titleArray = "{{typeaheadTitle}}".split("|")
+  const descriptorArray = "{{typeahead_descriptor}}".split("|"); // New array for descriptors
 
   for (var i = 0; i < typeaheadArray.length; i++) {
+    console.log("Initializing typeahead for index: " + i);
     var autocompleteConfig = {
       element: document.querySelector('#my-autocomplete-container-' + i),
-      id: 'typeahead_input_' + i, // To match it to the existing <label>.
+      id: 'typeahead_input_' + descriptorArray[i] + '_' + i, // Updated to include descriptor
       source: typeaheadArray[i].split(";"),
-      name: 'typeahead_input_' + i
+      name: 'typeahead_input_' + descriptorArray[i] + '_' + i // Updated to include descriptor
     }
     if(defaultValueArray[i] !== "null" && defaultValueArray[i] !== "undefined"){
       autocompleteConfig.defaultValue = decodeHtml(defaultValueArray[i]);
@@ -52,8 +54,8 @@
   // Mimic nunjucks error generation
   window.onload = function () {
     for (var i = 0; i < typeaheadArray.length; i++) {
-      // Set up observor to correct css classname when accessible-autocomplete rewrites the input field.
-      const typeaheadNode = document.getElementById("typeahead_input_" + i);
+      // Set up observer to correct css classname when accessible-autocomplete rewrites the input field.
+      const typeaheadNode = document.getElementById("typeahead_input_" + descriptorArray[i] + "_" + i);
       var callback;
       var inputClass;
       var errors;
@@ -62,13 +64,12 @@
         errors = JSON.parse("{{typeahead_errors}}".replace(/&quot;/g,'"'));
       }
 
-      if (errors && errors["typeahead_input_" + i]) {
-        const typeaheadError = errors["typeahead_input_" + i].text;
+      if (errors && errors["typeahead_input_" + descriptorArray[i] + "_" + i]) {
+        const typeaheadError = errors["typeahead_input_" + descriptorArray[i] + "_" + i].text;
         document.getElementById("typeahead-form-group-" + i).className = "govuk-form-group govuk-form-group--error";
         const errorHtml = '<p class="govuk-error-message"> <span class="govuk-visually-hidden">Error:</span> ' + typeaheadError + '</p>'
         const element = document.getElementById("typeahead-hint-" + i);
         element.insertAdjacentHTML("afterend", errorHtml);
-        //inputClass = "govuk-input govuk-input--width-20 govuk-input--error";
         typeaheadNode.className = typeaheadNode.className + " govuk-input--error";
       }
   }

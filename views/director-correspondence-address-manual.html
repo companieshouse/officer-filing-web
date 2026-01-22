@@ -84,7 +84,7 @@
           value: correspondence_address_county
         }) }}
 
-        {% include "includes/inputs/fields/country-input.html" %}
+        {% include "includes/inputs/fields/country-correspondence-input.html" %}
 
         {{ govukInput({
           errorMessage: errors.correspondence_address_postcode if errors,
@@ -113,7 +113,7 @@
           summaryHtml: '<div>'~i18n.directorCorrespondenceAddressAccordionTitle~ '</div>',
           html: correspondenceAddressSameAsHomeAddress,
           attributes: {
-            "data-event-id": "my-correspondance-address-is-my-home-address-accordion"
+            "data-event-id": "my-correspondence-address-is-my-home-address-accordion"
           }
         }) }}
 
