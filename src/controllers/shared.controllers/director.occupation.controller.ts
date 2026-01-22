@@ -45,7 +45,6 @@ export const getDirectorOccupation = async (req: Request, res: Response, next: N
       directorName: isUpdate ? 
         formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)): 
         formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
-      occupationField: DirectorField.OCCUPATION, // pass enum value to template
      });
      
   } catch (e) {
