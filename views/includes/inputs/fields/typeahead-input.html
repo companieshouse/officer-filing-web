@@ -56,8 +56,6 @@
     for (var i = 0; i < typeaheadArray.length; i++) {
       // Set up observer to correct css classname when accessible-autocomplete rewrites the input field.
       const typeaheadNode = document.getElementById("typeahead_input_" + descriptorArray[i] + "_" + i);
-      var callback;
-      var inputClass;
       var errors;
 
       if("{{typeahead_errors}}"){
