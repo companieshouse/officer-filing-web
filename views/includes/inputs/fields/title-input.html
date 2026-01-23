@@ -1,11 +1,12 @@
 <div id="typeahead-form-group-0" class="govuk-form-group govuk-input--width-30">
   <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
 
-  {% set typeaheadTitle = ["<label for='typeahead_input_0' class='govuk-label'>", i18n.directorNameTitleLabel, "</label>"] | join | safe %}
+  {% set typeaheadTitle = ["<label for='typeahead_input_title_0' class='govuk-label'>", i18n.directorNameTitleLabel, "</label>"] | join | safe %}
   {% set dropdownHint = i18n.directorNameTitleDropdownHint %}
   {% set dropdownDefaultText = i18n.directorNameTitleDropdownDefaultText %}
   {% set typeaheadHint = i18n.directorNameTitleTypeaheadHint %}
-  {% set errorMessage = errors.typeahead_input_0 %}
+  {% set typeahead_descriptor = "title" %}
+  {% set errorMessage = errors.typeahead_input_title_0 %}
   {% set inputClass = "govuk-!-width-one-quarter" %}
  
 

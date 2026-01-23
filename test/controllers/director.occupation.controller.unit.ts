@@ -6,7 +6,7 @@ import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
 import app from "../../src/app";
 
-import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_NATIONALITY_PATH, UPDATE_DIRECTOR_DETAILS_PATH, urlParams } from "../../src/types/page.urls";
+import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_OCCUPATION_PATH, DIRECTOR_NATIONALITY_PATH, urlParams } from "../../src/types/page.urls";
 import { isActiveFeature } from "../../src/utils/feature.flag";
 import { getOfficerFiling, patchOfficerFiling } from "../../src/services/officer.filing.service";
 import { getValidationStatus } from "../../src/services/validation.status.service";
@@ -17,6 +17,7 @@ import {
 import { ValidationStatusResponse } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { buildValidationErrors } from "../../src/controllers/shared.controllers/director.occupation.controller";
 import { occupationErrorMessageKey } from "../../src/utils/api.enumerations.keys";
+import { DirectorField } from "../../src/model/director.model";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -166,7 +167,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION]: "Accountant"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
@@ -179,7 +180,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "-,.:; 0-9A-Z&@$£¥€'\"«»''\"\"?!/\\\\()[\\]{}<>*=#%+"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "-,.:; 0-9A-Z&@$£¥€'\"«»''\"\"?!/\\\\()[\\]{}<>*=#%+"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
@@ -192,7 +193,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
@@ -205,7 +206,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "a-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķ"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "a-zÀÖØſƒǺẀỲàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķ"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
@@ -218,7 +219,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "ĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
         expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
       });
@@ -229,7 +230,7 @@ describe("Director occupation controller tests", () => {
             firstName: "John",
             lastName: "Smith"
           })
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ゃ"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "ゃ"});
   
         expect(response.text).toContain("Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
         expect(response.text).toContain("John Smith");
@@ -241,7 +242,7 @@ describe("Director occupation controller tests", () => {
           firstName: "John",
           lastName: "Smith"
         })
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "HBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVIAEFAEFAEFFAAEFAEFAEFAEAEFAEFAEFAFAEFAFAEFAEFAEFAEFAEFAEFAEFAEFEAF"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "HBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVIAEFAEFAEFFAAEFAEFAEFAEAEFAEFAEFAFAEFAFAEFAEFAEFAEFAEFAEFAEFAEFAEFAEFAEFEAF"});
 
         expect(response.text).toContain("Occupation must be 100 characters or less");
         expect(response.text).toContain("John Smith");
@@ -253,8 +254,7 @@ describe("Director occupation controller tests", () => {
           firstName: "John",
           lastName: "Smith"
         })
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
-
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ"});
         expect(response.text).toContain("Occupation must only include letters a to z, and common special characters such as hyphens, spaces and apostrophes");
         expect(response.text).toContain("John Smith");
         expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
@@ -274,7 +274,7 @@ describe("Director occupation controller tests", () => {
         })
         const response = await request(app)
         .post(DIRECTOR_OCCUPATION_URL)
-        .send({"typeahead_input_0" : "~"});
+        .send({[DirectorField.OCCUPATION] : "~"});
 
         expect(response.text).toContain(BACK_LINK_URL);
       });

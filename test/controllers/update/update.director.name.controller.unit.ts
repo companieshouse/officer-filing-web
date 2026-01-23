@@ -13,6 +13,7 @@ import { getOfficerFiling, patchOfficerFiling } from "../../../src/services/offi
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
 import { doFieldsMatch } from "../../../src/controllers/shared.controllers/director.name.controller";
+import { DirectorField } from "../../../src/model/director.model";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -147,7 +148,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({
-            "typeahead_input_0": "Dr",
+            [DirectorField.TITLE]: "Dr",
             "first_name": "John",
             "middle_names": "",
             "last_name": "Smith",
@@ -179,7 +180,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({
-            "typeahead_input_0": "Dr",
+            [DirectorField.TITLE]: "Dr",
             "first_name": "John",
             "middle_names": "",
             "last_name": "Smith",
@@ -211,7 +212,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({
-            "typeahead_input_0": "Dr",
+            [DirectorField.TITLE]: "Dr",
             "first_name": "John",
             "middle_names": "",
             "last_name": "Smith",
@@ -243,7 +244,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({
-            "typeahead_input_0": "Dr",
+            [DirectorField.TITLE]: "Dr",
             "first_name": "John",
             "middle_names": "",
             "last_name": "Smith",
@@ -278,7 +279,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({
-            "typeahead_input_0": "Dr",
+            [DirectorField.TITLE]: "Dr",
             "first_name": "John",
             "middle_names": "Mid",
             "last_name": "Smith"
@@ -294,7 +295,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_input_0": "Dr", 
+            [DirectorField.TITLE]: "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 
@@ -325,7 +326,7 @@ describe("Update Director name controller tests", () => {
         const response = await request(app)
           .post(DIRECTOR_NAME_URL)
           .send({ 
-            "typeahead_input_0": "Dr", 
+            [DirectorField.TITLE]: "Dr", 
             "first_name": "John", 
             "middle_names": "", 
             "last_name": "Smith", 

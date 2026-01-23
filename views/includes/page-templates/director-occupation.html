@@ -25,11 +25,12 @@
           <p class="govuk-body">{{ i18n.directorOccupationBody }}
           </p>
           <div id="typeahead-form-group-0" class="govuk-form-group">
-        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
-            {% set typeaheadTitle = ["<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='typeahead_input_0'>", i18n.directorOccupation, "</label></h2>"] | join | safe %}
+            <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-input--width-20"></div>
+            {% set typeaheadTitle = ["<h2 class='govuk-heading-s govuk-!-margin-bottom-1'> <label for='typeahead_input_occupation_0'>", i18n.directorOccupation, "</label></h2>"] | join | safe %}
+            {% set typeahead_descriptor = "occupation" %}
             {% set dropdownHint = i18n.directorOccupationDropdownHint %}
             {% set dropdownDefaultText = i18n.directorOccupationDropdownDefaultText %}
-            {% set errorMessage = errors.typeahead_input_0 %}
+            {% set errorMessage = errors.typeahead_input_occupation_0 %}
             {% set typeaheadHint = [i18n.directorOccupationTypeaheadHintP1, " <br> ", i18n.directorOccupationTypeaheadHintP2] | join | safe %}
 
             {% include "includes/inputs/fields/typeahead-input.html" %}

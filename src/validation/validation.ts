@@ -75,10 +75,10 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
     let listOfValidationKeys = new Array();
-    if (!validationStatusResponse || !validationStatusResponse.errors) {
+    if (!validationStatusResponse?.errors) {
         return "";
     }
-  
+
     // Map the error message returned from officer filing api to an errorMessageKey
     validationStatusResponse.errors.forEach(element => {
       listOfValidationKeys.push(convertAPIMessageToKey(element.error));

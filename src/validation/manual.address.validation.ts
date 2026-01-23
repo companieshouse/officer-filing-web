@@ -61,7 +61,7 @@ export const validatePremise = (premise: string, manualAddressValidationType: Ma
 		return validationErrors;
 	}
 
-	if(premise.length > PREMISE_ALLOWED_LENGTH) {
+	if (premise.length > PREMISE_ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.Premise);
 		return validationErrors;
 	}
@@ -84,7 +84,7 @@ export const validateAddressLine1 = (addressLine1: string, manualAddressValidati
 		return validationErrors;
 	}
 
-	if(addressLine1.length > ALLOWED_LENGTH) {
+	if (addressLine1.length > ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.AddressLine1);
 		return validationErrors;
 	}
@@ -106,7 +106,7 @@ export const validateAddressLine2 = (addressLine2: string, manualAddressValidati
 		return validationErrors;
 	}
 
-	if(addressLine2.length > ALLOWED_LENGTH) {
+	if (addressLine2.length > ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.AddressLine2);
 		return validationErrors;
 	}
@@ -129,7 +129,7 @@ export const validateCity = (city: string, manualAddressValidationType: ManualAd
 		return validationErrors;
 	}
 
-	if(city.length > ALLOWED_LENGTH) {
+	if (city.length > ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.City);
 		return validationErrors;
 	}
@@ -151,7 +151,7 @@ export const validateCounty = (county: string, manualAddressValidationType: Manu
 		return validationErrors;
 	}
 
-	if(county.length > ALLOWED_LENGTH) {
+	if (county.length > ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.County);
 		return validationErrors;
 	}
@@ -169,17 +169,17 @@ export const validateCounty = (county: string, manualAddressValidationType: Manu
 export const validatePostcode = (postcode: string, country: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
 	const regex = REGEX_FOR_VALID_CHARACTERS;
 	const match = regex.exec(postcode);
-	if(!match) {
+	if (!match) {
 		validationErrors.push(manualAddressValidationType.InvalidCharacters.Postcode);
 		return validationErrors;
 	}
 
-	if(postcode.length > POSTCODE_ALLOWED_LENGTH) {
+	if (postcode.length > POSTCODE_ALLOWED_LENGTH) {
 		validationErrors.push(manualAddressValidationType.InvalidLength.Postcode);
 		return validationErrors;
 	}
 
-	if(country && UK_COUNTRY_LIST.includes(country) && !postcode.match(REGEX_FOR_VALID_UK_POSTCODE)) {
+	if (country && UK_COUNTRY_LIST.includes(country) && !REGEX_FOR_VALID_UK_POSTCODE.exec(postcode)) {
 		validationErrors.push(manualAddressValidationType.InvalidValue.Postcode);
 	}
 

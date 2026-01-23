@@ -18,6 +18,7 @@ import { UPDATE_DIRECTOR_OCCUPATION_PATH } from "../../../src/types/page.urls";
 import { getCompanyAppointmentFullRecord } from "../../../src/services/company.appointments.service";
 import { STOP_TYPE } from "../../../src/utils/constants";
 import { Session } from "@companieshouse/node-session-handler";
+import { DirectorField } from "../../../src/model/director.model";
 
 const mockIsActiveFeature = isActiveFeature as jest.Mock;
 mockIsActiveFeature.mockReturnValue(true);
@@ -120,7 +121,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : "Accountant"});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : "Accountant"});
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
         {occupation: "Accountant",  occupationHasBeenUpdated : true})
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
@@ -140,7 +141,7 @@ describe("Director occupation controller tests", () => {
         mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
         mockPatchOfficerFiling.mockResolvedValueOnce({data:{}});
 
-        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({"typeahead_input_0" : ""});
+        const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({[DirectorField.OCCUPATION] : ""});
         expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID, 
         {occupation: "",  occupationHasBeenUpdated : false})
         expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
@@ -158,7 +159,7 @@ describe("Director occupation controller tests", () => {
         });
         const response = await request(app)
         .post(DIRECTOR_OCCUPATION_URL)
-        .send({"typeahead_input_0" : "~"});
+        .send({[DirectorField.OCCUPATION] : "~"});
 
         expect(response.text).toContain(UPDATE_BACK_LINK_URL);
       });
@@ -175,7 +176,7 @@ describe("Director occupation controller tests", () => {
 
         const response = await request(app)
           .post(DIRECTOR_OCCUPATION_URL)
-          .send({"typeahead_input_0" : "Accountant"});
+          .send({[DirectorField.OCCUPATION] : "Accountant"});
         expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
       });
 

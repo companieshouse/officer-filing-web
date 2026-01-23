@@ -80,7 +80,7 @@ const validData = {
   "correspondence_address_line_2": "Two",
   "correspondence_address_city": "Three",
   "correspondence_address_county": "Four",
-  "typeahead_input_0": "France",
+  "typeahead_input_correspondenceCountry_0": "France",
   "correspondence_address_postcode": "TE6 3ST"
 }
 
@@ -90,7 +90,7 @@ const invalidData = {
   "correspondence_address_line_2": "Twoゃ",
   "correspondence_address_city": "Three",
   "correspondence_address_county": "Fourゃ",
-  "typeahead_input_0": "England",
+  "typeahead_input_correspondenceCountry_0": "England",
   "correspondence_address_postcode": "ゃ"
 }
 

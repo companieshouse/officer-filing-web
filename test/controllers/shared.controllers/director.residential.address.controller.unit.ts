@@ -139,7 +139,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
       expect(response.text).toContain("Locality");
-      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain("Region");
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(PAGE_HEADING);
       expect(response.text).toContain(directorNameMock.firstName);
@@ -158,7 +158,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
       expect(response.text).toContain("Locality");
-      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain("Region");
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
       expect(response.text).toContain(directorNameMock.firstName);
       expect(response.text).toContain("Ble mae’r cyfarwyddwr yn byw?");
@@ -193,7 +193,7 @@ describe("Director name controller tests", () => {
       expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
       expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
-      expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+      expect(response.text).toContain("Region");
       expect(response.text).toContain("Premises");
       expect(response.text).toContain(
         serviceAddressMock.serviceAddress.premises + ", " 

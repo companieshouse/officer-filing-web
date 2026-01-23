@@ -13,15 +13,16 @@
 {% block content %}
 
 {% if errors %}
-  {% set dropdownOneError =  errors.typeahead_input_0 %}
-  {% set dropdownTwoError =  errors.typeahead_input_1 %}
-  {% set dropdownThreeError =  errors.typeahead_input_2 %}
+  {% set dropdownOneError =  errors.typeahead_input_nationality_0 %}
+  {% set dropdownTwoError =  errors.typeahead_input_nationality_1 %}
+  {% set dropdownThreeError =  errors.typeahead_input_nationality_2 %}
 {% endif %}
 {% set typeaheadHint = i18n.directorNationalityListHint+"|"+i18n.directorNationalitySecondNationalityHint+"|"+i18n.directorNationalityThirdNationalityHint %}
-{% set thirdNationality = "<label class='govuk-label' for='typeahead_input_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
+{% set thirdNationality = "<label class='govuk-label' for='typeahead_input_nationality_2'>"+i18n.directorNationalityThirdNationalityLabel+"</label>"%}
 
-{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_1'>"~i18n.directorNationalitySecondNationalityLabel~"</label>|<label class='govuk-label' for='typeahead_input_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
+{% set aheadTitle = "<h1 class='govuk-label-wrapper'><label class='govuk-label govuk-label--l' for='typeahead_input_nationality_0'>"~title~"</label></h1>|<label class='govuk-label' for='typeahead_input_nationality_1'>"~i18n.directorNationalitySecondNationalityLabel~"</label>|<label class='govuk-label' for='typeahead_input_nationality_2'>"~i18n.directorNationalityThirdNationalityLabel~"</label>" %}
 {% set typeaheadTitle =  aheadTitle | safe %}
+{% set typeahead_descriptor = "nationality|nationality|nationality" %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
@@ -34,12 +35,14 @@
 
         <span class="govuk-caption-l">{{directorName}}</span>
 
+        {% set field_prefix = "nationality" %}
+
         <div id="typeahead-form-group-0" class="govuk-form-group">
-        <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
-        {% set dropdownNumber = "0" %}
-        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
-        {% set errorMessage = dropdownOneError %}
+          <div id="my-autocomplete-container-0" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+          {% set dropdownNumber = "0" %}
+          {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+          {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+          {% set errorMessage = dropdownOneError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
         <p id="nationality-2-link" class="govuk-body" style="display: none;">
@@ -47,12 +50,12 @@
         </p>
 
         <div id="typeahead-form-group-1" class="govuk-form-group">
-        <div id="my-autocomplete-container-1" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
-        {% set dropdownNumber = "1" %}
-        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
-        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
-        {% set errorMessage = dropdownTwoError %}
+          <div id="my-autocomplete-container-1" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+          {% set dropdownNumber = "1" %}
+          {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+          {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
+          {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+          {% set errorMessage = dropdownTwoError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
         <p id= "nationality-3-link" class="govuk-body" style="display: none;">
@@ -60,12 +63,12 @@
         </p>
 
         <div id="typeahead-form-group-2" class="govuk-form-group">
-        <div id="my-autocomplete-container-2" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
-        {% set dropdownNumber = "2" %}
-        {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
-        {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
-        {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
-        {% set errorMessage = dropdownThreeError %}
+          <div id="my-autocomplete-container-2" class="autocomplete-wrapper govuk-!-width-two-thirds"></div>
+          {% set dropdownNumber = "2" %}
+          {% set dropdownTitle = typeaheadTitle.split("|")[dropdownNumber] %}
+          {% set dropdownHint = typeaheadHint.split("|")[dropdownNumber] %}
+          {% set dropdownValue = typeahead_value.split("|")[dropdownNumber] %}
+          {% set errorMessage = dropdownThreeError %}
         {% include "includes/inputs/fields/typeahead-noscript-input.html" %}
         </div>
 
