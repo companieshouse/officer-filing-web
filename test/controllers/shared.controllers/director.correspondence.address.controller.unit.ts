@@ -117,8 +117,9 @@ describe("Director correspondence address controller tests", () => {
         }
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineTwo);
+        // transformed address field values
         expect(response.text).toContain("Locality");
-        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+        expect(response.text).toContain("Region");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
@@ -144,8 +145,9 @@ describe("Director correspondence address controller tests", () => {
         }
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
         expect(response.text).not.toContain("Line2");
+        // transformed address field values
         expect(response.text).toContain("Locality");
-        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+        expect(response.text).toContain("Region");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
         expect(response.text).toContain(ACCORDION_INFORMATION);
@@ -194,6 +196,7 @@ describe("Director correspondence address controller tests", () => {
         expect(response.text).toContain("Select the director’s correspondence address");
         expect(response.text).toContain(PAGE_HEADING);
         expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
+        //care of
         if(url == PAGE_URL) {
           // from officer filing
           expect(response.text).toContain("John Doe");
@@ -203,8 +206,9 @@ describe("Director correspondence address controller tests", () => {
         }
         expect(mockGetOfficerFiling).toHaveBeenCalled();
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.addressLineOne);
+        // transformed address field values
         expect(response.text).toContain("Locality");
-        expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.region);
+        expect(response.text).toContain("Region");
         expect(response.text).toContain(validCompanyProfile.registeredOfficeAddress.postalCode);
         expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
       });
