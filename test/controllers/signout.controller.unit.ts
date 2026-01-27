@@ -91,7 +91,7 @@ describe("Signout controller tests", () => {
       }
       const url = "http://example.com/test"
       
-      expect(() => safeRedirect(res as any as Response, url)).toThrowError(new Error('Security failure with URL ' + url))
+      expect(() => safeRedirect(res as any as Response, url)).toThrow(new Error('Security failure with URL ' + url))
       expect(res.redirect).not.toHaveBeenCalled()
     });
   });

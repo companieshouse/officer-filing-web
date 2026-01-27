@@ -44,9 +44,9 @@ describe("Test validation status service", () => {
     const session =  getSessionRequest();
     const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
 
-    expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
-    expect(mockLoggerError).toBeCalledTimes(1);
-    expect(mockLoggerError).toBeCalledWith("Validation errors: " + JSON.stringify(mockValidationStatusResponse.errors));
+    expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockLoggerError).toHaveBeenCalledTimes(1);
+    expect(mockLoggerError).toHaveBeenCalledWith("Validation errors: " + JSON.stringify(mockValidationStatusResponse.errors));
     expect(response).toEqual(mockValidationStatusResponse);
   });
 
@@ -61,8 +61,8 @@ describe("Test validation status service", () => {
     const session =  getSessionRequest();
     const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID, false);
 
-    expect(mockGetValidationStatus).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
-    expect(mockLoggerError).not.toBeCalled();
+    expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockLoggerError).not.toHaveBeenCalledWith();
     expect(response).toEqual(mockValidationStatusResponse);
   });
 
@@ -85,7 +85,7 @@ describe("Test validation status service", () => {
       actualMessage = err.message;
     }
 
-    expect(mockLoggerError).not.toBeCalled();
+    expect(mockLoggerError).not.toHaveBeenCalledWith();
     expect(actualMessage).toBeTruthy();
     expect(actualMessage).toEqual(expectedMessage);
   });

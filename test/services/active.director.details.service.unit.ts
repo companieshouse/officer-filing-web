@@ -39,7 +39,7 @@ describe("Test active director details service", () => {
     const session =  getSessionRequest();
     const response = await getListActiveDirectorDetails(session, TRANSACTION_ID);
 
-    expect(mockGetActiveOfficerDetails).toBeCalledWith(TRANSACTION_ID);
+    expect(mockGetActiveOfficerDetails).toHaveBeenCalledWith(TRANSACTION_ID);
     expect(response).toEqual(mockCompanyOfficer);
   });
 

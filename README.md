@@ -9,7 +9,7 @@ CHS Web front end for officer filings:
 This Node / Express / Typescript Web app sits in from of officer-filing-api and uses Nunjucks and the GOV.UK design toolkit to implement these three Web journeys.
 
 ## DISCLAIMER ***********************************************************************
-Due to a problem with where GOV-UK Frontened looks for it's fonts, we have had to add an override
+Due to a problem with where GOV-UK Frontend looks for its fonts, we have had to add an override
 in styles.html.
 The problem was that we are using the newer version of GOVUK-Frontend. Version 4.6.0.
 
@@ -28,8 +28,19 @@ will mean it will stop working.
 
 In order to run the service locally you will need the following:
 
-- [NodeJS](https://nodejs.org/en/)
+- [NodeJS](https://nodejs.org/en/) v24 (engines block in package.json is used to enforce this)
+- npm >=v10 (engines block in package.json is used to enforce this)
 - [Git](https://git-scm.com/downloads)
+
+Having cloned the project into the working directory, run the following commands:
+
+```shell
+cd officer-filing-web
+npm install
+make clean build
+```
+
+The build step will additionally clone the required [companieshouse/api-enumerations](https://github.com/companieshouse/api-enumerations/) submodule.
 
 ### Getting started
 

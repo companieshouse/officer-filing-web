@@ -40,7 +40,7 @@ describe("Test check your answers service", () => {
     const session =  getSessionRequest();
     const response = await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
 
-    expect(mockGetDirectorAndTerminationDate).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockGetDirectorAndTerminationDate).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
     expect(response).toEqual(mockCompanyOfficer);
   });
 

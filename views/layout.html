@@ -1,4 +1,5 @@
-{% extends "govuk/template.njk" %}
+{# Extends the Companies House Page Template: https://github.com/companieshouse/ch-node-utils/blob/main/docs/page-template.md #}
+{% extends "ch-node-utils/templates/layouts/template.njk" %}
 
 {% from "govuk/components/back-link/macro.njk"           import govukBackLink %}
 {% from "govuk/components/button/macro.njk"              import govukButton %}
@@ -17,6 +18,8 @@
 {% from "govuk/components/panel/macro.njk"               import govukPanel %}
 {% from "govuk/components/pagination/macro.njk"          import govukPagination %}
 {% from "govuk/components/select/macro.njk"              import govukSelect %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/footer/macro.njk"             import govukFooter %}
 {% from "web-security-node/components/csrf-token-input/macro.njk" import csrfTokenInput %}
 {% import "add-lang-to-url.njk" as lang2url %}
 
@@ -52,6 +55,8 @@
 {% endblock %}
 
 {% block header %}
+{{ super() }}
+
 {% if CH01_ACTIVE === "true" %}
   {% set serviceName = i18n.appTitle %}
 {% elif AP01_ACTIVE === "true" %}
@@ -60,12 +65,19 @@
   {% set serviceName = i18n.appTitleJustRemove %}
 {% endif %}
 
-  {{ govukHeader({
+  {{ govukServiceNavigation({
+    homepageUrl: "https://www.gov.uk",
+    serviceName: serviceName,
+    serviceUrl: "/appoint-update-remove-company-officer",
+    containerClasses: "govuk-width-container"
+  }) }}
+
+  <!-- {{ govukHeader({
     homepageUrl: "https://www.gov.uk",
     serviceName: serviceName,
     serviceUrl: "/appoint-update-remove-company-officer",
     containerClasses: "govuk-width-container"})
-  }}
+  }} -->
 {% endblock %}
 
 {% block beforeContent %}
