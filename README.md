@@ -161,7 +161,7 @@ Path                                                                   | Method 
 *` SUBMISSION_URL/date-director-removed `*                             | GET      | Enter director removal date
 *` SUBMISSION_URL/date-director-removed `*                             | POST     | Redirect to confirmation screen
 *` SUBMISSION_URL/remove-director-check-answers `*                     | GET      | Confirm director removal details
-*` SUBMISSION_URL/remove-director-check-answers `*                     | POST     | Submit details of change and redirect to sbmission details
+*` SUBMISSION_URL/remove-director-check-answers `*                     | POST     | Submit details of change and redirect to submission details
 *` SUBMISSION_URL/remove-director-submitted `*                         | GET      | Submission details
 
 *` SUBMISSION_URL/trading-status `*                                    | -

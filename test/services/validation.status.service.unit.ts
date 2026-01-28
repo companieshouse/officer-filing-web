@@ -74,7 +74,10 @@ describe("Test validation status service", () => {
       errors: [{ error: errorMessage }]
     };
 
-    mockGetValidationStatus.mockReturnValueOnce(errorResponse);
+    mockGetValidationStatus.mockReturnValueOnce({
+      httpStatusCode: errorResponse.httpStatusCode,
+      errors: errorResponse.errors
+    });
     const session =  getSessionRequest();
     const expectedMessage = "Error retrieving validation status: " + JSON.stringify(errorResponse);
     let actualMessage;
@@ -82,11 +85,12 @@ describe("Test validation status service", () => {
     try {
       await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
     } catch (err) {
-      actualMessage = err.message;
+      actualMessage = (err as Error).message;
     }
 
-    expect(mockLoggerError).not.toHaveBeenCalledWith();
+    expect(mockLoggerError).not.toHaveBeenCalled();
     expect(actualMessage).toBeTruthy();
     expect(actualMessage).toEqual(expectedMessage);
   });
+
 });

@@ -12,7 +12,6 @@ import { logger } from "./utils/logger";
 import { commonTemplateVariablesMiddleware } from "./middleware/common.variables.middleware";
 import { AP01_ACTIVE, CACHE_SERVER, CH01_ACTIVE } from "./utils/properties";
 import { SessionStore } from "@companieshouse/node-session-handler";
-import { getGOVUKFrontendVersion } from "@companieshouse/ch-node-utils";
 import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
 import Redis from "ioredis";
 
@@ -43,8 +42,6 @@ nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
 nunjucksEnv.addGlobal("CH01_ACTIVE", CH01_ACTIVE);
 nunjucksEnv.addGlobal('publicRegisterInformation', "What information we'll show on the public online register");
-nunjucksEnv.addGlobal("govukFrontendVersion", getGOVUKFrontendVersion());
-nunjucksEnv.addGlobal("govukRebrand", true);
 
 app.enable("trust proxy");
 app.use(express.json());

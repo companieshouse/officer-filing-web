@@ -60,7 +60,7 @@ describe("Test check your answers service", () => {
     try {
       await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
     } catch (err) {
-      actualMessage = err.message;
+      actualMessage = (err as Error).message;
     }
 
     expect(actualMessage).toBeTruthy();
