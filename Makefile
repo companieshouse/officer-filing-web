@@ -33,7 +33,7 @@ test-unit:
 	npm run test
 
 .PHONY: dependency-check
-security-check:
+dependency-check:
 	npm audit --audit-level=high
 
 .PHONY: package
