@@ -20,7 +20,7 @@ describe("Test stop page validation service", () => {
 
     const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
     expect(response).toEqual(false);
   });
 
@@ -30,7 +30,7 @@ describe("Test stop page validation service", () => {
 
     const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
     expect(response).toEqual(true);
   });
 
@@ -40,7 +40,7 @@ describe("Test stop page validation service", () => {
 
     const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
     expect(response).toEqual(true);
   });
 
@@ -50,7 +50,7 @@ describe("Test stop page validation service", () => {
 
     const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toBeCalledWith(COMPANY_NUMBER);
+    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
     expect(response).toEqual(true);
   });
 });

@@ -240,11 +240,11 @@ describe("Director residential address manual controller tests", () => {
         const response = await request(app).post(url).send(validData);
 
         if (url === UPDATE_PAGE_URL || url === UPDATE_PAGE_URL_WELSH) {
-          expect(mockGetCompanyAppointmentFullRecord).toBeCalledWith(expect.any(Object), COMPANY_NUMBER, "123");
+          expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalledWith(expect.any(Object), COMPANY_NUMBER, "123");
         } else {
-          expect(mockGetCompanyAppointmentFullRecord).not.toBeCalled();
+          expect(mockGetCompanyAppointmentFullRecord).not.toHaveBeenCalled();
         }
-        expect(mockPatchOfficerFiling).toBeCalledWith(
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
           expect.objectContaining({}),
           TRANSACTION_ID,
           SUBMISSION_ID,

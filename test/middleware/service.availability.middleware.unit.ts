@@ -1,4 +1,13 @@
-jest.mock("ioredis");
+import { Request, Response, NextFunction } from "express";
+
+jest.mock("ioredis", () => {
+  return jest.fn().mockImplementation(() => ({
+    on: jest.fn(),
+    set: jest.fn(),
+    get: jest.fn(),
+  }));
+});
+
 jest.mock("../../src/utils/feature.flag");
 jest.mock("../../src/middleware/session.middleware", () => {
   return {

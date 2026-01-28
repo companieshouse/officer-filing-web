@@ -59,7 +59,7 @@ describe("officer filing service tests", () => {
       mockGetOfficerFiling.mockResolvedValueOnce(undefined);
 
       await expect(getOfficerFiling(session, TRANSACTION_ID, SUBMISSION_ID)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing GET request returned no response for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing GET request returned no response for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns a status greater than 400", async () => {
@@ -68,7 +68,7 @@ describe("officer filing service tests", () => {
       });
 
       await expect(getOfficerFiling(session, TRANSACTION_ID, SUBMISSION_ID)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Http status code 404 - Failed to get officer filing for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Http status code 404 - Failed to get officer filing for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns no resource", async () => {
@@ -77,7 +77,7 @@ describe("officer filing service tests", () => {
       });
 
       await expect(getOfficerFiling(session, TRANSACTION_ID, SUBMISSION_ID)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing API GET request returned no resource for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing API GET request returned no resource for transaction 2222");
     });
   });
 
@@ -105,7 +105,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing POST request returned no response for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing POST request returned no response for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns a status greater than 400", async () => {
@@ -117,7 +117,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Http status code 404 - Failed to post officer filing for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Http status code 404 - Failed to post officer filing for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns no resource", async () => {
@@ -129,7 +129,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(postOfficerFiling(session, TRANSACTION_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing API POST request returned no resource for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing API POST request returned no resource for transaction 2222");
     });
 
   });
@@ -143,7 +143,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing PATCH request returned no response for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing PATCH request returned no response for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns a status greater than 400", async () => {
@@ -155,7 +155,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Http status code 404 - Failed to patch officer filing for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Http status code 404 - Failed to patch officer filing for transaction 2222");
     });
 
     it("Should throw an error when officer filing api returns no resource", async () => {
@@ -167,7 +167,7 @@ describe("officer filing service tests", () => {
       };
 
       await expect(patchOfficerFiling(session, TRANSACTION_ID, APPOINTMENT_ID, officerFiling)).rejects.toThrow(ERROR);
-      expect(mockCreateAndLogError).toBeCalledWith("Officer filing API PATCH request returned no resource for transaction 2222");
+      expect(mockCreateAndLogError).toHaveBeenCalledWith("Officer filing API PATCH request returned no resource for transaction 2222");
     });
   });
 });

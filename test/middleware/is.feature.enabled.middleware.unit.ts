@@ -33,11 +33,11 @@ describe("IsFeatureEnabled Middleware tests", () => {
 
     expect(actual).toBe(expectResult);
 
-    expect(isActiveFeature as jest.Mock).toBeCalledWith('false');
+    expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('false');
 
     expect(res.status).toHaveBeenCalledTimes(1);
-    expect(res.status).toBeCalledWith(constants.HTTP_STATUS_NOT_FOUND);
-    expect(res.render).toBeCalledWith(Templates.SERVICE_OFFLINE_MID_JOURNEY);
+    expect(res.status).toHaveBeenCalledWith(constants.HTTP_STATUS_NOT_FOUND);
+    expect(res.render).toHaveBeenCalledWith(Templates.SERVICE_OFFLINE_MID_JOURNEY);
   });
 
   test("feature not enabled, should have 404 response status", () => {
@@ -50,9 +50,9 @@ describe("IsFeatureEnabled Middleware tests", () => {
 
     expect(actual).toBe(expectResult);
 
-    expect(isActiveFeature as jest.Mock).toBeCalledWith('true');
+    expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('true');
 
-    expect(res.status).not.toBeCalled();
-    expect(res.render).not.toBeCalled();
+    expect(res.status).not.toHaveBeenCalledWith();
+    expect(res.render).not.toHaveBeenCalledWith();
   });
 });

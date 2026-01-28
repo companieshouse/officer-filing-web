@@ -245,7 +245,7 @@ describe("Director correspondence address array page controller tests", () => {
           .post(url)
           .send({ "address_array": "1" })
 
-        expect(mockPatchOfficerFiling).toBeCalledWith(
+        expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
           expect.anything(),
           TRANSACTION_ID,
           SUBMISSION_ID,

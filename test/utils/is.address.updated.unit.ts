@@ -26,7 +26,7 @@ describe("isCorrespondenceAddressUpdate tests", () => {
     companyAppointment.serviceAddressIsSameAsRegisteredOfficeAddress = appointmentFlag;
 
     const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
-    expect(mockCompareAddress).not.toBeCalled();
+    expect(mockCompareAddress).not.toHaveBeenCalledWith();
     expect(isAddressUpdated).toBe(result);
   });
 
@@ -51,7 +51,7 @@ describe("isCorrespondenceAddressUpdate tests", () => {
 
     mockCompareAddress.mockReturnValue(!result);
     const isAddressUpdated = checkIsCorrespondenceAddressUpdated(officerFiling, companyAppointment);
-    expect(mockCompareAddress).toBeCalledWith(officerFiling.serviceAddress, companyAppointment.serviceAddress);
+    expect(mockCompareAddress).toHaveBeenCalledWith(officerFiling.serviceAddress, companyAppointment.serviceAddress);
     expect(isAddressUpdated).toBe(result);
   });
 });
@@ -75,7 +75,7 @@ describe("checkIsResidentialAddressUpdated tests", () => {
     companyAppointment.residentialAddressIsSameAsServiceAddress = appointmentFlag;
 
     const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
-    expect(mockCompareAddress).not.toBeCalled();
+    expect(mockCompareAddress).not.toHaveBeenCalledWith();
     expect(isAddressUpdated).toBe(result);
   });
 
@@ -100,7 +100,7 @@ describe("checkIsResidentialAddressUpdated tests", () => {
 
     mockCompareAddress.mockReturnValue(!result);
     const isAddressUpdated = checkIsResidentialAddressUpdated(officerFiling, companyAppointment);
-    expect(mockCompareAddress).toBeCalledWith(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
+    expect(mockCompareAddress).toHaveBeenCalledWith(officerFiling.residentialAddress, companyAppointment.usualResidentialAddress);
     expect(isAddressUpdated).toBe(result);
   });
 });
