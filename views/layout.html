@@ -17,6 +17,7 @@
 {% from "govuk/components/panel/macro.njk"               import govukPanel %}
 {% from "govuk/components/pagination/macro.njk"          import govukPagination %}
 {% from "govuk/components/select/macro.njk"              import govukSelect %}
+
 {% from "web-security-node/components/csrf-token-input/macro.njk" import csrfTokenInput %}
 {% import "add-lang-to-url.njk" as lang2url %}
 
@@ -52,6 +53,7 @@
 {% endblock %}
 
 {% block header %}
+
 {% if CH01_ACTIVE === "true" %}
   {% set serviceName = i18n.appTitle %}
 {% elif AP01_ACTIVE === "true" %}
@@ -60,12 +62,13 @@
   {% set serviceName = i18n.appTitleJustRemove %}
 {% endif %}
 
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk",
-    serviceName: serviceName,
-    serviceUrl: "/appoint-update-remove-company-officer",
-    containerClasses: "govuk-width-container"})
-  }}
+{{ govukHeader({
+  homepageUrl: "https://www.gov.uk",
+  serviceName: serviceName,
+  serviceUrl: "/appoint-update-remove-company-officer",
+  containerClasses: "govuk-width-container"})
+}}
+
 {% endblock %}
 
 {% block beforeContent %}

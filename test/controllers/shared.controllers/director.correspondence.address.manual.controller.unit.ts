@@ -317,7 +317,7 @@ describe("Director correspondence address controller tests", () => {
         const response = await request(app).post(url).send(validData);
 
         if (url === UPDATE_PAGE_URL) {
-          expect(mockPatchOfficerFiling).toBeCalledWith(
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,
@@ -335,7 +335,7 @@ describe("Director correspondence address controller tests", () => {
             })
           )
         } else {
-          expect(mockPatchOfficerFiling).toBeCalledWith(
+          expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
             expect.objectContaining({}),
             TRANSACTION_ID,
             SUBMISSION_ID,

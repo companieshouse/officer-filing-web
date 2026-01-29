@@ -24,5 +24,6 @@ module.exports = {
   globalSetup: './test/global.setup.ts',
   moduleNameMapper: {
     '^axios$': require.resolve('axios'),
+    '^@opentelemetry/otlp-exporter-base/node-http$': '<rootDir>/node_modules/@opentelemetry/otlp-exporter-base/build/src/index-node-http.js',
   }
 }

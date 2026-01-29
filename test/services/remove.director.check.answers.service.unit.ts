@@ -40,7 +40,7 @@ describe("Test check your answers service", () => {
     const session =  getSessionRequest();
     const response = await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
 
-    expect(mockGetDirectorAndTerminationDate).toBeCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+    expect(mockGetDirectorAndTerminationDate).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
     expect(response).toEqual(mockCompanyOfficer);
   });
 
@@ -60,7 +60,7 @@ describe("Test check your answers service", () => {
     try {
       await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
     } catch (err) {
-      actualMessage = err.message;
+      actualMessage = (err as Error).message;
     }
 
     expect(actualMessage).toBeTruthy();

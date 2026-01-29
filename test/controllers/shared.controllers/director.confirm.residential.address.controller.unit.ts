@@ -226,7 +226,7 @@ describe("Director confirm residential address controller tests", () => {
 
         const response = await request(app).post(url);
         if (url === UPDATE_PAGE_URL) {
-          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
           expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
             expect.objectContaining({}),
             TRANSACTION_ID,
@@ -257,7 +257,7 @@ describe("Director confirm residential address controller tests", () => {
         mockCheckIsResidentialAddress.mockReturnValue(false);
         const response = await request(app).post(url);
         if (url === UPDATE_PAGE_URL) {
-          expect(mockPatchOfficerFiling).toBeCalledTimes(1);
+          expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
           expect(mockPatchOfficerFiling).toHaveBeenCalledWith(
             expect.objectContaining({}),
             TRANSACTION_ID,
