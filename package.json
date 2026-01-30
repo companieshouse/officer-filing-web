@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Web front end for Directors Filing service",
   "main": "app.ts",
-      "engines": {
-        "node": ">=24.0.0",
-        "npm": ">=10"
-    },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "start": "node dist/bin/www.js",
     "chs-dev": "nodemon --legacy-watch",
@@ -57,9 +57,9 @@
     "@types/nunjucks": "^3.2.6",
     "@types/supertest": "^2.0.16",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "eslint": "^7.32.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.39.2",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
     "sonarqube-scanner": "3.5.0",
@@ -67,8 +67,5 @@
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
-  },
-  "ncu": {
-    "target": "minor"
   }
 }
