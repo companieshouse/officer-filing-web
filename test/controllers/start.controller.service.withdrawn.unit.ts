@@ -10,6 +10,8 @@ jest.mock('../../src/utils/properties', () => ({
   TM01_ACTIVE: "true",
   AP01_ACTIVE: "true",
   CH01_ACTIVE: "true",
+  COUNTRY_LIST: "England;France",
+  UK_COUNTRY_LIST: "England;Scotland;Wales;Northern Ireland;United Kingdom;Cymru",
 }));
 
 describe("start controller SERVICE WITHDRAWN tests", () => {

@@ -172,4 +172,17 @@ describe("Input validation tests", () => {
 		expect(jsValidationErrors).toHaveLength(0);
 	});
 
+test("Should populate array with validation when 'country' is a substring of a country", () => {
+		const serviceAddress : Address =  {
+			premises: "86",
+			addressLine1: "East Cowley Lane",
+			addressLine2: "Some address line 2",
+			locality: "Locality A",
+			region: "Region B",
+			country: "Fr",
+			postalCode: "",
+		}
+		const jsValidationErrors = validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation);
+		expect(jsValidationErrors).toHaveLength(1);
+       });
 });

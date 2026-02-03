@@ -1,11 +1,13 @@
 import { Address } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 import { ManualAddressValidationType, ValidationError } from "../model/validation.model";
 import { COUNTRY_LIST, UK_COUNTRY_LIST } from "../utils/properties";
-import { REGEX_FOR_VALID_CHARACTERS, REGEX_FOR_VALID_UK_POSTCODE } from "./validation";
+import { PROPERTY_DELIMITER, REGEX_FOR_VALID_CHARACTERS, REGEX_FOR_VALID_UK_POSTCODE } from "./validation";
 
 const PREMISE_ALLOWED_LENGTH = 200;
 const POSTCODE_ALLOWED_LENGTH = 20;
 const ALLOWED_LENGTH = 50;
+const COUNTRY_ARRAY = COUNTRY_LIST.split(PROPERTY_DELIMITER);
+const UK_COUNTRY_ARRAY = UK_COUNTRY_LIST.split(PROPERTY_DELIMITER);
 
 export const validateManualAddress = (address: Address, manualAddressValidationType: ManualAddressValidationType): ValidationError[] => {
 	let validationErrors: ValidationError[] = [];
@@ -179,7 +181,7 @@ export const validatePostcode = (postcode: string, country: string, manualAddres
 		return validationErrors;
 	}
 
-	if (country && UK_COUNTRY_LIST.includes(country) && !REGEX_FOR_VALID_UK_POSTCODE.exec(postcode)) {
+	if (country && UK_COUNTRY_ARRAY.includes(country) && !REGEX_FOR_VALID_UK_POSTCODE.exec(postcode)) {
 		validationErrors.push(manualAddressValidationType.InvalidValue.Postcode);
 	}
 
@@ -193,7 +195,7 @@ export const validatePostcode = (postcode: string, country: string, manualAddres
  * @param validationErrors
  */
 export const validateCountry = (country: string, manualAddressValidationType: ManualAddressValidationType, validationErrors: ValidationError[]): ValidationError[] => {
-	if(!COUNTRY_LIST.includes(country)) {
+	if(!COUNTRY_ARRAY.includes(country)) {
 		validationErrors.push(manualAddressValidationType.InvalidValue.Country);
 	}
 
@@ -210,11 +212,11 @@ export const validateCountryAndPostcode = (country: string, postcode: string, ma
 	if (!country) {
 			validationErrors.push(manualAddressValidationType.MissingValue.Country);
 			isPostcodeMandatory = true;
-	} else if (UK_COUNTRY_LIST.includes(country)) {
+	} else if (UK_COUNTRY_ARRAY.includes(country)) {
 			isPostcodeMandatory = true;
 	}
 
-	// Validate country after checking if it's in the UK_COUNTRY_LIST
+	// Validate country after checking if it's in the UK_COUNTRY_ARRAY
 	if (country) {
 			validationErrors = validateCountry(country, manualAddressValidationType, validationErrors);
 	}
