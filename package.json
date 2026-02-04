@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node dist/bin/www.js",
     "chs-dev": "nodemon --legacy-watch",
+    "prebuild": "rm -rf ./dist",
     "build": "tsc && cp -r views dist/",
     "test": "jest",
     "lint": "eslint '{src,test}/**/*'",
