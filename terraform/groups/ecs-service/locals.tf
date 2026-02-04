@@ -9,7 +9,7 @@ locals {
   docker_repo               = "officer-filing-web"
   lb_listener_rule_priority = 40
   lb_listener_paths         = ["/appoint-update-remove-company-officer*"]
-  healthcheck_path          = "/appoint-update-remove-company-officer" #healthcheck path for officer filing web
+  healthcheck_path          = "/appoint-update-remove-company-officer_dummmy" #healthcheck path for officer filing web
   healthcheck_matcher       = "200" # no explicit healthcheck in this service yet
 
   kms_alias       = "alias/${var.aws_profile}/environment-services-kms"
