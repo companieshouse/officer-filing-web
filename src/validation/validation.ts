@@ -31,6 +31,8 @@ export const REGEX_FOR_NAME_TITLE = /^[ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈ�
  */
 export const REGEX_FOR_VALID_FORMER_NAMES = /^[ÀÁÂÃÄÅĀĂĄÆǼÇĆĈĊČÞĎÐÈÉÊËĒĔĖĘĚĜĞĠĢĤĦÌÍÎÏĨĪĬĮİĴĶĹĻĽĿŁÑŃŅŇŊÒÓÔÕÖØŌŎŐǾŒŔŖŘŚŜŞŠŢŤŦÙÚÛÜŨŪŬŮŰŲŴẀẂẄỲÝŶŸŹŻŽ'A-Za-zſƒǺàáâãäåāăąæǽçćĉċčþďðèéêëēĕėęěĝģğġĥħìíîïĩīĭįĵķĺļľŀłñńņňŋòóôõöøōŏőǿœŕŗřśŝşšţťŧùúûüũūŭůűųŵẁẃẅỳýŷÿźżž, -]*$/;
 
+export const PROPERTY_DELIMITER = ';';
+
 /**
  * Format the validation errors to display to the user. Map the error message key to the actual error message using api-enumerations.
  * @param validationErrors Contains the error message, the fields to highlight, and the field to link when the error message is clicked
