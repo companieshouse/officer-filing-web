@@ -12,15 +12,7 @@ import app from "../app";
  * Get port from environment and store in Express.
  */
 
-const argv = yargs
-  .option("PORT", {
-    type: "number",
-    describe: "Port number to run the server",
-    demandOption: true, // Ensure PORT is provided
-  })
-  .parseSync();
-
-const port = normalizePort(argv.PORT || argv._[0]);
+const port = normalizePort((yargs.argv as any)?.PORT || (yargs.argv as any)?._?.[0]);
 app.set("port", port);
 
 /**
