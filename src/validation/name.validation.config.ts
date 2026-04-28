@@ -102,4 +102,4 @@ export const NameValidation: GenericValidationType = {
             link: DirectorField.PREVIOUS_NAMES
         }
     }
-}
+};

@@ -89,10 +89,10 @@ export const RemovalDateValidation: DateValidationType = {
             source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
             link: RemovalDateField.DAY
         },
-        DateOfChangeBeforeAppointment :{
+        DateOfChangeBeforeAppointment: {
             messageKey: RemovalDateErrorMessageKey.AFTER_APPOINTMENT_DATE,
             source: [RemovalDateField.DAY, RemovalDateField.MONTH, RemovalDateField.YEAR],
             link: RemovalDateField.DAY
         }
     }
-}
+};

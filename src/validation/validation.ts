@@ -40,33 +40,33 @@ export const PROPERTY_DELIMITER = ';';
  * @returns A validation errors object to display on the page
  */
 export function formatValidationErrors(validationErrors: ValidationError[], lang?: string): FormattedValidationErrors {
-  const errors = { errorList: [] } as any;
-  const localesService = getLocalesService();
-  validationErrors.forEach(validationResult => {
-    let errorMessage = validationResult.messageKey;
-    if (lang != undefined) {
-      const error = localesService.i18nCh.resolveSingleKey("error-" + validationResult.messageKey, lang);
-      if (!error?.startsWith("error-")) {
-        errorMessage = error;
-      }
-    }
-    if (errorMessage == validationResult.messageKey) {
-      errorMessage = lookupWebValidationMessage(validationResult.messageKey);
-    }
-    if (errorMessage == validationResult.messageKey) {
-      errorMessage = lookupAPIValidationMessage(validationResult.messageKey)
-    }
-    
-    // errors.errorList[] relates to the linked error messages at the top of the page
-    errors.errorList.push({ href: '#' + validationResult.link, text: errorMessage });
-    
-    // errors[] relates to the highlighted fields and the message just above those fields
-    validationResult.source.forEach(field => {
-      errors[field] = { text: errorMessage };
-    });
-  });
+    const errors = { errorList: [] } as any;
+    const localesService = getLocalesService();
+    validationErrors.forEach(validationResult => {
+        let errorMessage = validationResult.messageKey;
+        if (lang != undefined) {
+            const error = localesService.i18nCh.resolveSingleKey("error-" + validationResult.messageKey, lang);
+            if (!error?.startsWith("error-")) {
+                errorMessage = error;
+            }
+        }
+        if (errorMessage == validationResult.messageKey) {
+            errorMessage = lookupWebValidationMessage(validationResult.messageKey);
+        }
+        if (errorMessage == validationResult.messageKey) {
+            errorMessage = lookupAPIValidationMessage(validationResult.messageKey);
+        }
 
-  return errors;
+        // errors.errorList[] relates to the linked error messages at the top of the page
+        errors.errorList.push({ href: '#' + validationResult.link, text: errorMessage });
+
+        // errors[] relates to the highlighted fields and the message just above those fields
+        validationResult.source.forEach(field => {
+            errors[field] = { text: errorMessage };
+        });
+    });
+
+    return errors;
 }
 
 /**
@@ -76,23 +76,23 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
  * @returns An allowed error message key, or an empty string
  */
 export const mapValidationResponseToAllowedErrorKey = (validationStatusResponse: ValidationStatusResponse, allowedKeyEnum: any): string => {
-    let listOfValidationKeys = new Array();
+    const listOfValidationKeys = new Array();
     if (!validationStatusResponse?.errors) {
         return "";
     }
 
     // Map the error message returned from officer filing api to an errorMessageKey
     validationStatusResponse.errors.forEach(element => {
-      listOfValidationKeys.push(convertAPIMessageToKey(element.error));
+        listOfValidationKeys.push(convertAPIMessageToKey(element.error));
     });
-  
+
     // If the errorMessageKey of the validation response matches one of the given allowed keys then allow it - these values are ordered by priority
     for (const key of Object.values(allowedKeyEnum)) {
-      if (listOfValidationKeys.includes(key)) {
-        return key as string;
-      }
+        if (listOfValidationKeys.includes(key)) {
+            return key as string;
+        }
     }
-  
+
     return "";
 };
 
@@ -114,9 +114,9 @@ export const createValidationErrorBasic = (messageKey: string, sourceAndLink: st
  * @returns An error object to display on the page
  */
 export const createValidationError = (messageKey: string, source: string[], link: string): ValidationError => {
-  return {
-      messageKey: messageKey,
-      source: source,
-      link: link
-  };
+    return {
+        messageKey: messageKey,
+        source: source,
+        link: link
+    };
 };

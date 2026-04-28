@@ -7,43 +7,43 @@ const EXPECTED_WELSH = "Cyn i chi ddechrau";
 
 describe("start controller tests", () => {
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it("should return start page", async () => {
-    const response = await request(app)
-      .get("/appoint-update-remove-company-officer");
+    it("should return start page", async () => {
+        const response = await request(app)
+            .get("/appoint-update-remove-company-officer");
 
-    expect(response.text).toContain(EXPECTED_TEXT);
-    expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
-    expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=en');
-  });
+        expect(response.text).toContain(EXPECTED_TEXT);
+        expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+        expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=en');
+    });
 
-  it("should return start page when url has trailing slash", async () => {
-    const response = await request(app)
-      .get("/appoint-update-remove-company-officer/");
+    it("should return start page when url has trailing slash", async () => {
+        const response = await request(app)
+            .get("/appoint-update-remove-company-officer/");
 
-    expect(response.text).toContain(EXPECTED_TEXT);
-    expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+        expect(response.text).toContain(EXPECTED_TEXT);
+        expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
- it("Should render the page in welsh", async () => {
-    const response = await request(app)
-      .get("/appoint-update-remove-company-officer/" + "?lang=cy");
+    it("Should render the page in welsh", async () => {
+        const response = await request(app)
+            .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
-    expect(response.text).toContain(EXPECTED_WELSH);
-    expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=cy');
-  });
+        expect(response.text).toContain(EXPECTED_WELSH);
+        expect(response.text).toContain('/appoint-update-remove-company-officer/company-number?lang=cy');
+    });
 
-  it("Should render the external links with expected welsh formats", async () => {
-    const response = await request(app)
-      .get("/appoint-update-remove-company-officer/" + "?lang=cy");
+    it("Should render the external links with expected welsh formats", async () => {
+        const response = await request(app)
+            .get("/appoint-update-remove-company-officer/" + "?lang=cy");
 
-    expect(response.text).toContain(EXPECTED_WELSH);
-    expect(response.text).toContain('/#lang-cy');
-    expect(response.text).toContain('.cy');
-    expect(response.text).toContain('?lang=cy');
-  });
+        expect(response.text).toContain(EXPECTED_WELSH);
+        expect(response.text).toContain('/#lang-cy');
+        expect(response.text).toContain('.cy');
+        expect(response.text).toContain('?lang=cy');
+    });
 
 });

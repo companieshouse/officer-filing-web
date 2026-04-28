@@ -1,7 +1,7 @@
 jest.mock("@companieshouse/web-security-node", () => ({
-  CsrfProtectionMiddleware: jest.fn(() => (req: Request, res: Response, next: NextFunction) => {
-    next();
-  }),
+    CsrfProtectionMiddleware: jest.fn(() => (req: Request, res: Response, next: NextFunction) => {
+        next();
+    }),
 }));
 
 jest.mock("../../src/middleware/csrf.middleware");
@@ -19,8 +19,8 @@ mockCreateCsrfProtectionMiddleware.mockImplementation((sessionStore: any) => {
 });
 
 jest.mock("../../src/middleware/csrf.middleware", () => ({
-  createCsrfProtectionMiddleware: mockCreateCsrfProtectionMiddleware,
-  csrfErrorHandler: mockCsrfErrorHandler,
+    createCsrfProtectionMiddleware: mockCreateCsrfProtectionMiddleware,
+    csrfErrorHandler: mockCsrfErrorHandler,
 }));
 
 export default mockCreateCsrfProtectionMiddleware;

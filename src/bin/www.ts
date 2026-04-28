@@ -33,19 +33,19 @@ server.on("error", onError);
  */
 
 function normalizePort(val) {
-  const portNumber = parseInt(val, 10);
+    const portNumber = parseInt(val, 10);
 
-  if (isNaN(portNumber)) {
+    if (isNaN(portNumber)) {
     // named pipe
-    return val;
-  }
+        return val;
+    }
 
-  if (portNumber >= 0) {
+    if (portNumber >= 0) {
     // port number
-    return portNumber;
-  }
+        return portNumber;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -53,27 +53,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== "listen") {
-    throw error;
-  }
+    if (error.syscall !== "listen") {
+        throw error;
+    }
 
-  const bind = typeof port === "string"
-    ? "Pipe " + port
-    : "Port " + port;
+    const bind = typeof port === "string"
+        ? "Pipe " + port
+        : "Port " + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-      case "EACCES":
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+    case "EACCES":
         // TODO implement logger
         // logger.error(bind + " requires elevated privileges");
         process.exit(1);
         break;
-      case "EADDRINUSE":
+    case "EADDRINUSE":
         // TODO implement logger
         // logger.error(bind + " is already in use");
         process.exit(1);
         break;
-      default:
+    default:
         throw error;
-  }
+    }
 }

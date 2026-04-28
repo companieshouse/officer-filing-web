@@ -19,51 +19,50 @@ const mockToReadableFormat = toReadableFormat as jest.Mock;
 const mockCreateAndLogError = createAndLogError as jest.Mock;
 
 mockCreateApiClient.mockReturnValue({
-  companyProfile: {
-    getCompanyProfile: mockGetCompanyProfile
-  }
+    companyProfile: {
+        getCompanyProfile: mockGetCompanyProfile
+    }
 });
 
 mockCreateAndLogError.mockReturnValue(new Error());
 
 const clone = (objectToClone: any): any => {
-  return JSON.parse(JSON.stringify(objectToClone));
+    return JSON.parse(JSON.stringify(objectToClone));
 };
 
 const localeServices = getLocalesService();
 
-  describe("formatForDisplay tests", () => {
+describe("formatForDisplay tests", () => {
     it("Should convert dates into a readable format", () => {
-      const formattedDate = "15 April 2019";
-      mockToReadableFormat.mockReturnValue(formattedDate);
-      const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
+        const formattedDate = "15 April 2019";
+        mockToReadableFormat.mockReturnValue(formattedDate);
+        const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
 
-      expect(mockToReadableFormat.mock.calls[0][0]).toEqual(validCompanyProfile.dateOfCreation);
-      expect(formattedCompanyProfile.dateOfCreation).toEqual(formattedDate);
+        expect(mockToReadableFormat.mock.calls[0][0]).toEqual(validCompanyProfile.dateOfCreation);
+        expect(formattedCompanyProfile.dateOfCreation).toEqual(formattedDate);
     });
 
     it("Should convert company type into readable format", () => {
-      const formattedCompanyType = "Private limited company";
-      
-      const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
+        const formattedCompanyType = "Private limited company";
 
-      expect(formattedCompanyProfile.type).toEqual(formattedCompanyType);
+        const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
+
+        expect(formattedCompanyProfile.type).toEqual(formattedCompanyType);
     });
 
     it("Should convert company status into readable format", () => {
-      const formattedCompanyStatus = "Active";
+        const formattedCompanyStatus = "Active";
 
-      const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
+        const formattedCompanyProfile: CompanyProfile = formatForDisplay(clone(validCompanyProfile), getLocalesService(), "en");
 
-      expect(formattedCompanyProfile.companyStatus).toEqual(formattedCompanyStatus);
+        expect(formattedCompanyProfile.companyStatus).toEqual(formattedCompanyStatus);
     });
 
-    
 });
 
-    describe("buildAddress tests", () => {
-      it("Should produce HTML splitting the address entries one per line", () => {
-      const address = buildAddress(new Array("Line1", "Line2", "Line3"));
-      expect(address).toEqual("Line1<br>Line2<br>Line3<br>")
+describe("buildAddress tests", () => {
+    it("Should produce HTML splitting the address entries one per line", () => {
+        const address = buildAddress(["Line1", "Line2", "Line3"]);
+        expect(address).toEqual("Line1<br>Line2<br>Line3<br>");
     });
 });

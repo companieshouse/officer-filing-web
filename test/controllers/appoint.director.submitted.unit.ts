@@ -1,4 +1,4 @@
-jest.mock("../../src/utils/feature.flag")
+jest.mock("../../src/utils/feature.flag");
 jest.mock("../../src/services/remove.directors.check.answers.service");
 jest.mock("../../src/services/company.profile.service");
 jest.mock("../../src/services/officer.filing.service");
@@ -20,9 +20,9 @@ const mockGetOfficerFiling = getOfficerFiling as jest.Mock;
 const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 
 mockGetOfficerFiling.mockResolvedValue({
-  referenceAppointmentId: "app1",
-  referenceEtag: "ETAG",
-  resignedOn: "2008-08-08"
+    referenceAppointmentId: "app1",
+    referenceEtag: "ETAG",
+    resignedOn: "2008-08-08"
 });
 mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 const COMPANY_NUMBER = "12345678";
@@ -32,87 +32,87 @@ const PAGE_HEADING = "Appointment submitted";
 const FEEDBACK = "This is a new service. Help us improve it by completing our";
 const ERROR_PAGE_HEADING = "Sorry, there is a problem with this service";
 const PAGE_URL = APPOINT_DIRECTOR_SUBMITTED_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+    .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+    .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+    .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Appoint director submitted controller tests", () => {
 
     beforeEach(() => {
-      mocks.mockCreateSessionMiddleware.mockClear();
-      mockGetOfficerFiling.mockClear();
-      mockGetCompanyProfile.mockClear();
+        mocks.mockCreateSessionMiddleware.mockClear();
+        mockGetOfficerFiling.mockClear();
+        mockGetCompanyProfile.mockClear();
     });
-  
+
     describe("get tests", () => {
-  
-      it("Should navigate to appoint director submitted page", async () => {
-        const response = await request(app).get(PAGE_URL);
-        expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
-        expect(response.text).toContain(PAGE_HEADING);
-      });
 
-      it("Should render the page in welsh", async () => {
-        mockGetOfficerFiling.mockReturnValueOnce({
-          firstName: "John",
-          middleNames: "Elizabeth",
-          lastName: "Doe",
-          appointedOn: "08/08/2008"
-        })
+        it("Should navigate to appoint director submitted page", async () => {
+            const response = await request(app).get(PAGE_URL);
+            expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+            expect(response.text).toContain(PAGE_HEADING);
+        });
 
-        const response = await request(app).get(PAGE_URL + "?lang=cy");
-        expect(response.text).toContain("Penodiad wedi ei gyflwyno");
-      });
+        it("Should render the page in welsh", async () => {
+            mockGetOfficerFiling.mockReturnValueOnce({
+                firstName: "John",
+                middleNames: "Elizabeth",
+                lastName: "Doe",
+                appointedOn: "08/08/2008"
+            });
 
-      it("Should navigate to error page when feature flag is off", async () => {
-        mockIsActiveFeature.mockReturnValueOnce(false);
-        const response = await request(app).get(PAGE_URL);
-  
-        expect(response.text).toContain(ERROR_PAGE_HEADING);
-      });
+            const response = await request(app).get(PAGE_URL + "?lang=cy");
+            expect(response.text).toContain("Penodiad wedi ei gyflwyno");
+        });
 
-      it("Should display the reference number as transaction number", async () => {
-        const response = await request(app).get(PAGE_URL);
-        expect(response.text).toContain("Appointment submitted");
-        expect(response.text).toContain(TRANSACTION_ID);
-      });
+        it("Should navigate to error page when feature flag is off", async () => {
+            mockIsActiveFeature.mockReturnValueOnce(false);
+            const response = await request(app).get(PAGE_URL);
 
-      it("Should display removal summary for the director", async () => {
+            expect(response.text).toContain(ERROR_PAGE_HEADING);
+        });
 
-        mockGetOfficerFiling.mockReturnValueOnce({
-          firstName: "John",
-          middleNames: "Elizabeth",
-          title: "Mrs",
-          lastName: "Doe",
-          appointedOn: "08/08/2008"
-        })
-        const response = await request(app).get(PAGE_URL);
+        it("Should display the reference number as transaction number", async () => {
+            const response = await request(app).get(PAGE_URL);
+            expect(response.text).toContain("Appointment submitted");
+            expect(response.text).toContain(TRANSACTION_ID);
+        });
 
-        expect(mockGetCompanyProfile).toHaveBeenCalled();
-        expect(mockGetOfficerFiling).toHaveBeenCalled();
+        it("Should display removal summary for the director", async () => {
 
-        expect(response.text).toContain("Company name");
-        expect(response.text).toContain("Test Company");
-        expect(response.text).toContain("Company number");
-        expect(response.text).toContain("12345678");
-        expect(response.text).toContain("Name of director");
-        expect(response.text).toContain("John Elizabeth Doe");
-        expect(response.text).toContain("Mrs");
-        expect(response.text).toContain("Date of appointment");
-        expect(response.text).toContain("8 August 2008");
-      });
+            mockGetOfficerFiling.mockReturnValueOnce({
+                firstName: "John",
+                middleNames: "Elizabeth",
+                title: "Mrs",
+                lastName: "Doe",
+                appointedOn: "08/08/2008"
+            });
+            const response = await request(app).get(PAGE_URL);
 
-      it("Should display required subtitles & information", async () => {
-        const response = await request(app).get(PAGE_URL);
+            expect(mockGetCompanyProfile).toHaveBeenCalled();
+            expect(mockGetOfficerFiling).toHaveBeenCalled();
 
-        expect(mockGetCompanyProfile).toHaveBeenCalled();
-        expect(mockGetOfficerFiling).toHaveBeenCalled();
-        expect(response.text).toContain("What happens next");
-        expect(response.text).toContain("We&#39;ll send a confirmation email to you which contains your reference number.");
-        expect(response.text).toContain("What do you want to do next?");
-        expect(response.text).toContain("Feedback");
-        expect(response.text).toContain(FEEDBACK);
-      });
+            expect(response.text).toContain("Company name");
+            expect(response.text).toContain("Test Company");
+            expect(response.text).toContain("Company number");
+            expect(response.text).toContain("12345678");
+            expect(response.text).toContain("Name of director");
+            expect(response.text).toContain("John Elizabeth Doe");
+            expect(response.text).toContain("Mrs");
+            expect(response.text).toContain("Date of appointment");
+            expect(response.text).toContain("8 August 2008");
+        });
+
+        it("Should display required subtitles & information", async () => {
+            const response = await request(app).get(PAGE_URL);
+
+            expect(mockGetCompanyProfile).toHaveBeenCalled();
+            expect(mockGetOfficerFiling).toHaveBeenCalled();
+            expect(response.text).toContain("What happens next");
+            expect(response.text).toContain("We&#39;ll send a confirmation email to you which contains your reference number.");
+            expect(response.text).toContain("What do you want to do next?");
+            expect(response.text).toContain("Feedback");
+            expect(response.text).toContain(FEEDBACK);
+        });
 
     });
 

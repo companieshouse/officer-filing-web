@@ -5,12 +5,12 @@ import { urlParams } from "../types/page.urls";
 import { sanitizeCompanyNumber } from "../utils/url";
 
 export const companyAuthenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const companyNumber: string = sanitizeCompanyNumber(req.params[urlParams.PARAM_COMPANY_NUMBER]);
-  const authMiddlewareConfig: AuthOptions = {
-    chsWebUrl: CHS_URL,
-    returnUrl: req.originalUrl,
-    companyNumber: companyNumber
-  };
+    const companyNumber: string = sanitizeCompanyNumber(req.params[urlParams.PARAM_COMPANY_NUMBER]);
+    const authMiddlewareConfig: AuthOptions = {
+        chsWebUrl: CHS_URL,
+        returnUrl: req.originalUrl,
+        companyNumber: companyNumber
+    };
 
-  return authMiddleware(authMiddlewareConfig)(req, res, next);
+    return authMiddleware(authMiddlewareConfig)(req, res, next);
 };

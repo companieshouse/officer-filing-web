@@ -8,9 +8,9 @@ import { isActiveFeature } from "../utils/feature.flag";
  */
 export const serviceAvailabilityMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
-  if (!isActiveFeature(TM01_ACTIVE)) {
-    return res.render(Templates.SERVICE_OFFLINE_MID_JOURNEY, {EWF_URL});
-  }
+    if (!isActiveFeature(TM01_ACTIVE)) {
+        return res.render(Templates.SERVICE_OFFLINE_MID_JOURNEY, { EWF_URL });
+    }
 
-  return next();
+    return next();
 };

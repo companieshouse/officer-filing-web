@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
-  DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
-  UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
-  DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
+    DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
+    DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+    DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+    DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
+    UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH,
+    UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH,
+    UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH,
+    DIRECTOR_CORRESPONDENCE_ADDRESS_PATH,
+    UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -24,7 +24,7 @@ import { setBackLink, getDirectorNameForUpdateJourney, getDirectorNameForAppoint
 import { validateManualAddress } from "../../validation/manual.address.validation";
 import { CorrespondenceManualAddressValidation } from "../../validation/address.validation.config";
 import { logger } from "../../utils/logger";
-import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang} from "../../utils/localise";
+import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../../utils/localise";
 import { DirectorField } from "../../model/director.model";
 import { CorrespondenceAddressValidation } from "../../validation/director.correspondence.address.config";
 import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-appointments/types";
@@ -35,109 +35,109 @@ const directorChoiceHtmlField: string = DirectorField.CORRESPONDENCE_ADDRESS_RAD
 const registeredOfficerAddressValue: string = "director_registered_office_address";
 
 export const getDirectorCorrespondenceAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
-  try {
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-    const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
-    const directorName = isUpdate ? 
-      await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
-      await getDirectorNameForAppointJourney(officerFiling);
-    return res.render(templateName, {
-      templateName: templateName,
-      backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
-      optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
-      director_correspondence_address: officerFiling.directorServiceAddressChoice,
-      directorName: formatTitleCase(directorName),
-      directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-      ...getLocaleInfo(locales, lang),
-      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
-      lang
-    });
-  } catch (e) {
-    return next(e);
-  }
+    try {
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
+        const { officerFiling, companyProfile, session } = await urlUtilsRequestParams(req);
+        const directorName = isUpdate ?
+            await getDirectorNameForUpdateJourney(session, req, officerFiling) :
+            await getDirectorNameForAppointJourney(officerFiling);
+        return res.render(templateName, {
+            templateName: templateName,
+            backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
+            optionalBackLinkUrl: officerFiling.checkYourAnswersLink,
+            director_correspondence_address: officerFiling.directorServiceAddressChoice,
+            directorName: formatTitleCase(directorName),
+            directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
+            ...getLocaleInfo(locales, lang),
+            currentUrl: isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+            lang
+        });
+    } catch (e) {
+        return next(e);
+    }
 };
 
 export const postDirectorCorrespondenceAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate: boolean) => {
-  try{
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const lang = selectLang(req.query.lang);
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const lang = selectLang(req.query.lang);
 
-    const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
+        const selectedSraAddressChoice = req.body[directorChoiceHtmlField];
 
-    const companyProfile = await getCompanyProfile(companyNumber);
+        const companyProfile = await getCompanyProfile(companyNumber);
 
-    const validationErrors = buildResidentialAddressValidationErrors(req, CorrespondenceAddressValidation);
+        const validationErrors = buildResidentialAddressValidationErrors(req, CorrespondenceAddressValidation);
 
-    if (validationErrors.length > 0) {
-      const locales = getLocalesService();
-      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const formattedErrors = formatValidationErrors(validationErrors, lang);
-      const directorName = isUpdate ? 
-        await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
-        await getDirectorNameForAppointJourney(officerFiling);
-      return res.render(templateName, {
-        templateName: templateName,
-        backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink,urlUtils.getUrlToPath(backUrlPath, req)), lang),
-        errors: formattedErrors,
-        director_correspondence_address: officerFiling.directorServiceAddressChoice,
-        directorName: formatTitleCase(directorName),
-        directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
-        ...getLocaleInfo(locales, lang),
-        currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
-        lang
-      });
+        if (validationErrors.length > 0) {
+            const locales = getLocalesService();
+            const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+            const formattedErrors = formatValidationErrors(validationErrors, lang);
+            const directorName = isUpdate ?
+                await getDirectorNameForUpdateJourney(session, req, officerFiling) :
+                await getDirectorNameForAppointJourney(officerFiling);
+            return res.render(templateName, {
+                templateName: templateName,
+                backLinkUrl: addLangToUrl(setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(backUrlPath, req)), lang),
+                errors: formattedErrors,
+                director_correspondence_address: officerFiling.directorServiceAddressChoice,
+                directorName: formatTitleCase(directorName),
+                directorRegisteredOfficeAddress: formatDirectorRegisteredOfficeAddress(companyProfile),
+                ...getLocaleInfo(locales, lang),
+                currentUrl: isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+                lang
+            });
+        }
+
+        const officerFilingBody: OfficerFiling = {
+            directorServiceAddressChoice: selectedSraAddressChoice,
+            serviceAddress: undefined
+        };
+
+        const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
+        if (canUseRegisteredOfficeAddress && isUpdate) {
+
+            const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+            const appointmentId = officerFiling.referenceAppointmentId as string;
+            const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+            officerFilingBody.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+                { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFilingBody.serviceAddress },
+                companyAppointment);
+        }
+
+        const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
+        return getRedirectPath(canUseRegisteredOfficeAddress, selectedSraAddressChoice, isUpdate, patchFiling, req, res, lang);
+
+    } catch (e) {
+        next(e);
     }
-
-    const officerFilingBody: OfficerFiling = {
-      directorServiceAddressChoice: selectedSraAddressChoice,
-      serviceAddress: undefined
-    };
-
-    const canUseRegisteredOfficeAddress = verifyUseRegisteredOfficeAddress(selectedSraAddressChoice, companyProfile, officerFilingBody);
-    if (canUseRegisteredOfficeAddress && isUpdate) {
-
-      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-
-      officerFilingBody.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
-        { isServiceAddressSameAsRegisteredOfficeAddress: officerFiling.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFilingBody.serviceAddress }, 
-        companyAppointment);
-    }
-
-    const patchFiling = await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-   
-    return getRedirectPath(canUseRegisteredOfficeAddress, selectedSraAddressChoice, isUpdate, patchFiling, req, res, lang);
-   
-  } catch(e) {
-    next(e);
-  }
 };
 
 const getRedirectPath = (canUseRegisteredOfficeAddress, selectedSraAddressChoice, isUpdate, patchFiling, req, res, lang) => {
-  let path: string;
+    let path: string;
 
-  if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-    path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
+    if (!canUseRegisteredOfficeAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+        path = isUpdate ? UPDATE_DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH : DIRECTOR_LINK_CORRESPONDENCE_ADDRESS_ENTER_MANUALLY_PATH;
+        return redirectToPath(path, req, res, lang);
+    }
+
+    if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+        path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
+        return redirectToPath(path, req, res, lang);
+    }
+
+    if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
+        path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
+        return redirectToPath(path, req, res, lang);
+    }
+
+    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
     return redirectToPath(path, req, res, lang);
-  }
-
-  if (patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-    path = isUpdate ? UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_PATH : DIRECTOR_RESIDENTIAL_ADDRESS_PATH;
-    return redirectToPath(path, req, res, lang);
-  }
-
-  if (!patchFiling.data.isHomeAddressSameAsServiceAddress && selectedSraAddressChoice === registeredOfficerAddressValue) {
-    path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_LINK_PATH;
-    return redirectToPath(path, req, res, lang);
-  }
-
-  path = isUpdate ? UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH : DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH;
-  return redirectToPath(path, req, res, lang);
 };
 
 const redirectToPath = (path: string, req: Request, res: Response, lang: string) => {
@@ -145,34 +145,34 @@ const redirectToPath = (path: string, req: Request, res: Response, lang: string)
 };
 
 const verifyUseRegisteredOfficeAddress = (selectedSraAddressChoice: string, companyProfile: CompanyProfile, officerFilingBody: OfficerFiling): boolean => {
-  let useRegisteredOfficeAddress = false;
-  if (selectedSraAddressChoice === registeredOfficerAddressValue) {
-    const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
-    if (registeredOfficeAddress !== undefined) {
-      const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
-      if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
-        useRegisteredOfficeAddress = true;
-        officerFilingBody.serviceAddress = registeredOfficeAddress;
-      }
+    let useRegisteredOfficeAddress = false;
+    if (selectedSraAddressChoice === registeredOfficerAddressValue) {
+        const registeredOfficeAddress = mapCompanyProfileToOfficerFilingAddress(companyProfile.registeredOfficeAddress);
+        if (registeredOfficeAddress !== undefined) {
+            const registeredOfficeAddressAsCorrespondenceAddressErrors = validateManualAddress(registeredOfficeAddress, CorrespondenceManualAddressValidation);
+            if (registeredOfficeAddressAsCorrespondenceAddressErrors.length === 0) {
+                useRegisteredOfficeAddress = true;
+                officerFilingBody.serviceAddress = registeredOfficeAddress;
+            }
+        }
+        logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for correspondence address");
     }
-    logger.debug((useRegisteredOfficeAddress ? "Can" : "Can't") + " use registered office address copy for correspondence address");
-  }
 
-  return useRegisteredOfficeAddress;
+    return useRegisteredOfficeAddress;
 };
 
 export const buildResidentialAddressValidationErrors = (req: Request, correspondenceAddressValidationType: GenericValidationType): ValidationError[] => {
-  const validationErrors: ValidationError[] = [];
-  if (req.body[directorChoiceHtmlField] === undefined) {
-    validationErrors.push(correspondenceAddressValidationType.AddressBlank.ErrorField);
-  }
-  return validationErrors;
+    const validationErrors: ValidationError[] = [];
+    if (req.body[directorChoiceHtmlField] === undefined) {
+        validationErrors.push(correspondenceAddressValidationType.AddressBlank.ErrorField);
+    }
+    return validationErrors;
 };
 
 const getAppointUrl = (req: Request, lang: string): string => {
-    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
-}
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang);
+};
 
 const getUpdateUrl = (req: Request, lang: string): string => {
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang)
-}
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, req), lang);
+};

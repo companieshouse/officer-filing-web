@@ -18,4 +18,4 @@ export const OccupationValidation: OccupationValidationType = {
             link: DirectorField.OCCUPATION
         }
     }
-}
+};
