@@ -58,15 +58,17 @@
     "@types/nunjucks": "^3.2.6",
     "@types/supertest": "^2.0.16",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^8.58.1",
-    "@typescript-eslint/parser": "^8.58.1",
-    "eslint": "^9.39.4",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@stylistic/eslint-plugin": "^5.9.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "10.0.2",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "sonarqube-scanner": "3.5.0",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "globals": "^17.3.0"
   }
 }
