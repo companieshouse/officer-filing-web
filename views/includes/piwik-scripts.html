@@ -1,14 +1,18 @@
-<script src="{{assetPath}}/javascripts/app/piwik-enable.js"></script>
+<script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+<script src="{{ cdnHost }}/javascripts/vendor/jquery-3.3.1.min.js"></script>
 <script type="application/javascript">
-    window.SERVICE_NAME = 'officer-filing'
+    window.SERVICE_NAME = '{{PIWIK_SERVICE_NAME}}'
     window.PIWIK_URL = '{{ PIWIK_URL }}'
     window.PIWIK_SITE_ID = '{{ PIWIK_SITE_ID }}'
 </script>
+<script src="{{ cdnHost }}/javascripts/app/piwik-enable.js"></script>
+<script src="{{ cdnHost }}/javascripts/app/cookie-consent/cookie-consent-1.0.0.js"></script>
+<script src="{{ cdnHost }}/javascripts/app/cookie-consent/piwik-only-cookie-consent.js"></script>
 <div id="templateName" data-id='{{templateName}}' hidden></div>
-<script src="{{assetPath}}/javascripts/app/cookie-consent/cookie-consent-1.0.0.js"></script>
-<script src="{{assetPath}}/javascripts/app/cookie-consent/matomo-only-cookie-consent.js"></script>
 <noscript>
     <p>
         <img src="{{PIWIK_URL}}/piwik.php?idsite={{PIWIK_SITE_ID}}" style="border:0;" alt="" />
     </p>
 </noscript>
+<script src="{{ cdnHost }}/javascripts/lib/navbar.js"></script>
+<script src="{{ cdnHost }}/javascripts/app/session-timeout.js"></script>

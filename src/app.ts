@@ -14,6 +14,7 @@ import { AP01_ACTIVE, CACHE_SERVER, CH01_ACTIVE } from "./utils/properties";
 import { SessionStore } from "@companieshouse/node-session-handler";
 import { createCsrfProtectionMiddleware, csrfErrorHandler } from "./middleware/csrf.middleware";
 import Redis from "ioredis";
+import { getGOVUKFrontendVersion } from "@companieshouse/ch-node-utils";
 
 const app = express();
 app.disable("x-powered-by");
@@ -26,11 +27,11 @@ const csrfProtectionMiddleware = createCsrfProtectionMiddleware(sessionStore);
 // view engine setup
 const nunjucksEnv = nunjucks.configure([
   "views",
-  "node_modules/govuk-frontend/",
-  "node_modules/govuk-frontend/dist",
+  "node_modules/govuk-frontend/dist/",
+  "node_modules/govuk-frontend/dist/govuk",
   "node_modules/govuk-frontend/components/",
   "node_modules/@companieshouse/ch-node-utils/templates/",
-  "node_modules/@companieshouse/",
+  "node_modules/@companieshouse"
 ], {
   autoescape: true,
   express: app,
@@ -42,13 +43,20 @@ nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
 nunjucksEnv.addGlobal("CH01_ACTIVE", CH01_ACTIVE);
 nunjucksEnv.addGlobal('publicRegisterInformation', "What information we'll show on the public online register");
+nunjucksEnv.addGlobal("govukFrontendVersion", getGOVUKFrontendVersion());
+nunjucksEnv.addGlobal("govukRebrand", true);
 
 app.enable("trust proxy");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("views", [
+    path.join(__dirname, "views"),
+  "../node_modules/govuk-frontend/dist",
+  "node_modules/govuk-frontend/dist",
+  "node_modules/@companieshouse"
+]);
 app.set("view engine", "html");
 
 // apply middleware
