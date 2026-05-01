@@ -1,7 +1,7 @@
-jest.mock("../../src/utils/feature.flag")
+jest.mock("../../src/utils/feature.flag");
 jest.mock("../../src/services/validation.status.service");
 jest.mock("../../src/services/officer.filing.service");
-jest.mock("../../src/services/company.appointments.service")
+jest.mock("../../src/services/company.appointments.service");
 
 import mocks from "../mocks/all.middleware.mock";
 import request from "supertest";
@@ -28,223 +28,223 @@ const SELECT_NATIONALITY_FROM_LIST_ERROR = "Select a nationality from the list";
 const INVALID_NATIONALITY_CHARACTER_ERROR = "Start typing, then choose the director’s nationality from the list";
 
 const DIRECTOR_NATIONALITY_URL = DIRECTOR_NATIONALITY_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+    .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+    .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+    .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
-  const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+const UPDATE_DIRECTOR_NATIONALITY_URL = UPDATE_DIRECTOR_NATIONALITY_PATH
+    .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+    .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+    .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Director nationality controller tests", () => {
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mocks.mockCreateSessionMiddleware.mockClear();
-    mockGetOfficerFiling.mockReturnValue({
-      checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
-      firstName: "John",
-      lastName: "Smith",
-      referenceAppointmentId: "987654321",
-      referenceEtag: "etag",
-      nationality1: "Irish",
-      nationality2: "Congolese (Congo)"
-    });
-    mockPatchOfficerFiling.mockResolvedValueOnce({data:{
-    }});
-  });
-
-  describe("Nationality front end Validation", () => {
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
-    ("should render nationality error if nationality is blank", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:""});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should catch render error", async(url) => {
-      mockGetOfficerFiling.mockReset();
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:""});
-      expect(response.text).toContain(ERROR_PAGE_HEADING);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality is not in the list", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"western"});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality has invalid character", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"N^tion1"});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality 2 has invalid character", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"N^tion1"});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality 2 has invalid character", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"Irish",[DirectorField.NATIONALITY_3]:"N^tion1"});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should not render nationality error if nationality1 is in the list", async (url) => {
-      if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-          forename: "John",
-          otherForenames: "mid",
-          surname: "Smith",
-          nationality: ["Congolese (Congo)"]
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mocks.mockCreateSessionMiddleware.mockClear();
+        mockGetOfficerFiling.mockReturnValue({
+            checkYourAnswersLink: APPOINT_DIRECTOR_CHECK_ANSWERS_PATH,
+            firstName: "John",
+            lastName: "Smith",
+            referenceAppointmentId: "987654321",
+            referenceEtag: "etag",
+            nationality1: "Irish",
+            nationality2: "Congolese (Congo)"
         });
-      }
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"Congolese (Congo)"});
-      expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+        mockPatchOfficerFiling.mockResolvedValueOnce({ data: {
+        } });
     });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should not render nationality error if nationality2 is in the list", async(url) => {
-      if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etag",
-          forename: "John",
-          otherForenames: "mid",
-          surname: "Smith",
-          nationality: ["Irish,Congolese (Congo)"]
+    describe("Nationality front end Validation", () => {
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality is blank", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
         });
-      }
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"Irish",[DirectorField.NATIONALITY_2]:"Citizen of Guinea-Bissau"});
-      expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
-    });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality is contains invalid character", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"Can£adian&"});
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
-    });
-
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should not render nationality error if nationality2 is blank", async (url) => {
-      if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
-        mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
-          etag: "etags",
-          forename: "John",
-          otherForenames: "mid",
-          surname: "Smith",
-          nationality: ["Irish,Congolese (Congo)"]
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should catch render error", async(url) => {
+            mockGetOfficerFiling.mockReset();
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "" });
+            expect(response.text).toContain(ERROR_PAGE_HEADING);
         });
-      }
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:""});
-      expect(response.text).not.toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
-      if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
-        expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-        expect(response.text).toContain("/cannot-use")
-      } else expect(mockPatchOfficerFiling).toHaveBeenCalled();
-    });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality2 is not in the list", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"London"});
-      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality is not in the list", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "western" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality2 contains invalid character", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"(Indian)"});
-      expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality has invalid character", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "N^tion1" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality is duplicated", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"British"});
-      expect(response.text).toContain("Enter a different second nationality");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality 2 has invalid character", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "N^tion1" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality 1 and 3 are duplicate", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"Country",[DirectorField.NATIONALITY_3]:"British"});
-      expect(response.text).toContain("Enter a different third nationality");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality 2 has invalid character", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "Irish", [DirectorField.NATIONALITY_3]: "N^tion1" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(INVALID_NATIONALITY_CHARACTER_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality error if nationality 2 and 3 are duplicate", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"Irish",[DirectorField.NATIONALITY_3]:"Irish"});
-      expect(response.text).toContain("Enter a different second nationality");
-      expect(response.text).toContain("Enter a different third nationality");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should not render nationality error if nationality1 is in the list", async (url) => {
+            if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
+                mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+                    etag: "etag",
+                    forename: "John",
+                    otherForenames: "mid",
+                    surname: "Smith",
+                    nationality: ["Congolese (Congo)"]
+                });
+            }
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "Congolese (Congo)" });
+            expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error if nationality 1 and 3 exceed maximum length", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:"British",[DirectorField.NATIONALITY_3]:LONG_COUNTRY_NAME});
-      expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should not render nationality error if nationality2 is in the list", async(url) => {
+            if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
+                mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+                    etag: "etag",
+                    forename: "John",
+                    otherForenames: "mid",
+                    surname: "Smith",
+                    nationality: ["Irish,Congolese (Congo)"]
+                });
+            }
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "Irish", [DirectorField.NATIONALITY_2]: "Citizen of Guinea-Bissau" });
+            expect(response.text).not.toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error if nationality 1 AND 2 exceeds maximum length 49", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:LONG_COUNTRY_NAME,[DirectorField.NATIONALITY_2]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality is contains invalid character", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "Can£adian&" });
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+            expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error if nationality 2 AND 3 exceeds maximum length 49", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"",[DirectorField.NATIONALITY_2]:LONG_COUNTRY_NAME,[DirectorField.NATIONALITY_3]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should not render nationality error if nationality2 is blank", async (url) => {
+            if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
+                mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
+                    etag: "etags",
+                    forename: "John",
+                    otherForenames: "mid",
+                    surname: "Smith",
+                    nationality: ["Irish,Congolese (Congo)"]
+                });
+            }
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "" });
+            expect(response.text).not.toContain(ENTER_DIRECTOR_NATIONALITY_ERROR);
+            if (url === UPDATE_DIRECTOR_NATIONALITY_URL) {
+                expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+                expect(response.text).toContain("/cannot-use");
+            } else {expect(mockPatchOfficerFiling).toHaveBeenCalled();}
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error if nationality 1 AND 3 exceeds maximum length 49", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:LONG_COUNTRY_NAME,[DirectorField.NATIONALITY_3]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality2 is not in the list", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "London" });
+            expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error if nationality 3 exceeds maximum length 49", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:"British",[DirectorField.NATIONALITY_2]:SHORT_NATIONALITY,[DirectorField.NATIONALITY_3]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).not.toContain(LENGTH_FIFTY_ERROR);
-      expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality2 contains invalid character", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "(Indian)" });
+            expect(response.text).toContain(SELECT_NATIONALITY_FROM_LIST_ERROR);
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error 50 if nationality 1 exceed 50", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_1]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality is duplicated", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "British" });
+            expect(response.text).toContain("Enter a different second nationality");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error 50 if nationality 2 exceed 50", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_2]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
-    });
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality 1 and 3 are duplicate", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "Country", [DirectorField.NATIONALITY_3]: "British" });
+            expect(response.text).toContain("Enter a different third nationality");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
 
-    it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL]) 
-    ("should render nationality length error 50 if nationality 3 exceed 50", async(url) => {
-      const response = await request(app).post(url).send({[DirectorField.NATIONALITY_3]:SHORT_NATIONALITY+LONG_COUNTRY_NAME});
-      expect(response.text).toContain(LENGTH_FIFTY_ERROR);
-      expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality error if nationality 2 and 3 are duplicate", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "Irish", [DirectorField.NATIONALITY_3]: "Irish" });
+            expect(response.text).toContain("Enter a different second nationality");
+            expect(response.text).toContain("Enter a different third nationality");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error if nationality 1 and 3 exceed maximum length", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: "British", [DirectorField.NATIONALITY_3]: LONG_COUNTRY_NAME });
+            expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error if nationality 1 AND 2 exceeds maximum length 49", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: LONG_COUNTRY_NAME, [DirectorField.NATIONALITY_2]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error if nationality 2 AND 3 exceeds maximum length 49", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "", [DirectorField.NATIONALITY_2]: LONG_COUNTRY_NAME, [DirectorField.NATIONALITY_3]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error if nationality 1 AND 3 exceeds maximum length 49", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: LONG_COUNTRY_NAME, [DirectorField.NATIONALITY_3]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain("dual nationalities with a total of more than 49 characters");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error if nationality 3 exceeds maximum length 49", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: "British", [DirectorField.NATIONALITY_2]: SHORT_NATIONALITY, [DirectorField.NATIONALITY_3]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).not.toContain(LENGTH_FIFTY_ERROR);
+            expect(response.text).toContain("For technical reasons, we are currently unable to accept multiple nationalities");
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error 50 if nationality 1 exceed 50", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_1]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error 50 if nationality 2 exceed 50", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_2]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
+
+        it.each([DIRECTOR_NATIONALITY_URL, UPDATE_DIRECTOR_NATIONALITY_URL])
+        ("should render nationality length error 50 if nationality 3 exceed 50", async(url) => {
+            const response = await request(app).post(url).send({ [DirectorField.NATIONALITY_3]: SHORT_NATIONALITY + LONG_COUNTRY_NAME });
+            expect(response.text).toContain(LENGTH_FIFTY_ERROR);
+            expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
+        });
     });
-  });
 });

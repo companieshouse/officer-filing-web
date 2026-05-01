@@ -5,7 +5,7 @@ import { ValidationError } from "../../src/model/validation.model";
 
 describe("Input validation test", () => {
     test("should return validation errors if fields have invalid characters", () => {
-        let validationErrors: ValidationError[] = [];
+        const validationErrors: ValidationError[] = [];
         const jsvalidationErrors = validatePremise("ゃ", PremiseValidation, validationErrors);
         if (validationErrors) {
             expect(jsvalidationErrors).toHaveLength(1);
@@ -16,7 +16,7 @@ describe("Input validation test", () => {
     });
 
     test("should return validation error if field has lengthy value", () => {
-        let validationErrors: ValidationError[] = [];
+        const validationErrors: ValidationError[] = [];
         const jsvalidationErrors = validatePremise("HBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVICNAPFPORIVNEDPDSLKMDVPEPLKMVPKNRPINVOJNSDLMNAPHBHADFAEPQEIFJVI", PremiseValidation, validationErrors);
         if (validationErrors) {
             expect(jsvalidationErrors).toHaveLength(1);
@@ -27,7 +27,7 @@ describe("Input validation test", () => {
     });
 
     test("should return one validation error - order and priority of error test ", () => {
-        let validationErrors: ValidationError[] = [];
+        const validationErrors: ValidationError[] = [];
         const jsvalidationErrors = validatePremise("ゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃゃ", PremiseValidation, validationErrors);
         if (jsvalidationErrors) {
             expect(jsvalidationErrors).toHaveLength(1);

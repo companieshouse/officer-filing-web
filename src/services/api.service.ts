@@ -11,26 +11,26 @@ import { createPrivateApiClient } from "private-api-sdk-node";
 import { getAccessToken } from "../utils/session";
 
 export const createPublicOAuthApiClient = (session: Session): ApiClient => {
-  const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
-  if (oAuth) {
-    return createApiClient(undefined, oAuth, API_URL);
-  }
-  throw createAndLogError("Error getting session keys for creating public api client");
+    const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
+    if (oAuth) {
+        return createApiClient(undefined, oAuth, API_URL);
+    }
+    throw createAndLogError("Error getting session keys for creating public api client");
 };
 
 export const createPublicApiKeyClient = (): ApiClient => {
-  return createApiClient(CHS_API_KEY, undefined, API_URL);
+    return createApiClient(CHS_API_KEY, undefined, API_URL);
 };
 
 export const createPaymentApiClient = (session: Session, paymentUrl: string): ApiClient => {
-  const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
-  if (oAuth) {
-    return createApiClient(undefined, oAuth, paymentUrl);
-  }
-  throw createAndLogError("Error getting session keys for creating public api client");
+    const oAuth = session.data?.[SessionKey.SignInInfo]?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken];
+    if (oAuth) {
+        return createApiClient(undefined, oAuth, paymentUrl);
+    }
+    throw createAndLogError("Error getting session keys for creating public api client");
 };
 
 export const createPrivateOAuthApiClient = (session: Session | undefined): PrivateApiClient => {
-  const oAuth: string = getAccessToken(session);
-  return createPrivateApiClient(undefined, oAuth, API_URL);
+    const oAuth: string = getAccessToken(session);
+    return createPrivateApiClient(undefined, oAuth, API_URL);
 };

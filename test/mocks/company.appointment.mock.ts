@@ -25,20 +25,20 @@ export const validCompanyAppointment: CompanyAppointment = {
     title: "Mr",
     otherForenames: "Elizabeth",
     dateOfBirth: {
-      day: "1",
-      month: "2",
-      year: "2001"
+        day: "1",
+        month: "2",
+        year: "2001"
     },
     appointedOn: "2019-05-11",
     formerNames: [
-      {
-        forenames: "John",
-        surname: "Smith"
-      },
-      {
-        forenames: "Old",
-        surname: "MacDonald"
-      }
+        {
+            forenames: "John",
+            surname: "Smith"
+        },
+        {
+            forenames: "Old",
+            surname: "MacDonald"
+        }
     ],
     nationality: "British,American,Canadian",
     occupation: "Software Engineer",
@@ -150,4 +150,4 @@ export const companyAppointmentCorporateDirector: CompanyAppointment = {
 export const validCompanyAppointmentResource: Resource<CompanyAppointment> = {
     httpStatusCode: 200,
     resource: validCompanyAppointment,
-  };
+};

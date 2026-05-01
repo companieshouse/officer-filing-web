@@ -1,26 +1,25 @@
 jest.mock("ioredis");
 jest.mock("../../src/utils/feature.flag");
-jest.mock("@companieshouse/web-security-node")
+jest.mock("@companieshouse/web-security-node");
 jest.mock("../../src/middleware/csrf.middleware", () => {
-  return {
-    createCsrfProtectionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
-      return (req: Request, res: Response, next: NextFunction) => {
-        next();
-      };
-    }),
-    csrfErrorHandler: jest.fn(),
-  };
+    return {
+        createCsrfProtectionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+            return (req: Request, res: Response, next: NextFunction) => {
+                next();
+            };
+        }),
+        csrfErrorHandler: jest.fn(),
+    };
 });
 jest.mock("../../src/middleware/session.middleware", () => {
-  return {
-    createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
-      return (req: Request, res: Response, next: NextFunction) => {
-        next();
-      };
-    }),
-  };
+    return {
+        createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+            return (req: Request, res: Response, next: NextFunction) => {
+                next();
+            };
+        }),
+    };
 });
-
 
 import request from "supertest";
 import { Request, Response, NextFunction } from "express";
@@ -43,7 +42,7 @@ describe("company authentication middleware tests", () => {
     const mockNext = jest.fn() as NextFunction;
 
     beforeEach(() => {
-     jest.clearAllMocks();
+        jest.clearAllMocks();
     });
 
     it("should return 500 error page", async () => {

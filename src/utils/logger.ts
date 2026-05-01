@@ -4,7 +4,7 @@ import ApplicationLogger from "@companieshouse/structured-logging-node/lib/Appli
 export const logger: ApplicationLogger = createLogger("officer-filing-web");
 
 export const createAndLogError = (description: string): Error => {
-  const error = new Error (description);
-  logger.error(`${error.stack}`);
-  return error;
+    const error = new Error (description);
+    logger.error(`${error.stack}`);
+    return error;
 };

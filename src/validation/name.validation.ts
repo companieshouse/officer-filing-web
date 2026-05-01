@@ -23,7 +23,7 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
         const session: Session = req.session as Session;
         const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    
+
         const title = getField(req, DirectorField.TITLE);
         const firstName = getField(req, DirectorField.FIRST_NAME);
         const middleNames = getField(req, DirectorField.MIDDLE_NAMES);
@@ -34,23 +34,22 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
         const frontendValidationErrors = validateName(req, NameValidation, isUpdate);
         let currentUrl;
         let backLinkUrl: string;
-        if(isUpdate){
-          currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req)
-          backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req)
-        }
-        else{
-          currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req)
-          backLinkUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req)
+        if (isUpdate){
+            currentUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_NAME_PATH, req);
+            backLinkUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req);
+        } else {
+            currentUrl = urlUtils.getUrlToPath(DIRECTOR_NAME_PATH, req);
+            backLinkUrl = urlUtils.getUrlToPath(CURRENT_DIRECTORS_PATH, req);
         }
 
-        if(frontendValidationErrors.length > 0) {
+        if (frontendValidationErrors.length > 0) {
             const formattedErrors = formatValidationErrors(frontendValidationErrors, lang);
 
             return res.render(Templates.DIRECTOR_NAME, {
                 ...getLocaleInfo(locales, lang),
                 currentUrl: currentUrl,
                 templateName: Templates.DIRECTOR_NAME,
-                backLinkUrl:  addLangToUrl(setBackLink(req, officerFiling?.checkYourAnswersLink, backLinkUrl), lang),
+                backLinkUrl: addLangToUrl(setBackLink(req, officerFiling?.checkYourAnswersLink, backLinkUrl), lang),
                 typeahead_array: TITLE_LIST,
                 errors: formattedErrors,
                 typeahead_errors: JSON.stringify(formattedErrors),
@@ -62,10 +61,10 @@ export const nameValidator = async (req: Request, res: Response, next: NextFunct
                 previous_names_radio: previousNamesRadio,
                 isUpdate
             });
-          }
+        }
         return next();
 
-    } catch(error) {
+    } catch (error) {
         next(error);
     }
 };
@@ -77,13 +76,13 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
     const lastName = getField(req, DirectorField.LAST_NAME);
     const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
     const formerNames = getField(req, DirectorField.PREVIOUS_NAMES);
-    let validationErrors: ValidationError[] = [];
+    const validationErrors: ValidationError[] = [];
 
     validateTitle(title, nameValidationType, validationErrors);
     validateFirstName(firstName, nameValidationType, validationErrors);
     validateMiddleNames(middleNames, nameValidationType, validationErrors);
     validateLastName(lastName, nameValidationType, validationErrors);
-    if(!isUpdate) {
+    if (!isUpdate) {
         validateFormerNames(formerNames, previousNamesRadio, nameValidationType, validationErrors);
     }
 
@@ -91,7 +90,7 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
 };
 
 export const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if(title != null && title != "") {
+    if (title != null && title != "") {
         const regex = REGEX_FOR_NAME_TITLE;
         const match = regex.exec(title);
 
@@ -103,10 +102,10 @@ export const validateTitle = (title: string, nameValidationType: GenericValidati
             validationErrors.push(nameValidationType.TitleLength.ErrorField);
         }
     }
-}
+};
 
 export const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if(firstName != null && firstName != "") {
+    if (firstName != null && firstName != "") {
         const regex = REGEX_FOR_VALID_NAME;
         const match = regex.exec(firstName);
         if (!match){
@@ -120,12 +119,12 @@ export const validateFirstName = (firstName: string, nameValidationType: Generic
         // blank field
         validationErrors.push(nameValidationType.FirstNameBlank.ErrorField);
     }
-}
+};
 
 const validateMiddleNames = (middleNames: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if(middleNames != null && middleNames != "") {
+    if (middleNames != null && middleNames != "") {
         const regex = REGEX_FOR_VALID_NAME;
-        const match = regex.exec(middleNames); 
+        const match = regex.exec(middleNames);
         if (!match){
             // invalid characters
             validationErrors.push(nameValidationType.MiddleNamesInvalidCharacter.ErrorField);
@@ -134,10 +133,10 @@ const validateMiddleNames = (middleNames: string, nameValidationType: GenericVal
             validationErrors.push(nameValidationType.MiddleNamesLength.ErrorField);
         }
     }
-}
+};
 
 const validateLastName = (lastName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if(lastName != null && lastName != "") {
+    if (lastName != null && lastName != "") {
         const regex = REGEX_FOR_VALID_NAME;
         const match = regex.exec(lastName);
         if (!match){
@@ -150,14 +149,13 @@ const validateLastName = (lastName: string, nameValidationType: GenericValidatio
     } else {
         validationErrors.push(nameValidationType.LastNameBlank.ErrorField);
     }
-}
+};
 
 const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if (!previousNamesRadio) {
         validationErrors.push(nameValidationType.PreviousNamesRadioUnselected.ErrorField);
-    }
-    else if (previousNamesRadio == DirectorField.YES) {
-        if(formerNames != null && formerNames != "") {
+    } else if (previousNamesRadio == DirectorField.YES) {
+        if (formerNames != null && formerNames != "") {
             const regex = REGEX_FOR_VALID_FORMER_NAMES;
             const match = regex.exec(formerNames);
             if (!match){
@@ -171,4 +169,4 @@ const validateFormerNames = (formerNames: string, previousNamesRadio: string, na
             validationErrors.push(nameValidationType.PreviousNamesMissing.ErrorField);
         }
     }
-}
+};

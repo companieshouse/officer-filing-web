@@ -14,39 +14,39 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { getCompanyAppointmentFullRecord } from "../../services/company.appointments.service";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
-  try {
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const appointmentId = officerFiling.referenceAppointmentId;
-    if (appointmentId === undefined) {
-      throw new Error("Appointment id is undefined");
+    try {
+        const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+        const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const appointmentId = officerFiling.referenceAppointmentId;
+        if (appointmentId === undefined) {
+            throw new Error("Appointment id is undefined");
+        }
+        const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
+
+        return resp.render(Templates.UPDATE_DIRECTOR_SUBMITTED, {
+            templateName: Templates.UPDATE_DIRECTOR_SUBMITTED,
+            referenceNumber: transactionId,
+            companyNumber: companyNumber,
+            companyName: companyProfile.companyName,
+            directorTitle: formatTitleCase(appointment.title),
+            directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
+            updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
+            nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,
+            nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
+            occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,
+            residentialAddressHasBeenUpdated: officerFiling.residentialAddressHasBeenUpdated,
+            serviceAddressHasBeenUpdated: officerFiling.serviceAddressHasBeenUpdated,
+            ...getLocaleInfo(locales, lang),
+            currentUrl: req.originalUrl,
+        });
+    } catch (e) {
+        return next(e);
     }
-    const appointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-
-    return resp.render(Templates.UPDATE_DIRECTOR_SUBMITTED, {
-      templateName: Templates.UPDATE_DIRECTOR_SUBMITTED,
-      referenceNumber: transactionId,
-      companyNumber: companyNumber,
-      companyName: companyProfile.companyName,
-      directorTitle: formatTitleCase(appointment.title),
-      directorName: formatTitleCase(retrieveDirectorNameFromAppointment(appointment)),
-      updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
-      nameHasBeenUpdated: officerFiling.nameHasBeenUpdated,
-      nationalityHasBeenUpdated: officerFiling.nationalityHasBeenUpdated,
-      occupationHasBeenUpdated: officerFiling.occupationHasBeenUpdated,
-      residentialAddressHasBeenUpdated: officerFiling.residentialAddressHasBeenUpdated,
-      serviceAddressHasBeenUpdated: officerFiling.serviceAddressHasBeenUpdated,
-      ...getLocaleInfo(locales, lang),
-      currentUrl : req.originalUrl,
-    });
-  } catch (e) {
-    return next(e);
-  }
-}
+};

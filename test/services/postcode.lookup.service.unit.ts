@@ -39,7 +39,7 @@ describe("isValidPostcode test", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-      });
+    });
 
     it("should return true when postcode is valid", async () => {
         mockIsValidUKPostcode.mockResolvedValue(true);
@@ -64,22 +64,22 @@ describe("getUKAddressesFromPostcode test", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-      });
+    });
 
     it("should throw an error when no UK addresses are returned", async () => {
         mockGetUKAddressesFromPostcode.mockReturnValueOnce({ httpStatusCode: 500, resource: null });
         const postcode = 'SW1A1XY';
         await getUKAddressesFromPostcode("http://example.postcode.lookup", postcode)
-          .then(() => {
-              fail("Was expecting an error to be thrown.");
-          })
-          .catch(() => {
-              expect(createAndLogError).toHaveBeenCalledWith("Failed to get UK addresses for postcode SW1A1XY");
-          });
+            .then(() => {
+                fail("Was expecting an error to be thrown.");
+            })
+            .catch(() => {
+                expect(createAndLogError).toHaveBeenCalledWith("Failed to get UK addresses for postcode SW1A1XY");
+            });
     });
 
     it("should return UK addresses for a valid postcode", async () => {
-        mockGetUKAddressesFromPostcode.mockResolvedValueOnce({httpStatusCode: 200, resource: mockResponseBodyOfUKAddresses});
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce({ httpStatusCode: 200, resource: mockResponseBodyOfUKAddresses });
         const result = await getUKAddressesFromPostcode("http://example.postcode.lookup", "SW1A1AA");
 
         expect(result).toHaveLength(2);
@@ -88,7 +88,7 @@ describe("getUKAddressesFromPostcode test", () => {
     });
 
     it("should sort UK addresses ascendingly", async () => {
-        mockGetUKAddressesFromPostcode.mockResolvedValueOnce({httpStatusCode: 200, resource: mockResponseBodyOfUKAddresses.reverse()});
+        mockGetUKAddressesFromPostcode.mockResolvedValueOnce({ httpStatusCode: 200, resource: mockResponseBodyOfUKAddresses.reverse() });
         const result = await getUKAddressesFromPostcode("http://example.postcode.lookup", "SW1A1AA");
 
         expect(result).toHaveLength(2);

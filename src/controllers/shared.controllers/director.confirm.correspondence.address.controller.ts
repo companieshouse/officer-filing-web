@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
-  UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
+    DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
+    UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH,
+    UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH,
 } from "../../types/page.urls";
 import { urlUtils } from "../../utils/url";
 import { Session } from "@companieshouse/node-session-handler";
@@ -20,95 +20,95 @@ import { getDirectorNameForAppointJourney, getDirectorNameForUpdateJourney } fro
 import { formatValidationErrors } from "../../validation/validation";
 
 export const getConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, isUpdate?: boolean) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    let enterAddressManuallyUrl: string;
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        let enterAddressManuallyUrl: string;
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
 
-    // Validate serviceAddress missing fields if any onload
-    const serviceAddress: Address | undefined = officerFiling.serviceAddress;
-    const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
+        // Validate serviceAddress missing fields if any onload
+        const serviceAddress: Address | undefined = officerFiling.serviceAddress;
+        const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
 
-    if(isUpdate){
-      enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
-    } else {
-      enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
+        if (isUpdate){
+            enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address";
+        } else {
+            enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address";
+        }
+
+        return res.render(templateName, {
+            templateName: templateName,
+            backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
+            directorName: isUpdate ? await getDirectorNameForUpdateJourney(session, req, officerFiling) : await getDirectorNameForAppointJourney(officerFiling),
+            enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
+            errors: formatValidationErrors(jsValidationErrors, lang),
+            ...officerFiling.serviceAddress,
+            ...getLocaleInfo(locales, lang),
+            currentUrl: req.originalUrl,
+        });
+
+    } catch (e) {
+        return next(e);
     }
-
-    return res.render(templateName, {
-      templateName: templateName,
-      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
-      directorName : isUpdate ? await getDirectorNameForUpdateJourney(session, req, officerFiling) : await getDirectorNameForAppointJourney(officerFiling),
-      enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
-      errors: formatValidationErrors(jsValidationErrors,lang),
-      ...officerFiling.serviceAddress,
-      ...getLocaleInfo(locales, lang),
-      currentUrl: req.originalUrl,
-    });
-
-  } catch (e) {
-    return next(e);
-  }
 };
 
 export const postConfirmCorrespondence = async (req: Request, res: Response, next: NextFunction, nextPageUrl: string, isUpdate: boolean) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const lang = selectLang(req.query.lang);
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const locales = getLocalesService();
-    let enterAddressManuallyUrl: string;
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const lang = selectLang(req.query.lang);
+        const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const locales = getLocalesService();
+        let enterAddressManuallyUrl: string;
 
-    if(isUpdate){
-      enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
-    } else {
-      enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address"
+        if (isUpdate){
+            enterAddressManuallyUrl = urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address";
+        } else {
+            enterAddressManuallyUrl = urlUtils.getUrlToPath(DIRECTOR_CORRESPONDENCE_ADDRESS_MANUAL_PATH, req) + "?backLink=confirm-correspondence-address";
+        }
+
+        // Validate serviceAddress missing fields if any onload
+        const serviceAddress: Address | undefined = officerFiling.serviceAddress;
+        const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
+
+        if (jsValidationErrors.length > 0) {
+            return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, {
+                templateName: Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS,
+                backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req), lang),
+                directorName: isUpdate ?
+                    formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) :
+                    formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
+                enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
+                errors: formatValidationErrors(jsValidationErrors, lang),
+                ...officerFiling.serviceAddress,
+                ...getLocaleInfo(locales, lang),
+                currentUrl: req.originalUrl,
+            });
+        }
+
+        const officerFilingBody: OfficerFiling = {
+            isServiceAddressSameAsRegisteredOfficeAddress: false
+        };
+
+        if (isUpdate) {
+            const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+            const appointmentId = officerFiling.referenceAppointmentId as string;
+            const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+            const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+            officerFilingBody.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated(
+                { isServiceAddressSameAsRegisteredOfficeAddress: officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress },
+                companyAppointment
+            );
+        }
+
+        await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
+        return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
+    } catch (e){
+        return next(e);
     }
-    
-    // Validate serviceAddress missing fields if any onload
-    const serviceAddress: Address | undefined = officerFiling.serviceAddress;
-    const jsValidationErrors = serviceAddress ? validateManualAddress(serviceAddress, CorrespondenceManualAddressValidation) : [];
-
-    if(jsValidationErrors.length > 0) {
-      return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS, {
-        templateName: Templates.UPDATE_DIRECTOR_CONFIRM_CORRESPONDENCE_ADDRESS,
-        backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_PATH, req), lang),
-        directorName : isUpdate ? 
-          formatTitleCase(await getDirectorNameForUpdateJourney(session, req, officerFiling)) : 
-          formatTitleCase(await getDirectorNameForAppointJourney(officerFiling)),
-        enterAddressManuallyUrl: addLangToUrl(enterAddressManuallyUrl, lang),
-        errors: formatValidationErrors(jsValidationErrors,lang),
-        ...officerFiling.serviceAddress,
-        ...getLocaleInfo(locales, lang),
-        currentUrl: req.originalUrl,
-      });
-    }
-
-    const officerFilingBody: OfficerFiling = {
-      isServiceAddressSameAsRegisteredOfficeAddress: false
-    };
-
-    if (isUpdate) {
-      const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-      const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      officerFilingBody.serviceAddressHasBeenUpdated = checkIsCorrespondenceAddressUpdated( 
-        { isServiceAddressSameAsRegisteredOfficeAddress: officerFilingBody.isServiceAddressSameAsRegisteredOfficeAddress, serviceAddress: officerFiling.serviceAddress }, 
-        companyAppointment
-      );
-    }
-    
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-
-    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
-  }catch(e){
-    return next(e);
-  }
 };

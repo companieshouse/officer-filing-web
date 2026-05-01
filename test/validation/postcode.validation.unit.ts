@@ -7,7 +7,7 @@ describe("Input validation test", () => {
         const validationErrors = validatePostcode("", PostcodeValidation);
         if (validationErrors) {
             expect(validationErrors).toHaveLength(1);
-            expect(validationErrors[0].messageKey).toEqual(postcodeErrorMessageKey.POSTCODE_BLANK)
+            expect(validationErrors[0].messageKey).toEqual(postcodeErrorMessageKey.POSTCODE_BLANK);
         } else {
             fail("Expected validation not raised");
         }
@@ -53,5 +53,4 @@ describe("Input validation test", () => {
         }
     });
 
-    
 });
