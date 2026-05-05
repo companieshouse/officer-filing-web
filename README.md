@@ -16,7 +16,7 @@ The problem was that we are using the newer version of GOVUK-Frontend. Version 4
 This newer version looks for the fonts in a different place to the older versions, it looks for them
 in {cdnHost}/assets/fonts/{font name}
 
-older versions look for it in {cdnHost}/fonts/{font name}. So because the older versions looked for it there,
+Older versions look for it in {cdnHost}/fonts/{font name}. So because the older versions looked for it there,
 the cdn builder builds it and puts the fonts in that location, so when using the new GOV-UK Frontend,
 it doesn’t find the fonts.
 

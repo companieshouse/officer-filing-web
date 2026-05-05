@@ -38,6 +38,7 @@ const nunjucksEnv = nunjucks.configure([
 });
 
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
+nunjucksEnv.addGlobal("cdnHost", process.env.CDN_HOST);
 nunjucksEnv.addGlobal("PIWIK_URL", process.env.PIWIK_URL);
 nunjucksEnv.addGlobal("PIWIK_SITE_ID", process.env.PIWIK_SITE_ID);
 nunjucksEnv.addGlobal("AP01_ACTIVE", AP01_ACTIVE);
