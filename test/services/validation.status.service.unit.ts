@@ -16,81 +16,81 @@ const mockCreatePrivateApiClient = createApiClient as jest.Mock;
 const mockLoggerError = logger.error as jest.Mock;
 
 mockCreatePrivateApiClient.mockReturnValue({
-  officerFiling: OfficerFilingService.prototype
+    officerFiling: OfficerFilingService.prototype
 } as ApiClient);
 
 const clone = (objectToClone: any): any => {
-  return JSON.parse(JSON.stringify(objectToClone));
+    return JSON.parse(JSON.stringify(objectToClone));
 };
 
 describe("Test validation status service", () => {
 
-  const TRANSACTION_ID = "66454";
-  const SUBMISSION_ID = "9879868678";
+    const TRANSACTION_ID = "66454";
+    const SUBMISSION_ID = "9879868678";
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("Should call the sdk and get the validation status response", async () => {
-
-    const resource: Resource<ValidationStatusResponse> = {
-      httpStatusCode: 200,
-      resource: mockValidationStatusResponse
-    };
-
-    mockGetValidationStatus.mockReturnValueOnce(resource);
-    mockLoggerError.mockReturnValueOnce(undefined);
-    const session =  getSessionRequest();
-    const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
-
-    expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
-    expect(mockLoggerError).toHaveBeenCalledTimes(1);
-    expect(mockLoggerError).toHaveBeenCalledWith("Validation errors: " + JSON.stringify(mockValidationStatusResponse.errors));
-    expect(response).toEqual(mockValidationStatusResponse);
-  });
-
-  it("Should call the sdk and get the validation status response without logging", async () => {
-
-    const resource: Resource<ValidationStatusResponse> = {
-      httpStatusCode: 200,
-      resource: mockValidationStatusResponse
-    };
-
-    mockGetValidationStatus.mockReturnValueOnce(resource);
-    const session =  getSessionRequest();
-    const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID, false);
-
-    expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
-    expect(mockLoggerError).not.toHaveBeenCalledWith();
-    expect(response).toEqual(mockValidationStatusResponse);
-  });
-
-  it("should throw error when http error code is returned", async () => {
-
-    const errorMessage = "Oops! Someone stepped on the wire.";
-    const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 404,
-      errors: [{ error: errorMessage }]
-    };
-
-    mockGetValidationStatus.mockReturnValueOnce({
-      httpStatusCode: errorResponse.httpStatusCode,
-      errors: errorResponse.errors
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
-    const session =  getSessionRequest();
-    const expectedMessage = "Error retrieving validation status: " + JSON.stringify(errorResponse);
-    let actualMessage;
 
-    try {
-      await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
-    } catch (err) {
-      actualMessage = (err as Error).message;
-    }
+    it("Should call the sdk and get the validation status response", async () => {
 
-    expect(mockLoggerError).not.toHaveBeenCalled();
-    expect(actualMessage).toBeTruthy();
-    expect(actualMessage).toEqual(expectedMessage);
-  });
+        const resource: Resource<ValidationStatusResponse> = {
+            httpStatusCode: 200,
+            resource: mockValidationStatusResponse
+        };
+
+        mockGetValidationStatus.mockReturnValueOnce(resource);
+        mockLoggerError.mockReturnValueOnce(undefined);
+        const session = getSessionRequest();
+        const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
+
+        expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+        expect(mockLoggerError).toHaveBeenCalledTimes(1);
+        expect(mockLoggerError).toHaveBeenCalledWith("Validation errors: " + JSON.stringify(mockValidationStatusResponse.errors));
+        expect(response).toEqual(mockValidationStatusResponse);
+    });
+
+    it("Should call the sdk and get the validation status response without logging", async () => {
+
+        const resource: Resource<ValidationStatusResponse> = {
+            httpStatusCode: 200,
+            resource: mockValidationStatusResponse
+        };
+
+        mockGetValidationStatus.mockReturnValueOnce(resource);
+        const session = getSessionRequest();
+        const response = await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID, false);
+
+        expect(mockGetValidationStatus).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+        expect(mockLoggerError).not.toHaveBeenCalledWith();
+        expect(response).toEqual(mockValidationStatusResponse);
+    });
+
+    it("should throw error when http error code is returned", async () => {
+
+        const errorMessage = "Oops! Someone stepped on the wire.";
+        const errorResponse: ApiErrorResponse = {
+            httpStatusCode: 404,
+            errors: [{ error: errorMessage }]
+        };
+
+        mockGetValidationStatus.mockReturnValueOnce({
+            httpStatusCode: errorResponse.httpStatusCode,
+            errors: errorResponse.errors
+        });
+        const session = getSessionRequest();
+        const expectedMessage = "Error retrieving validation status: " + JSON.stringify(errorResponse);
+        let actualMessage;
+
+        try {
+            await getValidationStatus(session, TRANSACTION_ID, SUBMISSION_ID);
+        } catch (err) {
+            actualMessage = (err as Error).message;
+        }
+
+        expect(mockLoggerError).not.toHaveBeenCalled();
+        expect(actualMessage).toBeTruthy();
+        expect(actualMessage).toEqual(expectedMessage);
+    });
 
 });

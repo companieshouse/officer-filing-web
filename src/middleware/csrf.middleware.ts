@@ -6,18 +6,18 @@ import { COOKIE_NAME } from "../utils/properties";
 export const csrfErrorTemplateName = "csrf-error";
 
 export const csrfErrorHandler = (
-  err: CsrfError | Error,
-  _: Request,
-  res: Response,
-  next: NextFunction
+    err: CsrfError | Error,
+    _: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  if (!(err instanceof CsrfError)) {
-    return next(err);
-  }
+    if (!(err instanceof CsrfError)) {
+        return next(err);
+    }
 
-  return res.status(403).render(csrfErrorTemplateName, {
-    csrfErrors: true,
-  });
+    return res.status(403).render(csrfErrorTemplateName, {
+        csrfErrors: true,
+    });
 };
 
 export const createCsrfProtectionMiddleware = (sessionStore: SessionStore) => CsrfProtectionMiddleware({

@@ -7,15 +7,15 @@ import { PAGE_NOT_FOUND_PATH, SERVICE_ERROR_PATH } from "../types/page.urls";
 
 export const pageNotFound = (req: Request, res: Response) => {
 
-  const lang = selectLang(req.query.lang);
-  const locales = getLocalesService();
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
-  return res.status(404).render(Templates.ERROR_404, 
-    {
-      ...getLocaleInfo(locales, lang),
-      currentUrl:  urlUtils.getUrlToPath(PAGE_NOT_FOUND_PATH, req),
-      templateName: Templates.ERROR_404 
-    });
+    return res.status(404).render(Templates.ERROR_404,
+        {
+            ...getLocaleInfo(locales, lang),
+            currentUrl: urlUtils.getUrlToPath(PAGE_NOT_FOUND_PATH, req),
+            templateName: Templates.ERROR_404
+        });
 };
 
 /**
@@ -25,23 +25,23 @@ export const pageNotFound = (req: Request, res: Response) => {
  */
 export const errorHandler = (err: Error, req: Request, res: Response, _next: NextFunction) => {
 
-  logger.errorRequest(req, `An error has occurred. Re-routing to the error screen - ${err.stack}`);
+    logger.errorRequest(req, `An error has occurred. Re-routing to the error screen - ${err.stack}`);
 
-  errorPage(req, res);
+    errorPage(req, res);
 };
 
 export const get: Handler = (req: Request, res: Response) => {
-  errorPage(req, res);
+    errorPage(req, res);
 };
 
 const errorPage = (req: Request, res: Response) => {
-  const lang = selectLang(req.query.lang);
-  const locales = getLocalesService();
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
 
-  res.status(500).render(Templates.SERVICE_OFFLINE_MID_JOURNEY,
-    {
-      ...getLocaleInfo(locales, lang),
-      currentUrl:  urlUtils.getUrlToPath(SERVICE_ERROR_PATH, req),
-      templateName: Templates.SERVICE_OFFLINE_MID_JOURNEY
-    });
+    res.status(500).render(Templates.SERVICE_OFFLINE_MID_JOURNEY,
+        {
+            ...getLocaleInfo(locales, lang),
+            currentUrl: urlUtils.getUrlToPath(SERVICE_ERROR_PATH, req),
+            templateName: Templates.SERVICE_OFFLINE_MID_JOURNEY
+        });
 };

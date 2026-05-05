@@ -21,95 +21,95 @@ const companyNumber = "12345678";
 const SERVICE_UNAVAILABLE_TEXT = "Sorry, there is a problem with this service";
 
 describe("Confirm company controller tests", () => {
-  const PAGE_HEADING = "Confirm this is the correct company";
-  const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved&lang=en";
-  const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited&lang=en";
-  const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors&lang=en";
+    const PAGE_HEADING = "Confirm this is the correct company";
+    const DISSOLVED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=dissolved&lang=en";
+    const LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=limited-unlimited&lang=en";
+    const NO_DIRECTORS_PAGE_REDIRECT_HEADING = "Found. Redirecting to /appoint-update-remove-company-officer/company/12345678/cannot-use?stopType=no%20directors&lang=en";
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockGetCurrentOrFutureDissolved.mockReset();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockGetCurrentOrFutureDissolved.mockReset();
+    });
 
-  it("Should navigate to confirm company page", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+    it("Should navigate to confirm company page", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
-    const response = await request(app)
-    .get(CONFIRM_COMPANY_PATH)
-    .query({ companyNumber });
+        const response = await request(app)
+            .get(CONFIRM_COMPANY_PATH)
+            .query({ companyNumber });
 
-    expect(response.text).toContain(PAGE_HEADING);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+        expect(response.text).toContain(PAGE_HEADING);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should populate the template with CompanyProfile data", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+    it("Should populate the template with CompanyProfile data", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
-    const response = await request(app)
-      .get(CONFIRM_COMPANY_PATH);
+        const response = await request(app)
+            .get(CONFIRM_COMPANY_PATH);
 
-    expect(response.text).toContain(validCompanyProfile.companyNumber);
-    expect(response.text).toContain(validCompanyProfile.companyName);
-  });
+        expect(response.text).toContain(validCompanyProfile.companyNumber);
+        expect(response.text).toContain(validCompanyProfile.companyName);
+    });
 
-  it("Should render the page in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+    it("Should render the page in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        mockFormatForDisplay.mockReturnValueOnce(validCompanyProfile);
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
-    const response = await request(app)
-      .get(CONFIRM_COMPANY_PATH + "?lang=cy");
+        const response = await request(app)
+            .get(CONFIRM_COMPANY_PATH + "?lang=cy");
 
-    expect(response.text).toContain("Cadarnhau mai hwn yw’r cwmni cywir");
-  });
+        expect(response.text).toContain("Cadarnhau mai hwn yw’r cwmni cywir");
+    });
 
-  it("Should return error page if error is thrown when getting Company Profile", async () => {
-    const message = "Can't connect";
-    mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
+    it("Should return error page if error is thrown when getting Company Profile", async () => {
+        const message = "Can't connect";
+        mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
 
-    const response = await request(app)
-      .get(CONFIRM_COMPANY_PATH);
+        const response = await request(app)
+            .get(CONFIRM_COMPANY_PATH);
 
-    expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
-  });
+        expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+    });
 
-  it("Should call private sdk client and redirect to transaction using company number in profile retrieved from database", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+    it("Should call private sdk client and redirect to transaction using company number in profile retrieved from database", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
-    const response = await request(app)
-      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
-      
-    expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=en");
-  });
+        const response = await request(app)
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
 
-  it("Should redirect to dissolved stop screen when company is dissolved", async () => {
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
+        expect(response.status).toEqual(302);
+        expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=en");
+    });
 
-    const response = await request(app)
-      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+    it("Should redirect to dissolved stop screen when company is dissolved", async () => {
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
 
-    expect(response.text).toEqual(DISSOLVED_PAGE_REDIRECT_HEADING);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+        const response = await request(app)
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
 
-  it("Should redirect to non limited-unlimited stop screen when company is not limited or unlimited type", async () => {
-    mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+        expect(response.text).toEqual(DISSOLVED_PAGE_REDIRECT_HEADING);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+    it("Should redirect to non limited-unlimited stop screen when company is not limited or unlimited type", async () => {
+        mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    expect(response.text).toEqual(LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING);
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
-  
+        const response = await request(app)
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+
+        expect(response.text).toEqual(LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING);
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
+
 });
 

@@ -67,13 +67,13 @@ export const router: Router = Router();
  * @param template the template name
  */
 const renderTemplate = (template: string) => (req: Request, res: Response) => {
-  return res.render(template);
+    return res.render(template);
 };
 
 router.get("/", startRoute.get);
 
 if (SERVICE_WITHDRAWN === 'true') {
-  router.get("*", startRoute.get);
+    router.get("*", startRoute.get);
 }
 
 router.get(urls.COMPANY_NUMBER, companyNumberRoute.get);
@@ -177,7 +177,6 @@ router.post(urls.UPDATE_DIRECTOR_NAME, companyAuthenticationMiddleware, nameVali
 router.get(urls.DIRECTOR_DATE_OF_CHANGE, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorDateOfChange.get);
 router.post(urls.DIRECTOR_DATE_OF_CHANGE, companyAuthenticationMiddleware, directorDateOfChange.post);
 
-
 router.get(urls.UPDATE_DIRECTOR_OCCUPATION, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), directorUpdateOccupation.get);
 router.post(urls.UPDATE_DIRECTOR_OCCUPATION, companyAuthenticationMiddleware, directorUpdateOccupation.post);
 
@@ -210,7 +209,7 @@ router.post(urls.UPDATE_DIRECTOR_CORRESPONDENCE_ADDRESS_SEARCH_CHOOSE_ADDRESS, c
 router.get(urls.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorConfirmResidentialAddress.get);
 router.post(urls.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, companyAuthenticationMiddleware, updateDirectorConfirmResidentialAddress.post);
 
-router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK, isFeatureEnabled(CH01_ACTIVE),companyAuthenticationMiddleware, updateDirectorResidentialAddressLink.get);
+router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, updateDirectorResidentialAddressLink.get);
 router.post(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS_LINK, companyAuthenticationMiddleware, updateDirectorResidentialAddressLink.post);
 
 router.get(urls.UPDATE_DIRECTOR_RESIDENTIAL_ADDRESS, isFeatureEnabled(CH01_ACTIVE), companyAuthenticationMiddleware, checkYourAnswersMiddleware(), updateDirectorResidentialAddress.get);

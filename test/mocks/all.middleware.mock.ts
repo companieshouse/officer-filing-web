@@ -5,11 +5,11 @@ import { mockCreateCsrfProtectionMiddleware, mockCsrfErrorHandler } from "./csrf
 import mockCompanyAuthenticationMiddleware from "./company.authentication.middleware.mock";
 
 export default {
-  mockServiceAvailabilityMiddleware,
-  mockAuthenticationMiddleware,
-  mockCreateSessionMiddleware,
-  setShouldThrowError,
-  mockCreateCsrfProtectionMiddleware,
-  mockCompanyAuthenticationMiddleware,
-  mockCsrfErrorHandler,
+    mockServiceAvailabilityMiddleware,
+    mockAuthenticationMiddleware,
+    mockCreateSessionMiddleware,
+    setShouldThrowError,
+    mockCreateCsrfProtectionMiddleware,
+    mockCompanyAuthenticationMiddleware,
+    mockCsrfErrorHandler,
 };

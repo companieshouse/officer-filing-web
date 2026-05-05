@@ -4,9 +4,9 @@ import { DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS
 import { Templates } from "../types/template.paths";
 
 export const get = (req: Request, res: Response, next: NextFunction) => {
-  getResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, false)
-}
+    getResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, false);
+};
 
 export const post = (req: Request, res: Response, next: NextFunction) => {
-  postResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, false);
-}
+    postResidentialAddressManualEntry(req, res, next, Templates.DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL, DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, false);
+};

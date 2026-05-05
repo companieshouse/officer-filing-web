@@ -13,57 +13,57 @@ const mockGetDirectorAndTerminationDate = OfficerFilingService.prototype.getDire
 const mockCreatePrivateApiClient = createApiClient as jest.Mock;
 
 mockCreatePrivateApiClient.mockReturnValue({
-  officerFiling: OfficerFilingService.prototype
+    officerFiling: OfficerFilingService.prototype
 } as ApiClient);
 
 const clone = (objectToClone: any): any => {
-  return JSON.parse(JSON.stringify(objectToClone));
+    return JSON.parse(JSON.stringify(objectToClone));
 };
 
 describe("Test check your answers service", () => {
 
-  const TRANSACTION_ID = "66454";
-  const SUBMISSION_ID = "1236717823";
+    const TRANSACTION_ID = "66454";
+    const SUBMISSION_ID = "1236717823";
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it("Should call the sdk and get the active director details data", async () => {
+    it("Should call the sdk and get the active director details data", async () => {
 
-    const resource: Resource<CompanyOfficer> = {
-      httpStatusCode: 200,
-      resource: mockCompanyOfficer
-    };
+        const resource: Resource<CompanyOfficer> = {
+            httpStatusCode: 200,
+            resource: mockCompanyOfficer
+        };
 
-    mockGetDirectorAndTerminationDate.mockReturnValueOnce(resource);
-    const session =  getSessionRequest();
-    const response = await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
+        mockGetDirectorAndTerminationDate.mockReturnValueOnce(resource);
+        const session = getSessionRequest();
+        const response = await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
 
-    expect(mockGetDirectorAndTerminationDate).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
-    expect(response).toEqual(mockCompanyOfficer);
-  });
+        expect(mockGetDirectorAndTerminationDate).toHaveBeenCalledWith(TRANSACTION_ID, SUBMISSION_ID);
+        expect(response).toEqual(mockCompanyOfficer);
+    });
 
-  it("should throw error when http error code is returned", async () => {
+    it("should throw error when http error code is returned", async () => {
 
-    const errorMessage = "Oops! Someone stepped on the wire.";
-    const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 404,
-      errors: [{ error: errorMessage }]
-    };
+        const errorMessage = "Oops! Someone stepped on the wire.";
+        const errorResponse: ApiErrorResponse = {
+            httpStatusCode: 404,
+            errors: [{ error: errorMessage }]
+        };
 
-    mockGetDirectorAndTerminationDate.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest();
-    const expectedMessage = "Error retrieving TM01 check your answers details: " + JSON.stringify(errorResponse);
-    let actualMessage;
+        mockGetDirectorAndTerminationDate.mockReturnValueOnce(errorResponse);
+        const session = getSessionRequest();
+        const expectedMessage = "Error retrieving TM01 check your answers details: " + JSON.stringify(errorResponse);
+        let actualMessage;
 
-    try {
-      await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
-    } catch (err) {
-      actualMessage = (err as Error).message;
-    }
+        try {
+            await getDirectorAndTerminationDate(session, TRANSACTION_ID, SUBMISSION_ID);
+        } catch (err) {
+            actualMessage = (err as Error).message;
+        }
 
-    expect(actualMessage).toBeTruthy();
-    expect(actualMessage).toEqual(expectedMessage);
-  });
+        expect(actualMessage).toBeTruthy();
+        expect(actualMessage).toEqual(expectedMessage);
+    });
 });

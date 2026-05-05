@@ -16,96 +16,96 @@ import { ResidentialManualAddressValidation } from "../../validation/address.val
 import { formatValidationErrors } from "../../validation/validation";
 
 export const getDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, templateName: string, backUrlPath: string, manualEntryUrl: string, isUpdate: boolean) => {
-  try {
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const directorName = isUpdate ? 
-          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
-          await getDirectorNameForAppointJourney(officerFiling);
-    const manualEntryUrlWithBackLink = manualEntryUrl+"?backLink=confirm-residential-address";
+    try {
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const directorName = isUpdate ?
+            await getDirectorNameForUpdateJourney(session, req, officerFiling) :
+            await getDirectorNameForAppointJourney(officerFiling);
+        const manualEntryUrlWithBackLink = manualEntryUrl + "?backLink=confirm-residential-address";
 
-    // Validate residentialAddress missing fields if any onload
-    const residentialAddress: Address | undefined = officerFiling.residentialAddress;
-    const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
+        // Validate residentialAddress missing fields if any onload
+        const residentialAddress: Address | undefined = officerFiling.residentialAddress;
+        const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
 
-    return res.render(templateName, {
-      templateName: templateName,
-      backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
-      directorName: formatTitleCase(directorName),
-      enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-      errors: formatValidationErrors(jsValidationErrors,lang),
-      ...officerFiling.residentialAddress,
-      ...getLocaleInfo(locales, lang),
-      currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
-    });
-  } catch (e) {
-    return next(e);
-  }
+        return res.render(templateName, {
+            templateName: templateName,
+            backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(backUrlPath, req), lang),
+            directorName: formatTitleCase(directorName),
+            enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
+            errors: formatValidationErrors(jsValidationErrors, lang),
+            ...officerFiling.residentialAddress,
+            ...getLocaleInfo(locales, lang),
+            currentUrl: isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+        });
+    } catch (e) {
+        return next(e);
+    }
 };
 
 export const postDirectorConfirmResidentialAddress = async (req: Request, res: Response, next: NextFunction, checkYourAnswersLink: string, nextPageUrl: string, isUpdate: boolean) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
-    const directorName = isUpdate ? 
-          await getDirectorNameForUpdateJourney(session, req, officerFiling) : 
-          await getDirectorNameForAppointJourney(officerFiling);
-    const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH+"?backLink=confirm-residential-address";
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
+        const directorName = isUpdate ?
+            await getDirectorNameForUpdateJourney(session, req, officerFiling) :
+            await getDirectorNameForAppointJourney(officerFiling);
+        const manualEntryUrlWithBackLink = DIRECTOR_RESIDENTIAL_ADDRESS_MANUAL_PATH + "?backLink=confirm-residential-address";
 
-    // Validate residentialAddress missing fields if any onload
-    const residentialAddress: Address | undefined = officerFiling.residentialAddress;
-    const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
+        // Validate residentialAddress missing fields if any onload
+        const residentialAddress: Address | undefined = officerFiling.residentialAddress;
+        const jsValidationErrors = residentialAddress ? validateManualAddress(residentialAddress, ResidentialManualAddressValidation) : [];
 
-    if(jsValidationErrors.length > 0) {
-        return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
-          templateName: Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
-          backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req), lang),
-          directorName: formatTitleCase(directorName),
-          enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
-          errors: formatValidationErrors(jsValidationErrors,lang),
-          ...officerFiling.residentialAddress,
-          ...getLocaleInfo(locales, lang),
-          currentUrl : isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
-        });
-      }
+        if (jsValidationErrors.length > 0) {
+            return res.render(Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS, {
+                templateName: Templates.UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS,
+                backLinkUrl: addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_RESIDENTIAL_ADDRESS_SEARCH_PATH, req), lang),
+                directorName: formatTitleCase(directorName),
+                enterAddressManuallyUrl: addLangToUrl(urlUtils.getUrlToPath(manualEntryUrlWithBackLink, req), lang),
+                errors: formatValidationErrors(jsValidationErrors, lang),
+                ...officerFiling.residentialAddress,
+                ...getLocaleInfo(locales, lang),
+                currentUrl: isUpdate ? getUpdateUrl(req, lang) : getAppointUrl(req, lang),
+            });
+        }
 
-    const officerFilingBody: OfficerFiling = {
-      isHomeAddressSameAsServiceAddress: false
-    };
+        const officerFilingBody: OfficerFiling = {
+            isHomeAddressSameAsServiceAddress: false
+        };
 
-    if (isUpdate) {
-      const appointmentId = officerFiling.referenceAppointmentId as string;
-      const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-      const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
-      officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
-        { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
-        companyAppointment
-      );
+        if (isUpdate) {
+            const appointmentId = officerFiling.referenceAppointmentId as string;
+            const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+            const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(session, companyNumber, appointmentId);
+            officerFilingBody.residentialAddressHasBeenUpdated = checkIsResidentialAddressUpdated(
+                { isHomeAddressSameAsServiceAddress: officerFilingBody.isHomeAddressSameAsServiceAddress, residentialAddress: officerFiling.residentialAddress },
+                companyAppointment
+            );
+        }
+
+        await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
+
+        if (officerFiling.checkYourAnswersLink) {
+            return res.redirect(addLangToUrl(urlUtils.getUrlToPath(checkYourAnswersLink, req), lang));
+        }
+        return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
+    } catch (e) {
+        return next(e);
     }
-
-    await patchOfficerFiling(session, transactionId, submissionId, officerFilingBody);
-
-    if (officerFiling.checkYourAnswersLink) {
-      return res.redirect(addLangToUrl(urlUtils.getUrlToPath(checkYourAnswersLink, req), lang));
-    }
-    return res.redirect(addLangToUrl(urlUtils.getUrlToPath(nextPageUrl, req), lang));
-  } catch (e) {
-    return next(e);
-  }
 };
 
 const getAppointUrl = (req: Request, lang: string): string => {
-    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-}
+    return addLangToUrl(urlUtils.getUrlToPath(DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang);
+};
 
 const getUpdateUrl = (req: Request, lang: string): string => {
-    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang)
-}
+    return addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CONFIRM_RESIDENTIAL_ADDRESS_PATH, req), lang);
+};

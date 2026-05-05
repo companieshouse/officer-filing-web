@@ -84,19 +84,19 @@ export enum RADIO_BUTTON_VALUE {
 }
 
 export const taskKeys = {
-  SECTION_STATUS_KEY: "sectionStatus"
+    SECTION_STATUS_KEY: "sectionStatus"
 };
 
 export const appointmentTypes = {
-  INDIVIDUAL_PSC: "5007",
-  RLE_PSC: "5008",
-  LEGAL_PERSON_PSC: "5009"
+    INDIVIDUAL_PSC: "5007",
+    RLE_PSC: "5008",
+    LEGAL_PERSON_PSC: "5009"
 };
 
 export const appointmentTypeNames = {
-  PSC: "psc",
-  RLE: "rle",
-  ORP: "orp"
+    PSC: "psc",
+    RLE: "rle",
+    ORP: "orp"
 };
 
 export enum SECTIONS {
@@ -111,22 +111,22 @@ export enum SECTIONS {
 }
 
 export const transactionStatuses = {
-  CLOSED: "closed"
+    CLOSED: "closed"
 };
 
 export const headers = {
-  PAYMENT_REQUIRED: "x-payment-required"
+    PAYMENT_REQUIRED: "x-payment-required"
 };
 
 export const links = {
-  COSTS: "costs"
+    COSTS: "costs"
 };
 
 export enum OFFICER_ROLE {
   SECRETARY = "SECRETARY",
   DIRECTOR = "DIRECTOR",
   CORPORATE_DIRECTOR = "CORPORATE-DIRECTOR",
-  NOMINEE_DIRECTOR = "NOMINEE-DIRECTOR", 
+  NOMINEE_DIRECTOR = "NOMINEE-DIRECTOR",
   CORPORATE_NOMINEE_DIRECTOR = "CORPORATE-NOMINEE-DIRECTOR"
 }
 
@@ -147,86 +147,86 @@ export enum FILING_DESCRIPTION {
 
 export const allowedPublicCompanyTypes = new Array("plc");
 
-export const allowedPrivateCompanyTypes = new Array("ltd", "private-limited-guarant-nsc-limited-exemption", "private-limited-guarant-nsc", "private-unlimited", "private-unlimited-nsc", "private-limited-shares-section-30-exemption");
+export const allowedPrivateCompanyTypes = ["ltd", "private-limited-guarant-nsc-limited-exemption", "private-limited-guarant-nsc", "private-unlimited", "private-unlimited-nsc", "private-limited-shares-section-30-exemption"];
 
 export const allowedCompanyTypes = allowedPublicCompanyTypes.concat(allowedPrivateCompanyTypes);
 
-export const lowerCaseWordsForNationalityFormatting = new Array("AND", "OF", "THE", "DA", "PART", "CITIZEN")
+export const lowerCaseWordsForNationalityFormatting = ["AND", "OF", "THE", "DA", "PART", "CITIZEN"];
 
-export const STOP_PAGE_CONTENT = 
+export const STOP_PAGE_CONTENT =
 {
-    dissolved:{
+    dissolved: {
         pageBodyEnglish: `<p>` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
 
-        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
-        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href=` + START_SERVICE_AGAIN_URL  + ` data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
-        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a> `+ STOP_PAGE_CONTACT_US_TEXT + `</p>
+        <p><a href="https://www.gov.uk/guidance/company-restoration-guide" data-event-id="read-the-company-restoration-guide-link"> ` + DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
+        <p>` + DISSOLVED_COMPANY_BODY_LINE3_PART1 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a> ` + STOP_PAGE_CONTACT_US_TEXT + `</p>
         `,
-        
+
         pageBodyWelsh: `<p>` + DISSOLVED_COMPANY_BODY_LINE1_PART1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + DISSOLVED_COMPANY_BODY_LINE1_PART2 + `</p>
 
-        <p><a href="https://www.gov.uk/government/publications/company-strike-off-dissolution-and-restoration.cy" data-event-id="read-the-company-restoration-guide-link"> `+ DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
-        <p>`+ DISSOLVED_COMPANY_BODY_LINE3_PART1 +`<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">`+ DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
+        <p><a href="https://www.gov.uk/government/publications/company-strike-off-dissolution-and-restoration.cy" data-event-id="read-the-company-restoration-guide-link"> ` + DISSOLVED_COMPANY_BODY_LINE2_PART1 + `</a> ` + DISSOLVED_COMPANY_BODY_LINE2_PART2 + ` </p>
+        <p>` + DISSOLVED_COMPANY_BODY_LINE3_PART1 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + DISSOLVED_COMPANY_BODY_LINE3_PART2 + `</a>.</p>
         <p>` + STOP_PAGE_CONTACT_US_TEXT + ` <a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
-    limitedUnlimited:{
+    limitedUnlimited: {
         pageBodyEnglish: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
         <ul>
-            <li>`+ LIMITED_UNLIMITED_LTD + `</li>
-            <li>`+ LIMITED_UNLIMITED_PLC +`</li>
-            <li>`+ LIMITED_UNLIMITED_ULC +`</li>
+            <li>` + LIMITED_UNLIMITED_LTD + `</li>
+            <li>` + LIMITED_UNLIMITED_PLC + `</li>
+            <li>` + LIMITED_UNLIMITED_ULC + `</li>
         </ul>  
 
-        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, `+ LIMITED_UNLIMITED_BODY_4 +` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">`+ LIMITED_UNLIMITED_BODY_5 +`</a>.</p>
-        <p>`+ LIMITED_UNLIMITED_BODY_6 +`, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 +`</a>.</p>
-        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>`+ STOP_PAGE_CONTACT_US_TEXT + `</p>
+        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, ` + LIMITED_UNLIMITED_BODY_4 + ` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">` + LIMITED_UNLIMITED_BODY_5 + `</a>.</p>
+        <p>` + LIMITED_UNLIMITED_BODY_6 + `, <a href="` + COMPANY_LOOKUP.replace("{", "%7B").replace("}", "%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 + `</a>.</p>
+        <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
         `,
 
         pageBodyWelsh: `<p>` + LIMITED_UNLIMITED_BODY_1 + ` ` + COMPANY_NAME_PLACEHOLDER + ` ` + LIMITED_UNLIMITED_BODY_2 + `</p>
         <ul>
-            <li>`+ LIMITED_UNLIMITED_LTD + `</li>
-            <li>`+ LIMITED_UNLIMITED_PLC +`</li>
-            <li>`+ LIMITED_UNLIMITED_ULC +`</li>
+            <li>` + LIMITED_UNLIMITED_LTD + `</li>
+            <li>` + LIMITED_UNLIMITED_PLC + `</li>
+            <li>` + LIMITED_UNLIMITED_ULC + `</li>
         </ul>  
 
-        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, `+ LIMITED_UNLIMITED_BODY_4 +` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">`+ LIMITED_UNLIMITED_BODY_5 +`</a>.</p>
-        <p>` + LIMITED_UNLIMITED_BODY_6 +`, <a href="` + COMPANY_LOOKUP.replace("{","%7B").replace("}","%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 +`</a>.</p>
-        <p>` + STOP_PAGE_CONTACT_US_TEXT +`<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK +`</a>` + `.` +`</p>
+        <p>` + LIMITED_UNLIMITED_BODY_3 + ` ` + COMPANY_NAME_PLACEHOLDER + `, ` + LIMITED_UNLIMITED_BODY_4 + ` <a href="https://www.gov.uk/topic/company-registration-filing/forms" data-event-id="list-of-companies-house-forms">` + LIMITED_UNLIMITED_BODY_5 + `</a>.</p>
+        <p>` + LIMITED_UNLIMITED_BODY_6 + `, <a href="` + COMPANY_LOOKUP.replace("{", "%7B").replace("}", "%7D") + `" data-event-id="enter-a-different-company-number-link">` + LIMITED_UNLIMITED_BODY_7 + `</a>.</p>
+        <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + `.` + `</p>
         `,
     },
-    pre_october_2009:{
-      pageHeader: PRE_OCTOBER_2009_HEADER,
-      pageBody: `<p>` + PRE_OCTOBER_2009_HEADER1 + `</p>
+    pre_october_2009: {
+        pageHeader: PRE_OCTOBER_2009_HEADER,
+        pageBody: `<p>` + PRE_OCTOBER_2009_HEADER1 + `</p>
       <p>` + PRE_OCTOBER_2009_288B_LINK_TEXT1 + `<a href="https://webarchive.nationalarchives.gov.uk/ukgwa/20140103090023/http://www.companieshouse.gov.uk/forms/formsOnline1985.shtml" data-event-id="288b-form-link">` + PRE_OCTOBER_2009_288B_LINK_TEXT2 + `</a>` + PRE_OCTOBER_2009_288B_PARAGRAPH_TEXT + `</p>
       <p>` + PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT1 + " enquiries@companieshouse.gov.uk " + PRE_OCTOBER_2009_WHERE_TO_CONTACT_TEXT2 + `</p>
-      <p>` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT1+ `<a href="` + DATE_DIRECTOR_REMOVED_LINK + `" data-event-id="enter-a-different-date-link">` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT2 + `</a>.</p>
+      <p>` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT1 + `<a href="` + DATE_DIRECTOR_REMOVED_LINK + `" data-event-id="enter-a-different-date-link">` + PRE_OCTOBER_2009_REMOVED_DATE_TEXT2 + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `
     },
-    etag:{
-      pageHeader: ETAG_PAGE_HEADER,
-      pageBodyEnglish: `<p>` + ETAG_PAGE_BODY_1 + `</p>
+    etag: {
+        pageHeader: ETAG_PAGE_HEADER,
+        pageBodyEnglish: `<p>` + ETAG_PAGE_BODY_1 + `</p>
       <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `,
-      pageBodyWelsh: `<p>` + ETAG_PAGE_BODY_1 + `</p>
+        pageBodyWelsh: `<p>` + ETAG_PAGE_BODY_1 + `</p>
       <p>` + ETAG_PAGE_BODY_2 + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + ETAG_PAGE_BODY_START_SERVICE_AGAIN_LINK + `</a>.</p>
       <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     },
-    somethingWentWrong:{
-      pageHeader: SOMETHING_WENT_WRONG_HEADER,
-      pageBody: `
+    somethingWentWrong: {
+        pageHeader: SOMETHING_WENT_WRONG_HEADER,
+        pageBody: `
       <p>` + SOMETHING_WENT_WRONG_BODY + `<a href=` + START_SERVICE_AGAIN_URL + ` data-event-id="start-the-service-again-link">` + SOMETHING_WENT_WRONG_LINK + `</a>.</p>`
     },
     secure_officer: {
-      pageHeader: SECURE_OFFICER_HEADER,
-      pageBodyEnglish: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+        pageHeader: SECURE_OFFICER_HEADER,
+        pageBodyEnglish: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
       <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/#lang-en" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
       <p><a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a>` + STOP_PAGE_CONTACT_US_TEXT + `</p>
       `
-      ,
-      pageBodyWelsh: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
+        ,
+        pageBodyWelsh: `<p>` + SECURE_OFFICER_BODY_1 + `</p>
       <p>` + SECURE_OFFICER_BODY_2 + `<a href="https://idam-ui.company-information.service.gov.uk/#lang-cy" data-event-id="secure-officer-web-link">` + SECURE_OFFICER_WEBFILING_LINK + `</a>` + SECURE_OFFICER_BODY_3 + `<a href="https://www.gov.uk/government/publications/appoint-a-director-ap01" data-event-id="secure-officer-paper-form-link">` + SECURE_OFFICER_PAPER_FORM_LINK + `</a>` + SECURE_OFFICER_BODY_4 + `</p>
       <p>` + STOP_PAGE_CONTACT_US_TEXT + `<a href="https://www.gov.uk/contact-companies-house" data-event-id="contact-us-link">` + STOP_PAGE_BODY_CONTACT_US_LINK + `</a></p>`
     }
-}
+};

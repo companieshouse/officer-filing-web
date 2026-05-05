@@ -3,11 +3,10 @@ import { DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, DIRECTOR_RESIDENTIAL_ADDRESS_PATH
 import { Templates } from "../types/template.paths";
 import { getCorrespondenceLink, postCorrespondenceLink } from "./shared.controllers/director.correspondence.address.link.controller";
 
-
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  getCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false)
+    getCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false);
 };
 
 export const post = async (req: Request, res: Response, next: NextFunction) => {
-  postCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, {yes: DIRECTOR_RESIDENTIAL_ADDRESS_PATH, no: DIRECTOR_RESIDENTIAL_ADDRESS_PATH}, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false)
+    postCorrespondenceLink(req, res, next, Templates.DIRECTOR_CORRESPONDENCE_ADDRESS_LINK, { yes: DIRECTOR_RESIDENTIAL_ADDRESS_PATH, no: DIRECTOR_RESIDENTIAL_ADDRESS_PATH }, DIRECTOR_CORRESPONDENCE_ADDRESS_PATH, false);
 };

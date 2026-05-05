@@ -20,86 +20,86 @@ import { CompanyAppointment } from "private-api-sdk-node/dist/services/company-a
 import { setBackLink } from "../../utils/web";
 
 export const get = async (req: Request, resp: Response, next: NextFunction) => {
-  try {
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber= urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const officerFiling : OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const dateOfChangeFields = officerFiling.directorsDetailsChangedDate ? officerFiling.directorsDetailsChangedDate.split('-').reverse() : [];
-    
-    //patch officer filing with checkYourAnswersLink as empty if cya_backlink in url
-    if(req.query.cya_backlink === "true") {
-       officerFiling.checkYourAnswersLink = "";
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const dateOfChangeFields = officerFiling.directorsDetailsChangedDate ? officerFiling.directorsDetailsChangedDate.split('-').reverse() : [];
+
+        // patch officer filing with checkYourAnswersLink as empty if cya_backlink in url
+        if (req.query.cya_backlink === "true") {
+            officerFiling.checkYourAnswersLink = "";
             await patchOfficerFiling(session, transactionId, submissionId, officerFiling);
-  }
-  
-    return renderPage(resp, req, officerFiling, [], dateOfChangeFields, companyNumber);
-  } catch(e) {
-    return next(e);
-  }
+        }
+
+        return renderPage(resp, req, officerFiling, [], dateOfChangeFields, companyNumber);
+    } catch (e) {
+        return next(e);
+    }
 };
 
 export const post = async (req: Request, resp: Response, next: NextFunction) => {
-  try{
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const session: Session = req.session as Session;
+    try {
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+        const session: Session = req.session as Session;
 
-    const companyProfile = await getCompanyProfile(companyNumber);
-    const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const companyProfile = await getCompanyProfile(companyNumber);
+        const officerFiling = await getOfficerFiling(session, transactionId, submissionId);
 
-    // Get date of change
-    const docDay = req.body[DirectorDateOfChangeField.DAY];
-    const docMonth = req.body[DirectorDateOfChangeField.MONTH];
-    const docYear = req.body[DirectorDateOfChangeField.YEAR];
+        // Get date of change
+        const docDay = req.body[DirectorDateOfChangeField.DAY];
+        const docMonth = req.body[DirectorDateOfChangeField.MONTH];
+        const docYear = req.body[DirectorDateOfChangeField.YEAR];
 
-    // Validate the date fields (JS)
-    let changeOfDateValidationErrors: ValidationError[] = [];
-    let docValidateError = validateDateOfChange(docDay, docMonth, docYear, DirectorDateOfChangeValidation, companyProfile, officerFiling);
-    const dateOfChangeString = buildDateString(docDay, docMonth, docYear);
-    const lang = selectLang(req.query.lang);
+        // Validate the date fields (JS)
+        const changeOfDateValidationErrors: ValidationError[] = [];
+        const docValidateError = validateDateOfChange(docDay, docMonth, docYear, DirectorDateOfChangeValidation, companyProfile, officerFiling);
+        const dateOfChangeString = buildDateString(docDay, docMonth, docYear);
+        const lang = selectLang(req.query.lang);
 
-    if(docValidateError) {
-      changeOfDateValidationErrors.push(docValidateError);
-      return renderPage(resp, req, officerFiling, changeOfDateValidationErrors, [docDay, docMonth, docYear], companyNumber)
+        if (docValidateError) {
+            changeOfDateValidationErrors.push(docValidateError);
+            return renderPage(resp, req, officerFiling, changeOfDateValidationErrors, [docDay, docMonth, docYear], companyNumber);
+        }
+
+        // Patch the officer filing
+        const updatedFiling: OfficerFiling = {
+            directorsDetailsChangedDate: dateOfChangeString,
+        };
+
+        await patchOfficerFiling(session, transactionId, submissionId, updatedFiling);
+
+        return resp.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang));
+    } catch (e) {
+        return next(e);
     }
-    
-    //Patch the officer filing
-    const updatedFiling: OfficerFiling = {
-      directorsDetailsChangedDate: dateOfChangeString,
-    }
 
-    await patchOfficerFiling(session, transactionId, submissionId, updatedFiling);
-
-    return resp.redirect(addLangToUrl(urlUtils.getUrlToPath(UPDATE_DIRECTOR_CHECK_ANSWERS_PATH, req), lang));
-  } catch(e) {
-    return next(e);
-  }
-
-}
+};
 
 const renderPage = async (res: Response, req: Request, officerFiling: OfficerFiling, validationErrors: ValidationError[], dateOfChangeFields: string[], companyNumber: string,) => {
-  const lang = selectLang(req.query.lang);
-  const locales = getLocalesService();
-  const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
-  const date = {
-    date_of_change: {
-      "date_of_change-day": dateOfChangeFields[0],
-      "date_of_change-month": dateOfChangeFields[1],
-      "date_of_change-year": dateOfChangeFields[2]
-    }
-  };
+    const lang = selectLang(req.query.lang);
+    const locales = getLocalesService();
+    const companyAppointment: CompanyAppointment = await getCompanyAppointmentFullRecord(req.session as Session, companyNumber, officerFiling.referenceAppointmentId as string);
+    const date = {
+        date_of_change: {
+            "date_of_change-day": dateOfChangeFields[0],
+            "date_of_change-month": dateOfChangeFields[1],
+            "date_of_change-year": dateOfChangeFields[2]
+        }
+    };
 
-  return res.render(Templates.DIRECTOR_DATE_OF_CHANGE, {
-    templateName: Templates.DIRECTOR_DATE_OF_CHANGE,
-    backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang),
-    directorName: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
-    errors: formatValidationErrors(validationErrors, lang),
-    ...officerFiling,
-    ...date,
-    ...getLocaleInfo(locales, lang),
-    currentUrl: req.originalUrl,
-  });
-}
+    return res.render(Templates.DIRECTOR_DATE_OF_CHANGE, {
+        templateName: Templates.DIRECTOR_DATE_OF_CHANGE,
+        backLinkUrl: setBackLink(req, officerFiling.checkYourAnswersLink, urlUtils.getUrlToPath(UPDATE_DIRECTOR_DETAILS_PATH, req), lang),
+        directorName: formatTitleCase(retrieveDirectorNameFromAppointment(companyAppointment)),
+        errors: formatValidationErrors(validationErrors, lang),
+        ...officerFiling,
+        ...date,
+        ...getLocaleInfo(locales, lang),
+        currentUrl: req.originalUrl,
+    });
+};

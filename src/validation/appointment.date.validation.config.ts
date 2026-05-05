@@ -95,4 +95,4 @@ export const AppointmentDateValidation: DateValidationType = {
             link: AppointmentDateField.DAY
         }
     }
-}
+};

@@ -36,110 +36,110 @@ const COMPANY_NUMBER = "12345678";
 const TRANSACTION_ID = "11223344";
 const SUBMISSION_ID = "55555555";
 const PAGE_HEADING = "Removal of director submitted";
-const WHAT_HAPPENS_NEXT = "We'll send a confirmation email to you which contains your reference number."
+const WHAT_HAPPENS_NEXT = "We'll send a confirmation email to you which contains your reference number.";
 const FEEDBACK = "This is a new service. Help us improve it by completing our";
 const SUBMITTED_URL = REMOVE_DIRECTOR_SUBMITTED_PATH
-  .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
-  .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
-  .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
+    .replace(`:${urlParams.PARAM_COMPANY_NUMBER}`, COMPANY_NUMBER)
+    .replace(`:${urlParams.PARAM_TRANSACTION_ID}`, TRANSACTION_ID)
+    .replace(`:${urlParams.PARAM_SUBMISSION_ID}`, SUBMISSION_ID);
 
 describe("Remove director submitted controller tests", () => {
 
-  beforeEach(() => {
-    mocks.mockAuthenticationMiddleware.mockClear();
-    mocks.mockCreateSessionMiddleware.mockClear();
-    mockGetOfficerFiling.mockClear();
-    mockGetCompanyAppointmentFullRecord.mockClear();
-    mockGetCompanyProfile.mockClear();
-  });
-
-  describe("get tests", () => {
-
-    it("Should navigate to removal of director submitted page", async () => {
-      const response = await request(app).get(SUBMITTED_URL);
-
-      expect(response.text).toContain(PAGE_HEADING);
-      expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+    beforeEach(() => {
+        mocks.mockAuthenticationMiddleware.mockClear();
+        mocks.mockCreateSessionMiddleware.mockClear();
+        mockGetOfficerFiling.mockClear();
+        mockGetCompanyAppointmentFullRecord.mockClear();
+        mockGetCompanyProfile.mockClear();
     });
 
-    it("Should display removal summary for the non-corporate director", async () => {
-      const response = await request(app).get(SUBMITTED_URL);
+    describe("get tests", () => {
 
-      expect(mockGetCompanyProfile).toHaveBeenCalled();
-      expect(mockGetOfficerFiling).toHaveBeenCalled();
-      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+        it("Should navigate to removal of director submitted page", async () => {
+            const response = await request(app).get(SUBMITTED_URL);
 
-      expect(response.text).toContain("Company name");
-      expect(response.text).toContain("Test Company");
-      expect(response.text).toContain("Company number");
-      expect(response.text).toContain("12345678");
-      expect(response.text).toContain("Name of director");
-      expect(response.text).toContain("Mr John Elizabeth Doe");
-      expect(response.text).toContain("Date removed");
-      expect(response.text).toContain("8 August 2008");
+            expect(response.text).toContain(PAGE_HEADING);
+            expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
+        });
+
+        it("Should display removal summary for the non-corporate director", async () => {
+            const response = await request(app).get(SUBMITTED_URL);
+
+            expect(mockGetCompanyProfile).toHaveBeenCalled();
+            expect(mockGetOfficerFiling).toHaveBeenCalled();
+            expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+
+            expect(response.text).toContain("Company name");
+            expect(response.text).toContain("Test Company");
+            expect(response.text).toContain("Company number");
+            expect(response.text).toContain("12345678");
+            expect(response.text).toContain("Name of director");
+            expect(response.text).toContain("Mr John Elizabeth Doe");
+            expect(response.text).toContain("Date removed");
+            expect(response.text).toContain("8 August 2008");
+        });
+
+        it("Should display removal summary for corporate director", async () => {
+            mockGetCompanyAppointmentFullRecord.mockResolvedValue(companyAppointmentCorporateDirector );
+            const response = await request(app).get(SUBMITTED_URL);
+
+            expect(mockGetCompanyProfile).toHaveBeenCalled();
+            expect(mockGetOfficerFiling).toHaveBeenCalled();
+            expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+
+            expect(response.text).toContain("Company name");
+            expect(response.text).toContain("Test Company");
+            expect(response.text).toContain("Company number");
+            expect(response.text).toContain("12345678");
+            expect(response.text).toContain("Name of director");
+            expect(response.text).toContain("REACTIONLIQUOR CESSPOOLLIQUOR REGRET");
+            expect(response.text).toContain("Date removed");
+            expect(response.text).toContain("8 August 2008");
+        });
+
+        it("Should render the page in welsh", async () => {
+            const response = await request(app).get(SUBMITTED_URL + "?lang=cy");
+            expect(response.text).toContain("Dileu’r cyfarwyddwr wedi ei gyflwyno");
+
+        });
+
+        it("Should display required subtitles & information", async () => {
+            const response = await request(app).get(SUBMITTED_URL);
+
+            expect(mockGetCompanyProfile).toHaveBeenCalled();
+            expect(mockGetOfficerFiling).toHaveBeenCalled();
+            expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
+
+            expect(response.text).toContain("What happens next");
+            expect(response.text).toContain("We&#39;ll send a confirmation email to you which contains your reference number.");
+            expect(response.text).toContain("What do you want to do next?");
+            expect(response.text).toContain("Feedback");
+            expect(response.text).toContain(FEEDBACK);
+        });
+
+        it("Should throw an internal server error if resigned on date is missing", async () => {
+            mockGetOfficerFiling.mockResolvedValue({
+                httpStatusCode: 200,
+                resource: {
+                    referenceAppointmentId: "app1",
+                    referenceEtag: "ETAG",
+                }
+            });
+            const response = await request(app).get(SUBMITTED_URL);
+            expect(response.text).toContain("Sorry, there is a problem with this service");
+        });
+
+        it("Should throw an internal server error if appointment Id is missing", async () => {
+            mockGetOfficerFiling.mockResolvedValue({
+                httpStatusCode: 200,
+                resource: {
+                    referenceEtag: "ETAG",
+                    resignedOn: "2008-08-08"
+                }
+            });
+            const response = await request(app).get(SUBMITTED_URL);
+            expect(response.text).toContain("Sorry, there is a problem with this service");
+        });
+
     });
-
-    it("Should display removal summary for corporate director", async () => {
-      mockGetCompanyAppointmentFullRecord.mockResolvedValue(companyAppointmentCorporateDirector );
-      const response = await request(app).get(SUBMITTED_URL);
-
-      expect(mockGetCompanyProfile).toHaveBeenCalled();
-      expect(mockGetOfficerFiling).toHaveBeenCalled();
-      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
-
-      expect(response.text).toContain("Company name");
-      expect(response.text).toContain("Test Company");
-      expect(response.text).toContain("Company number");
-      expect(response.text).toContain("12345678");
-      expect(response.text).toContain("Name of director");
-      expect(response.text).toContain("REACTIONLIQUOR CESSPOOLLIQUOR REGRET");
-      expect(response.text).toContain("Date removed");
-      expect(response.text).toContain("8 August 2008");
-    });
-
-    it("Should render the page in welsh", async () => {
-          const response = await request(app).get(SUBMITTED_URL + "?lang=cy");
-               expect(response.text).toContain("Dileu’r cyfarwyddwr wedi ei gyflwyno");
-
-    });
-
-    it("Should display required subtitles & information", async () => {
-      const response = await request(app).get(SUBMITTED_URL);
-
-      expect(mockGetCompanyProfile).toHaveBeenCalled();
-      expect(mockGetOfficerFiling).toHaveBeenCalled();
-      expect(mockGetCompanyAppointmentFullRecord).toHaveBeenCalled();
-
-      expect(response.text).toContain("What happens next");
-      expect(response.text).toContain("We&#39;ll send a confirmation email to you which contains your reference number.");
-      expect(response.text).toContain("What do you want to do next?");
-      expect(response.text).toContain("Feedback");
-      expect(response.text).toContain(FEEDBACK);
-    });    
-  
-    it("Should throw an internal server error if resigned on date is missing", async () => {
-      mockGetOfficerFiling.mockResolvedValue({
-        httpStatusCode: 200,
-        resource: {
-          referenceAppointmentId: "app1",
-          referenceEtag: "ETAG",
-        }
-      });
-      const response = await request(app).get(SUBMITTED_URL);
-      expect(response.text).toContain("Sorry, there is a problem with this service");
-    });
-
-    it("Should throw an internal server error if appointment Id is missing", async () => {
-      mockGetOfficerFiling.mockResolvedValue({
-        httpStatusCode: 200,
-        resource: {
-          referenceEtag: "ETAG",
-          resignedOn: "2008-08-08"
-        }
-      });
-      const response = await request(app).get(SUBMITTED_URL);
-      expect(response.text).toContain("Sorry, there is a problem with this service");
-    });
-
-  });
 });

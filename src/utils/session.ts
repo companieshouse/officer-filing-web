@@ -4,10 +4,10 @@ import { ISignInInfo } from '@companieshouse/node-session-handler/lib/session/mo
 import { AccessTokenKeys } from '@companieshouse/node-session-handler/lib/session/keys/AccessTokenKeys';
 
 export function getSignInInfo(session): ISignInInfo {
-  return session?.data?.[SessionKey.SignInInfo];
+    return session?.data?.[SessionKey.SignInInfo];
 }
 
 export function getAccessToken(session): string {
-  const signInInfo = getSignInInfo(session);
-  return signInInfo?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken] as string;
+    const signInInfo = getSignInInfo(session);
+    return signInInfo?.[SignInInfoKeys.AccessToken]?.[AccessTokenKeys.AccessToken] as string;
 }

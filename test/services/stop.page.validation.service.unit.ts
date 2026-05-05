@@ -8,49 +8,49 @@ const mockGetCompanyProfile = getCompanyProfile as jest.Mock;
 
 describe("Test stop page validation service", () => {
 
-  const COMPANY_NUMBER = "12345678";
+    const COMPANY_NUMBER = "12345678";
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it("Should call getCompanyProfile and return false for valid company profile", async () => {
+    it("Should call getCompanyProfile and return false for valid company profile", async () => {
 
-    mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
+        mockGetCompanyProfile.mockResolvedValue(validCompanyProfile);
 
-    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+        const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
-    expect(response).toEqual(false);
-  });
+        expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
+        expect(response).toEqual(false);
+    });
 
-  it("Should call getCompanyProfile and return true for dissolved company", async () => {
+    it("Should call getCompanyProfile and return true for dissolved company", async () => {
 
-    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved" });
+        mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved" });
 
-    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+        const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
-    expect(response).toEqual(true);
-  });
+        expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
+        expect(response).toEqual(true);
+    });
 
-  it("Should call getCompanyProfile and return true for company with dateOfCessation", async () => {
+    it("Should call getCompanyProfile and return true for company with dateOfCessation", async () => {
 
-    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, dateOfCessation: "2000-01-01" });
+        mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, dateOfCessation: "2000-01-01" });
 
-    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+        const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
-    expect(response).toEqual(true);
-  });
+        expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
+        expect(response).toEqual(true);
+    });
 
-  it("Should call getCompanyProfile and return true for dissolved company with dateOfCessation", async () => {
+    it("Should call getCompanyProfile and return true for dissolved company with dateOfCessation", async () => {
 
-    mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved", dateOfCessation: "2000-01-01" });
+        mockGetCompanyProfile.mockResolvedValue({ ...validCompanyProfile, companyStatus: "dissolved", dateOfCessation: "2000-01-01" });
 
-    const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
+        const response = await getCurrentOrFutureDissolved(COMPANY_NUMBER);
 
-    expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
-    expect(response).toEqual(true);
-  });
+        expect(mockGetCompanyProfile).toHaveBeenCalledWith(COMPANY_NUMBER);
+        expect(response).toEqual(true);
+    });
 });

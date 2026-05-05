@@ -13,37 +13,37 @@ const CREATE_TRANSACTION_URL = CREATE_TRANSACTION_PATH.replace(":companyNumber",
 const EXPECTED_HEADER_LOCATION = "/appoint-update-remove-company-officer/company/" + MOCK_COMPANY_NUMBER + "/transaction/" + MOCK_TRANSACTION_NUMBER + "/current-directors";
 
 describe("Create transaction controller tests", () => {
-  
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
-  it("should redirect", async () => {
-    mockPostTransaction.mockReturnValueOnce({id: MOCK_TRANSACTION_NUMBER});
-    const response = await request(app)
-      .get(CREATE_TRANSACTION_URL);
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-    expect(mockPostTransaction).toHaveBeenCalled();
-    expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual(EXPECTED_HEADER_LOCATION); 
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    it("should redirect", async () => {
+        mockPostTransaction.mockReturnValueOnce({ id: MOCK_TRANSACTION_NUMBER });
+        const response = await request(app)
+            .get(CREATE_TRANSACTION_URL);
 
-  it("should redirect with lang on forward path", async () => {
-    mockPostTransaction.mockReturnValueOnce({id: MOCK_TRANSACTION_NUMBER});
-    const response = await request(app)
-      .get(CREATE_TRANSACTION_URL + "?lang=cy");
+        expect(mockPostTransaction).toHaveBeenCalled();
+        expect(response.status).toEqual(302);
+        expect(response.header.location).toEqual(EXPECTED_HEADER_LOCATION);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
 
-    expect(mockPostTransaction).toHaveBeenCalled();
-    expect(response.status).toEqual(302);
-    expect(response.header.location).toEqual(EXPECTED_HEADER_LOCATION + "?lang=cy");
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-  });
+    it("should redirect with lang on forward path", async () => {
+        mockPostTransaction.mockReturnValueOnce({ id: MOCK_TRANSACTION_NUMBER });
+        const response = await request(app)
+            .get(CREATE_TRANSACTION_URL + "?lang=cy");
 
-  it("should 404 not found on post", async () => {
-    const response = await request(app)
-      .post(CREATE_TRANSACTION_PATH);
+        expect(mockPostTransaction).toHaveBeenCalled();
+        expect(response.status).toEqual(302);
+        expect(response.header.location).toEqual(EXPECTED_HEADER_LOCATION + "?lang=cy");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+    });
 
-    expect(response.status).toEqual(404);
-  });
+    it("should 404 not found on post", async () => {
+        const response = await request(app)
+            .post(CREATE_TRANSACTION_PATH);
+
+        expect(response.status).toEqual(404);
+    });
 });

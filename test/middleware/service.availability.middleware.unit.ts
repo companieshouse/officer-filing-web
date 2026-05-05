@@ -1,22 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 
 jest.mock("ioredis", () => {
-  return jest.fn().mockImplementation(() => ({
-    on: jest.fn(),
-    set: jest.fn(),
-    get: jest.fn(),
-  }));
+    return jest.fn().mockImplementation(() => ({
+        on: jest.fn(),
+        set: jest.fn(),
+        get: jest.fn(),
+    }));
 });
 
 jest.mock("../../src/utils/feature.flag");
 jest.mock("../../src/middleware/session.middleware", () => {
-  return {
-    createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
-      return (req: Request, res: Response, next: NextFunction) => {
-        next();
-      };
-    }),
-  };
+    return {
+        createSessionMiddleware: jest.fn().mockImplementation((sessionStore: any) => {
+            return (req: Request, res: Response, next: NextFunction) => {
+                next();
+            };
+        }),
+    };
 });
 
 import request from "supertest";
@@ -27,21 +27,21 @@ const mockIsActiveFeature = isActiveFeature as jest.Mock;
 
 describe("service availability middleware tests", () => {
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it("should return 500 error page", async () => {
-    mockIsActiveFeature.mockReturnValueOnce(false);
-    const response = await request(app).get("/appoint-update-remove-company-officer");
+    it("should return 500 error page", async () => {
+        mockIsActiveFeature.mockReturnValueOnce(false);
+        const response = await request(app).get("/appoint-update-remove-company-officer");
 
-    expect(response.text).toContain("Sorry, there is a problem with this service");
-  });
+        expect(response.text).toContain("Sorry, there is a problem with this service");
+    });
 
-  it("should not return 500 error page", async () => {
-    mockIsActiveFeature.mockReturnValueOnce(true);
-    const response = await request(app).get("/appoint-update-remove-company-officer");
+    it("should not return 500 error page", async () => {
+        mockIsActiveFeature.mockReturnValueOnce(true);
+        const response = await request(app).get("/appoint-update-remove-company-officer");
 
-    expect(response.text).not.toContain("Sorry, there is a problem with this service");
-  });
+        expect(response.text).not.toContain("Sorry, there is a problem with this service");
+    });
 });

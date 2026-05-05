@@ -33,8 +33,8 @@ const nunjucksEnv = nunjucks.configure([
   "node_modules/@companieshouse/ch-node-utils/templates/",
   "node_modules/@companieshouse"
 ], {
-  autoescape: true,
-  express: app,
+    autoescape: true,
+    express: app,
 });
 
 nunjucksEnv.addGlobal("assetPath", process.env.CDN_HOST);
@@ -71,7 +71,7 @@ app.use(`${urls.OFFICER_FILING}*`, csrfProtectionMiddleware);
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
 app.use(userAuthRegex, authenticationMiddleware);
 
-app.use(commonTemplateVariablesMiddleware)
+app.use(commonTemplateVariablesMiddleware);
 // apply our default router to /officer-filing
 app.use(urls.OFFICER_FILING, router);
 app.use(errorHandler, pageNotFound);
