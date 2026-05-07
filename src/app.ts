@@ -55,11 +55,12 @@ app.set("view engine", "html");
 app.use(cookieParser());
 app.use(serviceAvailabilityMiddleware);
 
-app.use(`${urls.OFFICER_FILING}*`, sessionMiddleware);
-app.use(`${urls.OFFICER_FILING}*`, csrfProtectionMiddleware);
+app.use(`${urls.OFFICER_FILING}*officerFilling`, sessionMiddleware);
+app.use(`${urls.OFFICER_FILING}*officerFilling`, csrfProtectionMiddleware);
 
 // ------------- Enable login redirect -----------------
 const userAuthRegex = new RegExp("^" + urls.OFFICER_FILING + "/(?!accessibility-statement).+");
+logger.error(userAuthRegex.toString());
 app.use(userAuthRegex, authenticationMiddleware);
 
 app.use(commonTemplateVariablesMiddleware);
