@@ -9,7 +9,7 @@ describe("Confirm company controller tests", () => {
         jest.clearAllMocks();
     });
 
-    const COMPANY_NUMBER_PATH = OFFICER_FILING + "/" + COMPANY_NUMBER;
+    const COMPANY_NUMBER_PATH = OFFICER_FILING + COMPANY_NUMBER;
 
     it("should redirect to company lookup page", async () => {
         const response = await request(app)

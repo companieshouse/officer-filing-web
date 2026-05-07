@@ -186,6 +186,7 @@ describe("Remove director date controller tests", () => {
 
             const response = await request(app)
                 .post(REMOVE_DIRECTOR_URL)
+                .set("Content-Type","application/json")
                 .send({ "removal_date-day": "7",
                     "removal_date-month": "08",
                     "removal_date-year": "2010" });

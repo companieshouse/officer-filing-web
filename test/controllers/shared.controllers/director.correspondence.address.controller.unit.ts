@@ -302,7 +302,7 @@ describe("Director correspondence address controller tests", () => {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({
                 });
             }
-            const response = (await request(app).post(url).send({
+            const response = (await request(app).post(url).set("Content-Type","application/json").send({
                 director_correspondence_address: "director_registered_office_address"
             }));
             expect(response.status).toEqual(302);

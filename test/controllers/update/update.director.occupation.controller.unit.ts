@@ -102,7 +102,8 @@ describe("Director occupation controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
             mockPatchOfficerFiling.mockResolvedValueOnce({ data: {} });
 
-            const response = await request(app).post(DIRECTOR_OCCUPATION_URL);
+            const response = (await request(app).post(DIRECTOR_OCCUPATION_URL)
+            .set("Content-Type","application/json"));
             expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_DETAILS_ADDRESS_URL);
             expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         });
@@ -140,7 +141,8 @@ describe("Director occupation controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
             mockPatchOfficerFiling.mockResolvedValueOnce({ data: {} });
 
-            const response = await request(app).post(DIRECTOR_OCCUPATION_URL).send({ [DirectorField.OCCUPATION]: "" });
+            const response = await request(app).post(DIRECTOR_OCCUPATION_URL)
+            .set("Content-Type","application/json").send({ [DirectorField.OCCUPATION]: "" });
             expect(mockPatchOfficerFiling).toHaveBeenCalledWith(expect.any(Session), TRANSACTION_ID, SUBMISSION_ID,
                 { occupation: "", occupationHasBeenUpdated: false });
             expect(mockPatchOfficerFiling).toHaveBeenCalledTimes(1);
@@ -156,8 +158,9 @@ describe("Director occupation controller tests", () => {
                 etag: "etag",
                 occupation: "Director"
             });
-            const response = await request(app)
+            const response =  await request(app)
                 .post(DIRECTOR_OCCUPATION_URL)
+                .set("Content-Type","application/json")
                 .send({ [DirectorField.OCCUPATION]: "~" });
 
             expect(response.text).toContain(UPDATE_BACK_LINK_URL);
@@ -175,6 +178,7 @@ describe("Director occupation controller tests", () => {
 
             const response = await request(app)
                 .post(DIRECTOR_OCCUPATION_URL)
+                .set("Content-Type","application/json")
                 .send({ [DirectorField.OCCUPATION]: "Accountant" });
             expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
         });
