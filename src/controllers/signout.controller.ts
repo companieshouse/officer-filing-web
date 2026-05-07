@@ -23,7 +23,7 @@ export const get: Handler = (req, res) => {
     });
 };
 
-export const post = (req, res) => {
+export const post = (req: Request, res: Response) => {
 
     const lang = selectLang(req.query.lang as string);
     const previousPagePostParam = req.body["previousPage"];

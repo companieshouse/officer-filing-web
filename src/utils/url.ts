@@ -55,7 +55,7 @@ const sanitizeAppointmentId = (appointmentId: string): string => {
     return "";
 };
 
-export const sanitizeStopType = (stopType): string => {
+export const sanitizeStopType = (stopType: string): string => {
     if (stopType && typeof stopType === "string") {
         return stopType.replace(/[^a-z0-9-]/g, "");
     }
