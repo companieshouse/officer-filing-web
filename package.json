@@ -36,7 +36,19 @@
     "@companieshouse/node-session-handler": "^5.2.10",
     "@companieshouse/structured-logging-node": "^2.0.11",
     "@companieshouse/web-security-node": "^4.4.15",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/api-logs": "^0.217.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.73.0",
+    "@opentelemetry/baggage-span-processor": "^0.5.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.217.0",
+    "@opentelemetry/exporter-metrics-otlp-proto": "^0.217.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.217.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.217.0",
     "@opentelemetry/otlp-exporter-base": "^0.214.0",
+    "@opentelemetry/sdk-logs": "^0.217.0",
+    "@opentelemetry/sdk-metrics": "^2.7.1",
+    "@opentelemetry/sdk-node": "^0.217.0",
+    "@opentelemetry/sdk-trace-node": "^2.7.1",
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "express-validator": "^6.15.0",
@@ -50,6 +62,8 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.9.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^4.17.25",
     "@types/jest": "^30.0.0",
@@ -59,16 +73,14 @@
     "@types/supertest": "^2.0.16",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
-    "@stylistic/eslint-plugin": "^5.9.0",
-    "@eslint/js": "^10.0.1",
     "eslint": "10.0.2",
+    "globals": "^17.3.0",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "sonarqube-scanner": "3.5.0",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "globals": "^17.3.0"
+    "typescript": "^5.9.3"
   }
 }

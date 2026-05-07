@@ -1,5 +1,5 @@
 import app from "../app";
-
+import "../otel";
 const PORT = process.env.NODE_PORT;
 
 app.set("port", PORT);
