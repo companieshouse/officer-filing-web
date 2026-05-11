@@ -145,7 +145,8 @@ describe("Director protected details controller tests", () => {
             mockPatchOfficerFiling.mockResolvedValueOnce({ data: {
             } });
 
-            const response = await request(app).post(PAGE_URL);
+            const response = await request(app).post(PAGE_URL)
+            .set("Content-Type","application/json");
 
             expect(response.text).toContain("Found. Redirecting to " + NEXT_PAGE_URL);
             expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -167,7 +168,8 @@ describe("Director protected details controller tests", () => {
             mockPatchOfficerFiling.mockResolvedValueOnce({ data: {
             } });
 
-            const response = await request(app).post(PAGE_URL);
+            const response = await request(app).post(PAGE_URL)
+            .set("Content-Type","application/json");
 
             expect(response.text).toContain("Select whether the director has applied to protect their details at Companies House");
         });

@@ -39,7 +39,8 @@ describe("Signout controller tests", () => {
     describe('post tests', () => {
         it('should show an error if no radio buttons are selected', async () => {
             const response = await request(app)
-                .post(SIGNOUT_LOCATION);
+                .post(SIGNOUT_LOCATION)
+                .set("Content-Type","application/json");
 
             expect(response.status).toBe(400);
             expect(response.text).toContain('Select yes if you want to sign out');
@@ -49,8 +50,8 @@ describe("Signout controller tests", () => {
 
         it('should show an error if no radio buttons are selected in welsh', async () => {
             const response = await request(app)
-                .post(SIGNOUT_LOCATION + "?lang=cy");
-
+                .post(SIGNOUT_LOCATION + "?lang=cy")
+                .set("Content-Type","application/json");
             expect(response.status).toBe(400);
             expect(response.text).toContain("Dewiswch ydw os ydych am allgofnodi");
             expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();

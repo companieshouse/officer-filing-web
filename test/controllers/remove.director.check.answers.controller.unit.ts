@@ -265,7 +265,8 @@ describe("Remove director check answers controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
             mockCloseTransaction.mockResolvedValueOnce("closed");
 
-            const response = await request(app).post(CHECK_ANSWERS_URL);
+            const response = await request(app).post(CHECK_ANSWERS_URL)
+            .set("Content-Type","application/json");
 
             expect(mockGetValidationStatus).toHaveBeenCalled();
             expect(mockCloseTransaction).toHaveBeenCalled();
@@ -277,7 +278,8 @@ describe("Remove director check answers controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidationStatusResponseList);
             mockRetrieveStopScreen.mockReturnValueOnce(STOP_TYPE.DISSOLVED);
 
-            const response = await request(app).post(CHECK_ANSWERS_URL);
+            const response = await request(app).post(CHECK_ANSWERS_URL)
+            .set("Content-Type","application/json");
 
             expect(mockGetValidationStatus).toHaveBeenCalled();
             expect(mockCloseTransaction).not.toHaveBeenCalled();
@@ -288,7 +290,8 @@ describe("Remove director check answers controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
             mockCloseTransaction.mockRejectedValue(new Error("can't connect"));
 
-            const response = await request(app).post(CHECK_ANSWERS_URL);
+            const response = await request(app).post(CHECK_ANSWERS_URL)
+            .set("Content-Type","application/json");
 
             expect(mockGetValidationStatus).toHaveBeenCalled();
             expect(mockCloseTransaction).toHaveBeenCalled();
