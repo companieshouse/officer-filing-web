@@ -70,5 +70,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "globals": "^17.3.0"
+  },
+  "overrides": {
+    "glob": "^10.5.0"
   }
 }
