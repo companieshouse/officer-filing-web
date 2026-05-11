@@ -73,7 +73,7 @@ const renderTemplate = (template: string) => (req: Request, res: Response) => {
 router.get("/", startRoute.get);
 
 if (SERVICE_WITHDRAWN === 'true') {
-    router.get("*", startRoute.get);
+    router.get("*start", startRoute.get);
 }
 
 router.get(urls.COMPANY_NUMBER, companyNumberRoute.get);
