@@ -14,119 +14,119 @@ const PREVIOUS_WELSH = "Blaenorol";
 describe('Pagination element test suite', () => {
 
     it.each([
-        [1, {previous: false, items: [], next: false}],
+        [1, { previous: false, items: [], next: false }],
     ])('1 page, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 1;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2"], next: true}],
-        [2, {previous: true, items: ["1", "2"], next: false}],
+        [1, { previous: false, items: ["1", "2"], next: true }],
+        [2, { previous: true, items: ["1", "2"], next: false }],
     ])('2 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 2;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "3"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3"], next: false}],
+        [1, { previous: false, items: ["1", "2", "3"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3"], next: false }],
     ])('3 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 3;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "3"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3"], next: false}],
+        [1, { previous: false, items: ["1", "2", "3"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3"], next: false }],
     ])('3 pages, current page number = %p in welsh', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 3;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, "cy", localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "3", "4"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "4"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4"], next: false}],
+        [1, { previous: false, items: ["1", "2", "3", "4"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "4"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4"], next: false }],
     ])('4 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 4;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "...", "5"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "4", "5"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4", "5"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4", "5"], next: true}],
-        [5, {previous: true, items: ["1", "...", "4", "5"], next: false}],
+        [1, { previous: false, items: ["1", "2", "...", "5"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "4", "5"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4", "5"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4", "5"], next: true }],
+        [5, { previous: true, items: ["1", "...", "4", "5"], next: false }],
     ])('5 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 5;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "...", "6"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "...", "6"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4", "5", "6"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4", "5", "6"], next: true}],
-        [5, {previous: true, items: ["1", "...", "4", "5", "6"], next: true}],
-        [6, {previous: true, items: ["1", "...", "5", "6"], next: false}],
+        [1, { previous: false, items: ["1", "2", "...", "6"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "...", "6"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4", "5", "6"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4", "5", "6"], next: true }],
+        [5, { previous: true, items: ["1", "...", "4", "5", "6"], next: true }],
+        [6, { previous: true, items: ["1", "...", "5", "6"], next: false }],
     ])('6 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 6;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "...", "7"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "...", "7"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4", "...", "7"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4", "5", "6", "7"], next: true}],
-        [5, {previous: true, items: ["1", "...", "4", "5", "6", "7"], next: true}],
-        [6, {previous: true, items: ["1", "...", "5", "6", "7"], next: true}],
-        [7, {previous: true, items: ["1", "...", "6", "7"], next: false}],
+        [1, { previous: false, items: ["1", "2", "...", "7"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "...", "7"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4", "...", "7"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4", "5", "6", "7"], next: true }],
+        [5, { previous: true, items: ["1", "...", "4", "5", "6", "7"], next: true }],
+        [6, { previous: true, items: ["1", "...", "5", "6", "7"], next: true }],
+        [7, { previous: true, items: ["1", "...", "6", "7"], next: false }],
     ])('7 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 7;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "...", "8"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "...", "8"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4", "...", "8"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4", "5", "...", "8"], next: true}],
-        [5, {previous: true, items: ["1", "...", "4", "5", "6", "7", "8"], next: true}],
-        [6, {previous: true, items: ["1", "...", "5", "6", "7", "8"], next: true}],
-        [7, {previous: true, items: ["1", "...", "6", "7", "8"], next: true}],
-        [8, {previous: true, items: ["1", "...", "7", "8"], next: false}],
+        [1, { previous: false, items: ["1", "2", "...", "8"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "...", "8"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4", "...", "8"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4", "5", "...", "8"], next: true }],
+        [5, { previous: true, items: ["1", "...", "4", "5", "6", "7", "8"], next: true }],
+        [6, { previous: true, items: ["1", "...", "5", "6", "7", "8"], next: true }],
+        [7, { previous: true, items: ["1", "...", "6", "7", "8"], next: true }],
+        [8, { previous: true, items: ["1", "...", "7", "8"], next: false }],
     ])('8 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 8;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [1, {previous: false, items: ["1", "2", "...", "9"], next: true}],
-        [2, {previous: true, items: ["1", "2", "3", "...", "9"], next: true}],
-        [3, {previous: true, items: ["1", "2", "3", "4", "...", "9"], next: true}],
-        [4, {previous: true, items: ["1", "2", "3", "4", "5", "...", "9"], next: true}],
-        [5, {previous: true, items: ["1", "...", "4", "5", "6", "...", "9"], next: true}],
-        [6, {previous: true, items: ["1", "...", "5", "6", "7", "8", "9"], next: true}],
-        [7, {previous: true, items: ["1", "...", "6", "7", "8", "9"], next: true}],
-        [8, {previous: true, items: ["1", "...", "7", "8", "9"], next: true}],
-        [9, {previous: true, items: ["1", "...", "8", "9"], next: false}],
+        [1, { previous: false, items: ["1", "2", "...", "9"], next: true }],
+        [2, { previous: true, items: ["1", "2", "3", "...", "9"], next: true }],
+        [3, { previous: true, items: ["1", "2", "3", "4", "...", "9"], next: true }],
+        [4, { previous: true, items: ["1", "2", "3", "4", "5", "...", "9"], next: true }],
+        [5, { previous: true, items: ["1", "...", "4", "5", "6", "...", "9"], next: true }],
+        [6, { previous: true, items: ["1", "...", "5", "6", "7", "8", "9"], next: true }],
+        [7, { previous: true, items: ["1", "...", "6", "7", "8", "9"], next: true }],
+        [8, { previous: true, items: ["1", "...", "7", "8", "9"], next: true }],
+        [9, { previous: true, items: ["1", "...", "8", "9"], next: false }],
     ])('9 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 9;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
     });
 
     it.each([
-        [2, {previous: true, items: ["1", "2", "3", "...", "22"], next: true}],
-        [7, {previous: true, items: ["1", "...", "6", "7", "8", "...", "22"], next: true}],
-        [13, {previous: true, items: ["1", "...", "12", "13", "14", "...", "22"], next: true}],
-        [17, {previous: true, items: ["1", "...", "16", "17", "18", "...", "22"], next: true}],
-        [20, {previous: true, items: ["1", "...", "19", "20", "21", "22"], next: false}],
+        [2, { previous: true, items: ["1", "2", "3", "...", "22"], next: true }],
+        [7, { previous: true, items: ["1", "...", "6", "7", "8", "...", "22"], next: true }],
+        [13, { previous: true, items: ["1", "...", "12", "13", "14", "...", "22"], next: true }],
+        [17, { previous: true, items: ["1", "...", "16", "17", "18", "...", "22"], next: true }],
+        [20, { previous: true, items: ["1", "...", "19", "20", "21", "22"], next: false }],
     ])('22 pages, current page number = %p', (currentPageNumber: number, expectedData: { previous: boolean; items: string[]; next: boolean; }) => {
         const numOfPages = 22;
         validatePaginationElement(expectedData, numOfPages, prefix, currentPageNumber, lang, localService);
@@ -154,14 +154,14 @@ function validatePaginationElement(expectedData: { previous: boolean; items: str
 
     // Validate previous link
     if (expectedData.previous) {
-        expect(paginationElement.previous).toEqual({ 'href': prefix + '?page=' + (currentPageNumber - 1) + '&lang=' + lang , 'text': lang === "cy" ? PREVIOUS_WELSH : PREVIOUS});
+        expect(paginationElement.previous).toEqual({ 'href': prefix + '?page=' + (currentPageNumber - 1) + '&lang=' + lang, 'text': lang === "cy" ? PREVIOUS_WELSH : PREVIOUS });
     } else {
         expect(paginationElement.previous).toBeNull;
     }
 
     // Validate next link
     if (expectedData.next) {
-        expect(paginationElement.next).toEqual({ 'href': prefix + '?page=' + (currentPageNumber + 1) + '&lang=' + lang , 'text': lang === "cy" ? NEXT_WELSH : NEXT});
+        expect(paginationElement.next).toEqual({ 'href': prefix + '?page=' + (currentPageNumber + 1) + '&lang=' + lang, 'text': lang === "cy" ? NEXT_WELSH : NEXT });
     } else {
         expect(paginationElement.next).toBeNull;
     }

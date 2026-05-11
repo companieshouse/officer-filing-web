@@ -1,14 +1,13 @@
 import { ValidationStatusResponse, ValidationStatusError } from "@companieshouse/api-sdk-node/dist/services/officer-filing";
 
-
-export const createMockValidationStatusError = (errorMessage: string) : ValidationStatusError => {
+export const createMockValidationStatusError = (errorMessage: string): ValidationStatusError => {
     return {
         error: errorMessage,
         location: "$./transactions/185318-541416-850071/officers/646f2b75f8b00c631d83feb2/validation_status",
         type: "ch:validation",
         locationType: "json-path"
     };
-}
+};
 
 export const mockValidationStatusError: ValidationStatusError = createMockValidationStatusError("European public limited liability company (SE) not permitted");
 export const mockValidationStatusError1: ValidationStatusError = createMockValidationStatusError("Date John Doe was removed is missing");
@@ -33,49 +32,49 @@ export const mockValidationStatusErrorAppointmentDate: ValidationStatusError = c
 export const mockValidValidationStatusResponse: ValidationStatusResponse = {
     errors: [],
     isValid: true
-}
+};
 
 // @ts-ignore
 export const mockValidationStatusResponseUndefined: ValidationStatusResponse = {
     isValid: true
-}
+};
 
 export const mockValidationStatusResponse: ValidationStatusResponse = {
     errors: [mockValidationStatusError],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseList: ValidationStatusResponse = {
     errors: [mockValidationStatusError4, mockValidationStatusError2, mockValidationStatusError3, mockValidationStatusError5, mockValidationStatusError1, mockValidationStatusError6],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseList2: ValidationStatusResponse = {
     errors: [mockValidationStatusError4, mockValidationStatusError3, mockValidationStatusError5],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseList3: ValidationStatusResponse = {
     errors: [mockValidationStatusError4, mockValidationStatusError5],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseList4: ValidationStatusResponse = {
     errors: [mockValidationStatusError5],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponsePreOct2009: ValidationStatusResponse = {
     errors: [mockValidationStatusErrorPreOct2009],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseEtag: ValidationStatusResponse = {
     errors: [mockValidationStatusErrorEtag],
     isValid: false
-}
+};
 
 export const mockValidationStatusResponseDirectorName: ValidationStatusResponse = {
     errors: [mockValidationStatusErrorFirstName, mockValidationStatusErrorLastName],
     isValid: false
-}
+};

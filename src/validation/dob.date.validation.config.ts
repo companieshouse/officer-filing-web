@@ -90,4 +90,4 @@ export const DobDateValidation: DateValidationType = {
             link: DobDateField.DAY
         }
     }
-}
+};

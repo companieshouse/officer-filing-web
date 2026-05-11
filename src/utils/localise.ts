@@ -1,36 +1,36 @@
-import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils"
+import { LocalesService, LanguageNames } from "@companieshouse/ch-node-utils";
 import { LOCALES_ENABLED, LOCALES_PATH } from "./properties";
 
 export const selectLang = (lang): string => {
-  switch(lang) {
+    switch (lang) {
     case "cy": return "cy";
     case "en":
     default: return "en";
-  }
-}
+    }
+};
 
 export const addLangToUrl = (url: string, lang: string | undefined): string => {
-  if (lang == undefined || lang == "") {
-    return url;
-  }
-  if (url.includes("?")) {
-    if (url.includes("lang=")) {
-      return url.replace(/lang=[^&]+/, "lang=" + lang);
+    if (lang == undefined || lang == "") {
+        return url;
     }
-    return url + "&lang=" + lang;
-  } else {
-    return url + "?lang=" + lang;
-  }
-}
+    if (url.includes("?")) {
+        if (url.includes("lang=")) {
+            return url.replace(/lang=[^&]+/, "lang=" + lang);
+        }
+        return url + "&lang=" + lang;
+    } else {
+        return url + "?lang=" + lang;
+    }
+};
 
-export const getLocaleInfo = (locales: LocalesService, lang: string) => { 
-  return {
-    languageEnabled: locales.enabled,
-    languages: LanguageNames.sourceLocales(locales.localesFolder),
-    i18n: locales.i18nCh.resolveNamespacesKeys(lang),
-    lang,
-    htmlLang: lang
-  }
+export const getLocaleInfo = (locales: LocalesService, lang: string) => {
+    return {
+        languageEnabled: locales.enabled,
+        languages: LanguageNames.sourceLocales(locales.localesFolder),
+        i18n: locales.i18nCh.resolveNamespacesKeys(lang),
+        lang,
+        htmlLang: lang
+    };
 };
 
 const localesSevice = LocalesService.getInstance(LOCALES_PATH, LOCALES_ENABLED === "true");

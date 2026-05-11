@@ -9,50 +9,50 @@ import { isActiveFeature } from '../../src/utils/feature.flag';
 import { Templates } from '../../src/types/template.paths';
 
 describe("IsFeatureEnabled Middleware tests", () => {
-  const req = {} as Request;
-  const res = {
-    status: jest.fn().mockReturnThis() as any,
-    render: jest.fn() as any,
-    redirect: jest.fn() as any,
-  } as Response;
-  const next = jest.fn();
+    const req = {} as Request;
+    const res = {
+        status: jest.fn().mockReturnThis() as any,
+        render: jest.fn() as any,
+        redirect: jest.fn() as any,
+    } as Response;
+    const next = jest.fn();
 
-  beforeEach(() => {
-    logger.infoRequest = jest.fn();
+    beforeEach(() => {
+        logger.infoRequest = jest.fn();
 
-    jest.clearAllMocks();
-  });
+        jest.clearAllMocks();
+    });
 
-  test("feature not enabled, should have 404 response status", () => {
-    const expectResult = {} as Response;
-    res.render = jest.fn(() => expectResult);
+    test("feature not enabled, should have 404 response status", () => {
+        const expectResult = {} as Response;
+        res.render = jest.fn(() => expectResult);
 
-    (isActiveFeature as jest.Mock).mockReturnValue(false);
+        (isActiveFeature as jest.Mock).mockReturnValue(false);
 
-    const actual = isFeatureEnabled('false')(req, res, next);
+        const actual = isFeatureEnabled('false')(req, res, next);
 
-    expect(actual).toBe(expectResult);
+        expect(actual).toBe(expectResult);
 
-    expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('false');
+        expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('false');
 
-    expect(res.status).toHaveBeenCalledTimes(1);
-    expect(res.status).toHaveBeenCalledWith(constants.HTTP_STATUS_NOT_FOUND);
-    expect(res.render).toHaveBeenCalledWith(Templates.SERVICE_OFFLINE_MID_JOURNEY);
-  });
+        expect(res.status).toHaveBeenCalledTimes(1);
+        expect(res.status).toHaveBeenCalledWith(constants.HTTP_STATUS_NOT_FOUND);
+        expect(res.render).toHaveBeenCalledWith(Templates.SERVICE_OFFLINE_MID_JOURNEY);
+    });
 
-  test("feature not enabled, should have 404 response status", () => {
-    const expectResult = 'expectResult';
-    next.mockReturnValue(expectResult);
+    test("feature not enabled, should have 404 response status", () => {
+        const expectResult = 'expectResult';
+        next.mockReturnValue(expectResult);
 
-    (isActiveFeature as jest.Mock).mockReturnValue(true);
+        (isActiveFeature as jest.Mock).mockReturnValue(true);
 
-    const actual = isFeatureEnabled('true')(req, res, next);
+        const actual = isFeatureEnabled('true')(req, res, next);
 
-    expect(actual).toBe(expectResult);
+        expect(actual).toBe(expectResult);
 
-    expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('true');
+        expect(isActiveFeature as jest.Mock).toHaveBeenCalledWith('true');
 
-    expect(res.status).not.toHaveBeenCalledWith();
-    expect(res.render).not.toHaveBeenCalledWith();
-  });
+        expect(res.status).not.toHaveBeenCalledWith(200);
+        expect(res.render).not.toHaveBeenCalledWith("template-name");
+    });
 });

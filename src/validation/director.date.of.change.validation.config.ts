@@ -40,7 +40,7 @@ export const DirectorDateOfChangeValidation: DateValidationType = {
             source: [DirectorDateOfChangeField.DAY, DirectorDateOfChangeField.MONTH, DirectorDateOfChangeField.YEAR],
             link: DirectorDateOfChangeField.DAY
         },
-        },
+    },
     InvalidValue: {
         Day: {
             messageKey: directorDateOfChangeErrorMessageKey.INVALID_DATE,
@@ -100,4 +100,4 @@ export const DirectorDateOfChangeValidation: DateValidationType = {
             link: DirectorDateOfChangeField.DAY
         },
     }
-}
+};

@@ -5,8 +5,8 @@ import { getSessionRequest } from '../mocks/session.mock';
 describe('ApiService Test suite', () => {
 
     it('check instance of PrivateApiClient', () => {
-      const client = createPrivateOAuthApiClient(getSessionRequest());
-      expect(client).toBeInstanceOf(PrivateApiClient);
+        const client = createPrivateOAuthApiClient(getSessionRequest());
+        expect(client).toBeInstanceOf(PrivateApiClient);
     });
-  
+
 });

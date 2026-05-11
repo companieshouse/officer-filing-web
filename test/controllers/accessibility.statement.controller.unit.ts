@@ -8,16 +8,16 @@ const PAGE_HEADING_CY = "Datganiad hygyrchedd ar gyfer y gwasanaeth Penodi, diwe
 
 describe("accessibility statement controller tests", () => {
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it.each([["?lang=en", PAGE_HEADING_EN], ["?lang=cy", PAGE_HEADING_CY]])("should return accessibility statement page in the correct language", async (lang, heading) => {
-    const response = await request(app)
-      .get(ACCESSIBILITY_STATEMENT_PATH+lang);
+    it.each([["?lang=en", PAGE_HEADING_EN], ["?lang=cy", PAGE_HEADING_CY]])("should return accessibility statement page in the correct language", async (lang, heading) => {
+        const response = await request(app)
+            .get(ACCESSIBILITY_STATEMENT_PATH + lang);
 
-    expect(response.text).toContain(heading);
-    expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
-    expect(middlewareMocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+        expect(response.text).toContain(heading);
+        expect(middlewareMocks.mockAuthenticationMiddleware).not.toHaveBeenCalled();
+        expect(middlewareMocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 });

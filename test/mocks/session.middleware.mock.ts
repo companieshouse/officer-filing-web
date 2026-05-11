@@ -2,8 +2,7 @@ jest.mock("ioredis");
 jest.mock("../../src/middleware/session.middleware");
 
 import { NextFunction, Request, Response } from "express";
-import { SessionMiddleware, SessionStore } from "@companieshouse/node-session-handler";
-import { Session } from "@companieshouse/node-session-handler";
+import { SessionMiddleware, SessionStore, Session } from "@companieshouse/node-session-handler";
 
 export const mockSessionStore = jest.fn();
 
@@ -31,7 +30,7 @@ export const setShouldThrowError = (value: boolean, message?: string) => {
 };
 
 jest.mock("../../src/middleware/session.middleware", () => ({
-  createSessionMiddleware: mockCreateSessionMiddleware,
+    createSessionMiddleware: mockCreateSessionMiddleware,
 }));
 
 export default { mockCreateSessionMiddleware, setShouldThrowError };

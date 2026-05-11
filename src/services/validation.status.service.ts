@@ -12,20 +12,20 @@ export const getValidationStatus = async (session: Session, transactionId: strin
     const status = response.httpStatusCode as number;
 
     if (status >= 400) {
-      const errorResponse = response as ApiErrorResponse;
-      throw new Error(`Error retrieving validation status: ${JSON.stringify(errorResponse)}`);
+        const errorResponse = response as ApiErrorResponse;
+        throw new Error(`Error retrieving validation status: ${JSON.stringify(errorResponse)}`);
     }
     const successfulResponse = response as Resource<ValidationStatusResponse>;
     if (!logErrors) {
-      return successfulResponse.resource as ValidationStatusResponse;
+        return successfulResponse.resource as ValidationStatusResponse;
     } else {
-      return logValidationErrors(successfulResponse.resource as ValidationStatusResponse);
+        return logValidationErrors(successfulResponse.resource as ValidationStatusResponse);
     }
-}
+};
 
 const logValidationErrors = (validationStatus: ValidationStatusResponse): ValidationStatusResponse => {
     if (!validationStatus.isValid) {
-      logger.error("Validation errors: " + JSON.stringify(validationStatus.errors.slice(0, 10)));
+        logger.error("Validation errors: " + JSON.stringify(validationStatus.errors.slice(0, 10)));
     }
     return validationStatus;
-}
+};

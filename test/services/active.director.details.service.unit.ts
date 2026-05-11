@@ -13,72 +13,72 @@ const mockGetActiveOfficerDetails = OfficerFilingService.prototype.getListActive
 const mockCreatePrivateApiClient = createApiClient as jest.Mock;
 
 mockCreatePrivateApiClient.mockReturnValue({
-  officerFiling: OfficerFilingService.prototype
+    officerFiling: OfficerFilingService.prototype
 } as ApiClient);
 
 const clone = (objectToClone: any): any => {
-  return JSON.parse(JSON.stringify(objectToClone));
+    return JSON.parse(JSON.stringify(objectToClone));
 };
 
 describe("Test active director details service", () => {
 
-  const TRANSACTION_ID = "66454";
+    const TRANSACTION_ID = "66454";
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
 
-  it("Should call the sdk and get the active director details data", async () => {
+    it("Should call the sdk and get the active director details data", async () => {
 
-    const resource: Resource<CompanyOfficer> = {
-      httpStatusCode: 200,
-      resource: mockCompanyOfficer
-    };
+        const resource: Resource<CompanyOfficer> = {
+            httpStatusCode: 200,
+            resource: mockCompanyOfficer
+        };
 
-    mockGetActiveOfficerDetails.mockReturnValueOnce(resource);
-    const session =  getSessionRequest();
-    const response = await getListActiveDirectorDetails(session, TRANSACTION_ID);
+        mockGetActiveOfficerDetails.mockReturnValueOnce(resource);
+        const session = getSessionRequest();
+        const response = await getListActiveDirectorDetails(session, TRANSACTION_ID);
 
-    expect(mockGetActiveOfficerDetails).toHaveBeenCalledWith(TRANSACTION_ID);
-    expect(response).toEqual(mockCompanyOfficer);
-  });
+        expect(mockGetActiveOfficerDetails).toHaveBeenCalledWith(TRANSACTION_ID);
+        expect(response).toEqual(mockCompanyOfficer);
+    });
 
-  it("should throw error when http error code 500 is returned", async () => {
+    it("should throw error when http error code 500 is returned", async () => {
 
-    const errorMessage = "Oops! Someone stepped on the wire.";
-    const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 500,
-      errors: [{ error: errorMessage }]
-    };
+        const errorMessage = "Oops! Someone stepped on the wire.";
+        const errorResponse: ApiErrorResponse = {
+            httpStatusCode: 500,
+            errors: [{ error: errorMessage }]
+        };
 
-    mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest();
-    const expectedMessage = "Error retrieving active director details: " + JSON.stringify(errorResponse);
-    let actualMessage;
+        mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
+        const session = getSessionRequest();
+        const expectedMessage = "Error retrieving active director details: " + JSON.stringify(errorResponse);
+        let actualMessage;
 
-    try {
-      await getListActiveDirectorDetails(session, TRANSACTION_ID);
-    } catch (err) {
-      actualMessage = err.message;
-    }
+        try {
+            await getListActiveDirectorDetails(session, TRANSACTION_ID);
+        } catch (err) {
+            actualMessage = err.message;
+        }
 
-    expect(actualMessage).toBeTruthy();
-    expect(actualMessage).toEqual(expectedMessage);
-  });
+        expect(actualMessage).toBeTruthy();
+        expect(actualMessage).toEqual(expectedMessage);
+    });
 
-  it("should return an empty array when no officers are returned", async () => {
+    it("should return an empty array when no officers are returned", async () => {
 
-    const errorMessage = "404 not found\n{}";
-    const errorResponse: ApiErrorResponse = {
-      httpStatusCode: 404,
-      errors: [{ error: errorMessage }]
-    };
+        const errorMessage = "404 not found\n{}";
+        const errorResponse: ApiErrorResponse = {
+            httpStatusCode: 404,
+            errors: [{ error: errorMessage }]
+        };
 
-    mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
-    const session =  getSessionRequest();
+        mockGetActiveOfficerDetails.mockReturnValueOnce(errorResponse);
+        const session = getSessionRequest();
 
-    const response =  await getListActiveDirectorDetails(session, TRANSACTION_ID);
+        const response = await getListActiveDirectorDetails(session, TRANSACTION_ID);
 
-    expect(response.length).toEqual(0);
-  });
+        expect(response.length).toEqual(0);
+    });
 });

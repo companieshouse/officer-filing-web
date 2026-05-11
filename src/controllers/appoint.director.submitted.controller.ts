@@ -13,29 +13,29 @@ import { OfficerFiling } from "@companieshouse/api-sdk-node/dist/services/office
 import { addLangToUrl, getLocaleInfo, getLocalesService, selectLang } from "../utils/localise";
 
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
-    const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
-    const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
-    const session: Session = req.session as Session;
-    const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
-    const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
-    const lang = selectLang(req.query.lang);
-    const locales = getLocalesService();
+    try {
+        const companyNumber = urlUtils.getCompanyNumberFromRequestParams(req);
+        const transactionId = urlUtils.getTransactionIdFromRequestParams(req);
+        const submissionId = urlUtils.getSubmissionIdFromRequestParams(req);
+        const session: Session = req.session as Session;
+        const companyProfile: CompanyProfile = await getCompanyProfile(companyNumber);
+        const officerFiling: OfficerFiling = await getOfficerFiling(session, transactionId, submissionId);
+        const lang = selectLang(req.query.lang);
+        const locales = getLocalesService();
 
-    return res.render(Templates.APPOINT_DIRECTOR_SUBMITTED, {
-      referenceNumber: transactionId,
-      companyNumber: companyNumber,
-      companyName: companyProfile.companyName,
-      directorTitle: formatTitleCase(officerFiling.title),
-      directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
-      appointedOn: toReadableFormat(officerFiling.appointedOn),
-      templateName: Templates.APPOINT_DIRECTOR_SUBMITTED,
-      updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
-      ...getLocaleInfo(locales, lang),
-      currentUrl : req.originalUrl,
-    });
-  } catch (e) {
-    return next(e);
-  }
+        return res.render(Templates.APPOINT_DIRECTOR_SUBMITTED, {
+            referenceNumber: transactionId,
+            companyNumber: companyNumber,
+            companyName: companyProfile.companyName,
+            directorTitle: formatTitleCase(officerFiling.title),
+            directorName: formatTitleCase(retrieveDirectorNameFromFiling(officerFiling)),
+            appointedOn: toReadableFormat(officerFiling.appointedOn),
+            templateName: Templates.APPOINT_DIRECTOR_SUBMITTED,
+            updateDirectorSameCompany: addLangToUrl(urlUtils.getUrlToPath(CREATE_TRANSACTION_PATH, req), lang),
+            ...getLocaleInfo(locales, lang),
+            currentUrl: req.originalUrl,
+        });
+    } catch (e) {
+        return next(e);
+    }
 };

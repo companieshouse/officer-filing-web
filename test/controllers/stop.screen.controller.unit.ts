@@ -41,271 +41,280 @@ const SECURE_OFFICER_HEADING_WELSH = "Diweddaru manylion y cyfarwyddwr hwn gan d
 const START_SERVICE_AGAIN_URL = "appoint-update-remove-company-officer";
 
 describe("Stop screen controller tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    mockGetCompanyProfile.mockClear();
-  });
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockGetCompanyProfile.mockClear();
+    });
 
-  it("Should navigate to dissolved stop screen", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
-    
-    const response = await request(app)
-    .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
-    expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
-    expect(response.text).toContain(dissolvedCompanyProfile.companyName.toUpperCase())
-    expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=en");
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+    it("Should navigate to dissolved stop screen", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
 
-  it("Should navigate to dissolved stop screen in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
+        expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
+        expect(response.text).toContain(dissolvedCompanyProfile.companyName.toUpperCase());
+        expect(response.text).toContain(START_SERVICE_AGAIN_URL + "?lang=en");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
-    expect(response.text).toContain(DISSOLVED_PAGE_HEADING_WELSH);
-    expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT_WELSH);
-    expect(response.text).toContain(START_SERVICE_AGAIN_URL+"?lang=cy");
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+    it("Should navigate to dissolved stop screen in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
 
-  it("Should navigate to dissolved stop screen and replace company name with This company if not provided", async () => {
-    dissolvedCompanyProfile.companyName = "";
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
+        expect(response.text).toContain(DISSOLVED_PAGE_HEADING_WELSH);
+        expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT_WELSH);
+        expect(response.text).toContain(START_SERVICE_AGAIN_URL + "?lang=cy");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
-    expect(response.text).toContain(THIS_COMPANY + " " + DISSOLVED_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+    it("Should navigate to dissolved stop screen and replace company name with This company if not provided", async () => {
+        dissolvedCompanyProfile.companyName = "";
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
 
-  it("Should navigate to dissolved stop screen and replace company name with This company if not provided in welsh", async () => {
-    dissolvedCompanyProfile.companyName = "";
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
+        expect(response.text).toContain(THIS_COMPANY + " " + DISSOLVED_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
-    expect(response.text).toContain(THIS_COMPANY_WELSH + " " + DISSOLVED_PAGE_BODY_TEXT_WELSH);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+    it("Should navigate to dissolved stop screen and replace company name with This company if not provided in welsh", async () => {
+        dissolvedCompanyProfile.companyName = "";
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
 
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED + "&lang=cy");
+        expect(response.text).toContain(THIS_COMPANY_WELSH + " " + DISSOLVED_PAGE_BODY_TEXT_WELSH);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should set the content to dissolved company content", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+    it("Should set the content to dissolved company content", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
 
-    expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
-    expect(response.text).toContain(dissolvedCompanyProfile.companyName);
-    expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        expect(response.text).toContain(DISSOLVED_PAGE_HEADING);
+        expect(response.text).toContain(dissolvedCompanyProfile.companyName);
+        expect(response.text).toContain(DISSOLVED_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to non limited-unlimited stop screen", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
+    it("Should navigate to non limited-unlimited stop screen", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
-    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase())
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
-  it("Should set the content to non limited-unlimited company content", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+        expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
+        expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase());
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
+    it("Should set the content to non limited-unlimited company content", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
-    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase());
-    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
+        expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_HEADING);
+        expect(response.text).toContain(overseaCompanyCompanyProfile.companyName.toUpperCase());
+        expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to non limited-unlimited stop screen in english with empty company", async () => {
-    overseaCompanyCompanyProfile.companyName = "";
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+    it("Should navigate to non limited-unlimited stop screen in english with empty company", async () => {
+        overseaCompanyCompanyProfile.companyName = "";
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
 
-    expect(response.text).toContain(THIS_COMPANY_LOWERCASE);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        expect(response.text).toContain(THIS_COMPANY_LOWERCASE);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to non limited-unlimited stop screen in welsh company", async () => {
-    overseaCompanyCompanyProfile.companyName = "";
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+    it("Should navigate to non limited-unlimited stop screen in welsh company", async () => {
+        overseaCompanyCompanyProfile.companyName = "";
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
 
-    expect(response.text).toContain(THIS_COMPANY_WELSH);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        expect(response.text).toContain(THIS_COMPANY_WELSH);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to pre-october-2009 stop screen", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
+    it("Should navigate to pre-october-2009 stop screen", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
-    expect(response.text).toContain(overseaCompanyCompanyProfile.companyName)
-    expect(response.text).not.toContain("date-director-removed?lang=cy")
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
 
-  it("Should navigate to pre-october-2009 stop screen in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 + "&lang=cy");
+        expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
+        expect(response.text).toContain(overseaCompanyCompanyProfile.companyName);
+        expect(response.text).not.toContain("date-director-removed?lang=cy");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING_WELSH);
-    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH);
-    expect(response.text).toContain("date-director-removed?lang=cy")
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+    it("Should navigate to pre-october-2009 stop screen in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-  it("Should set the content to pre-october-2009 company content", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009 + "&lang=cy");
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
+        expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING_WELSH);
+        expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT_WELSH);
+        expect(response.text).toContain("date-director-removed?lang=cy");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
-    expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+    it("Should set the content to pre-october-2009 company content", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
-  it("Should substitute company name for 'This company' for dissolved company missing company name", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedMissingNameCompanyProfile);
-    const response = await request(app)
-    .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
-    expect(response.text).toContain("This company " + DISSOLVED_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_PRE_OCT_2009);
 
-  it("Should substitute company name for 'this company' for non limited-unlimited company missing company name", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
-    const response = await request(app)
-    .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
-    expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("TEST COMPANY", "this company"));
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();   });
+        expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_HEADING);
+        expect(response.text).toContain(PRE_OCTOBER_2009_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should return error page if error is thrown when getting Company Profile", async () => {
-    const message = "Can't connect";
-    mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
-    const response = await request(app)
-      .get(BASIC_STOP_PAGE_PATH);
+    it("Should substitute company name for 'This company' for dissolved company missing company name", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedMissingNameCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_DISSOLVED);
+        expect(response.text).toContain("This company " + DISSOLVED_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+    it("Should substitute company name for 'this company' for non limited-unlimited company missing company name", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyMissingNameCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED);
+        expect(response.text).toContain(NON_LIMITED_UNLIMITED_PAGE_BODY_TEXT.replace("TEST COMPANY", "this company"));
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should return error page if an unknown stop type is provided", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL + "undefined");
+    it("Should return error page if error is thrown when getting Company Profile", async () => {
+        const message = "Can't connect";
+        mockGetCompanyProfile.mockRejectedValueOnce(new Error(message));
+        const response = await request(app)
+            .get(BASIC_STOP_PAGE_PATH);
 
-    expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to etag stop screen", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_ETAG);
+    it("Should return error page if an unknown stop type is provided", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(dissolvedCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL + "undefined");
 
-    expect(response.text).toContain(ETAG_PAGE_HEADING);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        expect(response.text).toContain(SERVICE_UNAVAILABLE_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should set the content to etag company content", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+    it("Should navigate to etag stop screen", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_ETAG);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_ETAG);
 
-    expect(response.text).toContain(ETAG_PAGE_HEADING);
-    expect(response.text).toContain(ETAG_PAGE_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        expect(response.text).toContain(ETAG_PAGE_HEADING);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should navigate to etag stop screen in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
+    it("Should set the content to etag company content", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
-    expect(response.text).toContain(ETAG_PAGE_HEADING_WELSH);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_ETAG);
 
-  it("Should display something-went-wrong stop-screen heading and content", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        expect(response.text).toContain(ETAG_PAGE_HEADING);
+        expect(response.text).toContain(ETAG_PAGE_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=en");
+    it("Should navigate to etag stop screen in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_ETAG + "&lang=cy");
 
-    expect(response.text).toContain(SOMETHING_WENT_WRONG_HEADING);
-    expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        expect(response.text).toContain(ETAG_PAGE_HEADING_WELSH);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-  it("Should display something-went-wrong stop-screen heading and content in Welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy");
+    it("Should display something-went-wrong stop-screen heading and content", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
-    expect(response.text).toContain("Aeth rhywbeth o'i le");
-    expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT_WELSH);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=en");
 
-  it("Should navigate to secure officer stop screen", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER);
+        expect(response.text).toContain(SOMETHING_WENT_WRONG_HEADING);
+        expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    expect(response.text).toContain(SECURE_OFFICER_HEADING);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+    it("Should display something-went-wrong stop-screen heading and content in Welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_SOMETHING_WENT_WRONG + "&lang=cy");
 
-  it("Should navigate to secure officer stop screen in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER +"&lang=cy");
+        expect(response.text).toContain("Aeth rhywbeth o'i le");
+        expect(response.text).toContain(SOMETHING_WENT_WRONG_BODY_TEXT_WELSH);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 
-    expect(response.text).toContain(SECURE_OFFICER_HEADING_WELSH);
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled(); 
-  });
+    it("Should navigate to secure officer stop screen", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
 
-  it("Should navigate to prohibited company type stop screen in welsh", async () => {
-    mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
-    const response = await request(app)
-      .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
-    expect(response.text).toContain("Dim ond Cwmnïau cyfyngedig ac anghyfyngedig gall ddefnyddio'r gwasanaeth hwn");
-    expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
-    expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
-  });
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER);
+
+        expect(response.text).toContain(SECURE_OFFICER_HEADING);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
+
+    it("Should navigate to secure officer stop screen in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_SECURE_OFFICER + "&lang=cy");
+
+        expect(response.text).toContain(SECURE_OFFICER_HEADING_WELSH);
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
+
+    it("Should navigate to prohibited company type stop screen in welsh", async () => {
+        mockGetCompanyProfile.mockResolvedValueOnce(validCompanyProfile);
+        const response = await request(app)
+            .get(SHOW_STOP_PAGE_PATH_URL_NON_LIMITED_UNLIMITED + "&lang=cy");
+        expect(response.text).toContain("Dim ond Cwmnïau cyfyngedig ac anghyfyngedig gall ddefnyddio'r gwasanaeth hwn");
+        expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
+        expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();
+    });
 });
