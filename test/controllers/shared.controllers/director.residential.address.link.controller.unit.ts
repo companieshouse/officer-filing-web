@@ -177,8 +177,9 @@ describe("Director residential address link controller tests", () => {
             });
             mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
 
-            const response = await request(app).post(url)
-            .set("Content-Type","application/json");
+            const response = await request(app)
+            .post(url)
+                .set("Content-Type","application/json");
             expect(response.text).toContain(HA_TO_SA_ERROR);
             if (url === PAGE_URL){
                 expect(response.text).toContain("Testfirst Testmiddle Testlast");
