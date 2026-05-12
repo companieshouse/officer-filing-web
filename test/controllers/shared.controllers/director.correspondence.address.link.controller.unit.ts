@@ -183,7 +183,10 @@ describe("Director correspondence address link controller tests", () => {
                 formerNames: "testFormer"
             });
 
-            const response = await request(app).post(url);
+            const response = await request(app)
+                .post(url)
+                .set("Content-Type", "application/json");
+
             expect(response.text).toContain(SA_TO_ROA_ERROR);
             if (url === UPDATE_PAGE_URL){
                 expect(response.text).toContain("John Elizabeth Doe");
@@ -312,7 +315,10 @@ describe("Director correspondence address link controller tests", () => {
                 formerNames: "testFormer"
             });
 
-            const response = await request(app).post(url);
+            const response = await request(app)
+                .post(url)
+                .set("Content-Type", "application/json");
+
             expect(response.text).toContain(SA_TO_ROA_ERROR_WELSH);
         });
 

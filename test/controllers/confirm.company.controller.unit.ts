@@ -83,7 +83,8 @@ describe("Confirm company controller tests", () => {
         mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
 
         const response = await request(app)
-            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber)
+            .set("Content-Type", "application/json");
 
         expect(response.status).toEqual(302);
         expect(response.header.location).toEqual("/appoint-update-remove-company-officer/company/" + companyNumber + "/transaction?lang=en");
@@ -93,7 +94,8 @@ describe("Confirm company controller tests", () => {
         mockGetCurrentOrFutureDissolved.mockReturnValueOnce(true);
 
         const response = await request(app)
-            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber)
+            .set("Content-Type", "application/json");
 
         expect(response.text).toEqual(DISSOLVED_PAGE_REDIRECT_HEADING);
         expect(mocks.mockAuthenticationMiddleware).toHaveBeenCalled();
@@ -104,7 +106,8 @@ describe("Confirm company controller tests", () => {
         mockGetCompanyProfile.mockResolvedValueOnce(overseaCompanyCompanyProfile);
 
         const response = await request(app)
-            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber);
+            .post(CONFIRM_COMPANY_PATH + "?companyNumber=" + companyNumber)
+            .set("Content-Type", "application/json");
 
         expect(response.text).toEqual(LIMITED_UNLIMITED_PAGE_REDIRECT_HEADING);
         expect(mocks.mockCompanyAuthenticationMiddleware).not.toHaveBeenCalled();

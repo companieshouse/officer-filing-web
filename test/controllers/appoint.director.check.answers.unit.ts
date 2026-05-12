@@ -198,7 +198,9 @@ describe("Appoint director check answers controller tests", () => {
                 appointedOn: "2020-01-01"
             });
             mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
-            const response = (await request(app).post(PAGE_URL));
+            const response = (await request(app)
+            .post(PAGE_URL)
+            .set("Content-Type", "application/json"));
 
             expect(response.text).toContain("Select if you confirm that by submitting this information, the person named has consented to act as director");
         });
