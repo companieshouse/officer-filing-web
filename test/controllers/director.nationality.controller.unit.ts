@@ -149,7 +149,7 @@ describe("Director nationality controller tests", () => {
 
             const response = await request(app)
                 .post(DIRECTOR_NATIONALITY_URL)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
 
             expect(response.text).not.toContain("For technical reasons, we are currently unable to accept multiple nationalities with a total of more than 48 characters");
             expect(response.text).toContain("Enter the director’s nationality");

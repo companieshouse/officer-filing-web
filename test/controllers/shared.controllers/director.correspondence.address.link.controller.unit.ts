@@ -185,7 +185,7 @@ describe("Director correspondence address link controller tests", () => {
 
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
 
             expect(response.text).toContain(SA_TO_ROA_ERROR);
             if (url === UPDATE_PAGE_URL){
@@ -317,7 +317,7 @@ describe("Director correspondence address link controller tests", () => {
 
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
 
             expect(response.text).toContain(SA_TO_ROA_ERROR_WELSH);
         });

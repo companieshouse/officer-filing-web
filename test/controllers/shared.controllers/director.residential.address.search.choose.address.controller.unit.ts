@@ -293,7 +293,7 @@ describe("Director residential address array page controller tests", () => {
             mockGetUKAddressesFromPostcode.mockResolvedValueOnce([]);
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
 
             expect(response.text).toContain(SELECT_ADDRESS_ERROR);
         });

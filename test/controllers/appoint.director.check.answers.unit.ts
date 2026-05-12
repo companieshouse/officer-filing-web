@@ -200,7 +200,7 @@ describe("Appoint director check answers controller tests", () => {
             mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
             const response = (await request(app)
             .post(PAGE_URL)
-                .set("Content-Type", "application/json"));
+            .set("Content-Type", "application/json"));
 
             expect(response.text).toContain("Select if you confirm that by submitting this information, the person named has consented to act as director");
         });

@@ -179,7 +179,7 @@ describe("Director residential address link controller tests", () => {
 
             const response = await request(app)
             .post(url)
-                .set("Content-Type","application/json");
+            .set("Content-Type","application/json");
             expect(response.text).toContain(HA_TO_SA_ERROR);
             if (url === PAGE_URL){
                 expect(response.text).toContain("Testfirst Testmiddle Testlast");
@@ -286,7 +286,7 @@ describe("Director residential address link controller tests", () => {
 
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
             expect(response.text).toContain(HA_TO_SA_ERROR_WELSH);
         });
 
@@ -300,10 +300,10 @@ describe("Director residential address link controller tests", () => {
             mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json")
-                    .send({ 
-                        "ha_to_sa": "ha_to_sa_yes"
-                    });
+                .set("Content-Type", "application/json")
+                .send({ 
+                    "ha_to_sa": "ha_to_sa_yes"
+                });
 
             expect(response.text).toContain("Found. Redirecting to " + redirectLink);
             expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
@@ -319,10 +319,10 @@ describe("Director residential address link controller tests", () => {
             mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json")
-                    .send({ 
-                        "ha_to_sa": "ha_to_sa_yes" 
-                    });
+                .set("Content-Type", "application/json")
+                .send({ 
+                    "ha_to_sa": "ha_to_sa_yes" 
+                });
 
             expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         });
@@ -336,10 +336,10 @@ describe("Director residential address link controller tests", () => {
             mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce(validCompanyAppointmentResource.resource);
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json")
-                    .send({ 
-                        "ha_to_sa": "ha_to_sa_no" 
-                    });
+                .set("Content-Type", "application/json")
+                .send({ 
+                    "ha_to_sa": "ha_to_sa_no" 
+                });
 
             expect(response.text).toContain("Found. Redirecting to " + redirectLink);
         });

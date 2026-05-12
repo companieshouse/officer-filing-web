@@ -304,10 +304,10 @@ describe("Director correspondence address controller tests", () => {
             }
             const response = (await request(app)
             .post(url)
-                .set("Content-Type", "application/json")
-                .send({
-                    director_correspondence_address: "director_registered_office_address"
-                }));
+            .set("Content-Type", "application/json")
+            .send({
+                director_correspondence_address: "director_registered_office_address"
+            }));
 
             expect(response.status).toEqual(302);
             expect(response.text).toContain("Found. Redirecting to " + redirectLink);

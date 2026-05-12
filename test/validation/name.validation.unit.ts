@@ -297,11 +297,11 @@ describe("Director name validation tests", () => {
             });
             const response = await request(app)
                 .post(UPDATE_DIRECTOR_NAME_URL)
-                    .set("Content-Type", "application/json")
-                    .send({
-                        previous_names_radio: "Yes",
-                        previous_names: "§" + ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS
-                    });
+                .set("Content-Type", "application/json")
+                .send({
+                    previous_names_radio: "Yes",
+                    previous_names: "§" + ONE_HUNRED_AND_SIXTY_ONE_CHARACTERS
+                });
             expect(response.text).not.toContain(FORMER_NAMES_CHARACTERS);
             expect(response.text).not.toContain(FORMER_NAMES_LENGTH);
         });
@@ -313,8 +313,8 @@ describe("Director name validation tests", () => {
             const WELSH_LANG = "?lang=cy";
             const response = await request(app)
                 .post(DIRECTOR_NAME_URL + WELSH_LANG)
-                    .set("Content-Type","application/json")
-                    .send({ first_name: "§" + FIFTY_ONE_CHARACTERS });
+                .set("Content-Type","application/json")
+                .send({ first_name: "§" + FIFTY_ONE_CHARACTERS });
             expect(response.text).toContain(CURRENT_DIRECTORS_PATH_END + WELSH_LANG);
         });
     });

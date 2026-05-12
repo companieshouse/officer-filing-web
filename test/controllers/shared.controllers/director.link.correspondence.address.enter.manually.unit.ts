@@ -171,7 +171,7 @@ describe("Director link correspondence address enter manually controller tests",
 
             const response = await request(app)
                 .post(url)
-                    .set("Content-Type", "application/json");
+                .set("Content-Type", "application/json");
             expect(response.text).toContain(SA_TO_ROA_ERROR);
         });
 
