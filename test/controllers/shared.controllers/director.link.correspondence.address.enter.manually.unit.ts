@@ -169,8 +169,9 @@ describe("Director link correspondence address enter manually controller tests",
                 isServiceAddressSameAsRegisteredOfficeAddress: undefined
             });
 
-            const response = await request(app).post(url)
-            .set("Content-Type","application/json");
+            const response = await request(app)
+                .post(url)
+                    .set("Content-Type", "application/json");
             expect(response.text).toContain(SA_TO_ROA_ERROR);
         });
 

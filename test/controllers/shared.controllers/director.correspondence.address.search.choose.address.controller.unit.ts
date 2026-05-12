@@ -292,8 +292,9 @@ describe("Director correspondence address array page controller tests", () => {
         ("Should render a page and show error if the postcode is undefined", async (url) => {
             mockGetOfficerFiling.mockResolvedValueOnce({});
             mockGetUKAddressesFromPostcode.mockResolvedValueOnce([]);
-            const response = await request(app).post(url)
-            .set("Content-Type","application/json");
+            const response = await request(app)
+                .post(url)
+                    .set("Content-Type", "application/json");
 
             expect(response.text).toContain(SELECT_ADDRESS_ERROR);
         });
