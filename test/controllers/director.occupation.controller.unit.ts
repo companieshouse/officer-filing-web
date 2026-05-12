@@ -153,8 +153,9 @@ describe("Director occupation controller tests", () => {
             mockGetValidationStatus.mockResolvedValueOnce(mockValidValidationStatusResponse);
             mockPatchOfficerFiling.mockResolvedValueOnce({ data: {} });
 
-            const response = await request(app).post(DIRECTOR_OCCUPATION_URL)
-            .set("Content-Type","application/json");
+            const response = await request(app)
+                .post(DIRECTOR_OCCUPATION_URL)
+                    .set("Content-Type", "application/json");
             expect(response.text).toContain("Found. Redirecting to " + DIRECTOR_CORRESPONDENCE_ADDRESS_URL);
             expect(mocks.mockCompanyAuthenticationMiddleware).toHaveBeenCalled();
         });
