@@ -32,13 +32,13 @@
   "homepage": "https://github.com/companieshouse/officer-filing-web#readme",
   "dependencies": {
     "@companieshouse/api-sdk-node": "^2.0.334",
-    "@companieshouse/ch-node-utils": "^2.1.13",
+    "@companieshouse/ch-node-utils": "^3.0.5",
     "@companieshouse/node-session-handler": "^5.2.10",
     "@companieshouse/structured-logging-node": "^2.0.11",
     "@companieshouse/web-security-node": "^4.4.15",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/api-logs": "^0.217.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.73.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.76.0",
     "@opentelemetry/baggage-span-processor": "^0.5.0",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.217.0",
     "@opentelemetry/exporter-metrics-otlp-proto": "^0.217.0",
@@ -52,7 +52,7 @@
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "express-validator": "^6.15.0",
-    "govuk-frontend": "5.14.0",
+    "govuk-frontend": "6.0.0",
     "js-yaml": "^4.1.1",
     "luxon": "^2.5.2",
     "nunjucks": "^3.2.4",
@@ -82,5 +82,9 @@
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "@opentelemetry/sdk-node": "^0.217.0",
+    "protobufjs": "^8.2.0"
   }
 }
