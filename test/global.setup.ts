@@ -31,4 +31,5 @@ export default () => {
     process.env.UK_COUNTRY_LIST = "England;Scotland;Wales;Northern Ireland;United Kingdom;Cymru";
     process.env.POSTCODE_VALIDATION_URL = 'http://example-postcode-lookup/postcode';
     process.env.POSTCODE_ADDRESSES_LOOKUP_URL = 'http://example-postcode-lookup/multiple-addresses';
+    process.env.CONTACT_US_URL = 'https://www.gov.uk/find-contact-details-companies-house';
 };
