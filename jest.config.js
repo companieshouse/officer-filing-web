@@ -15,11 +15,11 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: true,
-    testMatch: ['**/test/**/*.unit.[jt]s'],
-    globals: {
-        'ts-jest': {
-            diagnostics: false
-        }
+    testMatch: [
+        '**/?(*.)+(spec|test|unit).ts?(x)',
+    ],
+    transform: {
+        '^.+\\.[tj]sx?$': 'ts-jest'
     },
     globalSetup: './test/global.setup.ts',
     moduleNameMapper: {
