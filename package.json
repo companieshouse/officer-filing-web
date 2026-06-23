@@ -86,10 +86,5 @@
     "protobufjs": "^8.6.0",
     "axios": "^1.18.0",
     "js-yaml": "^4.2.0"
-  },
-  "allowScripts": {
-    "fsevents@2.3.3": true,
-    "github:companieshouse/private-api-sdk-node#c92ab0418fcdd03a5bb41829a45bfe79f31f8e97": true,
-    "unrs-resolver@1.12.2": true
   }
 }
