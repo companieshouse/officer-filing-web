@@ -4,7 +4,7 @@
   "description": "Web front end for Directors Filing service",
   "main": "app.ts",
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=24.22.1",
     "npm": ">=10"
   },
   "scripts": {
@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/companieshouse/officer-filing-web#readme",
   "dependencies": {
-    "@companieshouse/api-sdk-node": "^2.0.354",
+    "@companieshouse/api-sdk-node": "^2.0.373",
     "@companieshouse/ch-node-utils": "^2.1.13",
-    "@companieshouse/node-session-handler": "^5.2.15",
-    "@companieshouse/structured-logging-node": "^2.0.14",
+    "@companieshouse/node-session-handler": "^5.2.23",
+    "@companieshouse/structured-logging-node": "^2.0.16",
     "@companieshouse/web-security-node": "^4.4.22",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/api-logs": "^0.219.0",
@@ -53,7 +53,7 @@
     "js-yaml": "^4.2.0",
     "luxon": "^3.7.2",
     "nunjucks": "^3.2.4",
-    "private-api-sdk-node": "github:companieshouse/private-api-sdk-node#1.0.132",
+    "private-api-sdk-node": "github:companieshouse/private-api-sdk-node#1.0.145",
     "tslib": "^1.14.1",
     "uuid": "^11.1.1",
     "yargs": "^17.7.2"
@@ -69,7 +69,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "eslint": "10.5.0",
+    "eslint": "^10.14.0",
     "globals": "^17.6.0",
     "jest": "^30.4.2",
     "nodemon": "^3.1.14",
