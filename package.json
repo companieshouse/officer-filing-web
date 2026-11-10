@@ -82,7 +82,7 @@
     "protobufjs": "^8.6.0",
     "axios": "^1.18.0",
     "js-yaml": "^4.2.0",
-    "glob": "^13.0.7",
-    "minimatch": "^10.2.6"
+    "glob": "^14.0.4",
+    "minimatch": "^11.0.5"
   }
 }
