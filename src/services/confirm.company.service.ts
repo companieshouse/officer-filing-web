@@ -5,7 +5,7 @@ import { LocalesService } from "@companieshouse/ch-node-utils";
 export const buildAddress = (addressArray: Array<string>): string => {
     let address = "";
     for (const addressValue of addressArray) {
-        if (addressValue != null && addressValue != ""){
+        if (addressValue !== null && addressValue !== ""){
             address = address + addressValue;
             address = address + "<br>";
         }
@@ -23,10 +23,10 @@ export const formatForDisplay = (companyProfile: CompanyProfile, locales: Locale
     companyProfile.registeredOfficeAddress.locality = formatTitleCase(companyProfile.registeredOfficeAddress.locality);
     companyProfile.registeredOfficeAddress.region = formatTitleCase(companyProfile.registeredOfficeAddress.region);
     companyProfile.registeredOfficeAddress.country = formatTitleCase(companyProfile.registeredOfficeAddress.country);
-    if (companyProfile.registeredOfficeAddress.postalCode != null){
+    if (companyProfile.registeredOfficeAddress.postalCode != null && companyProfile.registeredOfficeAddress.postalCode !== ""){
         companyProfile.registeredOfficeAddress.postalCode = companyProfile.registeredOfficeAddress.postalCode.toUpperCase();
     }
-    if (companyProfile.registeredOfficeAddress.poBox != null){
+    if (companyProfile.registeredOfficeAddress.poBox != null && companyProfile.registeredOfficeAddress.poBox !== ""){
         companyProfile.registeredOfficeAddress.poBox = companyProfile.registeredOfficeAddress.poBox.toUpperCase();
     }
     return companyProfile;
