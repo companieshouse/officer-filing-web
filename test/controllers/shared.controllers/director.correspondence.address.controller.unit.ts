@@ -108,7 +108,7 @@ describe("Director correspondence address controller tests", () => {
             });
             const response = await request(app).get(url);
             expect(response.text).toContain(PAGE_HEADING);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 // from officer filing
                 expect(response.text).toContain("John Doe");
             } else {
@@ -136,7 +136,7 @@ describe("Director correspondence address controller tests", () => {
             });
             const response = await request(app).get(url);
             expect(response.text).toContain(PAGE_HEADING);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 // from officer filing
                 expect(response.text).toContain("John Doe");
             } else {
@@ -197,7 +197,7 @@ describe("Director correspondence address controller tests", () => {
             expect(response.text).toContain(PAGE_HEADING);
             expect(response.text).toContain(PUBLIC_REGISTER_INFORMATION);
             // care of
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 // from officer filing
                 expect(response.text).toContain("John Doe");
             } else {

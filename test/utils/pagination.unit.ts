@@ -175,14 +175,14 @@ function validatePaginationElement(expectedData: { previous: boolean; items: str
         const paginationItem = paginationElement.items[i];
 
         // Current Number
-        if (currentPageNumber == Number(expectedItem)) {
+        if (currentPageNumber === Number(expectedItem)) {
             expect(paginationItem.current).toBeTruthy();
         } else {
             expect(paginationItem.current).toBeFalsy();
         }
 
         // Ellipses or Page Numbers / Links
-        if (expectedItem == ellipsis) {
+        if (expectedItem === ellipsis) {
             expect(paginationItem.ellipsis).toBeTruthy();
             expect(paginationItem.href).toBeUndefined();
         } else {

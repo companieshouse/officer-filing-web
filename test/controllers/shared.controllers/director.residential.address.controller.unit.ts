@@ -183,7 +183,7 @@ describe("Director name controller tests", () => {
             mockMapCompanyProfileToOfficerFilingAddress.mockReturnValueOnce(validAddress);
             const response = await request(app).get(url);
             expect(response.text).toContain(PAGE_HEADING);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 // from filing
                 expect(response.text).toContain("John Doe");
             } else {

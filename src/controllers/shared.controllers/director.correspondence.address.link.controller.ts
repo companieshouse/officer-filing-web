@@ -108,10 +108,10 @@ export const calculateSaToRoaBooleanValue = (req: Request): boolean|undefined =>
     if (!saToRoaRadio) {
         return undefined;
     }
-    if (saToRoaRadio == DirectorField.SA_TO_ROA_YES) {
+    if (saToRoaRadio === DirectorField.SA_TO_ROA_YES) {
         return true;
     }
-    if (saToRoaRadio == DirectorField.SA_TO_ROA_NO) {
+    if (saToRoaRadio === DirectorField.SA_TO_ROA_NO) {
         return false;
     }
     return undefined;

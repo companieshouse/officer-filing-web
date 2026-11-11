@@ -114,10 +114,10 @@ export const calculateHaToSaBooleanValue = (req: Request): boolean|undefined => 
     if (!haToSaRadio) {
         return undefined;
     }
-    if (haToSaRadio == DirectorField.HA_TO_SA_YES) {
+    if (haToSaRadio === DirectorField.HA_TO_SA_YES) {
         return true;
     }
-    if (haToSaRadio == DirectorField.HA_TO_SA_NO) {
+    if (haToSaRadio === DirectorField.HA_TO_SA_NO) {
         return false;
     }
     return undefined;

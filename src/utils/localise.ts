@@ -10,7 +10,7 @@ export const selectLang = (lang): string => {
 };
 
 export const addLangToUrl = (url: string, lang: string | undefined): string => {
-    if (lang == undefined || lang == "") {
+    if (lang === undefined || lang === "") {
         return url;
     }
     if (url.includes("?")) {
