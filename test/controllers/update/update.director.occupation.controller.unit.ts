@@ -183,8 +183,8 @@ describe("Director occupation controller tests", () => {
             const response = await request(app)
                 .post(DIRECTOR_OCCUPATION_URL)
                 .set("Content-Type", "application/json")
-                .send({[DirectorField.OCCUPATION]: "Accountant"});
-        
+                .send({ [DirectorField.OCCUPATION]: "Accountant" });
+
             expect(response.text).toContain("Found. Redirecting to " + ETAG_STOP_PAGE_URL);
         });
 

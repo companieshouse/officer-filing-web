@@ -313,7 +313,7 @@ describe("Director name validation tests", () => {
             const WELSH_LANG = "?lang=cy";
             const response = await request(app)
                 .post(DIRECTOR_NAME_URL + WELSH_LANG)
-                .set("Content-Type","application/json")
+                .set("Content-Type", "application/json")
                 .send({ first_name: "§" + FIFTY_ONE_CHARACTERS });
             expect(response.text).toContain(CURRENT_DIRECTORS_PATH_END + WELSH_LANG);
         });
