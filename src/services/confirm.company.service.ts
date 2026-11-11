@@ -23,10 +23,10 @@ export const formatForDisplay = (companyProfile: CompanyProfile, locales: Locale
     companyProfile.registeredOfficeAddress.locality = formatTitleCase(companyProfile.registeredOfficeAddress.locality);
     companyProfile.registeredOfficeAddress.region = formatTitleCase(companyProfile.registeredOfficeAddress.region);
     companyProfile.registeredOfficeAddress.country = formatTitleCase(companyProfile.registeredOfficeAddress.country);
-    if (companyProfile.registeredOfficeAddress.postalCode != null && companyProfile.registeredOfficeAddress.postalCode !== ""){
+    if (companyProfile.registeredOfficeAddress.postalCode !== undefined && companyProfile.registeredOfficeAddress.postalCode !== ""){
         companyProfile.registeredOfficeAddress.postalCode = companyProfile.registeredOfficeAddress.postalCode.toUpperCase();
     }
-    if (companyProfile.registeredOfficeAddress.poBox != null && companyProfile.registeredOfficeAddress.poBox !== ""){
+    if (companyProfile.registeredOfficeAddress.poBox !== undefined && companyProfile.registeredOfficeAddress.poBox !== ""){
         companyProfile.registeredOfficeAddress.poBox = companyProfile.registeredOfficeAddress.poBox.toUpperCase();
     }
     return companyProfile;
