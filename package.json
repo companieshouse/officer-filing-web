@@ -4,7 +4,7 @@
   "description": "Web front end for Directors Filing service",
   "main": "app.ts",
   "engines": {
-    "node": ">=24.0.0",
+    "node": ">=24.22.1",
     "npm": ">=10"
   },
   "scripts": {
@@ -15,9 +15,6 @@
     "test": "jest",
     "lint": "eslint '{src,test}/**/*'",
     "lint:fix": "eslint '{src,test}/**/*' --fix",
-    "sonarqube-base-branch": "sonar-scanner",
-    "sonarqube-pull-request": "sonar-scanner -D sonar.pullrequest.base=main",
-    "sonarqube": "branch=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD); if [[ $branch == \"HEAD\" ]]; then echo $branch && npm run sonarqube-base-branch; else echo $branch && npm run sonarqube-pull-request; fi;",
     "coverage": "jest --coverage --passWithNoTests"
   },
   "repository": {
@@ -31,10 +28,10 @@
   },
   "homepage": "https://github.com/companieshouse/officer-filing-web#readme",
   "dependencies": {
-    "@companieshouse/api-sdk-node": "^2.0.354",
+    "@companieshouse/api-sdk-node": "^2.0.373",
     "@companieshouse/ch-node-utils": "^2.1.13",
-    "@companieshouse/node-session-handler": "^5.2.15",
-    "@companieshouse/structured-logging-node": "^2.0.14",
+    "@companieshouse/node-session-handler": "^5.2.23",
+    "@companieshouse/structured-logging-node": "^2.0.16",
     "@companieshouse/web-security-node": "^4.4.22",
     "@opentelemetry/api": "^1.9.1",
     "@opentelemetry/api-logs": "^0.219.0",
@@ -72,11 +69,10 @@
     "@types/nunjucks": "^3.2.6",
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "eslint": "10.5.0",
+    "eslint": "^10.14.0",
     "globals": "^17.6.0",
     "jest": "^30.4.2",
     "nodemon": "^3.1.14",
-    "sonarqube-scanner": "^5.0.1",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
@@ -85,6 +81,8 @@
   "overrides": {
     "protobufjs": "^8.6.0",
     "axios": "^1.18.0",
-    "js-yaml": "^4.2.0"
+    "js-yaml": "^4.2.0",
+    "glob": "^14.0.4",
+    "minimatch": "^11.0.5"
   }
 }
