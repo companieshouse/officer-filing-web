@@ -86,7 +86,7 @@ describe("Director link correspondence address enter manually controller tests",
             const response = await request(app).get(url);
 
             expect(response.text).toContain(PAGE_HEADING);
-            if (url == APPOINT_PAGE_URL) {
+            if (url === APPOINT_PAGE_URL) {
                 expect(response.text).toContain("Testfirst Testmiddle Testlast");
             } else {
                 expect(response.text).toContain("John Elizabeth Doe");

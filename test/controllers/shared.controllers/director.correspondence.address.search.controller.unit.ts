@@ -163,7 +163,7 @@ describe('Director correspondence address search controller test', () => {
             expect(mockPatchOfficerFiling).not.toHaveBeenCalled();
             expect(response.text).toContain("%%%%%%");
             expect(response.text).toContain("ゃ");
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 // from filing
                 expect(response.text).toContain("John Smith");
             } else {
@@ -197,7 +197,7 @@ describe('Director correspondence address search controller test', () => {
         it.each([PAGE_URL, UPDATE_PAGE_URL])("should call postcode service for validating postcode when formatting of UK postcode is valid for '%s'", async (url) => {
             mockGetIsValidUKPostcode.mockReturnValue(true);
             mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
             }
             const response = await request(app).post(url).send({ "postcode": "SW1A1AA", "premises": "123" });
@@ -211,7 +211,7 @@ describe('Director correspondence address search controller test', () => {
             mockGetIsValidUKPostcode.mockReturnValue(true);
             mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
             mockGetOfficerFiling.mockResolvedValueOnce({});
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
             }
             const response = await request(app).post(url).send({ "postcode": "SW1A1AA" });
@@ -223,7 +223,7 @@ describe('Director correspondence address search controller test', () => {
             mockGetIsValidUKPostcode.mockReturnValue(true);
             mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
             mockGetOfficerFiling.mockResolvedValueOnce({});
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
             }
             const response = await request(app).post(url).send({ "postcode": "SW1A1AA", "premises": "121" });
@@ -235,7 +235,7 @@ describe('Director correspondence address search controller test', () => {
             mockGetOfficerFiling.mockResolvedValueOnce({});
             mockGetIsValidUKPostcode.mockReturnValue(true);
             mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseBodyOfUKAddresses);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
             }
             const response = await request(app).post(url).send({ "postcode": "SW1A1AA", "premises": "123" });
@@ -247,7 +247,7 @@ describe('Director correspondence address search controller test', () => {
             mockGetOfficerFiling.mockResolvedValueOnce({});
             mockGetIsValidUKPostcode.mockReturnValue(true);
             mockGetUKAddressesFromPostcode.mockReturnValue(mockResponseEmptyBodyCaseInsensitivity);
-            if (url == PAGE_URL) {
+            if (url === PAGE_URL) {
                 mockGetCompanyAppointmentFullRecord.mockResolvedValueOnce({});
             }
             const response = await request(app).post(url).send({ "postcode": "IM2 4NN", "premises": "flat 4 lansdowne" });

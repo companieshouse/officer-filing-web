@@ -81,7 +81,7 @@ const createPageItem = (pageNumber: number, currentPageNumber: number, isEllipsi
         };
     }
     return {
-        current: currentPageNumber == pageNumber,
+        current: currentPageNumber === pageNumber,
         number: pageNumber,
         href: addLangToUrl(`${prefix}?page=${pageNumber}`, lang),
     };

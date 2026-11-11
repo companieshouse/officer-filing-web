@@ -120,10 +120,10 @@ const getPreviousNamesForFiling = (req: Request): string|undefined => {
     const previousNames = getField(req, DirectorField.PREVIOUS_NAMES);
     const previousNamesRadio = getField(req, DirectorField.PREVIOUS_NAMES_RADIO);
 
-    if (previousNamesRadio == DirectorField.YES) {
+    if (previousNamesRadio === DirectorField.YES) {
         return previousNames;
     }
-    if (previousNamesRadio == DirectorField.NO) {
+    if (previousNamesRadio === DirectorField.NO) {
         return "";
     }
 };
@@ -132,8 +132,8 @@ const getPreviousNamesForFiling = (req: Request): string|undefined => {
  * Compare two strings ignoring case. An empty string is treated the same as undefined.
  */
 export const doFieldsMatch = (field1: string | undefined, field2: string | undefined): boolean => {
-    if ((!field1 || field1.trim() == "") && (!field2 || field2.trim() == "")) {
+    if ((!field1 || field1.trim() === "") && (!field2 || field2.trim() === "")) {
         return true;
     }
-    return field1?.toUpperCase() == field2?.toUpperCase();
+    return field1?.toUpperCase() === field2?.toUpperCase();
 };

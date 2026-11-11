@@ -99,10 +99,10 @@ export const directorAppliedToProtectDetailsValue = (req: Request): boolean|unde
     if (!directorProtectedDetailsRadio) {
         return undefined;
     }
-    if (directorProtectedDetailsRadio == DirectorField.PROTECTED_DETAILS_YES) {
+    if (directorProtectedDetailsRadio === DirectorField.PROTECTED_DETAILS_YES) {
         return true;
     }
-    if (directorProtectedDetailsRadio == DirectorField.PROTECTED_DETAILS_NO) {
+    if (directorProtectedDetailsRadio === DirectorField.PROTECTED_DETAILS_NO) {
         return false;
     }
     return undefined;

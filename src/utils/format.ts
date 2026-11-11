@@ -118,7 +118,7 @@ export const retrieveDirectorNameFromFiling = (filing: OfficerFiling ): string =
 };
 
 export const formatDirectorNameForDisplay = (appointment: CompanyAppointment): string => {
-    let directorName = "";
+    let directorName: string;
     if (equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_DIRECTOR) || equalsIgnoreCase(appointment.officerRole, OFFICER_ROLE.CORPORATE_NOMINEE_DIRECTOR)){
         directorName = appointment.name.toUpperCase();
     } else {

@@ -44,16 +44,16 @@ export function formatValidationErrors(validationErrors: ValidationError[], lang
     const localesService = getLocalesService();
     validationErrors.forEach(validationResult => {
         let errorMessage = validationResult.messageKey;
-        if (lang != undefined) {
+        if (lang !== undefined) {
             const error = localesService.i18nCh.resolveSingleKey("error-" + validationResult.messageKey, lang);
             if (!error?.startsWith("error-")) {
                 errorMessage = error;
             }
         }
-        if (errorMessage == validationResult.messageKey) {
+        if (errorMessage === validationResult.messageKey) {
             errorMessage = lookupWebValidationMessage(validationResult.messageKey);
         }
-        if (errorMessage == validationResult.messageKey) {
+        if (errorMessage === validationResult.messageKey) {
             errorMessage = lookupAPIValidationMessage(validationResult.messageKey);
         }
 

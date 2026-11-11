@@ -6,7 +6,7 @@ export const validatePremise = (premise: string,
     premisesValidationType: PremiseValidationType,
     validationErrors: ValidationError[]): ValidationError[] => {
     // Premise validation
-    if (premise != null) {
+    if (premise !== null) {
         const invalidPremisesCharacterValidationResult = validateInvalidCharacterValuesForPremise(premise, premisesValidationType);
         // Invalid characters
         if (invalidPremisesCharacterValidationResult) {

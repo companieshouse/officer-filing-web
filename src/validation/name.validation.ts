@@ -90,7 +90,7 @@ export const validateName = (req: Request, nameValidationType: GenericValidation
 };
 
 export const validateTitle = (title: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if (title != null && title != "") {
+    if (title !== null && title !== "") {
         const regex = REGEX_FOR_NAME_TITLE;
         const match = regex.exec(title);
 
@@ -105,7 +105,7 @@ export const validateTitle = (title: string, nameValidationType: GenericValidati
 };
 
 export const validateFirstName = (firstName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if (firstName != null && firstName != "") {
+    if (firstName !== null && firstName !== "") {
         const regex = REGEX_FOR_VALID_NAME;
         const match = regex.exec(firstName);
         if (!match){
@@ -122,7 +122,7 @@ export const validateFirstName = (firstName: string, nameValidationType: Generic
 };
 
 const validateMiddleNames = (middleNames: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if (middleNames != null && middleNames != "") {
+    if (middleNames !== null && middleNames !== "") {
         const regex = REGEX_FOR_VALID_NAME;
         const match = regex.exec(middleNames);
         if (!match){
@@ -136,7 +136,7 @@ const validateMiddleNames = (middleNames: string, nameValidationType: GenericVal
 };
 
 const validateLastName = (lastName: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
-    if (lastName != null && lastName != "") {
+    if (lastName !== null && lastName !== "") {
         const regex = REGEX_FOR_VALID_NAME;
         const match = regex.exec(lastName);
         if (!match){
@@ -154,8 +154,8 @@ const validateLastName = (lastName: string, nameValidationType: GenericValidatio
 const validateFormerNames = (formerNames: string, previousNamesRadio: string, nameValidationType: GenericValidationType, validationErrors: ValidationError[]) => {
     if (!previousNamesRadio) {
         validationErrors.push(nameValidationType.PreviousNamesRadioUnselected.ErrorField);
-    } else if (previousNamesRadio == DirectorField.YES) {
-        if (formerNames != null && formerNames != "") {
+    } else if (previousNamesRadio === DirectorField.YES) {
+        if (formerNames !== null && formerNames !== "") {
             const regex = REGEX_FOR_VALID_FORMER_NAMES;
             const match = regex.exec(formerNames);
             if (!match){

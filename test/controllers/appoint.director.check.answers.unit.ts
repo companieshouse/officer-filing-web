@@ -112,8 +112,8 @@ describe("Appoint director check answers controller tests", () => {
                 isServiceAddressSameAsRegisteredOfficeAddress: false
             } });
             const response = await request(app).get(PAGE_URL);
-            expect(response.text).toContain("Diddly Squat Farm Shop"),
-            expect(response.text).toContain(mockAddress1.postalCode),
+            expect(response.text).toContain("Diddly Squat Farm Shop");
+            expect(response.text).toContain(mockAddress1.postalCode);
             expect(response.text).not.toContain("The correspondence address is the same as the registered office address");
         });
 
@@ -157,8 +157,8 @@ describe("Appoint director check answers controller tests", () => {
                 isHomeAddressSameAsServiceAddress: false
             } });
             const response = await request(app).get(PAGE_URL);
-            expect(response.text).toContain("Diddly Squat Farm Shop"),
-            expect(response.text).toContain(mockAddress1.postalCode),
+            expect(response.text).toContain("Diddly Squat Farm Shop");
+            expect(response.text).toContain(mockAddress1.postalCode);
             expect(response.text).not.toContain("The home address is the same as the correspondence address");
         });
 
@@ -199,8 +199,8 @@ describe("Appoint director check answers controller tests", () => {
             });
             mockGetCurrentOrFutureDissolved.mockReturnValueOnce(false);
             const response = (await request(app)
-            .post(PAGE_URL)
-            .set("Content-Type", "application/json"));
+                .post(PAGE_URL)
+                .set("Content-Type", "application/json"));
 
             expect(response.text).toContain("Select if you confirm that by submitting this information, the person named has consented to act as director");
         });

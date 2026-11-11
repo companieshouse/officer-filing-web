@@ -263,9 +263,9 @@ const createOfficerCards = (req: Request, officers: CompanyOfficer[]): OfficerCa
  * @returns The appointment ID if available, or an empty string if not
 */
 const getAppointmentIdFromSelfLink = (officer: CompanyOfficer): string => {
-    if (officer.links != undefined) {
+    if (officer.links !== undefined) {
         const self = officer.links.self;
-        if (self != undefined) {
+        if (self !== undefined) {
             const regex = /\/appointments\/([^/]+)/;
             const match = regex.exec(self);
             if (match?.[1]) {

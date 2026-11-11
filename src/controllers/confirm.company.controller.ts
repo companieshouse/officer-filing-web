@@ -54,7 +54,7 @@ const buildPageOptions = async (session: Session, companyProfile: CompanyProfile
     const address = buildAddress(addressArray);
 
     let backLinkUrl = COMPANY_LOOKUP.replace("{", "%7B").replace("}", "%7D");
-    if (lang != undefined) {
+    if (lang !== undefined) {
         backLinkUrl += "%26lang%3D" + selectLang(lang);
     }
     return {

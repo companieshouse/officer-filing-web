@@ -98,7 +98,7 @@ export const validateNationality2 = (nationality: string[], nationalityValidatio
                 validationError.push(
                     nationalityValidationType.DualNationality2LengthValidator.ErrorField,
                     nationalityValidationType.DualNationality3LengthValidator.ErrorField);
-            } else if (nationality[1] == nationality[2]) {
+            } else if (nationality[1] === nationality[2]) {
                 // duplicated
                 validationError.push(
                     nationalityValidationType.DuplicatedNationality2Validator.ErrorField,
@@ -156,10 +156,10 @@ const validateCommonNationality = (
         validationError.push(
             nationalityValidationType.DualNationality1LengthValidator.ErrorField,
             nationalityValidationType.DualNationality3LengthValidator.ErrorField);
-    } else if (nationality[0] == nationality[1]) {
+    } else if (nationality[0] === nationality[1]) {
     // duplicated
         validationError.push(nationalityValidationType.DuplicatedNationality2Validator.ErrorField);
-    } else if (nationality[0] == nationality[2]) {
+    } else if (nationality[0] === nationality[2]) {
     // duplicated
         validationError.push(nationalityValidationType.DuplicatedNationality3Validator.ErrorField);
     } else if (!nationalityList.includes(nationality[0])) {
